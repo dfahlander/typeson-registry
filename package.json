@@ -1,0 +1,28 @@
+{
+  "name": "typeson-registry",
+  "version": "0.1.0",
+  "description": "Official registry for typeson type definitions",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dfahlander/typeson-registry.git"
+  },
+  "keywords": [
+    "typeson",
+    "JSON",
+    "remoting",
+    "universal"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dfahlander/typeson-registry/issues"
+  },
+  "homepage": "https://github.com/dfahlander/typeson-registry#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "typeson": "*"
+  }
+}
