@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Official registry for typeson type definitions",
   "scripts": {
     "test": "mocha"
@@ -24,5 +24,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "typeson": "*"
+  },
+  "dependencies": {
+    "base64-arraybuffer": "^0.1.5"
   }
 }
