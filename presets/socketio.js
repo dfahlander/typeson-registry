@@ -4,5 +4,5 @@ module.exports = [
     require('../types/map'),
     require('../types/regexp'),
     require('../types/set'),
-    require('../types/arraybuffer')
+    require('../types/arraybuffer-socketio')
 ];

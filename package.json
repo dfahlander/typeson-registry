@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Official registry for typeson type definitions",
   "scripts": {
     "test": "mocha"
@@ -15,7 +15,6 @@
     "remoting",
     "universal"
   ],
-  "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dfahlander/typeson-registry/issues"
@@ -23,7 +22,7 @@
   "homepage": "https://github.com/dfahlander/typeson-registry#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "typeson": "*"
+    "typeson": "^2.0.0"
   },
   "dependencies": {
     "base64-arraybuffer": "^0.1.5"
