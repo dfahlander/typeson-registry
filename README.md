@@ -1,5 +1,5 @@
 # typeson-registry
-Official registry of typeson types and their encapsulation definitions.
+Official registry of typeson types.
 
 * Types listed under [types](https://github.com/dfahlander/typeson-registry/tree/master/types)
 * Presets listed under [presets](https://github.com/dfahlander/typeson-registry/tree/master/presets)
