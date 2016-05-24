@@ -1,9 +1,5 @@
 var _global = typeof self === 'undefined' ? global : self;
 
-// Make sure Typeson never handles ArrayBuffer because it should be handled by socket.io.
-// Set ArrayBuffer to null to delete such earlier registration.
-exports.ArrayBuffer = null; 
-
 // Support all kinds of typed arrays (views of ArrayBuffers)
 [
     "Int8Array",

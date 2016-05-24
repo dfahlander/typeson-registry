@@ -1,8 +1,4 @@
 module.exports = [
-    require('../types/date'),
-    require('../types/error'),
-    require('../types/map'),
-    require('../types/regexp'),
-    require('../types/set'),
-    require('../types/arraybuffer')
+    require('./builtin')
+    // TODO: Add types that are de-facto universal even though not built-in into ecmasript standard.
 ];

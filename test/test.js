@@ -2,7 +2,7 @@ var assert = require('chai').assert,
     expect = require('chai').expect,
     Typeson = require('typeson');
 
-describe('Universal', function() {
+describe('Built-in', function() {
   describe('Date', function () {
     it('should get back a real Date instance with the original time milliseconds', function () {
         var typeson = new Typeson().register(require('../types/date'));
@@ -15,7 +15,7 @@ describe('Universal', function() {
 
   describe('Error', function () {
     it('should get back real Error instances corresponding to their types and with the original name and message', function () {
-        var typeson = new Typeson().register(require('../types/error'));
+        var typeson = new Typeson().register([require('../types/error'), require('../types/errors.js')]);
         var json = typeson.stringify({
             e1: new Error("Error1"),
             e2: new TypeError("Error2"),
@@ -39,7 +39,7 @@ describe('Universal', function() {
   
   describe('Map', function () {
     it('should get back a real Map instance with the original data and use complex types also in contained items', function () {
-        var typeson = new Typeson().register(require('../presets/universal'));
+        var typeson = new Typeson().register(require('../presets/builtin'));
         var map = new Map();
         var error = new Error("Error here"),
             date = new Date(10000);
@@ -55,7 +55,7 @@ describe('Universal', function() {
   
   describe('Set', function () {
     it('should get back a real Set instance with the original data and use complex types also in contained items', function () {
-        var typeson = new Typeson().register(require('../presets/universal'));
+        var typeson = new Typeson().register(require('../presets/builtin'));
         var set = new Set();
         var error = new Error("Error here"),
             date = new Date(10000),
@@ -83,7 +83,10 @@ describe('Universal', function() {
   describe('TypedArrays', function(){
     describe('Float64Array', function() {
         it('should get back real Float64Array instance with original array content', function () {
-            var typeson = new Typeson().register(require('../types/arraybuffer'));
+            var typeson = new Typeson().register([
+                require('../types/arraybuffer'),
+                require('../types/typed-arrays')
+            ]);
             var a = new Float64Array(3);
             a[0] = 23.8;
             a[1] = -15;
@@ -100,7 +103,10 @@ describe('Universal', function() {
     
     describe('Uint16 arrays over invalid unicode range', function() {
        it('should work to use any 16-bit number no matter whether it is invalid unicode or not', function(){
-            var typeson = new Typeson().register(require('../types/arraybuffer'));
+            var typeson = new Typeson().register([
+                require('../types/arraybuffer'),
+                require('../types/typed-arrays')
+            ]);
             var a = new Uint16Array(0x0900),
                 i = a.length;
             while (i--) a[i] = i + 0xd780;
@@ -127,7 +133,10 @@ describe('Universal', function() {
     
     describe("Int8 arrays with odd length", function () {
         it('should be possible to use an odd length of an Int8Array', function() {
-            var typeson = new Typeson().register(require('../types/arraybuffer'));
+            var typeson = new Typeson().register([
+                require('../types/arraybuffer'),
+                require('../types/typed-arrays')
+            ]);
             var a = new Uint8Array(3);
             a[0] = 0;
             a[1] = 1;
