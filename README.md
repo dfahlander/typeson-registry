@@ -7,15 +7,14 @@ Official registry of typeson types and their encapsulation definitions.
 # Usage
 
 ```js
-var myTypes = [
+var Typeson = require ('typeson');
+
+var TSON = new Typeson().register([
   require('typeson-registry/types/date'),
   require('typeson-registry/types/error'),
   require('typeson-registry/types/regexp'),
   require('typeson-registry/types/arraybuffer')
-];
-var Typeson = require ('typeson');
-
-var TSON = new Typeson().register(myTypes);
+]);
 
 var tson = TSON.stringify({Hello: "world", date: new Date(), error: new Error(), regexp: /foo/ig, binary: new Uint8Array(512)});
 
