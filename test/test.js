@@ -1,6 +1,7 @@
 var assert = require('chai').assert,
     expect = require('chai').expect,
-    Typeson = require('typeson');
+    Typeson = require('typeson'),
+    arrayFrom = require('../utils/array-from-iterator');
 
 describe('Built-in', function() {
   describe('Date', function () {
@@ -48,8 +49,8 @@ describe('Built-in', function() {
         var json = typeson.stringify({m: map});
         var obj = typeson.parse(json);
         expect(obj.m).to.be.an.instanceOf(Map);
-        expect(Array.from(obj.m.keys())[0]).to.be.an.instanceOf(Error);
-        expect(Array.from(obj.m.values())[0]).to.be.an.instanceOf(Date);
+        expect(arrayFrom(obj.m.keys())[0]).to.be.an.instanceOf(Error);
+        expect(arrayFrom(obj.m.values())[0]).to.be.an.instanceOf(Date);
     });
   });
   
@@ -73,7 +74,7 @@ describe('Built-in', function() {
         
         expect(obj.s).to.be.an.instanceOf(Set);
 
-        var a = Array.from(obj.s.values());
+        var a = arrayFrom(obj.s.values());
         expect(a[0].a).to.be.an.instanceOf(Error);
         expect(a[1]).to.be.an.instanceOf(Date);
         expect(a[2]).to.be.a('string');
@@ -137,7 +138,7 @@ describe('Built-in', function() {
                 require('../types/arraybuffer'),
                 require('../types/typed-arrays')
             ]);
-            var a = new Uint8Array(3);
+            var a = new Int8Array(3);
             a[0] = 0;
             a[1] = 1;
             a[2] = 2;
