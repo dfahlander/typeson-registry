@@ -7,7 +7,7 @@ Official registry of typeson types and their encapsulation definitions.
 # Usage
 
 ```js
-var MyDefs = [
+var myTypes = [
   require('typeson-registry/types/date'),
   require('typeson-registry/types/error'),
   require('typeson-registry/types/regexp'),
@@ -15,13 +15,14 @@ var MyDefs = [
 ];
 var Typeson = require ('typeson');
 
-var TSON = new Typeson().register(MyDefs);
+var TSON = new Typeson()
+    .register(myTypes);
 
-var json = TSON.stringify({Hello: "world", date: new Date(), error: new Error(), regexp: /foo/ig, binary: new Uint8Array(512)});
+var tson = TSON.stringify({Hello: "world", date: new Date(), error: new Error(), regexp: /foo/ig, binary: new Uint8Array(512)});
 
-console.log(json);
+console.log(tson);
 
-var parsedBack = TSON.parse(json);
+var parsedBack = TSON.parse(tson);
 
 assert(parsedBack.date instanceof Date);
 assert(parsedBack.binary instanceof Uint8Array);
