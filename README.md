@@ -4,7 +4,7 @@ Official registry of typeson types and their encapsulation definitions.
 * Types listed under [types](https://github.com/dfahlander/typeson-registry/tree/master/types)
 * Presets listed under [presets](https://github.com/dfahlander/typeson-registry/tree/master/presets)
 
-# Usage
+# usage
 
 ```js
 var Typeson = require ('typeson');
@@ -57,3 +57,7 @@ assert(parsedBack.date instanceof Date);
 assert(parsedBack.binary instanceof Uint8Array);
 
 ```
+
+# see also
+
+* [typeson](https://github.com/dfahlander/typeson)
