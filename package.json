@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Official registry for typeson type definitions",
   "scripts": {
     "test": "mocha"
