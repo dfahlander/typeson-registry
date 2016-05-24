@@ -12,7 +12,7 @@ var TSON = new Typeson().register([
     require('typeson-registry/types/date'),
     require('typeson-registry/types/error'),
     require('typeson-registry/types/regexp'),
-    require('typeson-registry/types/arraybuffer')
+    require('typeson-registry/types/typed-arrays'),
 ]);
 
 var tson = TSON.stringify({
