@@ -4,6 +4,6 @@
 */
 exports.ImageData = [
     function (x) { return x instanceof ImageData; },
-    function (d) { return {array: d.array, width: d.width, height: d.height}; },
+    function (d) { return {array: d.data, width: d.width, height: d.height}; },
     function (o) { return new ImageData(o.array, o.width, o.height); }
 ];

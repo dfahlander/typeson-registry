@@ -140,7 +140,7 @@ describe('Universal', function() {
             expect(a2[1]).to.equal(1);
             expect(a2[2]).to.equal(2);
         });
-    })
+    });
   });
   
 });
