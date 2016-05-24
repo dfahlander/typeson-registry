@@ -5,6 +5,8 @@ Official registry of typeson types and their encapsulation definitions.
 * Presets listed under `presets`
 
 # Usage
+
+```js
 var MyDefs = [
   require('typeson-registry/types/date'),
   require('typeson-registry/types/error'),
@@ -23,3 +25,5 @@ var parsedBack = TSON.parse(json);
 
 assert(parsedBack.date instanceof Date);
 assert(parsedBack.binary instanceof Uint8Array);
+
+```
