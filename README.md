@@ -15,8 +15,7 @@ var myTypes = [
 ];
 var Typeson = require ('typeson');
 
-var TSON = new Typeson()
-    .register(myTypes);
+var TSON = new Typeson().register(myTypes);
 
 var tson = TSON.stringify({Hello: "world", date: new Date(), error: new Error(), regexp: /foo/ig, binary: new Uint8Array(512)});
 
