@@ -9,10 +9,10 @@ Official registry of typeson types.
 ```js
 var Typeson = require ('typeson');
 var TSON = new Typeson().register([
-    require('../types/date'),
-    require('../types/error'),
-    require('../types/regexp'),
-    require('../types/arraybuffer')
+    require('typeson-registry/types/date'),
+    require('typeson-registry/types/error'),
+    require('typeson-registry/types/regexp'),
+    require('typeson-registry/types/arraybuffer')
 ]);
 
 var tson = TSON.stringify({
