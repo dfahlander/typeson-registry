@@ -59,6 +59,8 @@ assert(parsedBack.binary instanceof Uint8Array);
 ```
 # usage (browser)
 
+This sample uses plain script tags. All types and presets under dist are UMD modules so you can require using requirejs as well.
+
 ```html
 <html>
   <script src="//npmcdn.com/typeson/dist/typeson.js"></script>
@@ -105,7 +107,6 @@ assert(parsedBack.binary instanceof Uint8Array);
   </script>
 </html>
 ```
-All types and presets under dist are UMD modules so you can require using requirejs as well.
 
 # see also
 
