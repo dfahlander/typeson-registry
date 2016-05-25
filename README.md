@@ -66,8 +66,8 @@ This sample uses plain script tags. All types and presets under dist are UMD mod
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="//npmcdn.com/typeson/dist/typeson.js"></script>
-    <script src="//npmcdn.com/typeson-registry/dist/presets/builtin.js"></script>
+    <script src="https://npmcdn.com/typeson/dist/typeson.js"></script>
+    <script src="https://npmcdn.com/typeson-registry/dist/presets/builtin.js"></script>
     <script>
     
     var TSON = new Typeson().register(Typeson.presets.builtin);
