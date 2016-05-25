@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Official registry for typeson type definitions",
   "scripts": {
     "test": "mocha",
@@ -28,5 +28,6 @@
   "dependencies": {
     "typeson": "^3.0.0",
     "base64-arraybuffer": "^0.1.5"
-  }
+  },
+  "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/presets/builtin'));\n\nTSON.stringify({foo: new Date()});"
 }
