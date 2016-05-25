@@ -1,9 +1,10 @@
 {
   "name": "typeson-registry",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Official registry for typeson type definitions",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "node ./build.js"
   },
   "repository": {
     "type": "git",
@@ -21,10 +22,11 @@
   },
   "homepage": "https://github.com/dfahlander/typeson-registry#readme",
   "devDependencies": {
-    "chai": "^3.5.0"
+    "chai": "^3.5.0",
+    "webpack": "^1.13.1"
   },
   "dependencies": {
-    "typeson": "^2.1.1",
+    "typeson": "^3.0.0",
     "base64-arraybuffer": "^0.1.5"
   }
 }
