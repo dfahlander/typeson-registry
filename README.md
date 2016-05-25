@@ -54,7 +54,7 @@ console.log(tson);
 var parsedBack = TSON.parse(tson);
 
 assert(parsedBack.date instanceof Date);
-assert(parsedBack.binary instanceof Uint8Array);
+assert(parsedBack.inner.bin instanceof Uint8Array);
 
 ```
 # usage (browser)
