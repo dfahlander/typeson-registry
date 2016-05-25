@@ -1,5 +1,5 @@
 # typeson-registry
-*The type registry for [typeson](https://github.com/dfahlander/typeson)*
+The type registry for [typeson](https://github.com/dfahlander/typeson)
 
 * Types listed under [types](https://github.com/dfahlander/typeson-registry/tree/master/types)
 * Presets listed under [presets](https://github.com/dfahlander/typeson-registry/tree/master/presets)
