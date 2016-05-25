@@ -62,11 +62,13 @@ assert(parsedBack.inner.bin instanceof Uint8Array);
 This sample uses plain script tags. All types and presets under dist are UMD modules so you can require using requirejs as well.
 
 ```html
+<!DOCTYPE html>
 <html>
-  <script src="//npmcdn.com/typeson/dist/typeson.js"></script>
-  <script src="//npmcdn.com/typeson-registry/dist/presets/builtin.js"></script>
-  <script>
-  
+  <head>
+    <script src="//npmcdn.com/typeson/dist/typeson.js"></script>
+    <script src="//npmcdn.com/typeson-registry/dist/presets/builtin.js"></script>
+    <script>
+    
     var TSON = new Typeson().register(Typeson.presets.builtin);
     var tson = TSON.stringify({
         Hello: "world",
@@ -79,7 +81,7 @@ This sample uses plain script tags. All types and presets under dist are UMD mod
     }, null, 2);
     
     alert(tson);        
-    /* Output:
+    /* Alerts:
     
     {
       "Hello": "world",
@@ -103,8 +105,9 @@ This sample uses plain script tags. All types and presets under dist are UMD mod
       }
     }
     */
-  
-  </script>
+    
+    </script>
+  </head>
 </html>
 ```
 
