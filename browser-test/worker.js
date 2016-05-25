@@ -1,7 +1,7 @@
-importScripts('require-runtime.js');
+importScripts("../node_modules/typeson/dist/typeson.js");
+importScripts("../dist/presets/post-message.js");
 
-var Typeson = require('typeson');
-var TSON = new Typeson().register(require('../presets/builtin'));
+var TSON = new Typeson().register(Typeson.presets.postMessage);
 
 onmessage = function (ev) {
     console.log("Worker got: " + TSON.stringify(TSON.revive(ev.data)));

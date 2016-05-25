@@ -1,0 +1,17 @@
+<html>
+    <script src="../node_modules/typeson/dist/typeson.js"></script>
+    <script src="../dist/presets/post-message.js"></script>
+    <script>
+        var TSON = new Typeson().register(Typeson.presets.postMessage);
+        var worker = new Worker("worker.js");
+        worker.postMessage (TSON.encapsulate({
+            a: NaN,
+            b: Infinity,
+            c: -Infinity,
+            d: new Error("oops")
+        }));
+        worker.onmessage = function (ev) {
+            console.log("Got back: " + ev.data.a);
+        }
+    </script>
+</html>
