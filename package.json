@@ -1,7 +1,7 @@
 {
   "name": "typeson-registry",
-  "version": "0.6.2",
-  "description": "Official registry for typeson type definitions",
+  "version": "0.6.3",
+  "description": "The type registry for typeson",
   "scripts": {
     "test": "mocha",
     "build": "node ./build.js"
