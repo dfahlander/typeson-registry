@@ -4,7 +4,7 @@ The type registry for [typeson](https://github.com/dfahlander/typeson)
 * Types listed under [types](https://github.com/dfahlander/typeson-registry/tree/master/types)
 * Presets listed under [presets](https://github.com/dfahlander/typeson-registry/tree/master/presets)
 
-# usage (CommonJS)
+# usage
 
 ```js
 var Typeson = require ('typeson');
@@ -58,7 +58,7 @@ assert(parsedBack.date instanceof Date);
 assert(parsedBack.inner.bin instanceof Uint8Array);
 
 ```
-# usage (plain script tags)
+# usage (with plain script tags)
 
 This sample uses plain script tags. All types and presets under dist are UMD modules so you can require using requirejs as well.
 
