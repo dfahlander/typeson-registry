@@ -60,7 +60,7 @@ assert(parsedBack.inner.bin instanceof Uint8Array);
 ```
 # usage (with plain script tags)
 
-This sample uses plain script tags. All types and presets under dist are UMD modules so you could also require them as an AMD module using requirejs.
+All types and presets under dist are UMD modules so you could also require them as an AMD module using requirejs.
 
 ```html
 <!DOCTYPE html>
