@@ -66,8 +66,8 @@ All types and presets under dist are UMD modules so you could also require them 
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://npmcdn.com/typeson/dist/typeson.js"></script>
-    <script src="https://npmcdn.com/typeson-registry/dist/presets/builtin.js"></script>
+    <script src="https://unpkg.com/typeson/dist/typeson.js"></script>
+    <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.js"></script>
     <script>
     
     var TSON = new Typeson().register(Typeson.presets.builtin);
