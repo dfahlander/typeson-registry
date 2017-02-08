@@ -19,7 +19,7 @@ var _global = typeof self === 'undefined' ? global : self;
             // socket.io supports streaming ArrayBuffers. If we have a typed array
             // representing a portion of the buffer, we need to clone the buffer before leaving it
             // to socket.io.
-            a : a.slice(0)).buffer; 
+            a : a.slice(0)).buffer;
         },
         function revive (buf) {
             // One may configure socket.io to revive binary data as Buffer or Blob.

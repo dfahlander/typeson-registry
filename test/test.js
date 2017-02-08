@@ -37,14 +37,14 @@ describe('Built-in', function() {
         expect(obj.e5.name).to.equal("ReferenceError");
     });
   });
-  
+
   describe('Map', function () {
     it('should get back a real Map instance with the original data and use complex types also in contained items', function () {
         var typeson = new Typeson().register(require('../presets/builtin'));
         var map = new Map();
         var error = new Error("Error here"),
             date = new Date(10000);
-        
+
         map.set(error, date);
         var json = typeson.stringify({m: map});
         var obj = typeson.parse(json);
@@ -53,7 +53,7 @@ describe('Built-in', function() {
         expect(arrayFrom(obj.m.values())[0]).to.be.an.instanceOf(Date);
     });
   });
-  
+
   describe('Set', function () {
     it('should get back a real Set instance with the original data and use complex types also in contained items', function () {
         var typeson = new Typeson().register(require('../presets/builtin'));
@@ -64,14 +64,14 @@ describe('Built-in', function() {
             o = {
                 a: error
             };
-       
+
         set.add(o);
         set.add(date);
         set.add(str);
-        
+
         var json = typeson.stringify({s: set});
         var obj = typeson.parse(json);
-        
+
         expect(obj.s).to.be.an.instanceOf(Set);
 
         var a = arrayFrom(obj.s.values());
@@ -80,7 +80,7 @@ describe('Built-in', function() {
         expect(a[2]).to.be.a('string');
     });
   });
-  
+
   describe('TypedArrays', function(){
     describe('Float64Array', function() {
         it('should get back real Float64Array instance with original array content', function () {
@@ -101,7 +101,7 @@ describe('Built-in', function() {
             expect(obj.a[2]).to.equal(99);
         });
     });
-    
+
     describe('Uint16 arrays over invalid unicode range', function() {
        it('should work to use any 16-bit number no matter whether it is invalid unicode or not', function(){
             var typeson = new Typeson().register([
@@ -113,7 +113,7 @@ describe('Built-in', function() {
             while (i--) a[i] = i + 0xd780;
             var json = typeson.stringify({a: a});
             //console.log(json);
-            
+
             // Emulate a textencoder that eliminates invalid UTF chars
             i = json.length;
             var copy = new Uint16Array(i);
@@ -122,7 +122,7 @@ describe('Built-in', function() {
                 copy[i] = ch >= 0xd800 && ch < 0xe000 ? 0xfffd : ch;
             }
             json = String.fromCharCode.apply(null, copy);
-            
+
             var obj = typeson.parse(json);
             expect(obj.a).to.be.an.instanceOf(Uint16Array);
             expect(obj.a.length).to.equal(a.length);
@@ -131,7 +131,7 @@ describe('Built-in', function() {
             });
        });
     });
-    
+
     describe("Int8 arrays with odd length", function () {
         it('should be possible to use an odd length of an Int8Array', function() {
             var typeson = new Typeson().register([
@@ -152,5 +152,4 @@ describe('Built-in', function() {
         });
     });
   });
-  
 });

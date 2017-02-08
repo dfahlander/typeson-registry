@@ -11,7 +11,7 @@ var _global = typeof self === 'undefined' ? global : self;
     "Int32Array",
     "Uint32Array",
     "Float32Array",
-    "Float64Array"    
+    "Float64Array"
 ].forEach(function (typeName) {
     var TypedArray = _global[typeName];
     if (TypedArray) exports[typeName] = [

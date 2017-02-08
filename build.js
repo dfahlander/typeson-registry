@@ -36,4 +36,3 @@ function nameFromFile(f) {
 }
 
 //files.forEach(f => console.log(f));
-

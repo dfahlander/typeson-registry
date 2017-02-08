@@ -2,6 +2,8 @@
   "name": "typeson-registry",
   "version": "0.6.3",
   "description": "The type registry for typeson",
+  "author": "dfahlander",
+  "contributors": ["Brett Zamir"],
   "scripts": {
     "test": "mocha",
     "build": "node ./build.js"

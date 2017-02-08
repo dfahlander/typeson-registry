@@ -1,4 +1,6 @@
+<!DOCTYPE html>
 <html>
+    <meta charset="utf-8" />
     <script src="../node_modules/typeson/dist/typeson.js"></script>
     <script src="../dist/presets/post-message.js"></script>
     <script>
@@ -12,6 +14,6 @@
         }));
         worker.onmessage = function (ev) {
             console.log("Got back: " + ev.data.a);
-        }
+        };
     </script>
 </html>

@@ -11,5 +11,5 @@
  */
 module.exports = [
     require('../types/error'),
-    require('../types/errors')  
+    require('../types/errors')
 ];

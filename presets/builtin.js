@@ -7,6 +7,7 @@
 */
 module.exports = [
     // ES5
+    require('../types/undefined'),
     require('../types/primitive-objects'),
     require('../types/special-numbers'),
     require('../types/date'),

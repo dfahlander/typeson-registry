@@ -2,7 +2,7 @@ var _global = typeof self === 'undefined' ? global : self;
 
 // Comprises all built-in errors.
 [
-    "TypeError", 
+    "TypeError",
     "RangeError",
     "SyntaxError",
     "ReferenceError",
