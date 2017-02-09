@@ -1,9 +1,9 @@
-/* This preset includes types that are built-in into the javascript language itself, this
-   should work universally. Types that where added in ES6 or beyond will be checked before included
+/* This preset includes types that are built-in into the JavaScript language itself, this
+   should work universally. Types that were added in ES6 or beyond will be checked before inclusion
    so that this module can be consumed by both ES5 and ES6 environments.
    Some types cannot be encapsulated because their inner state is private: WeakMap, WeakSet.
    The Function type is not included because their closures would not be serialized, so a revived
-   Function that uses closures would not behave as expected.
+   Function that uses closures would not behave as expected. Symbols are similarly not included.
 */
 module.exports = [
     // ES5
