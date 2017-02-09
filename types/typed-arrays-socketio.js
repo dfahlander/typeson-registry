@@ -24,7 +24,7 @@ var _global = typeof self === 'undefined' ? global : self;
         function revive (buf) {
             // One may configure socket.io to revive binary data as Buffer or Blob.
             // We should therefore not rely on that the instance we get here is an ArrayBuffer
-            // If not, lets assume user wants to recieve it as configured with socket.io.
+            // If not, let's assume user wants to receive it as configured with socket.io.
             return buf instanceof ArrayBuffer ? new TypedArray(buf) : buf;
         }
     ];
