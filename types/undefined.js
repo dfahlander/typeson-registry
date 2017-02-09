@@ -1,3 +1,4 @@
+var Typeson = require('typeson');
 module.exports = {
     undefined: [
         function (x, stateObj) { return typeof x === 'undefined' && stateObj.ownKeys; },
