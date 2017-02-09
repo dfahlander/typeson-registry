@@ -1,10 +1,11 @@
 # typeson-registry
+
 The type registry for [typeson](https://github.com/dfahlander/typeson)
 
-* Types listed under [types](https://github.com/dfahlander/typeson-registry/tree/master/types)
-* Presets listed under [presets](https://github.com/dfahlander/typeson-registry/tree/master/presets)
+- Types listed under [types](https://github.com/dfahlander/typeson-registry/tree/master/types)
+- Presets listed under [presets](https://github.com/dfahlander/typeson-registry/tree/master/presets)
 
-# usage
+## Usage
 
 ```js
 var Typeson = require ('typeson');
@@ -58,7 +59,8 @@ assert(parsedBack.date instanceof Date);
 assert(parsedBack.inner.bin instanceof Uint8Array);
 
 ```
-# usage (with plain script tags)
+
+## Usage (with plain script tags)
 
 All types and presets under dist are UMD modules so you could also require them as AMD modules with requirejs if you prefer.
 
@@ -112,6 +114,6 @@ All types and presets under dist are UMD modules so you could also require them 
 </html>
 ```
 
-# see also
+## See also
 
-* [typeson](https://github.com/dfahlander/typeson)
+- [typeson](https://github.com/dfahlander/typeson)
