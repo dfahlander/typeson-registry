@@ -152,4 +152,26 @@ describe('Built-in', function() {
         });
     });
   });
+  describe("undefined type", function () {
+      it('should be possible to restore `undefined` values', function() {
+          var typeson = new Typeson().register([
+              require('../types/undefined')
+          ]);
+          var a = [undefined, {b: undefined, c: [3, null, , undefined]}];
+          var json = typeson.stringify(a);
+          var a2 = typeson.parse(json);
+          expect(a2.length).to.equal(2);
+          expect(a2[0]).to.equal(undefined);
+          expect(a2[1].b).to.equal(undefined);
+          expect(a2[1].c[1]).to.not.equal(undefined);
+          expect(a2[1].c[2]).to.equal(undefined);
+          expect(a2[1].c[3]).to.equal(undefined);
+
+          expect('0' in a2).to.be.true;
+          expect('b' in a2[1]).to.be.true;
+          expect('1' in a2[1].c).to.be.true;
+          expect('2' in a2[1].c).to.be.false;
+          expect('3' in a2[1].c).to.be.true;
+      });
+  });
 });
