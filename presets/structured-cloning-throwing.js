@@ -16,7 +16,8 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
             'WeakMap', // WeakMap instances have an extra slot ([[WeakSetData]]) but not throwing in Chrome `postMessage`
             'WeakSet' // WeakSet instances have an extra slot ([[WeakSetData]]) but not throwing in Chrome `postMessage`
         ].includes(stringTag) ||
-        val === Object.prototype // A non-array exotic object but not throwing in Chrome `postMessage`
+        val === Object.prototype || // A non-array exotic object but not throwing in Chrome `postMessage`
+        (val && typeof val === 'object' && typeof val.nodeType === 'number' && typeof val.insertBefore === 'function') // Duck-type DOM node objects (non-array exotic? objects which cannot be cloned by the SCA)
     ) {
         throw new DOMException('The object cannot be cloned.', 'DataCloneError');
     }
