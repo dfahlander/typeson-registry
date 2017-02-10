@@ -1,4 +1,4 @@
-module.exports = require('./structured-cloning').concat({checkDataCloneError: [function (val) {
+module.exports = require('./structured-cloning').concat({checkDataCloneException: [function (val) {
     // Should also throw with:
     // 1. `IsDetachedBuffer` (a process not called within the ECMAScript spec)
     // 2. `IsCallable` (covered by `typeof === 'function'` or a function's `toStringTag`)
