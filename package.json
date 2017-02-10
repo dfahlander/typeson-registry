@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "0.6.3",
+  "version": "1.0.0-alpha.1",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": ["Brett Zamir"],
@@ -28,7 +28,7 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "typeson": "^3.0.0",
+    "typeson": "^3.2.0",
     "base64-arraybuffer": "^0.1.5"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
