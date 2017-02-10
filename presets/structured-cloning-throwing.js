@@ -9,6 +9,7 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
         [
             'Function', // All functions including bound function exotic objects
             'Arguments', // A non-array exotic object
+            'Module', // A non-array exotic object
             'Error', // `Error` and other errors have the [[ErrorData]] internal slot and give "Error"
             'Proxy', // Proper `toStringTag` not yet implemented in Chrome/Firefox/Node
             'Promise', // Promise instances have an extra slot ([[PromiseState]]) but not throwing in Chrome `postMessage`
