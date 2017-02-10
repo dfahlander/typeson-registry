@@ -175,3 +175,35 @@ describe('Built-in', function() {
       });
   });
 });
+
+describe('Structured cloning', function () {
+    it('should work with Structured cloning with throwing', function () {
+        var typeson = new Typeson().register([require('../presets/structured-cloning-throwing')]);
+        var caught = false;
+        global.ImageData = function ImageData () {}; // Shim for Node
+        try {
+            typeson.stringify(new Error('test'));
+        } catch (err) {
+            caught = true;
+        }
+        assert(caught, 'Caught error');
+        var expected = '{"$":1234567890000,"$types":{"$":{"":"Date"}}}';
+        var result = typeson.stringify(new Date(1234567890000));
+        expect(result).to.deep.equal(expected);
+    });
+    it('should work with Structured cloning without throwing', function () {
+        var typeson = new Typeson().register([require('../presets/structured-cloning')]);
+        var caught = false;
+        global.ImageData = function ImageData () {}; // Shim for Node
+        try {
+            typeson.stringify(new Error('test'));
+        } catch (err) {
+            console.log(err);
+            caught = true;
+        }
+        assert(!caught, 'Did not catch error');
+        var expected = '{"$":1234567890000,"$types":{"$":{"":"Date"}}}';
+        var result = typeson.stringify(new Date(1234567890000));
+        expect(result).to.deep.equal(expected);
+    });
+});
