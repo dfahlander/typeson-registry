@@ -8,6 +8,7 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
     if (typeof val === 'symbol' || // Symbol's `toStringTag` is only "Symbol" for its initial value, so we check `typeof`
         [
             'Function', // All functions
+            'Arguments', // An exotic object
             'Error', // `Error` and other errors have the [[ErrorData]] internal slot and give "Error"
             'Proxy', // Proper `toStringTag` not yet implemented in Chrome/Firefox/Node
             'Promise', // Promise instances have an extra slot ([[PromiseState]]) but not throwing in Chrome `postMessage`
