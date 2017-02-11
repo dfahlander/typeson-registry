@@ -17,7 +17,7 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
             'Error', // `Error` and other errors have the [[ErrorData]] internal slot and give "Error"
             'Proxy', // Proper `toStringTag` not yet implemented in Chrome/Firefox/Node
             'Promise', // Promise instances have an extra slot ([[PromiseState]]) but not throwing in Chrome `postMessage`
-            'WeakMap', // WeakMap instances have an extra slot ([[WeakSetData]]) but not throwing in Chrome `postMessage`
+            'WeakMap', // WeakMap instances have an extra slot ([[WeakMapData]]) but not throwing in Chrome `postMessage`
             'WeakSet' // WeakSet instances have an extra slot ([[WeakSetData]]) but not throwing in Chrome `postMessage`
         ].includes(stringTag) ||
         val === Object.prototype || // A non-array exotic object but not throwing in Chrome `postMessage`
