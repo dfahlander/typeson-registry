@@ -9,9 +9,11 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
     //      [[DefineOwnProperty]],[[HasProperty]],[[Get]],[[Set]],[[Delete]],[[OwnPropertyKeys]]);
     //      except for the standard, built-in exotic objects, we'd need to know whether these methods had distinct behaviors
     var stringTag = ({}.toString.call(val).slice(8, -1));
-    if (typeof val === 'symbol' || // Symbol's `toStringTag` is only "Symbol" for its initial value, so we check `typeof`
+    if ([
+            'symbol', // Symbol's `toStringTag` is only "Symbol" for its initial value, so we check `typeof`
+            'function' // All functions including bound function exotic objects
+        ].includes(typeof val) ||
         [
-            'Function', // All functions including bound function exotic objects
             'Arguments', // A non-array exotic object
             'Module', // A non-array exotic object
             'Error', // `Error` and other errors have the [[ErrorData]] internal slot and give "Error"
