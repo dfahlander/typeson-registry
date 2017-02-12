@@ -153,7 +153,7 @@ describe('Built-in', function() {
     });
   });
   describe("undefined type", function () {
-      it('should be possible to restore `undefined` values', function() {
+      it('should be possible to restore `undefined` properties', function() {
           var typeson = new Typeson().register([
               require('../types/undefined')
           ]);
@@ -172,6 +172,15 @@ describe('Built-in', function() {
           expect('1' in a2[1].c).to.be.true;
           expect('2' in a2[1].c).to.be.false;
           expect('3' in a2[1].c).to.be.true;
+      });
+      it('should be possible to restore `undefined` at root', function() {
+          var typeson = new Typeson().register([
+              require('../types/undefined')
+          ]);
+          var json = typeson.stringify(undefined);
+          expect(json).to.equal('{"$":null,"$types":{"$":{"":"undefined"}}}');
+          var a = typeson.parse(json);
+          expect(a).to.be.undefined;
       });
   });
 });
