@@ -14,6 +14,9 @@
         }));
         worker.onmessage = function (ev) {
             console.log("Got back: " + ev.data.a);
+            console.log("Got back: " + ev.data.b);
+            console.log("Got back: " + ev.data.c);
+            console.log("Main thread revival of original error is an `Error`: " + (TSON.revive(ev.data).d instanceof Error));
         };
     </script>
 </html>
