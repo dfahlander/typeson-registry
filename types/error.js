@@ -1,5 +1,6 @@
+var Typeson = require('typeson');
 exports.Error = [
-    function (x) { return x instanceof Error; },
+    function (x) { return Typeson.toStringTag(x) === 'Error'; },
     function (error) { return {name: error.name, message: error.message}; },
     function (data) {
         var e = new Error (data.message);

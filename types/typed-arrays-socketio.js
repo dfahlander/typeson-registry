@@ -1,5 +1,7 @@
 var _global = typeof self === 'undefined' ? global : self;
 
+var Typeson = require('typeson');
+
 // Support all kinds of typed arrays (views of ArrayBuffers)
 [
     "Int8Array",
@@ -25,7 +27,7 @@ var _global = typeof self === 'undefined' ? global : self;
             // One may configure socket.io to revive binary data as Buffer or Blob.
             // We should therefore not rely on that the instance we get here is an ArrayBuffer
             // If not, let's assume user wants to receive it as configured with socket.io.
-            return buf instanceof ArrayBuffer ? new TypedArray(buf) : buf;
+            return Typeson.toStringTag(buf) === 'ArrayBuffer' ? new TypedArray(buf) : buf;
         }
     ];
 });

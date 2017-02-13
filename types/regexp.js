@@ -1,5 +1,6 @@
+var Typeson = require('typeson');
 exports.RegExp = [
-    function (x) { return x instanceof RegExp; },
+    function (x) { return Typeson.toStringTag(x) === 'RegExp'; },
     function (rexp) {
         return {
             source: rexp.source,
