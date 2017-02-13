@@ -1,6 +1,5 @@
-var _global = typeof self === 'undefined' ? global : self;
-
 var Typeson = require('typeson');
+var _global = typeof self === 'undefined' ? global : self;
 
 // Support all kinds of typed arrays (views of ArrayBuffers)
 [
@@ -16,7 +15,7 @@ var Typeson = require('typeson');
 ].forEach(function (typeName) {
     var TypedArray = _global[typeName];
     if (TypedArray) exports[typeName] = [
-        function test (x) { return x.constructor === TypedArray; },
+        function test (x) { return Typeson.toStringTag(x) === typeName; },
         function encapsulate (a) { return (a.byteOffset === 0 && a.byteLength === a.buffer.byteLength ?
             // socket.io supports streaming ArrayBuffers. If we have a typed array
             // representing a portion of the buffer, we need to clone the buffer before leaving it

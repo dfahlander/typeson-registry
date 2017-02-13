@@ -1,3 +1,4 @@
+var Typeson = require('typeson');
 var _global = typeof self === 'undefined' ? global : self;
 
 // Comprises all built-in errors.
@@ -8,11 +9,11 @@ var _global = typeof self === 'undefined' ? global : self;
     "ReferenceError",
     "EvalError",
     "URIError",
-    "InternalError"
+    "InternalError" // non-standard
 ].forEach(function (errName) {
     var constructor = _global[errName];
     if (constructor) exports[errName] = [
-        function (x) { return x.constructor === constructor; },
+        function (x) { return Typeson.hasConstructorOf(x, constructor); },
         function (e) { return e.message; },
         function (message) { return new constructor (message); }
     ]

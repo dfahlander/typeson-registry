@@ -1,3 +1,4 @@
+var Typeson = require('typeson');
 var B64 = require ('base64-arraybuffer');
 
 var _global = typeof self === 'undefined' ? global : self;
@@ -15,7 +16,7 @@ var _global = typeof self === 'undefined' ? global : self;
 ].forEach(function (typeName) {
     var TypedArray = _global[typeName];
     if (TypedArray) exports[typeName] = [
-        function test (x) { return x.constructor === TypedArray; },
+        function test (x) { return Typeson.toStringTag(x) === typeName; },
         function encapsulate (a) { return B64.encode (a.buffer, a.byteOffset, a.byteLength); },
         function revive (b64) { return new TypedArray (B64.decode(b64)); }
     ];
