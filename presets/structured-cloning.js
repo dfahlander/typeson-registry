@@ -2,6 +2,7 @@
 module.exports = [
     // Todo: Might also register `ImageBitmap` and synchronous `Blob`/`File`/`FileList`
     // ES5
+    require('../types/user-object'), // Processed last
     require('../types/undefined'),
     require('../types/primitive-objects'),
     require('../types/special-numbers'),

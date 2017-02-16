@@ -3,6 +3,20 @@ var assert = require('chai').assert,
     Typeson = require('typeson'),
     arrayFrom = require('../utils/array-from-iterator');
 
+function Person (name, age, dob, isMarried) {
+    name && (this.name = name);
+    age && (this.age = age);
+    dob && (this.dob = dob);
+    isMarried && (this.isMarried = isMarried);
+}
+Person.prototype.name = '';
+Person.prototype.age = 0;
+Person.prototype.dob = new Date(1900, 0, 1);
+Person.prototype.isMarried = false;
+
+function SimulatedNonBuiltIn () {}
+SimulatedNonBuiltIn.prototype[Symbol.toStringTag] = 'SimulatedNonBuiltIn';
+
 describe('Built-in', function() {
   describe('Date', function () {
     it('should get back a real Date instance with the original time milliseconds', function () {
@@ -214,5 +228,35 @@ describe('Structured cloning', function () {
         var expected = '{"$":1234567890000,"$types":{"$":{"":"Date"}}}';
         var result = typeson.stringify(new Date(1234567890000));
         expect(result).to.deep.equal(expected);
+    });
+    it('should work with user instantiated objects', function () {
+        var typeson = new Typeson().register([require('../presets/structured-cloning')]);
+        var john = new Person('John Doe');
+        var bob = new Person('Bob Smith', 30, new Date(2000, 5, 20), true);
+
+        var clonedData = typeson.parse(typeson.stringify([john, bob]));
+        expect(clonedData).to.have.same.deep.members([
+            {name: 'John Doe'},
+            {name: 'Bob Smith', dob: new Date(2000, 5, 20), age: 30, isMarried: true}
+        ]);
+    });
+});
+describe('Non-built-in object ignoring', function () {
+    it('should ignore non-built-in objects (simulated)', function () {
+        var typeson = new Typeson().register([
+            require('../types/user-object'),
+            require('../types/nonbuiltin-ignore')
+        ]);
+        var john = new Person('John Doe');
+        var simulatedNonBuiltInObject = new SimulatedNonBuiltIn();
+        var clonedData = typeson.parse(typeson.stringify({a: john, b: simulatedNonBuiltInObject}));
+        expect(clonedData).to.deep.equal({
+            a: {name: 'John Doe'}
+        });
+        var a = typeson.encapsulate(['a', simulatedNonBuiltInObject, 5, null]);
+        expect('0' in a).to.be.true;
+        expect('1' in a).to.be.false;
+        expect('2' in a).to.be.true;
+        expect('3' in a).to.be.true;
     });
 });
