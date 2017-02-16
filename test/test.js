@@ -244,7 +244,6 @@ describe('Structured cloning', function () {
 describe('Non-built-in object ignoring', function () {
     it('should ignore non-built-in objects (simulated)', function () {
         var typeson = new Typeson().register([
-            require('../types/user-object'),
             require('../types/nonbuiltin-ignore')
         ]);
         var john = new Person('John Doe');
@@ -258,5 +257,20 @@ describe('Non-built-in object ignoring', function () {
         expect('1' in a).to.be.false;
         expect('2' in a).to.be.true;
         expect('3' in a).to.be.true;
+    });
+});
+describe('User objects', function () {
+    it('should work with nonbuiltin-ignore', function () {
+        var typeson = new Typeson().register([
+            require('../types/user-object'),
+            require('../types/nonbuiltin-ignore')
+        ]);
+        var bob = new Person('Bob Smith', 30, new Date(2000, 5, 20), true);
+        var simulatedNonBuiltInObject = new SimulatedNonBuiltIn();
+        var clonedData = typeson.parse(typeson.stringify({a: bob, b: simulatedNonBuiltInObject}));
+        expect(clonedData).to.deep.equal({
+            a: {name: 'Bob Smith', age: 30, isMarried: true}
+        });
+        expect('dob' in clonedData.a).to.be.false;
     });
 });
