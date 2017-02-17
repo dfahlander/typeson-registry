@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "typeson": "https://github.com/dfahlander/typeson#master",
-    "base64-arraybuffer": "^0.1.5"
+    "base64-arraybuffer": "https://github.com/dfahlander/base64-arraybuffer#patch-1"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
 }
