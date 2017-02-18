@@ -4,7 +4,7 @@ exports.RegExp = [
     function (rexp) {
         return {
             source: rexp.source,
-            flags: (rexp.global?'g':'')+(rexp.ignoreCase?'i':'')+(rexp.multiLine?'m':'')
+            flags: (rexp.global?'g':'')+(rexp.ignoreCase?'i':'')+(rexp.multiline?'m':'')
         };
     },
     function (data) { return new RegExp (data.source, data.flags); }

@@ -114,6 +114,13 @@ All types and presets under dist are UMD modules so you could also require them 
 </html>
 ```
 
+## Development
+
+[node-canvas](https://github.com/Automattic/node-canvas) is used to test `ImageData`.
+Be sure to follow the installation steps. On Windows, besides following the [Windows installation steps](https://github.com/Automattic/node-canvas/wiki/Installation---Windows), [this](https://github.com/nodejs/node-gyp/issues/94#issuecomment-278587021)
+and [this](https://github.com/Automattic/node-canvas/issues/191#issuecomment-7681555)
+helped complete the installation.
+
 ## See also
 
 - [typeson](https://github.com/dfahlander/typeson)

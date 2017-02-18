@@ -25,7 +25,8 @@
   "homepage": "https://github.com/dfahlander/typeson-registry#readme",
   "devDependencies": {
     "chai": "^3.5.0",
-    "webpack": "^2.2.1"
+    "webpack": "^2.2.1",
+    "node-canvas": "https://github.com/Automattic/node-canvas"
   },
   "dependencies": {
     "typeson": "https://github.com/dfahlander/typeson#master",
