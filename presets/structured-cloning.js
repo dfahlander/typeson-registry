@@ -3,7 +3,7 @@ module.exports = [
     // Todo: Might also register `ImageBitmap` and synchronous `Blob`/`File`/`FileList`
     // ES5
     require('../types/user-object'), // Processed last
-    require('../types/undefined'),
+    require('../presets/undefined'),
     require('../types/primitive-objects'),
     require('../types/special-numbers'),
     require('../types/date'),
@@ -16,5 +16,9 @@ module.exports = [
     typeof DataView === 'function' && require('../types/dataview'),
     typeof Intl !== 'undefined' && require('../types/intl-types'),
     // Non-built-ins
-    require('../types/imagedata')
+    require('../types/imagedata'),
+    require('../types/imagebitmap'), // Async return
+    require('../types/file'),
+    require('../types/filelist'),
+    require('../types/blob')
 ];

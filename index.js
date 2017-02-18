@@ -1,0 +1,36 @@
+var Typeson;
+if (Typeson === undefined) { Typeson = require('typeson'); }
+Typeson.types = {};
+Typeson.presets = {};
+Typeson.types.arraybuffer = require('./types/arraybuffer.js');
+Typeson.types.blob = require('./types/blob.js');
+Typeson.types.cloneable = require('./types/cloneable.js');
+Typeson.types.dataview = require('./types/dataview.js');
+Typeson.types.date = require('./types/date.js');
+Typeson.types.error = require('./types/error.js');
+Typeson.types.errors = require('./types/errors.js');
+Typeson.types.file = require('./types/file.js');
+Typeson.types.filelist = require('./types/filelist.js');
+Typeson.types.imagebitmap = require('./types/imagebitmap.js');
+Typeson.types.imagedata = require('./types/imagedata.js');
+Typeson.types.intlTypes = require('./types/intl-types.js');
+Typeson.types.map = require('./types/map.js');
+Typeson.types.nonbuiltinIgnore = require('./types/nonbuiltin-ignore.js');
+Typeson.types.primitiveObjects = require('./types/primitive-objects.js');
+Typeson.types.regexp = require('./types/regexp.js');
+Typeson.types.resurrectable = require('./types/resurrectable.js');
+Typeson.types.set = require('./types/set.js');
+Typeson.types.specialNumbers = require('./types/special-numbers.js');
+Typeson.types.typedArraysSocketio = require('./types/typed-arrays-socketio.js');
+Typeson.types.typedArrays = require('./types/typed-arrays.js');
+Typeson.types.undefined = require('./types/undefined.js');
+Typeson.types.userObject = require('./types/user-object.js');
+Typeson.presets.builtin = require('./presets/builtin.js');
+Typeson.presets.postMessage = require('./presets/post-message.js');
+Typeson.presets.socketio = require('./presets/socketio.js');
+Typeson.presets.sparseUndefined = require('./presets/sparse-undefined.js');
+Typeson.presets.structuredCloningThrowing = require('./presets/structured-cloning-throwing.js');
+Typeson.presets.structuredCloning = require('./presets/structured-cloning.js');
+Typeson.presets.undefined = require('./presets/undefined.js');
+Typeson.presets.universal = require('./presets/universal.js');
+if (typeof module !== 'undefined') { module.exports = Typeson; }

@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
-    <meta charset="utf-8" />
-    <script src="../node_modules/typeson/dist/typeson.js"></script>
-    <script src="../dist/presets/post-message.js"></script>
+    <head>
+        <meta charset="utf-8" />
+        <script src="../dist/presets/post-message.js"></script>
+    </head>
+    <body>
+    <pre id="log" style="width: 100%; height: 500px;"></pre>
     <script>
+        function log (msg) {console.log(msg); document.getElementById('log').textContent += msg + '\n';}
         var TSON = new Typeson().register(Typeson.presets.postMessage);
         var worker = new Worker("worker.js");
         worker.postMessage (TSON.encapsulate({
@@ -13,10 +17,15 @@
             d: new Error("oops")
         }));
         worker.onmessage = function (ev) {
-            console.log("Got back: " + ev.data.a);
-            console.log("Got back: " + ev.data.b);
-            console.log("Got back: " + ev.data.c);
-            console.log("Main thread revival of original error is an `Error`: " + (TSON.revive(ev.data).d instanceof Error));
+            if (typeof ev.data === 'string') {
+                log(ev.data);
+                return;
+            }
+            log("Got back: " + ev.data.a);
+            log("Got back: " + ev.data.b);
+            log("Got back: " + ev.data.c);
+            log("Main thread revival of original error is an `Error`: " + (TSON.revive(ev.data).d instanceof Error));
         };
     </script>
+    </body>
 </html>

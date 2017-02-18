@@ -8,6 +8,7 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
     //      [[GetPrototypeOf]],[[SetPrototypeOf]],[[IsExtensible]],[[PreventExtensions]],[[GetOwnProperty]],
     //      [[DefineOwnProperty]],[[HasProperty]],[[Get]],[[Set]],[[Delete]],[[OwnPropertyKeys]]);
     //      except for the standard, built-in exotic objects, we'd need to know whether these methods had distinct behaviors
+    // Note: There is no apparent way for us to detect a `Proxy` and reject (Chrome at least is not rejecting anyways)
     var stringTag = ({}.toString.call(val).slice(8, -1));
     if ([
             'symbol', // Symbol's `toStringTag` is only "Symbol" for its initial value, so we check `typeof`
@@ -17,12 +18,12 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
             'Arguments', // A non-array exotic object
             'Module', // A non-array exotic object
             'Error', // `Error` and other errors have the [[ErrorData]] internal slot and give "Error"
-            'Proxy', // Proper `toStringTag` not yet implemented in Chrome/Firefox/Node
             'Promise', // Promise instances have an extra slot ([[PromiseState]]) but not throwing in Chrome `postMessage`
             'WeakMap', // WeakMap instances have an extra slot ([[WeakMapData]]) but not throwing in Chrome `postMessage`
             'WeakSet' // WeakSet instances have an extra slot ([[WeakSetData]]) but not throwing in Chrome `postMessage`
         ].includes(stringTag) ||
         val === Object.prototype || // A non-array exotic object but not throwing in Chrome `postMessage`
+        ((stringTag === 'Blob' || stringTag === 'File') && val.isClosed) ||
         (val && typeof val === 'object' && typeof val.nodeType === 'number' && typeof val.insertBefore === 'function') // Duck-type DOM node objects (non-array exotic? objects which cannot be cloned by the SCA)
     ) {
         throw new DOMException('The object cannot be cloned.', 'DataCloneError');

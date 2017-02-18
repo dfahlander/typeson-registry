@@ -1,6 +1,4 @@
-/** ImageData is browser / DOM specific.
- * Requires arraybuffer.js in order for the returned Uint8ClampedArray to be encapsulated as well,
- * or if use with socket.io, socket.io will take care of that.
+/** ImageData is browser / DOM specific (though `node-canvas` has it available on `Canvas`).
 */
 var Typeson = require('typeson');
 exports.ImageData = [

@@ -1,13 +1,13 @@
 /* This preset includes types that are built-in into the JavaScript language itself, this
    should work universally. Types that were added in ES6 or beyond will be checked before inclusion
    so that this module can be consumed by both ES5 and ES6 environments.
-   Some types cannot be encapsulated because their inner state is private: WeakMap, WeakSet.
+   Some types cannot be encapsulated because their inner state is private: `WeakMap`, `WeakSet`.
    The Function type is not included because their closures would not be serialized, so a revived
    Function that uses closures would not behave as expected. Symbols are similarly not included.
 */
 module.exports = [
     // ES5
-    require('../types/undefined'),
+    require('../presets/undefined'),
     require('../types/primitive-objects'),
     require('../types/special-numbers'),
     require('../types/date'),
