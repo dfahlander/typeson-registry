@@ -3075,7 +3075,7 @@
     "typeson": {
       "version": "3.2.0",
       "from": "git+https://github.com/dfahlander/typeson.git",
-      "resolved": "git+https://github.com/dfahlander/typeson.git#b36dbf654885e2979d2913b603153eef4a44b1c7"
+      "resolved": "git+https://github.com/dfahlander/typeson.git#7874552261ae4585fb1eec74173113000d046b0d"
     },
     "uglify-js": {
       "version": "2.7.5",
