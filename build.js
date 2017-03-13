@@ -18,6 +18,10 @@ Typeson.presets = {};
 `;
 var epilogue = `if (typeof module !== 'undefined') { module.exports = Typeson; }\n`;
 
+if (!fs.existsSync('dist')){
+    fs.mkdirSync('dist');
+}
+
 var ws = fs.createWriteStream('index.js');
 ws.write(prologue);
 ['types', 'presets'].forEach(dir => {
@@ -27,6 +31,9 @@ ws.write(prologue);
             var reqStr = `Typeson.${dir}.${nameFromFile(f)} = require('./${dir}/${f}');\n`;
             ws.write(reqStr);
             // While building the general file, we write the individual files too
+            if (!fs.existsSync(`dist/${dir}`)){
+                fs.mkdirSync(`dist/${dir}`);
+            }
             browserifyUglifyAndExtractMaps(prologue + reqStr + epilogue, `dist/${dir}/${f}`, browserifyString);
         });
 });
