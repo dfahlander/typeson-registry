@@ -4,7 +4,7 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
     // 2. `IsCallable` (covered by `typeof === 'function'` or a function's `toStringTag`)
     // 3. internal slots besides [[Prototype]] or [[Extensible]] (e.g., [[PromiseState]] or [[WeakMapData]])
     // 4. exotic object (e.g., `Proxy`) (which does not have default behavior for one or more of the
-    //      essential internal methods that are limited to the following for non-function objects (we auto-exclude functions): 
+    //      essential internal methods that are limited to the following for non-function objects (we auto-exclude functions):
     //      [[GetPrototypeOf]],[[SetPrototypeOf]],[[IsExtensible]],[[PreventExtensions]],[[GetOwnProperty]],
     //      [[DefineOwnProperty]],[[HasProperty]],[[Get]],[[Set]],[[Delete]],[[OwnPropertyKeys]]);
     //      except for the standard, built-in exotic objects, we'd need to know whether these methods had distinct behaviors

@@ -11,7 +11,6 @@ if (typeof URL.createObjectURL === 'undefined') {
         return blobURL;
     };
     // We also need to tweak `XMLHttpRequest` which our types rely on to obtain the Blob/File content
-    var B64 = require('base64-arraybuffer');
     var utils = require('jsdom/lib/jsdom/living/generated/utils');
     var impl = utils.implSymbol;
     var _xhropen = XMLHttpRequest.prototype.open;
@@ -19,10 +18,7 @@ if (typeof URL.createObjectURL === 'undefined') {
         if ((/^blob:/).test(url)) {
             var blob = blobURLs[url];
             var type = blob.type;
-            if (type === null) {
-                type = 'application/octet-stream';
-            }
-            url = 'data:' + type + ';base64,' + B64.encode(blob[impl]._buffer);
+			url = 'data:' + type + ';base64,' + blob[impl]._buffer.toString('base64');
         }
         return _xhropen.call(this, method, url, async);
     };
