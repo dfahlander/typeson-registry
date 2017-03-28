@@ -19,9 +19,9 @@ if (typeof URL.createObjectURL === 'undefined') {
         if ((/^blob:/).test(url)) {
             var blob = blobURLs[url];
             var type = blob.type;
-			if (type === null) {
-				type = 'application/octet-stream';
-			}
+            if (type === null) {
+                type = 'application/octet-stream';
+            }
             url = 'data:' + type + ';base64,' + B64.encode(blob[impl]._buffer);
         }
         return _xhropen.call(this, method, url, async);
