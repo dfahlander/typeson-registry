@@ -18,7 +18,7 @@ if (typeof URL.createObjectURL === 'undefined') {
         if ((/^blob:/).test(url)) {
             var blob = blobURLs[url];
             var type = blob.type;
-			url = 'data:' + type + ';base64,' + blob[impl]._buffer.toString('base64');
+            url = 'data:' + type + ';base64,' + blob[impl]._buffer.toString('base64');
         }
         return _xhropen.call(this, method, url, async);
     };
