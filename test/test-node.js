@@ -1,11 +1,16 @@
 var path = require('path');
 
-global.document = require('jsdom').jsdom('', {features: {
+const jsdom = require('jsdom');
+const {JSDOM} = jsdom;
+
+const dom = new JSDOM('', {
     // Needed to load an image file
     // https://github.com/tmpvar/jsdom#external-resources
-    FetchExternalResources: ['img']
-}});
-global.window = document.defaultView;
+    resources: 'usable'
+});
+
+global.document = dom.window.document;
+global.window = dom.window;
 
 // We set this up separately from test-entry.js as browserify doesn't seem to be able to handle them properly
 // Should be made available automatically by jsdom anyways: https://github.com/tmpvar/jsdom/issues/1749
@@ -33,6 +38,11 @@ global.createImageBitmap = function (canvas) {
     return new Promise(function (res, rej) {
         // This really ought not be a canvas, but it works as a simple shim for our tests
         canvas[Symbol.toStringTag] = 'ImageBitmap';
+        // Above line not working in current jsdom now
+        if (!canvas.dataset) {
+            canvas.dataset = {};
+        }
+        canvas.dataset.toStringTag = 'ImageBitmap';
         res(canvas);
     });
 };

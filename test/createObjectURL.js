@@ -1,7 +1,7 @@
 // Imperfectly polyfill jsdom for testing `Blob`/`File`
 // Todo: This can be removed once `URL.createObjectURL` may be implemented in jsdom: https://github.com/tmpvar/jsdom/issues/1721
 var whatwgURL = require('whatwg-url');
-var serializeURLToUnicodeOrigin = whatwgURL.serializeURLToUnicodeOrigin;
+var serializeURLOrigin = whatwgURL.serializeURLOrigin;
 var parseURL = whatwgURL.parseURL;
 
 if (typeof URL.createObjectURL === 'undefined') {
@@ -9,7 +9,7 @@ if (typeof URL.createObjectURL === 'undefined') {
     var blobURLs = {};
     URL.createObjectURL = function (blob) {
         // https://github.com/tmpvar/jsdom/issues/1721#issuecomment-282465529
-        var blobURL = 'blob:' + serializeURLToUnicodeOrigin(parseURL(location.href)) + '/' + uuid();
+        var blobURL = 'blob:' + serializeURLOrigin(parseURL(location.href)) + '/' + uuid();
         blobURLs[blobURL] = blob;
         return blobURL;
     };

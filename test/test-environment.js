@@ -1,5 +1,8 @@
 /* global shimIndexedDB */
 /* eslint-disable no-var */
+if (typeof global === 'undefined') {
+    window.global = {};
+}
 (function () {
     'use strict';
 
@@ -7,7 +10,7 @@
     mocha.setup({ui: 'bdd', timeout: 5000});
     mocha.globals(['Typeson']);
     global.expect = window.expect = chai.expect;
-    var describe = window.describe = global.describe;
+    var describe = window.describe = global.describe || window.describe;
     global.assert = window.assert = chai.assert;
 
     /** Environment Info **/

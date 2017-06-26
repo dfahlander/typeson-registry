@@ -2,6 +2,7 @@
 /*global mocha, Typeson, ActiveXObject */
 // helper to get all the test cases
 'use strict';
+var expect = chai.expect;
 // stubs to load nodejs tests
 function require (path) { // eslint-disable-line no-unused-vars
     if (path === 'mocha') {return mocha;}

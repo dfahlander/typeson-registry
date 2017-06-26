@@ -27,9 +27,12 @@ MyCloneable.prototype.prototypeProperty = 10;
 
 function MyResurrectable () {}
 
-global.util = window.util = {
+window.util = {
     Person: Person,
     SimulatedNonBuiltIn: SimulatedNonBuiltIn,
     MyCloneable: MyCloneable,
     MyResurrectable: MyResurrectable
 };
+if (typeof global !== 'undefined') {
+    global.util = window.util;
+}

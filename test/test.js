@@ -425,9 +425,9 @@ describe('ImageData', function () {
         var imageData = new ImageData(1, 3);
         var tson = typeson.stringify(imageData);
         var back = typeson.parse(tson);
-        expect(back).to.deep.equal({
-            width: 1, height: 3, data: new Uint8ClampedArray(12)
-        });
+        expect(back.width).to.equal(1);
+        expect(back.height).to.equal(3);
+        expect(back.data).to.deep.equal(new Uint8ClampedArray(12));
     });
 });
 
@@ -465,7 +465,7 @@ describe('ImageBitmap', function () {
             });
         };
         // Didn't work with a relative path nor with an SVG file in node-canvas
-        img.src = typeof imageTestFileNode !== 'undefined' ? imageTestFileNode : 'test/Flag_of_the_United_Nations.png'; // browserify-test uses testem which assumes cwd() resolution (in `Config.prototype.resolvePath` of `node_modules/testem/lib/config.js`)
+        img.src = typeof imageTestFileNode !== 'undefined' ? imageTestFileNode : '../test/Flag_of_the_United_Nations.png'; // browserify-test uses testem which assumes cwd() resolution (in `Config.prototype.resolvePath` of `node_modules/testem/lib/config.js`)
     });
     it('should get back an ImageBitmap instance with the original data asynchronously', function (done) {
         var typeson = new Typeson().register(
@@ -500,12 +500,13 @@ describe('ImageBitmap', function () {
             });
         };
         // Didn't work with a relative path nor with an SVG file in node-canvas
-        img.src = typeof imageTestFileNode !== 'undefined' ? imageTestFileNode : 'test/Flag_of_the_United_Nations.png'; // browserify-test uses testem which assumes cwd() resolution (in `Config.prototype.resolvePath` of `node_modules/testem/lib/config.js`)
+        img.src = typeof imageTestFileNode !== 'undefined' ? imageTestFileNode : '../test/Flag_of_the_United_Nations.png'; // browserify-test uses testem which assumes cwd() resolution (in `Config.prototype.resolvePath` of `node_modules/testem/lib/config.js`)
     });
 });
 
 describe('Blob', function () {
     it('should get back a Blob instance with the original data', function (done) {
+        this.timeout(10000);
         var typeson = new Typeson().register(
             require('../types/blob')
         );
@@ -569,6 +570,7 @@ describe('Blob', function () {
 });
 
 describe('File', function () {
+    this.timeout(10000);
     it('should get back a File instance with the original data', function (done) {
         var typeson = new Typeson().register(
             require('../types/file')
@@ -637,7 +639,7 @@ describe('File', function () {
 });
 
 describe('FileList', function () {
-    this.timeout(5000);
+    this.timeout(10000);
     it('should get back a FileList instance with the original data', function () {
         var currTime = new Date();
         var anotherTime = new Date('1985');

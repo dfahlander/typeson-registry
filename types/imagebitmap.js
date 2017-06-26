@@ -2,7 +2,11 @@
 */
 var Typeson = require('typeson');
 exports.ImageBitmap = {
-    test: function (x) { return Typeson.toStringTag(x) === 'ImageBitmap'; },
+    test: function (x) {
+        return Typeson.toStringTag(x) === 'ImageBitmap' ||
+            // In Node, our polyfill sets the dataset on a canvas element as JSDom no longer allows overriding toStringTag
+            x && x.dataset && x.dataset.toStringTag === 'ImageBitmap';
+    },
     replace: function (bm) {
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');

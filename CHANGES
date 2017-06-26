@@ -1,0 +1,121 @@
+# typeson-registry
+
+## Version ?
+
+- Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
+    get cross-frame/cross-module class detection (replacing `constructor`
+    and `instanceof` checks)
+
+- Fix (RegExp): Get `regexp` type to work properly with `multiline`
+- Fix (RegExp): Add `unicode` and `sticky` flag support for cloning
+- Fix (undefined/sparseUndefined): Label `undefined` at root as regular
+    `undefined` rather than `sparseUndefined` (will rely on update to
+    `typeson`)
+- Fix (SCA): Remove `Proxy` from list of structured clone throwing to throw
+    as not available as such
+- Fix (DataView): Get `dataview` to properly encode and decode `buffer`
+    property
+- Fix (ImageData): Get `imagedata` type to work properly (as `data` is not
+    an array proper and length is on prototype, the object iteration
+    will not preserve; fix by converting to array and reconstructing
+    `Uint8ClampedArray` during revival)
+- Fix (TypedArrays): For sake of TypedArrays, update to patched
+    `base64-arraybuffer`
+
+- Enhancement: Add cloneable type with test (detects/utilizes
+    `__cloneEncapsulate` and `__cloneRevive` methods on an object)
+- Enhancement: Add resurrectable type with test (resurrects non-plain
+    objects, functions, and symbols to the exact instance, assuming the
+    same session/environment)
+- Enhancement: Add `ImageBitmap` type (with sync and async revival)
+- Enhancement: Add `File`, `Blob`, and `FileList` types (with sync and
+    async replacement/encapsulation)
+- Enhancement: Add `user-objects` type and utilize in structured cloning
+    to allow for non-plain user objects to be cloned; add test
+- Enhancement: Add `nonbuiltin-ignore` type to roughly detect non-builtin
+    objects and avoid adding them as properties
+- Enhancement (minor): Check `typeof` for functions in SCA since can avoid
+    false positives
+
+- Refactoring: Rely on now Typeson-built-in `isUserObject`
+- Refactoring: Adjust to Typeson changes re: sparse arrays and `undefined`
+
+- npm: Update dependencies and remove shrinkwrap
+- npm/ignore files: Add `node-canvas` testing dependency and ignore
+    resulting build directory
+
+- Building: Create `dist` directories if not existing
+- Building: Package all types/presets into one (browserified/uglified)
+    file as well as to individual files
+- Building: Uglify and build source maps (preserving source files)
+
+- Test building: Add Windows-specific routine for copying node-canvas DLLs
+- Testing: Partial `URL.createObjectURL` polyfill
+- Testing: Add browser testing support
+- Testing: Make `Intl` locale result consistent
+- Testing: Add `universal` preset tests
+- Testing: Run built-in tests once with individual type(s) and once with
+    the preset
+- Testing: Add watch routine for CI development; add preliminary babelify
+    routine to support more advanced features in test source (if not code)
+- Testing: Add `ImageData` test that works in Node
+- Testing: Add tests for missing untested types
+- Testing: Add a property and prototype property to simulated built in
+    class
+- Testing: Add user objects test; simplify non-built-in test
+- Testing: Provide simple `server.js` (run by default with `npm start`)
+    to avoid Chrome origin restrictions when run on file system
+- Testing: Restore `undefined` at root
+- Testing (Workers): Display results on HTML page
+- Testing (Workers): Elaborate more on logging
+- Testing (Update): JSDom API usage; overcome apparent Mocha change with
+    deep equal, bump some timeouts, get working fully with in-browser test
+- Testing (Refactoring): move utils into own file; use
+    polyfill form of `Array.from`; avoid setting globals; create entry
+    file without Canvas-specific code (problem when browserified)
+- Testing (Refactoring): Consistent indentation and var. naming, reorder tests
+    as present in built-in preset
+
+- Demos: Remove redundant references to Typeson (already bundled with dist
+    files)
+- Docs (README): Demonstrate function revival (but indicate caveats and
+    do not bundle)
+- Docs (Code comment): imagedata no longer needs `arraybuffer.js` and can
+    be shimmed in Node via `node-canvas`
+- Docs (README): Indicate node-canvas build requirements for tests
+
+## Version 1.0.0-alpha.2
+
+- Fix (SCA): Structured cloning algorithm (SCA) should also throw upon
+    encountering the `arguments` exotic object
+- Fix (SCA): Prohibit `Object.prototype` as it is an exotic object and
+    therefore per SCA ought to be rejected (though not forbidden currently
+    in Chrome)
+- Fix (SCA): Prevent final built-in non-array exotic object (`Module`)
+    that should throw with SCA
+- Fix (SCA): Throw upon DOM nodes (common non-built-in exotic? objects that
+    cannot be cloned)
+- Fix (ImageData): Check that `ImageData` is even defined; e.g., not in Node
+    without node-canvas (it is not so critical, at least for structured cloning,
+    to cause failures by its absence)
+- Doc: Add to code comments re: exotic objects
+
+## Version 1.0.0-alpha.1
+
+- Enhancement (SCA): Add preliminary structured-cloning export with additional
+    exception throwing checker (implemented as a typeson `test`)
+- Enhancement (undefined/builtin): Add `undefined` type (overcomes JSON
+    limitations representing `undefined`) and also add to `builtin` preset
+- Enhancement (sparseUndefined): Add a new `sparseUndefined` type to allow
+    rebuilding of sparse arrays (without explicit `undefined`)
+- Refactoring: Adjust `undefined` behavior per new `typeson` behavior: ensure
+    an explicit `undefined` will be added by reviver where justified
+- Clean-up: Remove trailing WS, consistent semi-colon usage
+- Clean-up: Make HTML proper HTML5 (and avoid browser messages)
+- npm: Add authorship/contributors
+- Testing: Add Structured Cloning tests (of both kinds)
+- Testing: Add `undefined` and `sparseUndefined` tests (will require new
+    published version of typeson)
+- Docs: Fix typos in code comments
+- Docs (README:) Fix headings (and use list style that doesn't trip up
+    poor syntax highlighters which don't distinguish with bold)
