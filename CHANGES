@@ -1,6 +1,6 @@
 # typeson-registry
 
-## Version ?
+## Version 1.0.0
 
 - Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
     get cross-frame/cross-module class detection (replacing `constructor`
@@ -78,11 +78,12 @@
 
 - Demos: Remove redundant references to Typeson (already bundled with dist
     files)
-- Docs (README): Demonstrate function revival (but indicate caveats and
-    do not bundle)
 - Docs (Code comment): imagedata no longer needs `arraybuffer.js` and can
     be shimmed in Node via `node-canvas`
+- Docs (README): Demonstrate function revival (but indicate caveats and
+    do not bundle)
 - Docs (README): Indicate node-canvas build requirements for tests
+- Docs (README): Add more info and usage notes for types and presets
 
 ## Version 1.0.0-alpha.2
 
