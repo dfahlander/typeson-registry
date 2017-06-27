@@ -17,7 +17,7 @@
     property
 - Fix (ImageData): Get `imagedata` type to work properly (as `data` is not
     an array proper and length is on prototype, the object iteration
-    will not preserve; fix by converting to array and reconstructing
+    will not preserve); fix by converting to array and reconstructing
     `Uint8ClampedArray` during revival)
 - Fix (TypedArrays): For sake of TypedArrays, update to patched
     `base64-arraybuffer`

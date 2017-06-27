@@ -145,7 +145,9 @@ All types and presets under dist are UMD modules so you could also require them 
     via deprecated means)
 - `FileList` - HTML does not provide a means of creating a `FileList` object
     dynamically, so we polyfill one for revival. This method also sets `File`
-- `ImageBitmap` - Has sync and async revivers
+- `ImageBitmap` - Has sync and async revivers. The sync method does not produce
+    a genuine `ImageBitmap` but instead produces a canvas element which can
+    frequently be used in a similar context to `ImageBitmap`.
 - `ImageData`
 - `intl-types.js` (`Intl.Collator`, `Intl.DateTimeFormat`, `Intl.NumberFormat`) -
     Not all properties can be preserved
