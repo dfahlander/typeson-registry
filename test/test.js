@@ -770,7 +770,7 @@ describe('User objects', function () {
         var tson = typeson.stringify({a: bob, b: simulatedNonBuiltInObject});
         var back = typeson.parse(tson);
         expect(back).to.deep.equal({
-            a: {name: 'Bob Smith', age: 30, isMarried: true, dob: '2000-06-19T16:00:00.000Z'}
+            a: {name: 'Bob Smith', age: 30, isMarried: true, dob: new Date(2000, 5, 20).toJSON()}
         });
         expect('nonbuiltin' in back.a).to.be.false;
     });
