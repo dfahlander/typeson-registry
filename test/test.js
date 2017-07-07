@@ -67,25 +67,25 @@ function BuiltIn (preset) {
 
     describe('Special numbers', function () {
         it('NaN', function () {
-            var typeson = new Typeson().register(preset || require('../types/special-numbers'));
+            var typeson = new Typeson().register(preset || require('../presets/special-numbers'));
             var tson = typeson.stringify(NaN, null, 2);
             var back = typeson.parse(tson);
             expect(back).to.be.NaN;
         });
         it('Infinity', function () {
-            var typeson = new Typeson().register(preset || require('../types/special-numbers'));
+            var typeson = new Typeson().register(preset || require('../presets/special-numbers'));
             var tson = typeson.stringify(Infinity, null, 2);
             var back = typeson.parse(tson);
             expect(back).to.equal(Infinity);
         });
         it('-Infinity', function () {
-            var typeson = new Typeson().register(preset || require('../types/special-numbers'));
+            var typeson = new Typeson().register(preset || require('../presets/special-numbers'));
             var tson = typeson.stringify(-Infinity, null, 2);
             var back = typeson.parse(tson);
             expect(back).to.equal(-Infinity);
         });
         it('should not mistake string forms of the special numbers', function () {
-            var typeson = new Typeson().register(preset || require('../types/special-numbers'));
+            var typeson = new Typeson().register(preset || require('../presets/special-numbers'));
             var tson = typeson.stringify('NaN', null, 2);
             var back = typeson.parse(tson);
             expect(back).to.equal('NaN');
@@ -97,7 +97,7 @@ function BuiltIn (preset) {
             expect(back).to.equal('-Infinity');
         });
         it('should not disturb encoding of normal numbers', function () {
-            var typeson = new Typeson().register(preset || require('../types/special-numbers'));
+            var typeson = new Typeson().register(preset || require('../presets/special-numbers'));
             var tson = typeson.stringify(512, null, 2);
             var back = typeson.parse(tson);
             expect(back).to.equal(512);

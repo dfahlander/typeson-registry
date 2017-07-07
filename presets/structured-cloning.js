@@ -5,7 +5,7 @@ module.exports = [
     require('../types/user-object'), // Processed last
     require('../presets/undefined'),
     require('../types/primitive-objects'),
-    require('../types/special-numbers'),
+    require('../presets/special-numbers'),
     require('../types/date'),
     require('../types/regexp'),
     // ES2015 (ES6)

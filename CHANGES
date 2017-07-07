@@ -2,6 +2,9 @@
 
 ## Version 1.0.0
 
+- Breaking change: Make `SpecialNumber` a preset consisting of new
+    individual types for `NaN`, `Infinity`, `-Infinity`
+
 - Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
     get cross-frame/cross-module class detection (replacing `constructor`
     and `instanceof` checks)

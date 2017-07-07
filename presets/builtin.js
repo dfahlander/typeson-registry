@@ -9,7 +9,7 @@ module.exports = [
     // ES5
     require('../presets/undefined'),
     require('../types/primitive-objects'),
-    require('../types/special-numbers'),
+    require('../presets/special-numbers'),
     require('../types/date'),
     require('../types/error'),
     require('../types/errors'),

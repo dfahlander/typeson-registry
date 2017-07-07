@@ -149,9 +149,12 @@ All types and presets under dist are UMD modules so you could also require them 
     a genuine `ImageBitmap` but instead produces a canvas element which can
     frequently be used in a similar context to `ImageBitmap`.
 - `ImageData`
+- `Infinity` - Preserves positive infinity
 - `intl-types.js` (`Intl.Collator`, `Intl.DateTimeFormat`, `Intl.NumberFormat`) -
     Not all properties can be preserved
 - `Map`
+- `NaN` - Preserves `NaN` (not a number)
+- `NegativeInfinity` - Preserves negative infinity
 - `nonBuiltInIgnore` - For roughly detecting non-builtin objects and to avoid
     adding them as properties
 - `primitive-objects.js` (`StringObject`, `BooleanObject`, `NumberObject`)
@@ -159,7 +162,6 @@ All types and presets under dist are UMD modules so you could also require them 
 - `resurrectable` - Resurrects any non-array object, function, or symbol; can
     only be revived for the current window session.
 - `Set`
-- `SpecialNumber` (preserves `NaN`, `Infinity`, `-Infinity`)
 - `typed-arrays-socketio.js` (`Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`) - See [typeson#environmentformat-support](https://github.com/dfahlander/typeson#environmentformat-support) and `presets/socketio.js`
 - `typed-arrays.js` (`Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`) - Base64-encodes
 - `undefined` (See also `presets/undefined.js` and `presets/sparse-undefined.js`)
@@ -179,6 +181,7 @@ All types and presets under dist are UMD modules so you could also require them 
 - `sparse-undefined.js` (`sparseArrays` and `sparseUndefined`) - Supports
     reconstructing sparse arrays (with missing properties not even assigned
     an explicit `undefined`). See `types/undefined.js` for the explicit case or `presets/undefined.js` for a utility combining both.
+- `special-numbers.js` (preserves `NaN`, `Infinity`, `-Infinity`)
 - `structured-cloning.js` - For the Structured Cloning Algorithm used by the likes of `postMessage` and `indexedDB`. See also the `cloneable` type.
 - `structured-cloning-throwing.js` - Same as `structured-cloning.js` but throws with non-recognized types. See also the `cloneable` type.
 - `undefined.js` - Supports reconstructing explicit and implicit (sparse) uses of `undefined`.
