@@ -112,6 +112,13 @@ function BuiltIn (preset) {
             expect(obj).to.be.an.instanceOf(Date);
             expect(obj.getTime()).to.equal(1234567);
         });
+        it('should get back a real invalid Date instance', function () {
+            var typeson = new Typeson().register(preset || require('../types/date'));
+            var json = typeson.stringify(new Date(NaN));
+            var obj = typeson.parse(json);
+            expect(obj).to.be.an.instanceOf(Date);
+            expect(obj.getTime()).to.be.NaN;
+        });
     });
 
     describe('Error and Errors', function () {

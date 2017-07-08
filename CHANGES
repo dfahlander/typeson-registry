@@ -11,6 +11,7 @@
 
 - Fix (RegExp): Get `regexp` type to work properly with `multiline`
 - Fix (RegExp): Add `unicode` and `sticky` flag support for cloning
+- Fix (Date): Support invalid dates (with `NaN` value)
 - Fix (undefined/sparseUndefined): Label `undefined` at root as regular
     `undefined` rather than `sparseUndefined` (will rely on update to
     `typeson`)
