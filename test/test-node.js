@@ -11,6 +11,7 @@ const dom = new JSDOM('', {
 
 global.document = dom.window.document;
 global.window = dom.window;
+global.HTMLElement = global.window.HTMLElement; // https://github.com/chaijs/type-detect/issues/98
 
 // We set this up separately from test-entry.js as browserify doesn't seem to be able to handle them properly
 // Should be made available automatically by jsdom anyways: https://github.com/tmpvar/jsdom/issues/1749

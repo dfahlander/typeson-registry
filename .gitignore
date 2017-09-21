@@ -3,3 +3,4 @@
 /dist
 *.log
 build
+.__browserify_string_empty.js
