@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -47,7 +47,7 @@
     "whatwg-url": "6.2.1"
   },
   "dependencies": {
-    "typeson": "^5.0.0",
+    "typeson": "^5.0.1",
     "base64-arraybuffer": "https://github.com/dfahlander/base64-arraybuffer#patch-1"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
