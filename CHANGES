@@ -2,6 +2,8 @@
 
 ## Version 1.0.0
 
+- Breaking and other changes: Upgraded version of Typeson from 3.0.0 to 5.1.0
+
 - Breaking change: Make `SpecialNumber` a preset consisting of new
     individual types for `NaN`, `Infinity`, `-Infinity`
 
