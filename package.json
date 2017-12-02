@@ -41,13 +41,13 @@
     "canvas": "1.6.7",
     "chai": "4.1.2",
     "jsdom": "11.5.1",
-    "mapstraction": "https://github.com/brettz9/mapstraction#relativePaths",
+    "mapstraction": "1.0.1",
     "mocha": "4.0.1",
     "uglifyify": "4.0.5",
     "uuid": "3.1.0",
     "watchify": "3.9.0",
     "webpack": "3.9.1",
-    "whatwg-url": "6.2.1"
+    "whatwg-url": "6.3.0"
   },
   "dependencies": {
     "typeson": "5.2.0",
