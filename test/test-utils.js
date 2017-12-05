@@ -9,7 +9,7 @@ Person.prototype.age = 0;
 Person.prototype.dob = new Date(1900, 0, 1);
 Person.prototype.isMarried = false;
 
-function SimulatedNonBuiltIn () {this.aaa = 5;}
+function SimulatedNonBuiltIn () { this.aaa = 5; }
 SimulatedNonBuiltIn.prototype.bbb = 8;
 SimulatedNonBuiltIn.prototype[Symbol.toStringTag] = 'SimulatedNonBuiltIn';
 
@@ -17,22 +17,19 @@ function MyCloneable (obj) {
     this.obj = obj;
     this.nonpersistentStateInfo = Math.random();
 }
-MyCloneable.prototype.__cloneEncapsulate = function () {
+MyCloneable.prototype[Symbol.for('cloneEncapsulate')] = function () {
     return {obj: JSON.stringify(this.obj)};
 };
-MyCloneable.prototype.__cloneRevive = function (encapsulatedMyCloneable) {
+MyCloneable.prototype[Symbol.for('cloneRevive')] = function (encapsulatedMyCloneable) {
     return new MyCloneable(JSON.parse(encapsulatedMyCloneable.obj));
 };
 MyCloneable.prototype.prototypeProperty = 10;
 
 function MyResurrectable () {}
 
-window.util = {
-    Person: Person,
-    SimulatedNonBuiltIn: SimulatedNonBuiltIn,
-    MyCloneable: MyCloneable,
-    MyResurrectable: MyResurrectable
+export default {
+    Person,
+    SimulatedNonBuiltIn,
+    MyCloneable,
+    MyResurrectable
 };
-if (typeof global !== 'undefined') {
-    global.util = window.util;
-}

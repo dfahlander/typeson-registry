@@ -1,6 +1,9 @@
-var Typeson = require('typeson');
-exports.userObjects = [
-    function (x, stateObj) { return Typeson.isUserObject(x); },
-    function (n) { return Object.assign({}, n); },
-    function (s) { return s;}
-];
+import Typeson from 'typeson';
+
+export default {
+    userObject: {
+        test (x, stateObj) { return Typeson.isUserObject(x); },
+        replace (n) { return Object.assign({}, n); },
+        revive (s) { return s; }
+    }
+};

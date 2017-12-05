@@ -1,45 +1,90 @@
-var fs = require('fs');
-var path = require('path');
-var mapstraction = require('mapstraction');
-var uglifyify = require('uglifyify');
-var browserifyString = require('browserify-string');
-var browserify = require('browserify');
-// var watchify = require('watchify');
-var browserifyTest = require('browserify-test').default; // Babel doesn't handle without `babel-plugin-add-module-exports` and `browserify-test` is not using it (and `import` doesn't need to add it)
-var babelify = require('babelify');
+/* eslint-env node */
+const fs = require('fs');
+const path = require('path');
+const mapstraction = require('mapstraction');
+const uglifyify = require('uglifyify'); // eslint-disable-line no-unused-vars
+const browserifyString = require('browserify-string');
+const browserify = require('browserify');
+const browserifyTest = require('browserify-test').default; // Babel doesn't handle without `babel-plugin-add-module-exports` and `browserify-test` is not using it (and `import` doesn't need to add it)
+const babelify = require('babelify'); // eslint-disable-line no-unused-vars
 
-var prologue =
+const prologue =
     // `//# sourceMappingURL=path/to/source.map
     // require("source-map-support").install();
-`var Typeson;
-if (Typeson === undefined) { Typeson = require('typeson'); }
-Typeson.types = {};
-Typeson.presets = {};
+`// This file is auto-generated from \`build.js\`
+import Typeson from 'typeson';
 `;
-var epilogue = `if (typeof module !== 'undefined') { module.exports = Typeson; }\n`;
+const epilogue = `export default Typeson;\n`;
 
-if (!fs.existsSync('dist')){
+if (!fs.existsSync('dist')) {
     fs.mkdirSync('dist');
 }
 
-var ws = fs.createWriteStream('index.js');
+const ws = fs.createWriteStream('index-es6.js');
 ws.write(prologue);
-['types', 'presets'].forEach(dir => {
-    fs.readdirSync(__dirname + '/' + dir)
+const moduleStrings = {};
+const dirs = ['types', 'presets'];
+dirs.forEach(dir => {
+    // While building the general file, we write the individual files too
+    if (!fs.existsSync(`dist/${dir}`)) {
+        fs.mkdirSync(`dist/${dir}`);
+    }
+    let currentLine = '';
+    moduleStrings[dir] = '';
+    ws.write(`\n// ${dir.toUpperCase()}\n`);
+    fs.readdirSync(path.join(__dirname, '/', dir))
         .filter(f => f.lastIndexOf('.js') === f.length - '.js'.length)
-        .forEach(f => {
-            var reqStr = `Typeson.${dir}.${nameFromFile(f)} = require('./${dir}/${f}');\n`;
-            ws.write(reqStr);
-            // While building the general file, we write the individual files too
-            if (!fs.existsSync(`dist/${dir}`)){
-                fs.mkdirSync(`dist/${dir}`);
+        .forEach((f, i) => {
+            const name = nameFromFile(f);
+            let fileName = name; // `${name[0].toUpperCase() + name.slice(1)}`;
+            let fileString = fileName;
+            if (fileName === 'undef' && dir === 'presets') {
+                fileName = 'undef2';
+                fileString += ': ' + fileName;
             }
-            browserifyUglifyAndExtractMaps(prologue + reqStr + epilogue, `dist/${dir}/${f}`, browserifyString);
+            /*
+            if (['Infinity', 'NaN', 'undefined'].includes(fileName)) {
+                fileName = `${dir.slice(0, -1)}${fileName.charAt().toUpperCase() + fileName.slice(1)}`;
+                fileString += ': ' + fileName;
+            }
+            */
+            let currentAddition;
+            const wouldbeLength =
+                currentLine.length + // Previously existing line length adjusted
+                (i === 0 ? 0 : 1) + // space
+                fileString.length +
+                1; // comma
+            if (wouldbeLength / 80 > 1) { // Shouldn't be adding more than 80 chars
+                moduleStrings[dir] += '\n';
+                currentLine = currentAddition = `    ${fileString},`;
+            } else {
+                currentAddition = (i === 0 ? '' : ' ') + `${fileString},`;
+                currentLine += currentAddition;
+            }
+            moduleStrings[dir] += currentAddition;
+
+            const reqStr = `import ${fileName} from './${dir}/${f}';\n`;
+            ws.write(reqStr);
+            browserifyUglifyAndExtractMaps({
+                entries: prologue + reqStr + epilogue,
+                target: `dist/${dir}/${f}`,
+                browserifyString
+            });
         });
+    moduleStrings[dir] = moduleStrings[dir].slice(0, -1);
+});
+ws.write('\n');
+dirs.forEach((dir) => {
+    ws.write(
+        `Typeson.${dir} = {
+    ${moduleStrings[dir]}
+};
+`
+    );
 });
 ws.end(epilogue);
 
-browserifyUglifyAndExtractMaps('index.js', 'dist/all.js').on('finish', () => {
+browserifyUglifyAndExtractMaps({entries: 'index.js', target: 'dist/all.js'}).on('finish', () => {
     fs.unlink(path.join(process.cwd(), '.__browserify_string_empty.js'), function (err) {
         if (err) {
             console.log(err);
@@ -51,21 +96,21 @@ browserifyUglifyAndExtractMaps('index.js', 'dist/all.js').on('finish', () => {
     });
 });
 
-function browserifyUglifyAndExtractMaps (entries, target, browserifyString) {
-    var browserifyOptions = {
+function browserifyUglifyAndExtractMaps ({entries, target, browserifyString}) {
+    const browserifyOptions = {
         standalone: 'Typeson',
         // detectGlobals: false, // Besides speeding up, avoids some apparent bug with modules referencing `global` getting added with double directories into `sources` of the source map (e.g., as `types/errors/errors` instead of `types/errors`)
         debug: true // Needed by mapstraction to extract source map
     };
 
-    var browserifyInstance;
+    let browserifyInstance;
     if (browserifyString) {
         browserifyInstance = browserifyString(entries, browserifyOptions);
     } else {
         browserifyOptions.entries = entries;
         browserifyInstance = browserify(browserifyOptions);
     }
-    var ret = browserifyInstance.transform({ global: true }, 'uglifyify'
+    const ret = browserifyInstance.transform({ global: true }, 'uglifyify'
     // ).plugin(babelify)
     ).plugin(
         mapstraction, {
@@ -84,16 +129,16 @@ function browserifyUglifyAndExtractMaps (entries, target, browserifyString) {
     return ret;
 }
 
-function nameFromFile(f) {
-    var name = f.substr(0, f.length -".js".length),
-        dash;
+function nameFromFile (f) {
+    let name = f.substr(0, f.length - '.js'.length);
+    let dash;
     do {
         dash = name.indexOf('-');
         if (dash >= 0) {
             name = name.substr(0, dash) +
-                name.substr(dash+1, 1).toUpperCase() +
-                name.substr(dash+2);
+                name.substr(dash + 1, 1).toUpperCase() +
+                name.substr(dash + 2);
         }
     } while (dash >= 0);
-    return name.split('.');
+    return name.split('.')[0];
 }

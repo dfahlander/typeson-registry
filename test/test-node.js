@@ -1,4 +1,5 @@
-var path = require('path');
+/* eslint-env node */
+const path = require('path');
 
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
@@ -32,11 +33,9 @@ Blob.prototype[Symbol.toStringTag] = 'Blob';
 global.File = window.File;
 File.prototype[Symbol.toStringTag] = 'File';
 
-require('./createObjectURL'); // Polyfill enough for our tests
-
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 global.createImageBitmap = function (canvas) {
-    return new Promise(function (res, rej) {
+    return new Promise(function (resolve, reject) {
         // This really ought not be a canvas, but it works as a simple shim for our tests
         canvas[Symbol.toStringTag] = 'ImageBitmap';
         // Above line not working in current jsdom now
@@ -44,7 +43,7 @@ global.createImageBitmap = function (canvas) {
             canvas.dataset = {};
         }
         canvas.dataset.toStringTag = 'ImageBitmap';
-        res(canvas);
+        resolve(canvas);
     });
 };
 

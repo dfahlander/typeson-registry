@@ -1,24 +1,45 @@
 /* This preset includes types for the Structured Cloning Algorithm. */
-module.exports = [
-    // Todo: Might also register `ImageBitmap` and synchronous `Blob`/`File`/`FileList`
+
+import userObject from '../types/user-object.js';
+import presetUndefined from '../presets/undef.js';
+import primitiveObjects from '../types/primitive-objects.js';
+import specialNumbers from '../presets/special-numbers.js';
+import date from '../types/date.js';
+import regexp from '../types/regexp.js';
+import map from '../types/map.js';
+import set from '../types/set.js';
+import arraybuffer from '../types/arraybuffer.js';
+import typedArrays from '../types/typed-arrays.js';
+import dataview from '../types/dataview.js';
+import intlTypes from '../types/intl-types.js';
+
+import imagedata from '../types/imagedata.js';
+import imagebitmap from '../types/imagebitmap.js'; // Async return
+import file from '../types/file.js';
+import filelist from '../types/filelist.js';
+import blob from '../types/blob.js';
+
+const expObj = [
+    // Todo: Might also register synchronous `ImageBitmap` and `Blob`/`File`/`FileList`?
     // ES5
-    require('../types/user-object'), // Processed last
-    require('../presets/undefined'),
-    require('../types/primitive-objects'),
-    require('../presets/special-numbers'),
-    require('../types/date'),
-    require('../types/regexp'),
-    // ES2015 (ES6)
-    typeof Map === 'function' && require('../types/map'),
-    typeof Set === 'function' && require('../types/set'),
-    typeof ArrayBuffer === 'function' && require('../types/arraybuffer'),
-    typeof Uint8Array === 'function' && require('../types/typed-arrays'),
-    typeof DataView === 'function' && require('../types/dataview'),
-    typeof Intl !== 'undefined' && require('../types/intl-types'),
+    userObject, // Processed last (non-builtin)
+
+    presetUndefined, primitiveObjects, specialNumbers,
+    date, regexp,
+
     // Non-built-ins
-    require('../types/imagedata'),
-    require('../types/imagebitmap'), // Async return
-    require('../types/file'),
-    require('../types/filelist'),
-    require('../types/blob')
-];
+    imagedata,
+    imagebitmap, // Async return
+    file,
+    filelist,
+    blob
+].concat(
+    // ES2015 (ES6)
+    typeof Map === 'function' ? map : [],
+    typeof Set === 'function' ? set : [],
+    typeof ArrayBuffer === 'function' ? arraybuffer : [],
+    typeof Uint8Array === 'function' ? typedArrays : [],
+    typeof DataView === 'function' ? dataview : [],
+    typeof Intl !== 'undefined' ? intlTypes : []
+);
+export default expObj;

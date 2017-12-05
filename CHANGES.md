@@ -2,9 +2,9 @@
 
 ## Version 1.0.0
 
-- Breaking and other changes: Upgraded version of Typeson from 3.0.0 to 5.1.0
+- Breaking and other changes: Upgraded version of Typeson from 3.0.0 to 5.4.0
 
-- Breaking change: Make `SpecialNumber` a preset consisting of new
+- Breaking change: Make `SpecialNumbers` a preset consisting of new
     individual types for `NaN`, `Infinity`, `-Infinity`
 
 - Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
@@ -15,7 +15,7 @@
 - Fix (RegExp): Add `unicode` and `sticky` flag support for cloning
 - Fix (Date): Support invalid dates (with `NaN` value)
 - Fix (undefined/sparseUndefined): Label `undefined` at root as regular
-    `undefined` rather than `sparseUndefined` (will rely on update to
+    `undef` type rather than `sparseUndefined` (will rely on update to
     `typeson`)
 - Fix (SCA): Remove `Proxy` from list of structured clone throwing to throw
     as not available as such
@@ -25,18 +25,19 @@
     an array proper and length is on prototype, the object iteration
     will not preserve); fix by converting to array and reconstructing
     `Uint8ClampedArray` during revival)
-- Fix (TypedArrays): For sake of TypedArrays, update to patched
-    `base64-arraybuffer`
+- Fix (TypedArrays): For sake of TypedArrays, update to
+    `base64-arraybuffer-es6`
 
 - Enhancement: Add cloneable type with test (detects/utilizes
-    `__cloneEncapsulate` and `__cloneRevive` methods on an object)
+    `Symbol.for('cloneEncapsulate')` and `Symbol.for('cloneRevive')`
+    methods on an object)
 - Enhancement: Add resurrectable type with test (resurrects non-plain
     objects, functions, and symbols to the exact instance, assuming the
     same session/environment)
 - Enhancement: Add `ImageBitmap` type (with sync and async revival)
 - Enhancement: Add `File`, `Blob`, and `FileList` types (with sync and
     async replacement/encapsulation)
-- Enhancement: Add `user-objects` type and utilize in structured cloning
+- Enhancement: Add `user-object` type and utilize in structured cloning
     to allow for non-plain user objects to be cloned; add test
 - Enhancement: Add `nonbuiltin-ignore` type to roughly detect non-builtin
     objects and avoid adding them as properties
@@ -76,9 +77,8 @@
 - Testing (Workers): Elaborate more on logging
 - Testing (Update): JSDom API usage; overcome apparent Mocha change with
     deep equal, bump some timeouts, get working fully with in-browser test
-- Testing (Refactoring): move utils into own file; use
-    polyfill form of `Array.from`; avoid setting globals; create entry
-    file without Canvas-specific code (problem when browserified)
+- Testing (Refactoring): move utils into own file; avoid setting globals;
+    create entry file without Canvas-specific code (problem when browserified)
 - Testing (Refactoring): Consistent indentation and var. naming, reorder tests
     as present in built-in preset
 

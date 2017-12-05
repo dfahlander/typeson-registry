@@ -1,15 +1,16 @@
-var fs = require('fs');
-var path = require('path');
-var isWin = /^win/.test(process.platform);
+/* eslint-env node */
+const fs = require('fs');
+const path = require('path');
+const isWin = /^win/.test(process.platform);
 
 function copy (fromPath, toPath) {
     fs.writeFileSync(toPath, fs.readFileSync(fromPath));
 }
 
 if (isWin) {
-    var pathToGTKBin = 'C:\\GTK\\bin\\';
-    var pathToIEShims = 'C:\\Program Files (x86)\\Internet Explorer\\IEShims.dll';
-    var targetDir = path.join(require.resolve('canvas'), '../../build/Release');
+    const pathToGTKBin = 'C:\\GTK\\bin\\';
+    const pathToIEShims = 'C:\\Program Files (x86)\\Internet Explorer\\IEShims.dll';
+    const targetDir = path.join(require.resolve('canvas'), '../../build/Release');
 
     [pathToGTKBin, pathToIEShims, targetDir].forEach((path) => {
         if (!fs.existsSync(path)) {
@@ -26,7 +27,7 @@ if (isWin) {
             process.exit(1);
         }
         files.filter((f) => (/\.dll$/).test(f)).forEach((file) => {
-            var targetPath = targetDir + '\\' + file;
+            const targetPath = targetDir + '\\' + file;
             if (fs.existsSync(targetPath)) {
                 console.log('File already exists at target path: ' + targetPath);
             } else {

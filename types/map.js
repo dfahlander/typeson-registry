@@ -1,7 +1,8 @@
-var Typeson = require('typeson');
-var makeArray = require('../utils/array-from-iterator');
-exports.Map = [
-    function (x) { return Typeson.toStringTag(x) === 'Map'; },
-    function (map) { return makeArray(map.entries()); },
-    function (entries) { return new Map(entries); }
-];
+import Typeson from 'typeson';
+export default {
+    map: {
+        test (x) { return Typeson.toStringTag(x) === 'Map'; },
+        replace (map) { return Array.from(map.entries()); },
+        revive (entries) { return new Map(entries); }
+    }
+};

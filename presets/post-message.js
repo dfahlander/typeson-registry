@@ -9,7 +9,11 @@
  * This preset will only include the Error types and you can register your custom types
  * after having registered these.
  */
-module.exports = [
-    require('../types/error'),
-    require('../types/errors')
+
+import error from '../types/error.js';
+import errors from '../types/errors.js';
+
+export default [
+    error,
+    errors
 ];

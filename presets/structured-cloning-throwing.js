@@ -1,4 +1,6 @@
-module.exports = require('./structured-cloning').concat({checkDataCloneException: [function (val) {
+import structuredCloning from './structured-cloning.js';
+
+export default structuredCloning.concat({checkDataCloneException: [function (val) {
     // Should also throw with:
     // 1. `IsDetachedBuffer` (a process not called within the ECMAScript spec)
     // 2. `IsCallable` (covered by `typeof === 'function'` or a function's `toStringTag`)
@@ -9,8 +11,9 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
     //      [[DefineOwnProperty]],[[HasProperty]],[[Get]],[[Set]],[[Delete]],[[OwnPropertyKeys]]);
     //      except for the standard, built-in exotic objects, we'd need to know whether these methods had distinct behaviors
     // Note: There is no apparent way for us to detect a `Proxy` and reject (Chrome at least is not rejecting anyways)
-    var stringTag = ({}.toString.call(val).slice(8, -1));
-    if ([
+    const stringTag = ({}.toString.call(val).slice(8, -1));
+    if (
+        [
             'symbol', // Symbol's `toStringTag` is only "Symbol" for its initial value, so we check `typeof`
             'function' // All functions including bound function exotic objects
         ].includes(typeof val) ||
@@ -24,7 +27,11 @@ module.exports = require('./structured-cloning').concat({checkDataCloneException
         ].includes(stringTag) ||
         val === Object.prototype || // A non-array exotic object but not throwing in Chrome `postMessage`
         ((stringTag === 'Blob' || stringTag === 'File') && val.isClosed) ||
-        (val && typeof val === 'object' && typeof val.nodeType === 'number' && typeof val.insertBefore === 'function') // Duck-type DOM node objects (non-array exotic? objects which cannot be cloned by the SCA)
+        (val && typeof val === 'object' &&
+            // Duck-type DOM node objects (non-array exotic? objects which
+            //    cannot be cloned by the SCA)
+            typeof val.nodeType === 'number' &&
+            typeof val.insertBefore === 'function')
     ) {
         throw new DOMException('The object cannot be cloned.', 'DataCloneError');
     }

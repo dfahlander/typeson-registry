@@ -1,7 +1,17 @@
-var Typeson = require('typeson');
-var B64 = require ('base64-arraybuffer');
-exports.DataView = [
-    function (x) { return Typeson.toStringTag(x) === 'DataView'; },
-    function (dw) { return { buffer: B64.encode(dw.buffer), byteOffset: dw.byteOffset, byteLength: dw.byteLength }; },
-    function (obj) { return new DataView(B64.decode(obj.buffer), obj.byteOffset, obj.byteLength); }
-];
+import Typeson from 'typeson';
+import {encode, decode} from 'base64-arraybuffer-es6';
+export default {
+    dataview: {
+        test (x) { return Typeson.toStringTag(x) === 'DataView'; },
+        replace ({buffer, byteOffset, byteLength}) {
+            return {
+                buffer: encode(buffer),
+                byteOffset,
+                byteLength
+            };
+        },
+        revive ({buffer, byteOffset, byteLength}) {
+            return new DataView(decode(buffer), byteOffset, byteLength);
+        }
+    }
+};

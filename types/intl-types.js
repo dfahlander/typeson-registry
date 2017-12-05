@@ -1,18 +1,25 @@
-var Typeson = require('typeson');
-exports["Intl.Collator"] = [
-    function (x) { return Typeson.hasConstructorOf(x, Intl.Collator); },
-    function (c) { return c.resolvedOptions(); },
-    function (options) { return new Intl.Collator(options.locale, options); }
-];
+import Typeson from 'typeson';
 
-exports["Intl.DateTimeFormat"] = [
-    function (x) { return Typeson.hasConstructorOf(x, Intl.DateTimeFormat); },
-    function (dtf) { return dtf.resolvedOptions(); },
-    function (options) { return new Intl.DateTimeFormat(options.locale, options); }
-];
+const IntlCollator = {
+    test (x) { return Typeson.hasConstructorOf(x, Intl.Collator); },
+    replace (c) { return c.resolvedOptions(); },
+    revive (options) { return new Intl.Collator(options.locale, options); }
+};
 
-exports["Intl.NumberFormat"] = [
-    function (x) { return Typeson.hasConstructorOf(x, Intl.NumberFormat); },
-    function (nf) { return nf.resolvedOptions(); },
-    function (options) { return new Intl.NumberFormat(options.locale, options); }
-];
+const IntlDateTimeFormat = {
+    test (x) { return Typeson.hasConstructorOf(x, Intl.DateTimeFormat); },
+    replace (dtf) { return dtf.resolvedOptions(); },
+    revive (options) { return new Intl.DateTimeFormat(options.locale, options); }
+};
+
+const IntlNumberFormat = {
+    test (x) { return Typeson.hasConstructorOf(x, Intl.NumberFormat); },
+    replace (nf) { return nf.resolvedOptions(); },
+    revive (options) { return new Intl.NumberFormat(options.locale, options); }
+};
+
+export default {
+    IntlCollator,
+    IntlDateTimeFormat,
+    IntlNumberFormat
+};

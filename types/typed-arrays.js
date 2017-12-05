@@ -1,23 +1,34 @@
-var Typeson = require('typeson');
-var B64 = require ('base64-arraybuffer');
+/* eslint-env browser, node */
+import Typeson from 'typeson';
+import {encode, decode} from 'base64-arraybuffer';
 
-var _global = typeof self === 'undefined' ? global : self;
+const _global = typeof self === 'undefined' ? global : self;
 
+const exportObj = {};
 [
-    "Int8Array",
-    "Uint8Array",
-    "Uint8ClampedArray",
-    "Int16Array",
-    "Uint16Array",
-    "Int32Array",
-    "Uint32Array",
-    "Float32Array",
-    "Float64Array"
+    'Int8Array',
+    'Uint8Array',
+    'Uint8ClampedArray',
+    'Int16Array',
+    'Uint16Array',
+    'Int32Array',
+    'Uint32Array',
+    'Float32Array',
+    'Float64Array'
 ].forEach(function (typeName) {
-    var TypedArray = _global[typeName];
-    if (TypedArray) exports[typeName] = [
-        function test (x) { return Typeson.toStringTag(x) === typeName; },
-        function encapsulate (a) { return B64.encode (a.buffer, a.byteOffset, a.byteLength); },
-        function revive (b64) { return new TypedArray (B64.decode(b64)); }
-    ];
+    const arrType = typeName;
+    const TypedArray = _global[arrType];
+    if (TypedArray) {
+        exportObj[typeName.toLowerCase()] = {
+            test (x) { return Typeson.toStringTag(x) === arrType; },
+            replace (a) {
+                return encode(a.buffer, a.byteOffset, a.byteLength);
+            },
+            revive (b64) {
+                return new TypedArray(decode(b64));
+            }
+        };
+    }
 });
+
+export default exportObj;

@@ -1,9 +1,9 @@
-module.exports = [
+export default [
     {
         sparseArrays: {
             testPlainObjects: true,
-            test: function (x) {return Array.isArray(x);},
-            replace: function (a, stateObj) {
+            test (x) { return Array.isArray(x); },
+            replace (a, stateObj) {
                 stateObj.iterateUnsetNumeric = true;
                 return a;
             }
@@ -11,9 +11,11 @@ module.exports = [
     },
     {
         sparseUndefined: {
-            test: function (x, stateObj) { return typeof x === 'undefined' && stateObj.ownKeys === false; },
-            replace: function (n) { return null; },
-            revive: function (s) { return undefined;} // Will avoid adding anything
+            test (x, stateObj) {
+                return typeof x === 'undefined' && stateObj.ownKeys === false;
+            },
+            replace (n) { return null; },
+            revive (s) { return undefined; } // Will avoid adding anything
         }
     }
 ];

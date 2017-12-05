@@ -1,9 +1,12 @@
-var Typeson = require('typeson');
-var B64 = require ('base64-arraybuffer');
+import Typeson from 'typeson';
+import {encode, decode} from 'base64-arraybuffer-es6';
 
-exports.ArrayBuffer = [
-    function test (x) { return Typeson.toStringTag(x) === 'ArrayBuffer';},
-    function encapsulate (b) { return B64.encode(b); },
-    function revive (b64) { return B64.decode(b64); }
-];
+export default {
+    arraybuffer: {
+        test (x) { return Typeson.toStringTag(x) === 'ArrayBuffer'; },
+        replace (b) { return encode(b); },
+        revive (b64) { return decode(b64); }
+    }
+};
+
 // See also typed-arrays!

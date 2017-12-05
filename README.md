@@ -15,19 +15,24 @@ See the testing environment of `test/test.js` for some examples.
 You must run `npm run build` if you wish to get the individual browser scripts built locally (into `dist`)
 (or in development to get `index.js` to be rebuilt based on existing presets and types).
 
-## Usage
+## Usage (Node)
 
 ```js
-var Typeson = require ('typeson');
-var TSON = new Typeson().register([
-    require('typeson-registry/types/date'),
-    require('typeson-registry/types/error'),
-    require('typeson-registry/types/regexp'),
-    require('typeson-registry/types/typed-arrays'),
+import Typeson from 'typeson';
+import date from 'typeson-registry/types/date';
+import error from 'typeson-registry/types/error';
+import regexp from 'typeson-registry/types/regexp';
+import typedArrays from 'typeson-registry/types/typed-arrays';
+
+const TSON = new Typeson().register([
+    date,
+    error,
+    regexp,
+    typedArrays
     // ...
 ]);
 
-var tson = TSON.stringify({
+const tson = TSON.stringify({
     Hello: "world",
     date: new Date(),
     error: new Error(),
@@ -63,27 +68,39 @@ console.log(tson);
 }
 */
 
-var parsedBack = TSON.parse(tson);
+const parsedBack = TSON.parse(tson);
 
 assert(parsedBack.date instanceof Date);
 assert(parsedBack.inner.bin instanceof Uint8Array);
+```
 
+## Usage (`import` in supporting browsers)
+
+```html
+<script type="module">
+
+import Typeson from './node_modules/typeson-registry.js';
+
+const {presets: {builtin}} = Typeson;
+const TSON = new Typeson().register([
+    builtin
+]);
+</script>
 ```
 
 ## Usage (with plain script tags)
 
-All types and presets under dist are UMD modules so you could also require them as AMD modules with requirejs if you prefer.
+All types and presets under `dist/` are UMD modules so you could also require them as AMD modules with requirejs if you prefer.
 
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://unpkg.com/typeson/dist/typeson.js"></script>
     <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.js"></script>
     <script>
 
-    var TSON = new Typeson().register(Typeson.presets.builtin);
-    var tson = TSON.stringify({
+    const TSON = new Typeson().register(Typeson.presets.builtin);
+    const tson = TSON.stringify({
         Hello: "world",
         date: new Date(),
         error: new Error(),
@@ -93,7 +110,7 @@ All types and presets under dist are UMD modules so you could also require them 
         }
     }, null, 2);
 
-    alert(tson);        
+    alert(tson);
     /* Alerts:
 
     {
@@ -126,45 +143,63 @@ All types and presets under dist are UMD modules so you could also require them 
 
 ## Notes on types and presets
 
+Note that the type name corresponds to the file name in the following manner:
+
+1. Genuine separate words are camel-cased in the type name but hyphenated in
+    the file name (e.g., `negativeInfinity` and `negativity-infinity.js`);
+    names whose original API is camel-cased are not hyphenated, however
+    (e.g., `arraybuffer` and `arraybuffer.js` given `ArrayBuffer`).
+1. All other portions of names are lower-cased (e.g., `date` and `date.js`).
+1. Type names that would clash with existing objects when exported (even after
+    lower-casing) must have a separate, preferably abbreviated form (e.g.,
+    the type and preset `undef` and `undef.js` was necessary for `undefined`)
+1. Type names which are not allowed as ES6 exports (e.g., periods in `Intl` types
+    are now removed: `Intl.Collator` -> `IntlCollator`)
+1. Type names should indicate the singular (e.g., `userObject`) except for
+    files containing multiple related exports (e.g., `errors`, `typed-arrays`,
+    and `typed-arrays-socketio.js`); files with multiple exports whose extra
+    exports are incidental (e.g., `filelist`) do not need a plural.
+
 ### Types
 
-- `ArrayBuffer`
-- `Blob` - Has sync and async encapsulation/replacements (though sync only
+- `arraybuffer`
+- `blob` - Has sync and async encapsulation/replacements (though sync only
     via deprecated means)
-- `cloneable` - Looks for `__cloneEncapsulate` and `__cloneRevive` methods to allow
+- `cloneable` - Looks for `Symbol.for('cloneEncapsulate')` and
+    `Symbol.for('cloneRevive')` methods to allow
     for a means of extending our built-in structured cloning presets (though if
     you are polyfilling a standard object, we welcome you to submit back as a
     PR!). The clones cannot be revived past the current window session, however.
-- `DataView`
-- `Date`
+- `dataview`
+- `date`
 - `error.js` (`Error`) and `errors.js` (`TypeError`, `RangeError`, `SyntaxError`, `ReferenceError`, `EvalError`, `URIError`, `InternalError`) - These
     provide a means of resurrecting error object across cloning boundaries
     (since they are not otherwise treated as cloneable by the Structured
     Cloning Algorithm).
-- `File` - Has sync and async encapsulation/replacements (though sync only
+- `file` - Has sync and async encapsulation/replacements (though sync only
     via deprecated means)
-- `FileList` - HTML does not provide a means of creating a `FileList` object
+- `filelist` - HTML does not provide a means of creating a `FileList` object
     dynamically, so we polyfill one for revival. This method also sets `File`
-- `ImageBitmap` - Has sync and async revivers. The sync method does not produce
+- `imagebitmap` - Has sync and async revivers. The sync method does not produce
     a genuine `ImageBitmap` but instead produces a canvas element which can
     frequently be used in a similar context to `ImageBitmap`.
-- `ImageData`
-- `Infinity` - Preserves positive infinity
+- `imagedata`
+- `infinity` - Preserves positive infinity
 - `intl-types.js` (`Intl.Collator`, `Intl.DateTimeFormat`, `Intl.NumberFormat`) -
     Not all properties can be preserved
-- `Map`
-- `NaN` - Preserves `NaN` (not a number)
+- `map`
+- `nan` - Preserves `NaN` (not a number)
 - `NegativeInfinity` - Preserves negative infinity
 - `nonBuiltInIgnore` - For roughly detecting non-builtin objects and to avoid
     adding them as properties
 - `primitive-objects.js` (`StringObject`, `BooleanObject`, `NumberObject`)
-- `RegExp`
+- `regexp`
 - `resurrectable` - Resurrects any non-array object, function, or symbol; can
     only be revived for the current window session.
-- `Set`
+- `set`
 - `typed-arrays-socketio.js` (`Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`) - See [typeson#environmentformat-support](https://github.com/dfahlander/typeson#environmentformat-support) and `presets/socketio.js`
 - `typed-arrays.js` (`Int8Array`, `Uint8Array`, `Uint8ClampedArray`, `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`, `Float64Array`) - Base64-encodes
-- `undefined` (See also `presets/undefined.js` and `presets/sparse-undefined.js`)
+- `undef` (for `undefined`) (See also `presets/undefined.js` and `presets/sparse-undefined.js`)
 - `userObjects` - Allows for inherited objects but ensures the prototype chain
     inherits from `Object` (or `null`). Should be low priority if one is matching
     other objects as it will readily match many objects.
@@ -196,15 +231,15 @@ that it is unsafe, and also that the function might not behave deterministically
 when revived (e.g., if the function were provided from another context).
 
 ```js
-var functionType = {functionType: [
+const functionType = {functionType: [
     function (x) { return typeof x === 'function'; },
     function (functionType) { return '(' + functionType.toString() + ')'; },
     function (o) { return eval(o); }
 ]};
 
-var typeson = new Typeson().register(functionType);
-var tson = typeson.stringify(function () { return 'abc'; });
-var back = typeson.parse(tson);
+const typeson = new Typeson().register(functionType);
+const tson = typeson.stringify(function () { return 'abc'; });
+const back = typeson.parse(tson);
 back() // 'abc'
 ```
 
