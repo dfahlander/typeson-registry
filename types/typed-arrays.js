@@ -1,6 +1,6 @@
 /* eslint-env browser, node */
 import Typeson from 'typeson';
-import {encode, decode} from 'base64-arraybuffer';
+import {encode, decode} from 'base64-arraybuffer-es6';
 
 const _global = typeof self === 'undefined' ? global : self;
 

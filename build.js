@@ -1,12 +1,6 @@
 /* eslint-env node */
 const fs = require('fs');
 const path = require('path');
-const mapstraction = require('mapstraction');
-const uglifyify = require('uglifyify'); // eslint-disable-line no-unused-vars
-const browserifyString = require('browserify-string');
-const browserify = require('browserify');
-const browserifyTest = require('browserify-test').default; // Babel doesn't handle without `babel-plugin-add-module-exports` and `browserify-test` is not using it (and `import` doesn't need to add it)
-const babelify = require('babelify'); // eslint-disable-line no-unused-vars
 
 const prologue =
     // `//# sourceMappingURL=path/to/source.map
@@ -65,11 +59,6 @@ dirs.forEach(dir => {
 
             const reqStr = `import ${fileName} from './${dir}/${f}';\n`;
             ws.write(reqStr);
-            browserifyUglifyAndExtractMaps({
-                entries: prologue + reqStr + epilogue,
-                target: `dist/${dir}/${f}`,
-                browserifyString
-            });
         });
     moduleStrings[dir] = moduleStrings[dir].slice(0, -1);
 });
@@ -83,51 +72,6 @@ dirs.forEach((dir) => {
     );
 });
 ws.end(epilogue);
-
-browserifyUglifyAndExtractMaps({entries: 'index.js', target: 'dist/all.js'}).on('finish', () => {
-    fs.unlink(path.join(process.cwd(), '.__browserify_string_empty.js'), function (err) {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        if (process.argv[2] === 'test') {
-            browserifyTest({files: ['./test/test-entry.js'], transform: ['babelify'], watch: true});
-        }
-    });
-});
-
-function browserifyUglifyAndExtractMaps ({entries, target, browserifyString}) {
-    const browserifyOptions = {
-        standalone: 'Typeson',
-        // detectGlobals: false, // Besides speeding up, avoids some apparent bug with modules referencing `global` getting added with double directories into `sources` of the source map (e.g., as `types/errors/errors` instead of `types/errors`)
-        debug: true // Needed by mapstraction to extract source map
-    };
-
-    let browserifyInstance;
-    if (browserifyString) {
-        browserifyInstance = browserifyString(entries, browserifyOptions);
-    } else {
-        browserifyOptions.entries = entries;
-        browserifyInstance = browserify(browserifyOptions);
-    }
-    const ret = browserifyInstance.transform({ global: true }, 'uglifyify'
-    // ).plugin(babelify)
-    ).plugin(
-        mapstraction, {
-            // sourcesBase: process.argv[2] === 'null' ? '' : (process.argv[2] || '../'), // Works
-            // sourceRoot: process.argv[3] || '', // 'http://localhost:8085', // Can work in place of `sourcesBase`
-            /*
-            sourcesMap: function (sourceFile) { // Best solution as makes it fully independent of build
-                return '../' + sourceFile;
-            },
-            */
-            _: [target + '.map']
-        }
-    ).bundle().pipe(
-        fs.createWriteStream(target)
-    );
-    return ret;
-}
 
 function nameFromFile (f) {
     let name = f.substr(0, f.length - '.js'.length);
