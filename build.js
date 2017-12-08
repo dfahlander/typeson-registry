@@ -96,26 +96,31 @@ dirs.forEach((dir) => {
 ws.write('\n\n');
 ws.end(epilogue);
 
-ws.on('finish', async () => {
-    await bundle({input: 'index.js', output: './dist/all.js', name: 'Typeson'});
-    await bundle({input: 'index.js', output: './dist/index.js', name: 'Typeson', format: 'es'});
+ws.on('finish', () => {
+    Promise.all(
+        bundle({input: 'index.js', output: './dist/all.js', name: 'Typeson'}),
+        bundle({input: 'index.js', output: './dist/index.js', name: 'Typeson', format: 'es'}),
 
-    await bundle({input: 'test/test.js', output: 'test/test-polyglot.js', name: 'TypesonTest'});
-    await bundle({
-        input: 'polyfills/createObjectURL.js',
-        output: 'polyfills/createObjectURL-polyglot.js',
-        name: 'createObjectURL'
-    });
+        bundle({input: 'test/test.js', output: 'test/test-polyglot.js', name: 'TypesonTest'}),
+        bundle({
+            input: 'polyfills/createObjectURL.js',
+            output: 'polyfills/createObjectURL-polyglot.js',
+            name: 'createObjectURL'
+        })
+    );
 });
 })();
 
 async function bundle ({input, output, name, format = 'umd'}) {
     const plugins = [
+        uglify({
+            keep_fnames: true, // Needed for `Typeson.Undefined` and other constructor detection
+            keep_classnames: true // Keep in case implementing above as classes
+        }, minify),
         resolve({
             main: false
         }),
-        commonjs(),
-        uglify({}, minify)
+        commonjs()
     ];
     if (format !== 'es') {
         plugins.unshift(babel());
