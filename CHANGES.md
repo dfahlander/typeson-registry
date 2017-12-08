@@ -34,6 +34,8 @@
     3.0.0 to 5.4.0 (has own `module`)
 - Breaking change: Make `SpecialNumbers` a preset consisting of new
     individual types for `NaN`, `Infinity`, `-Infinity`
+- Breaking change: Node must reference `dist` subdirectory (except for
+    main `dist/all.js`)
 
 - Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
     get cross-frame/cross-module class detection (replacing `constructor`
@@ -92,7 +94,7 @@
     add `engines` in anticipation of targeting specific version
 
 - Building: Create `dist` directories if not existing
-- Building: Package all types/presets into one (browserified/uglified)
+- Building: Package all types/presets into one (rolled-up/uglified)
     file as well as to individual files
 - Building: Uglify and build source maps (preserving source files)
 
