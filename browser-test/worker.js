@@ -1,6 +1,9 @@
 /* globals Typeson */
 /* eslint-env worker */
-importScripts('../index.js');
+
+// Todo: ES6 Modules import not yet supported in workers by Chrome
+// import Typeson from '../dist/index.js';
+importScripts('../dist/all.js');
 
 const TSON = new Typeson().register(Typeson.presets.postMessage);
 

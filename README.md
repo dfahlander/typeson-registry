@@ -15,7 +15,7 @@ See the testing environment of `test/test.js` for some examples.
 You must run `npm run build` if you wish to get the individual browser scripts built locally (into `dist`)
 (or in development to get `index.js` to be rebuilt based on existing presets and types).
 
-## Usage (Node)
+## Usage (Pre-rollup in Node or browser)
 
 ```js
 import Typeson from 'typeson';
@@ -70,16 +70,27 @@ console.log(tson);
 
 const parsedBack = TSON.parse(tson);
 
-assert(parsedBack.date instanceof Date);
-assert(parsedBack.inner.bin instanceof Uint8Array);
+console.log(parsedBack.date instanceof Date);
+console.log(parsedBack.inner.bin instanceof Uint8Array);
 ```
 
-## Usage (`import` in supporting browsers)
+## Usage (Node without own Rollup)
+
+```js
+const Typeson = require('typeson-registry/dist/all.js');
+
+const {presets: {builtin}} = Typeson;
+const TSON = new Typeson().register([
+    builtin
+]);
+```
+
+## Usage (`import` in supporting browsers without own Rollup)
 
 ```html
 <script type="module">
 
-import Typeson from './node_modules/typeson-registry.js';
+import Typeson from './node_modules/typeson-registry/dist/index.js';
 
 const {presets: {builtin}} = Typeson;
 const TSON = new Typeson().register([
@@ -88,7 +99,7 @@ const TSON = new Typeson().register([
 </script>
 ```
 
-## Usage (with plain script tags)
+## Usage (with plain script tags without own Rollup)
 
 All types and presets under `dist/` are UMD modules so you could also require them as AMD modules with requirejs if you prefer.
 
@@ -96,6 +107,7 @@ All types and presets under `dist/` are UMD modules so you could also require th
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://unpkg.com/typeson/dist/typeson.js"></script>
     <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.js"></script>
     <script>
 

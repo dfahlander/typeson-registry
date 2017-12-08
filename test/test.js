@@ -1,38 +1,9 @@
 /* eslint-env mocha */
-/* globals global, expect, assert, imageTestFileNode */
+/* globals expect, assert, imageTestFileNode */
 /* eslint-disable no-unused-expressions */
-import Typeson from '../index-es6.js';
+import Typeson from '../index.js';
+import testEnvironment from '../test/test-environment.js'; // eslint-disable-line no-unused-vars
 import util from './test-utils.js';
-
-// For Node (we put here as this is exported and to be usable externally in ES6 module syntax
-//     whereas the `test-node.js` file has not been converted to ES6)
-import {createObjectURL, xmlHttpRequestOpen} from '../polyfills/createObjectURL.js';
-if (!URL.createObjectURL) {
-    URL.createObjectURL = createObjectURL;
-    XMLHttpRequest.prototype.open = xmlHttpRequestOpen;
-}
-
-// No means to set a `FileList` currently in jsdom so we
-//   make our own `FileList`; Todo: jsdom should really support this:
-//   https://github.com/tmpvar/jsdom/issues/1272
-const glob = typeof module !== 'undefined' ? global : window;
-function FileList () {
-    this._files = arguments[0];
-    this.length = this._files.length;
-}
-FileList.prototype.item = function (index) {
-    return this._files[index];
-};
-FileList.prototype[Symbol.toStringTag] = 'FileList';
-Object.defineProperty(glob.HTMLInputElement.prototype, 'files', {
-    get: function () {
-        return new FileList(this._files);
-    },
-    set: function (val) {
-        this._files = val;
-    }
-});
-glob.FileList = FileList;
 
 const {
     types: {
@@ -702,7 +673,7 @@ describe('FileList', function () {
 
         const input = document.createElement('input');
         input.type = 'file';
-        input.files = [ // See the test-entry for our adapter to make this settable
+        input.files = [ // See the test-environment for our adapter to make this settable
             new File([
                 'content1'
             ],
@@ -740,7 +711,7 @@ describe('FileList', function () {
 
         const input = document.createElement('input');
         input.type = 'file';
-        input.files = [ // See the test-entry for our adapter to make this settable
+        input.files = [ // See the test-environment for our adapter to make this settable
             new File([
                 'content1'
             ],
@@ -952,3 +923,5 @@ describe('Presets', () => {
         });
     });
 });
+
+mocha.run();

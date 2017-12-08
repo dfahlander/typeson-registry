@@ -2,8 +2,36 @@
 
 ## Version 1.0.0
 
-- Breaking and other changes: Upgraded version of Typeson from 3.0.0 to 5.4.0
-
+- Breaking change (file names): Rename files
+    `undefined.js` -> `undef.js` (preset too),
+    `NaN.js`->`nan.js`, `Infinity.js`->`infinity.js`,
+    `NegativeInfinity.js`->`negative-infinity.js`
+- Breaking change (type name): Intl types must specify properties now without
+    periods per apparent `export` limitations
+- Breaking change (type name): Use `userObjects`->`userObject` on internal
+    representation of types (consistent with pattern of reserving plurals
+    for files containing multiple exports)
+- Breaking change (type name): Export type objects lower-cased to avoid
+    importing into context where they would conflict with built-in classes
+    or objects: `ArrayBuffer`->`arraybuffer`, `Blob`->`blob`,
+    `DataView`->`dataview`, `Date`->`date`, `Error`->`error`, `File`->`file`,
+    `FileList`->`filelist`, `ImageBitmap`->`imagebitmap`,
+    `ImageData`->`imagedata`, `Infinity`->`infinity`, `Map`->`map`,
+    `NaN`->`nan`, `RegExp`->`regexp`, `Set`->`set`
+- Breaking change (type name): For those that would still conflict
+    (type and preset `undefined`->`undef`), abbreviate
+- Breaking change (type name): Make type name consistent with file name
+    (initial lower-cased camel-case type name (changing case only for
+    genuinely separate words, not for API names) with hyphenated file
+    name) `NegativeInfinity`->`negativeInfinity`,
+    `nonBuiltInIgnore`->`nonbuiltinIgnore`,
+- Breaking change (type name): Lower case exports from `errors.js`,
+    `typed-arrays.js`, `typed-arrays-socketio.js`
+- Breaking change: For `cloneable`, look for `cloneEncapsulate` and
+    `cloneRevive` global symbols instead of pseudo-private methods (Babel
+    polyfills Symbol)
+- Breaking and other changes: Upgraded version of Typeson from
+    3.0.0 to 5.4.0 (has own `module`)
 - Breaking change: Make `SpecialNumbers` a preset consisting of new
     individual types for `NaN`, `Infinity`, `-Infinity`
 
@@ -28,6 +56,9 @@
 - Fix (TypedArrays): For sake of TypedArrays, update to
     `base64-arraybuffer-es6`
 
+- Enhancement (build): Adapt build processes for Rollup along with
+    uglification and external source maps to represent code internally
+    as ES6 Modules (and make for easy export to browser-usable ES6 modules)
 - Enhancement: Add cloneable type with test (detects/utilizes
     `Symbol.for('cloneEncapsulate')` and `Symbol.for('cloneRevive')`
     methods on an object)
@@ -46,10 +77,19 @@
 
 - Refactoring: Rely on now Typeson-built-in `isUserObject`
 - Refactoring: Adjust to Typeson changes re: sparse arrays and `undefined`
+- Refactoring: Use `test`/`replace`/`revive` object format for greater
+    readability and possible extensibility
+- Refactoring: Switch to ES6 Modules
 
-- npm: Update dependencies and remove shrinkwrap
+- Linting: Add ESLint including npm script and apply
+
+- npm: Update dev/dependencies and remove shrinkwrap
 - npm/ignore files: Add `node-canvas` testing dependency and ignore
     resulting build directory
+- npm: Add `module` field (for bundlers as Webpack/Rollup)
+- npm: Use `dist/all.js` for `main` in `package.json`
+- npm: Remove `prepublish` script (being repeated on npm <= 4);
+    add `engines` in anticipation of targeting specific version
 
 - Building: Create `dist` directories if not existing
 - Building: Package all types/presets into one (browserified/uglified)
@@ -66,12 +106,13 @@
 - Testing: Add watch routine for CI development; add preliminary babelify
     routine to support more advanced features in test source (if not code)
 - Testing: Add `ImageData` test that works in Node
+- Testing: Split tests for `undefined`; add more checks
 - Testing: Add tests for missing untested types
 - Testing: Add a property and prototype property to simulated built in
     class
 - Testing: Add user objects test; simplify non-built-in test
-- Testing: Provide simple `server.js` (run by default with `npm start`)
-    to avoid Chrome origin restrictions when run on file system
+- Testing: Provide simple `server.js` to avoid Chrome origin restrictions
+    when run on file system; auto-open test file
 - Testing: Restore `undefined` at root
 - Testing (Workers): Display results on HTML page
 - Testing (Workers): Elaborate more on logging
@@ -81,6 +122,7 @@
     create entry file without Canvas-specific code (problem when browserified)
 - Testing (Refactoring): Consistent indentation and var. naming, reorder tests
     as present in built-in preset
+- Testing (Node): New API for `createObjectURL`
 
 - Demos: Remove redundant references to Typeson (already bundled with dist
     files)

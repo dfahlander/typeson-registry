@@ -12,8 +12,7 @@
     "eslint": "eslint browser-test/ test/ presets/ types/ *.js",
     "test": "npm run eslint && npm run rollup && mocha test/test-node",
     "browser-test": "npm run eslint && npm run rollup && npm start browser-test/",
-    "rollup": "rollup -c",
-    "build": "node ./build.js",
+    "rollup": "node ./build.js",
     "windows": "node windows-devinstall"
   },
   "repository": {
@@ -57,11 +56,14 @@
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-uglify": "^2.0.1",
+    "uglify-es": "^3.2.1",
     "whatwg-url": "6.4.0"
   },
   "dependencies": {
     "base64-arraybuffer-es6": "0.1.0",
-    "typeson": "5.4.0"
+    "typeson": "5.4.0",
+    "uuid": "^3.1.0"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
 }

@@ -2,7 +2,16 @@
 const fs = require('fs');
 const path = require('path');
 
+const rollup = require('rollup');
+const babel = require('rollup-plugin-babel');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
+
+const uglify = require('rollup-plugin-uglify');
+const {minify} = require('uglify-es');
+
 const prologue =
+    // Todo: Integrate source-map-support?
     // `//# sourceMappingURL=path/to/source.map
     // require("source-map-support").install();
 `// This file is auto-generated from \`build.js\`
@@ -14,11 +23,14 @@ if (!fs.existsSync('dist')) {
     fs.mkdirSync('dist');
 }
 
-const ws = fs.createWriteStream('index-es6.js');
+const ws = fs.createWriteStream('index.js');
 ws.write(prologue);
 const moduleStrings = {};
+
+(async () => { // eslint-disable-line padded-blocks
+
 const dirs = ['types', 'presets'];
-dirs.forEach(dir => {
+await Promise.all(dirs.map(async dir => {
     // While building the general file, we write the individual files too
     if (!fs.existsSync(`dist/${dir}`)) {
         fs.mkdirSync(`dist/${dir}`);
@@ -26,14 +38,18 @@ dirs.forEach(dir => {
     let currentLine = '';
     moduleStrings[dir] = '';
     ws.write(`\n// ${dir.toUpperCase()}\n`);
-    fs.readdirSync(path.join(__dirname, '/', dir))
+    const dirPath = path.join(__dirname, '/', dir);
+    // Todo: Would be faster to Promise.all on concatenation of all
+    const promiseAll = await Promise.all(fs.readdirSync(dirPath)
         .filter(f => f.lastIndexOf('.js') === f.length - '.js'.length)
-        .forEach((f, i) => {
+        .map((f, i) => {
             const name = nameFromFile(f);
             let fileName = name; // `${name[0].toUpperCase() + name.slice(1)}`;
             let fileString = fileName;
-            if (fileName === 'undef' && dir === 'presets') {
-                fileName = 'undef2';
+
+            // Todo: We really should auto-detect duplicates instead
+            if (['undef'].includes(fileName) && dir === 'presets') {
+                fileName += '2';
                 fileString += ': ' + fileName;
             }
             /*
@@ -59,19 +75,70 @@ dirs.forEach(dir => {
 
             const reqStr = `import ${fileName} from './${dir}/${f}';\n`;
             ws.write(reqStr);
-        });
+            return bundle({
+                name: `Typeson.${dir}.${name}`,
+                input: path.join(dirPath, f),
+                output: `./dist/${dir}/${f}`
+            });
+        })
+    );
     moduleStrings[dir] = moduleStrings[dir].slice(0, -1);
-});
-ws.write('\n');
+    return promiseAll;
+}));
+
 dirs.forEach((dir) => {
     ws.write(
-        `Typeson.${dir} = {
+        `\nTypeson.${dir} = {
     ${moduleStrings[dir]}
-};
-`
+};`
     );
 });
+ws.write('\n\n');
 ws.end(epilogue);
+
+ws.on('finish', async () => {
+    await bundle({input: 'index.js', output: './dist/all.js', name: 'Typeson'});
+    await bundle({input: 'index.js', output: './dist/index.js', name: 'Typeson', format: 'es'});
+
+    await bundle({input: 'test/test.js', output: 'test/test-polyglot.js', name: 'TypesonTest'});
+    await bundle({
+        input: 'polyfills/createObjectURL.js',
+        output: 'polyfills/createObjectURL-polyglot.js',
+        name: 'createObjectURL'
+    });
+});
+})();
+
+async function bundle ({input, output, name, format = 'umd'}) {
+    const plugins = [
+        resolve({
+            main: false
+        }),
+        commonjs(),
+        uglify({}, minify)
+    ];
+    if (format !== 'es') {
+        plugins.unshift(babel());
+    }
+    // Todo: Setup rollup.watch() dev routine
+    const bundle = await rollup.rollup({
+        input,
+        plugins
+    });
+    // const {imports, exports, modules} = bundle;
+    // console.log('imports/exports/modules', Object.keys(imports), exports, Object.keys(modules));
+    try {
+        const ret = await bundle.write({
+            file: output,
+            format,
+            name,
+            sourcemap: true
+        });
+        return ret;
+    } catch (err) {
+        console.log('error writing bundle: ', output, err);
+    }
+};
 
 function nameFromFile (f) {
     let name = f.substr(0, f.length - '.js'.length);
