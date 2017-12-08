@@ -1,3 +1,6 @@
 .*
-*.log
+/*.*
 build
+test
+browser-test
+!LICENSE-MIT.txt
