@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "1.0.0-alpha.17",
+  "version": "1.0.0-alpha.18",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -59,8 +59,8 @@
     "uglify-es": "^3.2.1"
   },
   "dependencies": {
-    "base64-arraybuffer-es6": "0.2.0",
-    "typeson": "5.6.0",
+    "base64-arraybuffer-es6": "0.3.1",
+    "typeson": "5.7.1",
     "uuid": "^3.1.0",
     "whatwg-url": "6.4.0"
   },
