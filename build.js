@@ -96,8 +96,8 @@ dirs.forEach((dir) => {
 ws.write('\n\n');
 ws.end(epilogue);
 
-ws.on('finish', () => {
-    Promise.all(
+ws.on('finish', async () => {
+    await Promise.all([
         bundle({input: 'index.js', output: './dist/all.js', name: 'Typeson'}),
         bundle({input: 'index.js', output: './dist/index.js', name: 'Typeson', format: 'es'}),
 
@@ -107,7 +107,8 @@ ws.on('finish', () => {
             output: 'polyfills/createObjectURL-polyglot.js',
             name: 'createObjectURL'
         })
-    );
+    ]);
+    console.log('Finished build');
 });
 })();
 
@@ -133,13 +134,12 @@ async function bundle ({input, output, name, format = 'umd'}) {
     // const {imports, exports, modules} = bundle;
     // console.log('imports/exports/modules', Object.keys(imports), exports, Object.keys(modules));
     try {
-        const ret = await bundle.write({
+        return bundle.write({
             file: output,
             format,
             name,
             sourcemap: true
         });
-        return ret;
     } catch (err) {
         console.log('error writing bundle: ', output, err);
     }
