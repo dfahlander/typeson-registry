@@ -272,6 +272,20 @@ function BuiltIn (preset) {
             expect(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
         });
+        it('should return the same ArrayBuffer instance', () => {
+            const typeson = new Typeson().register(preset || [arraybuffer]);
+            const buf1 = new ArrayBuffer(16);
+            const buf2 = buf1;
+            const obj = {
+                buf1,
+                buf2
+            };
+            const tson = typeson.stringify(obj, null, 2);
+            const back = typeson.parse(tson);
+            expect(back.buf1 instanceof ArrayBuffer);
+            expect(back.buf2 instanceof ArrayBuffer);
+            expect(back.buf1).to.equal(back.buf2);
+        });
     });
 
     describe('TypedArrays', () => {
@@ -344,6 +358,33 @@ function BuiltIn (preset) {
                 expect(a2[2]).to.equal(2);
             });
         });
+
+        describe('Uint8 arrays with shared buffer object', () => {
+            it('should return the same buffer object from different wrappers (or data views or buffer itself)', () => {
+                const typeson = new Typeson().register(preset || [
+                    arraybuffer,
+                    typedArrays,
+                    dataview
+                ]);
+                const shared = new ArrayBuffer(7);
+                const dataView = new DataView(shared, 3, 4);
+                const obj = {
+                    wrapper1: new Uint8Array(shared),
+                    wrapper2: new Uint16Array(shared, 2, 2),
+                    buffer: shared,
+                    dataView
+                };
+                obj.wrapper1[0] = 1;
+                obj.wrapper2[1] = 0xffff;
+
+                const json = typeson.stringify(obj);
+                // console.log(json);
+                const obj2 = typeson.parse(json);
+                expect(obj2.wrapper1.buffer).to.equal(obj2.wrapper2.buffer);
+                expect(obj2.wrapper1.buffer).to.equal(obj2.buffer);
+                expect(obj2.wrapper1.buffer).to.equal(obj2.dataView.buffer);
+            });
+        });
     });
 
     /*
@@ -363,6 +404,27 @@ function BuiltIn (preset) {
             const back = typeson.parse(tson);
             expect(back).to.be.an.instanceOf(DataView);
             expect(back.byteLength).to.equal(4);
+        });
+        it('should reproduce DataView with the same buffer', () => {
+            const typeson = new Typeson().register(preset || [dataview]);
+            const sample = [0x44, 0x33, 0x22, 0x11, 0xFF, 0xEE, 0xDD, 0xCC];
+            const buffer = new Uint8Array(sample).buffer;
+            const dataView1 = new DataView(buffer, 3, 4);
+            const dataView2 = new DataView(buffer, 3, 4);
+            const dataView3 = new DataView(buffer, 3, 4);
+
+            const obj = {
+                dataView1,
+                dataView2,
+                dataView3
+            };
+
+            const tson = typeson.stringify(obj, null, 2);
+            const back = typeson.parse(tson);
+            expect(back.dataView1).to.be.an.instanceOf(DataView);
+            expect(back.dataView2).to.be.an.instanceOf(DataView);
+            expect(back.dataView3).to.be.an.instanceOf(DataView);
+            expect(back.dataView1.byteLength).to.equal(4);
         });
     });
 

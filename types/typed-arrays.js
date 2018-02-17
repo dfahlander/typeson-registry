@@ -21,11 +21,34 @@ const exportObj = {};
     if (TypedArray) {
         exportObj[typeName.toLowerCase()] = {
             test (x) { return Typeson.toStringTag(x) === arrType; },
-            replace (a) {
-                return encode(a.buffer, a.byteOffset, a.byteLength);
+            replace ({buffer, byteOffset, length}, stateObj) {
+                if (!stateObj.buffers) {
+                    stateObj.buffers = [];
+                }
+                const index = stateObj.buffers.indexOf(buffer);
+                if (index > -1) {
+                    return {index, byteOffset, length};
+                }
+                stateObj.buffers.push(buffer);
+                return {
+                    encoded: encode(buffer),
+                    byteOffset,
+                    length
+                };
             },
-            revive (b64) {
-                return new TypedArray(decode(b64));
+            revive (b64Obj, stateObj) {
+                if (!stateObj.buffers) {
+                    stateObj.buffers = [];
+                }
+                const {byteOffset, length, encoded, index} = b64Obj;
+                let buffer;
+                if ('index' in b64Obj) {
+                    buffer = stateObj.buffers[index];
+                } else {
+                    buffer = decode(encoded);
+                    stateObj.buffers.push(buffer);
+                }
+                return new TypedArray(buffer, byteOffset, length);
             }
         };
     }

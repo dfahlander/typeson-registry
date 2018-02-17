@@ -2,6 +2,10 @@
 
 ## Version 1.0.0
 
+- Breaking fix: Preserve the full underlying buffer for `DataView` and
+    typed arrays; add tests
+- Breaking fix: If buffer is reused across `ArrayBuffer`, `DataView`,
+    and/or typed arrays, rebuild cyclic references; add tests
 - Breaking change (file names): Rename files
     `undefined.js` -> `undef.js` (preset too),
     `NaN.js`->`nan.js`, `Infinity.js`->`infinity.js`,
@@ -31,7 +35,7 @@
     `cloneRevive` global symbols instead of pseudo-private methods (Babel
     polyfills Symbol)
 - Breaking and other changes: Upgraded version of Typeson from
-    3.0.0 to 5.4.0 (has own `module`)
+    3.0.0 to 5.8.1 (has own `module`)
 - Breaking change: Make `SpecialNumbers` a preset consisting of new
     individual types for `NaN`, `Infinity`, `-Infinity`
 - Breaking change: Node must reference `dist` subdirectory (except for
