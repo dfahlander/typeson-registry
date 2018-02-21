@@ -957,6 +957,13 @@ describe('Presets', () => {
                 {name: 'Bob Smith', dob: new Date(2000, 5, 20), age: 30, isMarried: true}
             ]);
         });
+        it('should work with recursive structures', () => {
+            const typeson = new Typeson().register(structuredCloningThrowing);
+            const obj = [];
+            obj.push(obj);
+            const clonedData = typeson.parse(typeson.stringify(obj));
+            expect(clonedData[0]).to.equal(clonedData);
+        });
     });
     describe('Special Numbers (as preset)', () => {
         SpecialNumbers([specialNumbers]);
