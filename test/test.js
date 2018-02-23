@@ -619,6 +619,7 @@ describe('Blob', function () {
         });
         const tson = typeson.stringify(blob1);
         const back = typeson.parse(tson);
+
         expect(back.type).to.equal(contentType);
         expect('name' in back).to.be.false; // No file properties
         expect('lastModified' in back).to.be.false; // No file properties
@@ -658,6 +659,35 @@ describe('Blob', function () {
                 assert(false, 'FileReader should not err');
             });
             reader.readAsText(back);
+        });
+    });
+    it('Handle large (typed array) Blobs', function (done) {
+        this.timeout(10000);
+        function largeValue (size, seed) {
+            const buffer = new Uint8Array(size);
+            // 32-bit xorshift - must be non-zero seed
+            let state = 1000 + seed;
+            for (let i = 0; i < size; ++i) {
+                state ^= state << 13;
+                state ^= state >> 17;
+                state ^= state << 5;
+                buffer[i] = state & 0xff;
+            }
+            return buffer;
+        }
+
+        const typeson = new Typeson().register(blob);
+        const largeVal = 131072;
+        const b5 = new Blob([largeValue(largeVal, 1)], {type: 'text/x-blink-1'});
+        const t5 = typeson.stringify(b5);
+        const tback = typeson.parse(t5);
+        expect(tback.size, 'Sync large val').to.equal(largeVal);
+
+        const b6 = new Blob([largeValue(largeVal, 1)], {type: 'text/x-blink-1'});
+        typeson.stringifyAsync(b6).then((t6) => {
+            const tback = typeson.parse(t6);
+            expect(tback.size, 'Async large val').to.equal(largeVal);
+            done();
         });
     });
 });

@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "1.0.0-alpha.20",
+  "version": "1.0.0-alpha.21",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -10,8 +10,8 @@
   "module": "./index.js",
   "scripts": {
     "eslint": "eslint browser-test/ test/ presets/ types/ *.js",
-    "test": "npm run eslint && npm run rollup && mocha test/test-node",
-    "browser-test": "npm run eslint && npm run rollup && npm start browser-test/",
+    "test": "npm run rollup && npm run eslint && mocha test/test-node",
+    "browser-test": "npm run rollup && npm run eslint && npm start browser-test/",
     "rollup": "node ./build.js",
     "windows": "node windows-devinstall"
   },

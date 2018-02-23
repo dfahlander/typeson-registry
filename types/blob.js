@@ -1,11 +1,16 @@
 import Typeson from 'typeson';
 
+import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
+
 export default {
     blob: {
         test (x) { return Typeson.toStringTag(x) === 'Blob'; },
         replace (b) { // Sync
             const req = new XMLHttpRequest();
             req.open('GET', URL.createObjectURL(b), false); // Sync
+            if (typeof TextEncoder !== 'undefined') { // Using TextDecoder/TextEncoder used too much space
+                req.overrideMimeType('text/plain; charset=utf-16le');
+            }
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
             }
@@ -16,7 +21,7 @@ export default {
             };
         },
         revive ({type, stringContents}) {
-            return new Blob([stringContents], {type});
+            return new Blob([string2arraybuffer(stringContents)], {type});
         },
         replaceAsync (b) {
             return new Typeson.Promise((resolve, reject) => {
@@ -34,7 +39,7 @@ export default {
                 reader.addEventListener('error', () => {
                     reject(reader.error);
                 });
-                reader.readAsText(b);
+                reader.readAsText(b, 'UTF-16');
             });
         }
     }

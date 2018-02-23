@@ -28,8 +28,9 @@ const _xhropen = XMLHttpRequest.prototype.open;
 function xmlHttpRequestOpen (method, url, async) {
     if ((/^blob:/).test(url)) {
         const blob = blobURLs[url];
-        const type = blob.type;
-        url = 'data:' + type + ';base64,' + blob[impl]._buffer.toString('base64');
+        const type = 'text/plain'; // blob.type;
+        const utf16 = blob[impl]._buffer.toString('utf16le');
+        url = 'data:' + type + ',' + utf16;
     }
     return _xhropen.call(this, method, url, async);
 };
