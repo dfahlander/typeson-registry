@@ -25,10 +25,10 @@ FileList.prototype.item = function (index) {
 };
 FileList.prototype[Symbol.toStringTag] = 'FileList';
 Object.defineProperty(glob.HTMLInputElement.prototype, 'files', {
-    get: function () {
+    get () {
         return new FileList(this._files);
     },
-    set: function (val) {
+    set (val) {
         this._files = val;
     }
 });

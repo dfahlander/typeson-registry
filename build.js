@@ -5,15 +5,13 @@ const path = require('path');
 const rollup = require('rollup');
 const babel = require('rollup-plugin-babel');
 const resolve = require('rollup-plugin-node-resolve');
-const commonjs = require('rollup-plugin-commonjs');
 
-const uglify = require('rollup-plugin-uglify');
-const {minify} = require('uglify-es');
+const {terser} = require('rollup-plugin-terser');
 
 const prologue =
-    // Todo: Integrate source-map-support?
-    // `//# sourceMappingURL=path/to/source.map
-    // require("source-map-support").install();
+// Todo: Integrate source-map-support?
+// `//# sourceMappingURL=path/to/source.map
+// require("source-map-support").install();
 `// This file is auto-generated from \`build.js\`
 import Typeson from 'typeson';
 `;
@@ -114,14 +112,13 @@ ws.on('finish', async () => {
 
 async function bundle ({input, output, name, format = 'umd'}) {
     const plugins = [
-        uglify({
+        input.includes('test') ? null : terser({
             keep_fnames: true, // Needed for `Typeson.Undefined` and other constructor detection
             keep_classnames: true // Keep in case implementing above as classes
-        }, minify),
+        }),
         resolve({
             main: false
-        }),
-        commonjs()
+        })
     ];
     if (format !== 'es') {
         plugins.unshift(babel());

@@ -49,7 +49,7 @@ global.createImageBitmap = function (canvas) {
 };
 
 // We set this up separately from test-environment.js as it uses its own mocha
-global.mocha = {setup: function () {}, globals: function () {}, checkLeaks: function () {}, run: function () {}};
+global.mocha = {setup () {}, globals () {}, checkLeaks () {}, run () {}};
 
 global.imageTestFileNode = 'file://' + path.resolve(__dirname, 'Flag_of_the_United_Nations.png');
 

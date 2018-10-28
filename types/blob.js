@@ -1,5 +1,4 @@
 import Typeson from 'typeson';
-
 import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
 
 export default {
@@ -8,8 +7,8 @@ export default {
         replace (b) { // Sync
             const req = new XMLHttpRequest();
             req.open('GET', URL.createObjectURL(b), false); // Sync
-            if (typeof TextEncoder !== 'undefined') { // Using TextDecoder/TextEncoder used too much space
-                req.overrideMimeType('text/plain; charset=utf-16le');
+            if (typeof process === 'undefined') {
+                req.overrideMimeType('text/plain; charset=x-user-defined');
             }
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
@@ -39,7 +38,7 @@ export default {
                 reader.addEventListener('error', () => {
                     reject(reader.error);
                 });
-                reader.readAsText(b, 'UTF-16');
+                reader.readAsBinaryString(b);
             });
         }
     }

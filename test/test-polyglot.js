@@ -1,2 +1,3066 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?t():"function"==typeof define&&define.amd?define(t):t()}(0,function(){"use strict";var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},t=function(){return function(e,t){if(Array.isArray(e))return e;if(Symbol.iterator in Object(e))return function sliceIterator(e,t){var n=[],r=!0,i=!1,a=void 0;try{for(var o,s=e[Symbol.iterator]();!(r=(o=s.next()).done)&&(n.push(o.value),!t||n.length!==t);r=!0);}catch(e){i=!0,a=e}finally{try{!r&&s.return&&s.return()}finally{if(i)throw a}}return n}(e,t);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),n=function(e){if(Array.isArray(e)){for(var t=0,n=Array(e.length);t<e.length;t++)n[t]=e[t];return n}return Array.from(e)},r=Object.keys,i=Array.isArray,a={}.toString,o=Object.getPrototypeOf,s={}.hasOwnProperty,c=s.toString,A=["type","replaced","iterateIn","iterateUnsetNumeric"];function isThenable(e,t){return Typeson.isObject(e)&&"function"==typeof e.then&&(!t||"function"==typeof e.catch)}function toStringTag(e){return a.call(e).slice(8,-1)}function hasConstructorOf(t,n){if(!t||"object"!==(void 0===t?"undefined":e(t)))return!1;var r=o(t);if(!r)return!1;var i=s.call(r,"constructor")&&r.constructor;return"function"!=typeof i?null===n:"function"==typeof i&&null!==n&&c.call(i)===c.call(n)}function isPlainObject(e){return!(!e||"Object"!==toStringTag(e))&&(!o(e)||hasConstructorOf(e,Object))}function isObject(t){return t&&"object"===(void 0===t?"undefined":e(t))}function Typeson(a){var o=[],s=[],c={},u=this.types={},l=this.stringify=function(e,t,n,r){r=Object.assign({},a,r,{stringification:!0});var o=f(e,null,r);return i(o)?JSON.stringify(o[0],t,n):o.then(function(e){return JSON.stringify(e,t,n)})};this.stringifySync=function(e,t,n,r){return l(e,t,n,Object.assign({},{throwOnBadSyncType:!0},r,{sync:!0}))},this.stringifyAsync=function(e,t,n,r){return l(e,t,n,Object.assign({},{throwOnBadSyncType:!0},r,{sync:!1}))};var p=this.parse=function(e,t,n){return n=Object.assign({},a,n,{parse:!0}),g(JSON.parse(e,t),n)};this.parseSync=function(e,t,n){return p(e,t,Object.assign({},{throwOnBadSyncType:!0},n,{sync:!0}))},this.parseAsync=function(e,t,n){return p(e,t,Object.assign({},{throwOnBadSyncType:!0},n,{sync:!1}))},this.specialTypeNames=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};return n.returnTypeNames=!0,this.encapsulate(e,t,n)},this.rootTypeName=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};return n.iterateNone=!0,this.encapsulate(e,t,n)};var f=this.encapsulate=function(u,l,p){var f=(p=Object.assign({sync:!0},a,p)).sync,g={},y=[],d=[],w=[],b=!(p&&"cyclic"in p)||p.cyclic,v=p.encapsulateObserver,h=_encapsulate("",u,b,l||{},w);function finish(e){var t=Object.values(g);if(p.iterateNone)return t.length?t[0]:Typeson.getJSONType(e);if(t.length){if(p.returnTypeNames)return[].concat(n(new Set(t)));e&&isPlainObject(e)&&!e.hasOwnProperty("$types")?e.$types=g:e={$:e,$types:{$:g}}}else isObject(e)&&e.hasOwnProperty("$types")&&(e={$:e,$types:!0});return!p.returnTypeNames&&e}return w.length?f&&p.throwOnBadSyncType?function(){throw new TypeError("Sync method requested but async result obtained")}():Promise.resolve(function checkPromises(e,n){return Promise.all(n.map(function(e){return e[1].p})).then(function(r){return Promise.all(r.map(function(r){var i=[],a=n.splice(0,1)[0],o=t(a,7),s=o[0],c=o[2],A=o[3],u=o[4],l=o[5],p=o[6],f=_encapsulate(s,r,c,A,i,!0,p),g=hasConstructorOf(f,TypesonPromise);return s&&g?f.p.then(function(t){return u[l]=t,checkPromises(e,i)}):(s?u[l]=f:e=g?f.p:f,checkPromises(e,i))}))}).then(function(){return e})}(h,w)).then(finish):!f&&p.throwOnBadSyncType?function(){throw new TypeError("Async method requested but sync result obtained")}():p.stringification&&f?[finish(h)]:f?finish(h):Promise.resolve(finish(h));function _adaptBuiltinStateObjectProperties(e,t,n){Object.assign(e,t);var r=A.map(function(t){var n=e[t];return delete e[t],n});n(),A.forEach(function(t,n){e[t]=r[n]})}function _encapsulate(t,n,a,s,c,A,u){var l=void 0,f={},w=void 0===n?"undefined":e(n),b=v?function(e){var r=u||s.type||Typeson.getJSONType(n);v(Object.assign(e||f,{keypath:t,value:n,cyclic:a,stateObj:s,promisesData:c,resolvingTypesonPromise:A,awaitingTypesonPromise:hasConstructorOf(n,TypesonPromise)},void 0!==r?{type:r}:{}))}:null;if(w in{string:1,boolean:1,number:1,undefined:1})return void 0===n||"number"===w&&(isNaN(n)||n===-1/0||n===1/0)?(l=replace(t,n,s,c,!1,A,b))!==n&&(f={replaced:l}):l=n,b&&b(),l;if(null===n)return b&&b(),n;if(a&&!s.iterateIn&&!s.iterateUnsetNumeric){var h=y.indexOf(n);if(!(h<0))return g[t]="#",b&&b({cyclicKeypath:d[h]}),"#"+d[h];!0===a&&(y.push(n),d.push(t))}var m=isPlainObject(n),I=i(n),C=(m||I)&&(!o.length||s.replaced)||s.iterateIn?n:replace(t,n,s,c,m||I,null,b),D=void 0;if(C!==n?(l=C,f={replaced:C}):I||"array"===s.iterateIn?(D=new Array(n.length),f={clone:D}):m||"object"===s.iterateIn?f={clone:D={}}:""===t&&hasConstructorOf(n,TypesonPromise)?(c.push([t,n,a,s,void 0,void 0,s.type]),l=n):l=n,b&&b(),p.iterateNone)return D||l;if(!D)return l;if(s.iterateIn){var x=function _loop(e){var r={ownKeys:n.hasOwnProperty(e)};_adaptBuiltinStateObjectProperties(s,r,function(){var r=t+(t?".":"")+escapeKeyPathComponent(e),i=_encapsulate(r,n[e],!!a,s,c,A);hasConstructorOf(i,TypesonPromise)?c.push([r,i,!!a,s,D,e,s.type]):void 0!==i&&(D[e]=i)})};for(var B in n)x(B);b&&b({endIterateIn:!0,end:!0})}else r(n).forEach(function(e){var r=t+(t?".":"")+escapeKeyPathComponent(e);_adaptBuiltinStateObjectProperties(s,{ownKeys:!0},function(){var t=_encapsulate(r,n[e],!!a,s,c,A);hasConstructorOf(t,TypesonPromise)?c.push([r,t,!!a,s,D,e,s.type]):void 0!==t&&(D[e]=t)})}),b&&b({endIterateOwn:!0,end:!0});if(s.iterateUnsetNumeric){for(var M=n.length,E=function _loop2(e){if(!(e in n)){var r=t+(t?".":"")+e;_adaptBuiltinStateObjectProperties(s,{ownKeys:!1},function(){var t=_encapsulate(r,void 0,!!a,s,c,A);hasConstructorOf(t,TypesonPromise)?c.push([r,t,!!a,s,D,e,s.type]):void 0!==t&&(D[e]=t)})}},O=0;O<M;O++)E(O);b&&b({endIterateUnsetNumeric:!0,end:!0})}return D}function replace(e,t,n,r,i,a,A){for(var u=i?o:s,l=u.length;l--;){var p=u[l];if(p.test(t,n)){var y=p.type;if(c[y]){var d=g[e];g[e]=d?[y].concat(d):y}return Object.assign(n,{type:y,replaced:!0}),!f&&p.replaceAsync||p.replace?(A&&A({replacing:!0}),_encapsulate(e,p[f||!p.replaceAsync?"replace":"replaceAsync"](t,n),b&&"readonly",n,r,a,y)):(A&&A({typeDetected:!0}),_encapsulate(e,t,b&&"readonly",n,r,a,y))}}return t}};this.encapsulateSync=function(e,t,n){return f(e,t,Object.assign({},{throwOnBadSyncType:!0},n,{sync:!0}))},this.encapsulateAsync=function(e,t,n){return f(e,t,Object.assign({},{throwOnBadSyncType:!0},n,{sync:!1}))};var g=this.revive=function(e,n){var o=(n=Object.assign({sync:!0},a,n)).sync,s=e&&e.$types,A=!0;if(!s)return e;if(!0===s)return e.$;s.$&&isPlainObject(s.$)&&(e=e.$,s=s.$,A=!1);var u=[],l={},p=function _revive(e,n,a,o,p,f){if(A&&"$types"===e)return;var g=s[e];if(i(n)||isPlainObject(n)){var y=i(n)?new Array(n.length):{};for(r(n).forEach(function(t){var r=_revive(e+(e?".":"")+escapeKeyPathComponent(t),n[t],a||y,o,y,t);hasConstructorOf(r,Undefined)?y[t]=void 0:void 0!==r&&(y[t]=r)}),n=y;u.length;){var d=t(u[0],4),w=d[0],b=d[1],v=d[2],h=d[3],m=getByKeyPath(w,b);if(hasConstructorOf(m,Undefined))v[h]=void 0;else{if(void 0===m)break;v[h]=m}u.splice(0,1)}}if(!g)return n;if("#"===g){var I=getByKeyPath(a,n.substr(1));return void 0===I&&u.push([a,n.substr(1),p,f]),I}var C=o.sync;return[].concat(g).reduce(function(e,t){var n=c[t];if(!n)throw new Error("Unregistered type: "+t);return n[C&&n.revive?"revive":!C&&n.reviveAsync?"reviveAsync":"revive"](e,l)},n)}("",e,null,n);return isThenable(p=hasConstructorOf(p,Undefined)?void 0:p)?o&&n.throwOnBadSyncType?function(){throw new TypeError("Sync method requested but async result obtained")}():p:!o&&n.throwOnBadSyncType?function(){throw new TypeError("Async method requested but sync result obtained")}():o?p:Promise.resolve(p)};this.reviveSync=function(e,t){return g(e,Object.assign({},{throwOnBadSyncType:!0},t,{sync:!0}))},this.reviveAsync=function(e,t){return g(e,Object.assign({},{throwOnBadSyncType:!0},t,{sync:!1}))},this.register=function(e,t){return t=t||{},[].concat(e).forEach(function R(e){if(i(e))return e.map(R);e&&r(e).forEach(function(n){if("#"===n)throw new TypeError("# cannot be used as a type name as it is reserved for cyclic objects");if(Typeson.JSON_TYPES.includes(n))throw new TypeError("Plain JSON object types are reserved as type names");var r=e[n],a=r.testPlainObjects?o:s,A=a.filter(function(e){return e.type===n});if(A.length&&(a.splice(a.indexOf(A[0]),1),delete c[n],delete u[n]),r){if("function"==typeof r){var l=r;r={test:function test(e){return e&&e.constructor===l},replace:function replace(e){return assign({},e)},revive:function revive(e){return assign(Object.create(l.prototype),e)}}}else i(r)&&(r={test:r[0],replace:r[1],revive:r[2]});var p={type:n,test:r.test.bind(r)};r.replace&&(p.replace=r.replace.bind(r)),r.replaceAsync&&(p.replaceAsync=r.replaceAsync.bind(r));var f="number"==typeof t.fallback?t.fallback:t.fallback?0:1/0;if(r.testPlainObjects?o.splice(f,0,p):s.splice(f,0,p),r.revive||r.reviveAsync){var g={};r.revive&&(g.revive=r.revive.bind(r)),r.reviveAsync&&(g.reviveAsync=r.reviveAsync.bind(r)),c[n]=g}u[n]=r}})}),this}}function assign(e,t){return r(t).map(function(n){e[n]=t[n]}),e}function escapeKeyPathComponent(e){return e.replace(/~/g,"~0").replace(/\./g,"~1")}function unescapeKeyPathComponent(e){return e.replace(/~1/g,".").replace(/~0/g,"~")}function getByKeyPath(e,t){if(""===t)return e;var n=t.indexOf(".");if(n>-1){var r=e[unescapeKeyPathComponent(t.substr(0,n))];return void 0===r?void 0:getByKeyPath(r,t.substr(n+1))}return e[unescapeKeyPathComponent(t)]}function Undefined(){}function TypesonPromise(e){this.p=new Promise(e)}TypesonPromise.prototype.then=function(e,t){var n=this;return new TypesonPromise(function(r,i){n.p.then(function(t){r(e?e(t):t)},function(e){n.p.catch(function(e){return t?t(e):Promise.reject(e)}).then(r,i)})})},TypesonPromise.prototype.catch=function(e){return this.then(null,e)},TypesonPromise.resolve=function(e){return new TypesonPromise(function(t){t(e)})},TypesonPromise.reject=function(e){return new TypesonPromise(function(t,n){n(e)})},["all","race"].map(function(e){TypesonPromise[e]=function(t){return new TypesonPromise(function(n,r){Promise[e](t.map(function(e){return e.p})).then(n,r)})}}),Typeson.Undefined=Undefined,Typeson.Promise=TypesonPromise,Typeson.isThenable=isThenable,Typeson.toStringTag=toStringTag,Typeson.hasConstructorOf=hasConstructorOf,Typeson.isObject=isObject,Typeson.isPlainObject=isPlainObject,Typeson.isUserObject=function isUserObject(e){if(!e||"Object"!==toStringTag(e))return!1;var t=o(e);return!t||hasConstructorOf(e,Object)||isUserObject(t)},Typeson.escapeKeyPathComponent=escapeKeyPathComponent,Typeson.unescapeKeyPathComponent=unescapeKeyPathComponent,Typeson.getByKeyPath=getByKeyPath,Typeson.getJSONType=function(t){return null===t?"null":i(t)?"array":void 0===t?"undefined":e(t)},Typeson.JSON_TYPES=["null","boolean","number","string","array","object"];for(var u="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",l=new Uint8Array(256),p=0;p<u.length;p++)l[u.charCodeAt(p)]=p;var f=function encode(e,t,n){for(var r=new Uint8Array(e,t,n),i=r.length,a="",o=0;o<i;o+=3)a+=u[r[o]>>2],a+=u[(3&r[o])<<4|r[o+1]>>4],a+=u[(15&r[o+1])<<2|r[o+2]>>6],a+=u[63&r[o+2]];return i%3==2?a=a.substring(0,a.length-1)+"=":i%3==1&&(a=a.substring(0,a.length-2)+"=="),a},g=function decode(e){var t=e.length,n=.75*e.length,r=0,i=void 0,a=void 0,o=void 0,s=void 0;"="===e[e.length-1]&&(n--,"="===e[e.length-2]&&n--);for(var c=new ArrayBuffer(n),A=new Uint8Array(c),u=0;u<t;u+=4)i=l[e.charCodeAt(u)],a=l[e.charCodeAt(u+1)],o=l[e.charCodeAt(u+2)],s=l[e.charCodeAt(u+3)],A[r++]=i<<2|a>>4,A[r++]=(15&a)<<4|o>>2,A[r++]=(3&o)<<6|63&s;return c},y={arraybuffer:{test:function test(e){return"ArrayBuffer"===Typeson.toStringTag(e)},replace:function replace(e,t){t.buffers||(t.buffers=[]);var n=t.buffers.indexOf(e);return n>-1?{index:n}:(t.buffers.push(e),f(e))},revive:function revive(t,n){if(n.buffers||(n.buffers=[]),"object"===(void 0===t?"undefined":e(t)))return n.buffers[t.index];var r=g(t);return n.buffers.push(r),r}}};function string2arraybuffer(e){for(var t=new Uint16Array(e.length),n=0;n<e.length;n++)t[n]=e.charCodeAt(n);return t.buffer}var d={blob:{test:function test(e){return"Blob"===Typeson.toStringTag(e)},replace:function replace(e){var t=new XMLHttpRequest;if(t.open("GET",URL.createObjectURL(e),!1),"undefined"!=typeof TextEncoder&&t.overrideMimeType("text/plain; charset=utf-16le"),200!==t.status&&0!==t.status)throw new Error("Bad Blob access: "+t.status);return t.send(),{type:e.type,stringContents:t.responseText}},revive:function revive(e){var t=e.type,n=e.stringContents;return new Blob([string2arraybuffer(n)],{type:t})},replaceAsync:function replaceAsync(e){return new Typeson.Promise(function(t,n){if(e.isClosed)n(new Error("The Blob is closed"));else{var r=new FileReader;r.addEventListener("load",function(){t({type:e.type,stringContents:r.result})}),r.addEventListener("error",function(){n(r.error)}),r.readAsText(e,"UTF-16")}})}}},w={};var b={cloneable:{test:function test(t){return t&&"object"===(void 0===t?"undefined":e(t))&&"function"==typeof t[Symbol.for("cloneEncapsulate")]},replace:function replace(e){var t=e[Symbol.for("cloneEncapsulate")](),n=function generateUUID(){var e=(new Date).getTime();return"undefined"!=typeof performance&&"function"==typeof performance.now&&(e+=performance.now()),"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(t){var n=(e+16*Math.random())%16|0;return e=Math.floor(e/16),("x"===t?n:3&n|8).toString(16)})}();return w[n]=e,{uuid:n,encapsulated:t}},revive:function revive(e){var t=e.uuid,n=e.encapsulated;return w[t][Symbol.for("cloneRevive")](n)}}},v={dataview:{test:function test(e){return"DataView"===Typeson.toStringTag(e)},replace:function replace(e,t){var n=e.buffer,r=e.byteOffset,i=e.byteLength;t.buffers||(t.buffers=[]);var a=t.buffers.indexOf(n);return a>-1?{index:a,byteOffset:r,byteLength:i}:(t.buffers.push(n),{encoded:f(n),byteOffset:r,byteLength:i})},revive:function revive(e,t){t.buffers||(t.buffers=[]);var n=e.byteOffset,r=e.byteLength,i=e.encoded,a=e.index,o=void 0;return"index"in e?o=t.buffers[a]:(o=g(i),t.buffers.push(o)),new DataView(o,n,r)}}},h={date:{test:function test(e){return"Date"===Typeson.toStringTag(e)},replace:function replace(e){var t=e.getTime();return isNaN(t)?"NaN":t},revive:function revive(e){return"NaN"===e?new Date(NaN):new Date(e)}}},m={error:{test:function test(e){return"Error"===Typeson.toStringTag(e)},replace:function replace(e){return{name:e.name,message:e.message}},revive:function revive(e){var t=e.name,n=e.message,r=new Error(n);return r.name=t,r}}},I="undefined"==typeof self?global:self,C={};["TypeError","RangeError","SyntaxError","ReferenceError","EvalError","URIError","InternalError"].forEach(function(e){var t=I[e];t&&(C[e.toLowerCase()]={test:function test(e){return Typeson.hasConstructorOf(e,t)},replace:function replace(e){return e.message},revive:function revive(e){return new t(e)}})});var D={file:{test:function test(e){return"File"===Typeson.toStringTag(e)},replace:function replace(e){var t=new XMLHttpRequest;if(t.open("GET",URL.createObjectURL(e),!1),"undefined"!=typeof TextEncoder&&t.overrideMimeType("text/plain; charset=utf-16le"),200!==t.status&&0!==t.status)throw new Error("Bad Blob access: "+t.status);return t.send(),{type:e.type,stringContents:t.responseText,name:e.name,lastModified:e.lastModified}},revive:function revive(e){var t=e.name,n=e.type,r=e.stringContents,i=e.lastModified,a=string2arraybuffer(r);return new File([a],t,{type:n,lastModified:i})},replaceAsync:function replaceAsync(e){return new Typeson.Promise(function(t,n){if(e.isClosed)n(new Error("The File is closed"));else{var r=new FileReader;r.addEventListener("load",function(){t({type:e.type,stringContents:r.result,name:e.name,lastModified:e.lastModified})}),r.addEventListener("error",function(){n(r.error)}),r.readAsText(e,"UTF-16")}})}}},x={file:D.file,filelist:{test:function test(e){return"FileList"===Typeson.toStringTag(e)},replace:function replace(e){for(var t=[],n=0;n<e.length;n++)t[n]=e.item(n);return t},revive:function revive(e){function FileList(){this._files=arguments[0],this.length=this._files.length}return FileList.prototype.item=function(e){return this._files[e]},FileList.prototype[Symbol.toStringTag]="FileList",new FileList(e)}}},B={imagebitmap:{test:function test(e){return"ImageBitmap"===Typeson.toStringTag(e)||e&&e.dataset&&"ImageBitmap"===e.dataset.toStringTag},replace:function replace(e){var t=document.createElement("canvas");return t.getContext("2d").drawImage(e,0,0),t.toDataURL()},revive:function revive(e){var t=document.createElement("canvas"),n=t.getContext("2d"),r=document.createElement("img");return r.onload=function(){n.drawImage(r,0,0)},r.src=e,t},reviveAsync:function reviveAsync(e){var t=document.createElement("canvas"),n=t.getContext("2d"),r=document.createElement("img");return r.onload=function(){n.drawImage(r,0,0)},r.src=e,createImageBitmap(t)}}},M={imagedata:{test:function test(e){return"ImageData"===Typeson.toStringTag(e)},replace:function replace(e){return{array:Array.from(e.data),width:e.width,height:e.height}},revive:function revive(e){return new ImageData(new Uint8ClampedArray(e.array),e.width,e.height)}}},E={infinity:{test:function test(e){return e===1/0},replace:function replace(e){return"Infinity"},revive:function revive(e){return 1/0}}},O={IntlCollator:{test:function test(e){return Typeson.hasConstructorOf(e,Intl.Collator)},replace:function replace(e){return e.resolvedOptions()},revive:function revive(e){return new Intl.Collator(e.locale,e)}},IntlDateTimeFormat:{test:function test(e){return Typeson.hasConstructorOf(e,Intl.DateTimeFormat)},replace:function replace(e){return e.resolvedOptions()},revive:function revive(e){return new Intl.DateTimeFormat(e.locale,e)}},IntlNumberFormat:{test:function test(e){return Typeson.hasConstructorOf(e,Intl.NumberFormat)},replace:function replace(e){return e.resolvedOptions()},revive:function revive(e){return new Intl.NumberFormat(e.locale,e)}}},T={map:{test:function test(e){return"Map"===Typeson.toStringTag(e)},replace:function replace(e){return Array.from(e.entries())},revive:function revive(e){return new Map(e)}}},S={nan:{test:function test(e){return"number"==typeof e&&isNaN(e)},replace:function replace(e){return"NaN"},revive:function revive(e){return NaN}}},Q={negativeInfinity:{test:function test(e){return e===-1/0},replace:function replace(e){return"-Infinity"},revive:function revive(e){return-1/0}}},q={nonbuiltinIgnore:{test:function test(t){return t&&"object"===(void 0===t?"undefined":e(t))&&!Array.isArray(t)&&!["Object","Boolean","Number","String","Error","RegExp","Math","Date","Map","Set","JSON","ArrayBuffer","SharedArrayBuffer","DataView","Int8Array","Uint8Array","Uint8ClampedArray","Int16Array","Uint16Array","Int32Array","Uint32Array","Float32Array","Float64Array","Promise","String Iterator","Array Iterator","Map Iterator","Set Iterator","WeakMap","WeakSet","Atomics","Module"].includes(Typeson.toStringTag(t))},replace:function replace(e){}}},U={StringObject:{test:function test(t){return"String"===Typeson.toStringTag(t)&&"object"===(void 0===t?"undefined":e(t))},replace:function replace(e){return String(e)},revive:function revive(e){return new String(e)}},BooleanObject:{test:function test(t){return"Boolean"===Typeson.toStringTag(t)&&"object"===(void 0===t?"undefined":e(t))},replace:function replace(e){return Boolean(e)},revive:function revive(e){return new Boolean(e)}},NumberObject:{test:function test(t){return"Number"===Typeson.toStringTag(t)&&"object"===(void 0===t?"undefined":e(t))},replace:function replace(e){return Number(e)},revive:function revive(e){return new Number(e)}}},j={regexp:{test:function test(e){return"RegExp"===Typeson.toStringTag(e)},replace:function replace(e){return{source:e.source,flags:(e.global?"g":"")+(e.ignoreCase?"i":"")+(e.multiline?"m":"")+(e.sticky?"y":"")+(e.unicode?"u":"")}},revive:function revive(e){var t=e.source,n=e.flags;return new RegExp(t,n)}}},L={};var P={resurrectable:{test:function test(t){return t&&!Array.isArray(t)&&["object","function","symbol"].includes(void 0===t?"undefined":e(t))},replace:function replace(e){var t=function generateUUID$1(){var e=(new Date).getTime();return"undefined"!=typeof performance&&"function"==typeof performance.now&&(e+=performance.now()),"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(t){var n=(e+16*Math.random())%16|0;return e=Math.floor(e/16),("x"===t?n:3&n|8).toString(16)})}();return L[t]=e,t},revive:function revive(e){return L[e]}}},V={set:{test:function test(e){return"Set"===Typeson.toStringTag(e)},replace:function replace(e){return Array.from(e.values())},revive:function revive(e){return new Set(e)}}},F="undefined"==typeof self?global:self,N={};["Int8Array","Uint8Array","Uint8ClampedArray","Int16Array","Uint16Array","Int32Array","Uint32Array","Float32Array","Float64Array"].forEach(function(e){var t=e,n=F[e];n&&(N[e.toLowerCase()]={test:function test(e){return Typeson.toStringTag(e)===t},replace:function replace(e){return(0===e.byteOffset&&e.byteLength===e.buffer.byteLength?e:e.slice(0)).buffer},revive:function revive(e){return"ArrayBuffer"===Typeson.toStringTag(e)?new n(e):e}})});var k="undefined"==typeof self?global:self,J={};["Int8Array","Uint8Array","Uint8ClampedArray","Int16Array","Uint16Array","Int32Array","Uint32Array","Float32Array","Float64Array"].forEach(function(e){var t=e,n=k[t];n&&(J[e.toLowerCase()]={test:function test(e){return Typeson.toStringTag(e)===t},replace:function replace(e,t){var n=e.buffer,r=e.byteOffset,i=e.length;t.buffers||(t.buffers=[]);var a=t.buffers.indexOf(n);return a>-1?{index:a,byteOffset:r,length:i}:(t.buffers.push(n),{encoded:f(n),byteOffset:r,length:i})},revive:function revive(e,t){t.buffers||(t.buffers=[]);var r=e.byteOffset,i=e.length,a=e.encoded,o=e.index,s=void 0;return"index"in e?s=t.buffers[o]:(s=g(a),t.buffers.push(s)),new n(s,r,i)}})});var K={undef:{test:function test(e,t){return void 0===e&&(t.ownKeys||!("ownKeys"in t))},replace:function replace(e){return null},revive:function revive(e){return new Typeson.Undefined}}},Y={userObject:{test:function test(e,t){return Typeson.isUserObject(e)},replace:function replace(e){return Object.assign({},e)},revive:function revive(e){return e}}},G=[{sparseArrays:{testPlainObjects:!0,test:function test(e){return Array.isArray(e)},replace:function replace(e,t){return t.iterateUnsetNumeric=!0,e}}},{sparseUndefined:{test:function test(e,t){return void 0===e&&!1===t.ownKeys},replace:function replace(e){return null},revive:function revive(e){}}}],W=[G,K],Z=[S,E,Q],_=[W,U,Z,h,m,C,j].concat("function"==typeof Map?T:[],"function"==typeof Set?V:[],"function"==typeof ArrayBuffer?y:[],"function"==typeof Uint8Array?J:[],"function"==typeof DataView?v:[],"undefined"!=typeof Intl?O:[]),$=[m,C],z=[_,{ArrayBuffer:null},N],H=[Y,W,U,Z,h,j,M,B,D,x,d].concat("function"==typeof Map?T:[],"function"==typeof Set?V:[],"function"==typeof ArrayBuffer?y:[],"function"==typeof Uint8Array?J:[],"function"==typeof DataView?v:[],"undefined"!=typeof Intl?O:[]),X=H.concat({checkDataCloneException:[function(t){var n={}.toString.call(t).slice(8,-1);if(["symbol","function"].includes(void 0===t?"undefined":e(t))||["Arguments","Module","Error","Promise","WeakMap","WeakSet"].includes(n)||t===Object.prototype||("Blob"===n||"File"===n)&&t.isClosed||t&&"object"===(void 0===t?"undefined":e(t))&&"number"==typeof t.nodeType&&"function"==typeof t.insertBefore)throw new DOMException("The object cannot be cloned.","DataCloneError");return!1}]}),ee=[_];Typeson.types={arraybuffer:y,blob:d,cloneable:b,dataview:v,date:h,error:m,errors:C,file:D,filelist:x,imagebitmap:B,imagedata:M,infinity:E,intlTypes:O,map:T,nan:S,negativeInfinity:Q,nonbuiltinIgnore:q,primitiveObjects:U,regexp:j,resurrectable:P,set:V,typedArraysSocketio:N,typedArrays:J,undef:K,userObject:Y},Typeson.presets={builtin:_,postMessage:$,socketio:z,sparseUndefined:G,specialNumbers:Z,structuredCloningThrowing:X,structuredCloning:H,undef:W,universal:ee};var te="undefined"!=typeof module,ne=te&&require("uuid/v4"),re=te&&require("whatwg-url")||{},ie=te&&require("jsdom/lib/jsdom/living/generated/utils")||{},ae=re.serializeURLOrigin,oe=re.parseURL,se={},ce=ie.implSymbol,Ae=XMLHttpRequest.prototype.open;URL.createObjectURL||(URL.createObjectURL=function createObjectURL(e){var t="blob:"+ae(oe(location.href))+"/"+ne();return se[t]=e,t},XMLHttpRequest.prototype.open=function xmlHttpRequestOpen(e,t,n){/^blob:/.test(t)&&(t="data:text/plain,"+se[t][ce]._buffer.toString("utf16le"));return Ae.call(this,e,t,n)}),mocha.setup({ui:"bdd",timeout:5e3});var ue="undefined"!=typeof module?global:window;function FileList$1(){this._files=arguments[0],this.length=this._files.length}function Person(e,t,n,r){e&&(this.name=e),t&&(this.age=t),n&&(this.dob=n),r&&(this.isMarried=r)}function SimulatedNonBuiltIn(){this.aaa=5}function MyCloneable(e){this.obj=e,this.nonpersistentStateInfo=Math.random()}FileList$1.prototype.item=function(e){return this._files[e]},FileList$1.prototype[Symbol.toStringTag]="FileList",Object.defineProperty(ue.HTMLInputElement.prototype,"files",{get:function get(){return new FileList$1(this._files)},set:function set(e){this._files=e}}),ue.FileList=FileList$1,ue.expect=chai.expect,ue.assert=chai.assert,Person.prototype.name="",Person.prototype.age=0,Person.prototype.dob=new Date(1900,0,1),Person.prototype.isMarried=!1,SimulatedNonBuiltIn.prototype.bbb=8,SimulatedNonBuiltIn.prototype[Symbol.toStringTag]="SimulatedNonBuiltIn",MyCloneable.prototype[Symbol.for("cloneEncapsulate")]=function(){return{obj:JSON.stringify(this.obj)}},MyCloneable.prototype[Symbol.for("cloneRevive")]=function(e){return new MyCloneable(JSON.parse(e.obj))},MyCloneable.prototype.prototypeProperty=10;var le={Person:Person,SimulatedNonBuiltIn:SimulatedNonBuiltIn,MyCloneable:MyCloneable,MyResurrectable:function MyResurrectable(){}},pe=Typeson.types,fe=pe.errors,ge=pe.typedArrays,ye=pe.intlTypes,de=pe.undef,we=pe.primitiveObjects,be=pe.nan,ve=pe.infinity,he=pe.negativeInfinity,me=pe.date,Ie=pe.error,Ce=pe.regexp,De=pe.map,xe=pe.set,Be=pe.arraybuffer,Me=pe.dataview,Ee=pe.imagedata,Oe=pe.imagebitmap,Te=pe.blob,Se=pe.file,Qe=pe.filelist,qe=pe.nonbuiltinIgnore,Ue=pe.userObject,je=pe.cloneable,Le=pe.resurrectable,Pe=Typeson.presets,Ve=Pe.builtin,Fe=Pe.universal,Ne=Pe.structuredCloningThrowing,ke=Pe.structuredCloning,Re=Pe.specialNumbers,Je=Pe.postMessage,Ke=Pe.undef,Ye=Pe.sparseUndefined;function ErrorAndErrors(e){describe("Error and Errors",function(){it("should get back real Error instances corresponding to their types and with the original name and message",function(){var t=(new Typeson).register(e||[Ie,fe]),n=t.stringify({e1:new Error("Error1"),e2:new TypeError("Error2"),e3:new RangeError("Error3"),e4:new SyntaxError("Error4"),e5:new ReferenceError("Error5")}),r=t.parse(n);expect(r.e1).to.be.an.instanceOf(Error),expect(r.e1.name).to.equal("Error"),expect(r.e2).to.be.an.instanceOf(TypeError),expect(r.e2.name).to.equal("TypeError"),expect(r.e3).to.be.an.instanceOf(RangeError),expect(r.e3.name).to.equal("RangeError"),expect(r.e4).to.be.an.instanceOf(SyntaxError),expect(r.e4.name).to.equal("SyntaxError"),expect(r.e5).to.be.an.instanceOf(ReferenceError),expect(r.e5.name).to.equal("ReferenceError")})})}function SpecialNumbers(e){describe("Special numbers",function(){it("NaN",function(){var t=(new Typeson).register(e||be),n=t.stringify(NaN,null,2),r=t.parse(n);expect(r).to.be.NaN}),it("Infinity",function(){var t=(new Typeson).register(e||ve),n=t.stringify(1/0,null,2),r=t.parse(n);expect(r).to.equal(1/0)}),it("-Infinity",function(){var t=(new Typeson).register(e||he),n=t.stringify(-1/0,null,2),r=t.parse(n);expect(r).to.equal(-1/0)}),it("should not mistake string forms of the special numbers",function(){var t=(new Typeson).register(e||[be,ve,he]),n=t.stringify("NaN",null,2),r=t.parse(n);expect(r).to.equal("NaN"),n=t.stringify("Infinity",null,2),r=t.parse(n),expect(r).to.equal("Infinity"),n=t.stringify("-Infinity",null,2),r=t.parse(n),expect(r).to.equal("-Infinity")}),it("should not disturb encoding of normal numbers",function(){var t=(new Typeson).register(e||[be,ve,he]),n=t.stringify(512,null,2),r=t.parse(n);expect(r).to.equal(512)})})}function Undefined$1(e){describe("undefined type",function(){it("should be possible to restore `undefined` properties",function(){var t=(new Typeson).register(e||de),n=[void 0,{b:void 0,c:[3,null,,void 0]}],r=t.stringify(n),i=t.parse(r);expect(i.length).to.equal(2),expect(i[0]).to.equal(void 0),expect(i[1].b).to.equal(void 0),expect("b"in i[1]).to.be.true,expect(i[1].c[0]).to.equal(3),expect(i[1].c[1]).to.equal(null),expect(i[1].c[3]).to.equal(void 0),expect("0"in i).to.be.true,expect("b"in i[1]).to.be.true,expect("1"in i[1].c).to.be.true,expect("3"in i[1].c).to.be.true,e?(expect(i[1].c[2]).to.equal(void 0),expect("2"in i[1].c).to.be.false):(expect(i[1].c[2]).to.not.equal(void 0),expect(i[1].c[2]).to.equal(null),expect("2"in i[1].c).to.be.true)}),it("should be possible to restore `undefined` at root",function(){var t=(new Typeson).register(e||de),n=t.stringify(void 0);expect(n).to.equal('{"$":null,"$types":{"$":{"":"undef"}}}');var r=t.parse(n);expect(r).to.be.undefined})})}function BuiltIn(e){Undefined$1(e),describe("Primitive objects",function(){it("String object",function(){var t=(new Typeson).register(e||we),n=new String("hello"),r=t.stringify(n,null,2),i=t.parse(r);expect(i).to.be.an.instanceOf(String),expect(i.valueOf()).to.equal("hello"),expect(i.length).to.equal(5)}),it("Boolean object",function(){var t=(new Typeson).register(e||we),n=new Boolean(!0),r=t.stringify(n,null,2),i=t.parse(r);expect(i).to.be.an.instanceOf(Boolean),expect(i.valueOf()).to.equal(!0)}),it("Number object",function(){var t=(new Typeson).register(e||we),n=new Number(456),r=t.stringify(n,null,2),i=t.parse(r);expect(i).to.be.an.instanceOf(Number),expect(i.valueOf()).to.equal(456)})}),SpecialNumbers(),describe("Date",function(){it("should get back a real Date instance with the original time milliseconds",function(){var t=(new Typeson).register(e||me),n=t.stringify(new Date(1234567)),r=t.parse(n);expect(r).to.be.an.instanceOf(Date),expect(r.getTime()).to.equal(1234567)}),it("should get back a real invalid Date instance",function(){var t=(new Typeson).register(e||me),n=t.stringify(new Date(NaN)),r=t.parse(n);expect(r).to.be.an.instanceOf(Date),expect(r.getTime()).to.be.NaN})}),ErrorAndErrors(e),describe("RegExp",function(){it("should return a RegExp",function(){var t=(new Typeson).register(e||[Ce]),n=new RegExp("ab?c","guy"),r=t.stringify(n,null,2),i=t.parse(r);expect(i instanceof RegExp),expect(i.global).to.equal(!0),expect(i.unicode).to.equal(!0),expect(i.sticky).to.equal(!0),expect(i.ignoreCase).to.equal(!1),expect(i.multiline).to.equal(!1),expect(i.source).to.equal("ab?c"),n=/ab?c/im,r=t.stringify(n,null,2),i=t.parse(r),expect(i instanceof RegExp),expect(i.global).to.equal(!1),expect(i.unicode).to.equal(!1),expect(i.sticky).to.equal(!1),expect(i.ignoreCase).to.equal(!0),expect(i.multiline).to.equal(!0),expect(i.source).to.equal("ab?c")})}),describe("Map",function(){it("should get back a real Map instance with the original data and use complex types also in contained items",function(){var t=(new Typeson).register(e||De),n=new Map,r=new Error("Error here"),i=new Date(1e4);n.set(r,i);var a=t.stringify({m:n}),o=t.parse(a);expect(o.m).to.be.an.instanceOf(Map),e&&(expect(Array.from(o.m.keys())[0]).to.be.an.instanceOf(Error),expect(Array.from(o.m.values())[0]).to.be.an.instanceOf(Date))})}),describe("Set",function(){it("should get back a real Set instance with the original data and use complex types also in contained items",function(){var t=(new Typeson).register(e||xe),n=new Set,r=new Error("Error here"),i=new Date(1e4),a={a:r};n.add(a),n.add(i),n.add("");var o=t.stringify({s:n}),s=t.parse(o);expect(s.s).to.be.an.instanceOf(Set);var c=Array.from(s.s.values());e&&(expect(c[0].a).to.be.an.instanceOf(Error),expect(c[1]).to.be.an.instanceOf(Date)),expect(c[2]).to.be.a("string")})}),describe("ArrayBuffer",function(){it("should return an ArrayBuffer",function(){var t=(new Typeson).register(e||[Be]),n=new ArrayBuffer(16),r=t.stringify(n,null,2),i=t.parse(r);expect(i instanceof ArrayBuffer),expect(i.byteLength).to.equal(16)}),it("should return the same ArrayBuffer instance",function(){var t=(new Typeson).register(e||[Be]),n=new ArrayBuffer(16),r={buf1:n,buf2:n},i=t.stringify(r,null,2),a=t.parse(i);expect(a.buf1 instanceof ArrayBuffer),expect(a.buf2 instanceof ArrayBuffer),expect(a.buf1).to.equal(a.buf2)})}),describe("TypedArrays",function(){describe("Float64Array",function(){it("should get back real Float64Array instance with original array content",function(){var t=(new Typeson).register(e||[Be,ge]),n=new Float64Array(3);n[0]=23.8,n[1]=-15,n[2]=99;var r=t.stringify({a:n}),i=t.parse(r);expect(i.a).to.be.an.instanceOf(Float64Array),expect(i.a.length).to.equal(3),expect(i.a[0]).to.equal(23.8),expect(i.a[1]).to.equal(-15),expect(i.a[2]).to.equal(99)})}),describe("Uint16 arrays over invalid unicode range",function(){it("should work to use any 16-bit number no matter whether it is invalid unicode or not",function(){for(var t=(new Typeson).register(e||[Be,ge]),n=new Uint16Array(2304),r=n.length;r--;)n[r]=r+55168;var i=t.stringify({a:n});r=i.length;for(var a=new Uint16Array(r);r--;){var o=i.charCodeAt(r);a[r]=o>=55296&&o<57344?65533:o}i=String.fromCharCode.apply(null,a);var s=t.parse(i);expect(s.a).to.be.an.instanceOf(Uint16Array),expect(s.a.length).to.equal(n.length),s.a.forEach(function(e,t){expect(e).to.equal(t+55168)})})}),describe("Int8 arrays with odd length",function(){it("should be possible to use an odd length of an Int8Array",function(){var t=(new Typeson).register(e||[Be,ge]),n=new Int8Array(3);n[0]=0,n[1]=1,n[2]=2;var r=t.stringify(n),i=t.parse(r);expect(i.length).to.equal(3),expect(i[0]).to.equal(0),expect(i[1]).to.equal(1),expect(i[2]).to.equal(2)})}),describe("Uint8 arrays with shared buffer object",function(){it("should return the same buffer object from different wrappers (or data views or buffer itself)",function(){var t=(new Typeson).register(e||[Be,ge,Me]),n=new ArrayBuffer(7),r=new DataView(n,3,4),i={wrapper1:new Uint8Array(n),wrapper2:new Uint16Array(n,2,2),buffer:n,dataView:r};i.wrapper1[0]=1,i.wrapper2[1]=65535;var a=t.stringify(i),o=t.parse(a);expect(o.wrapper1.buffer).to.equal(o.wrapper2.buffer),expect(o.wrapper1.buffer).to.equal(o.buffer),expect(o.wrapper1.buffer).to.equal(o.dataView.buffer)})})}),describe("DataView",function(){it("should return a DataView",function(){var t=(new Typeson).register(e||[Me]),n=new Uint8Array([68,51,34,17,255,238,221,204]).buffer,r=new DataView(n,3,4);expect(r.byteLength).to.equal(4);var i=t.stringify(r,null,2),a=t.parse(i);expect(a).to.be.an.instanceOf(DataView),expect(a.byteLength).to.equal(4)}),it("should reproduce DataView with the same buffer",function(){var t=(new Typeson).register(e||[Me]),n=new Uint8Array([68,51,34,17,255,238,221,204]).buffer,r={dataView1:new DataView(n,3,4),dataView2:new DataView(n,3,4),dataView3:new DataView(n,3,4)},i=t.stringify(r,null,2),a=t.parse(i);expect(a.dataView1).to.be.an.instanceOf(DataView),expect(a.dataView2).to.be.an.instanceOf(DataView),expect(a.dataView3).to.be.an.instanceOf(DataView),expect(a.dataView1.byteLength).to.equal(4)})}),describe("Intl types",function(){it("should return a Intl.Collator",function(){var t=(new Typeson).register(e||[ye]),n={localeMatcher:"lookup",usage:"search",sensitivity:"base",ignorePunctuation:!0,numeric:!0,caseFirst:"upper"},r=JSON.parse(JSON.stringify(n)),i=new Intl.Collator(["en","hi","de-AT","de-DE-u-co-phonebk","en-US-u-kn-true","en-US-u-kf-upper"],n),a=i.resolvedOptions().locale,o=t.stringify(i,null,2),s=t.parse(o);expect(s instanceof Intl.Collator),expect(s.resolvedOptions().locale).to.deep.equal(a),Object.keys(r).filter(function(e){return!["localeMatcher","locales"].includes(e)}).forEach(function(e){expect(s.resolvedOptions()[e]).to.deep.equal(r[e])})}),it("should return a Intl.DateTimeFormat",function(){var t=(new Typeson).register(e||[ye]),n={localeMatcher:"lookup",timeZone:"Asia/Shanghai",hour12:!1,formatMatcher:"basic"},r=JSON.parse(JSON.stringify(n)),i=new Intl.DateTimeFormat(["hi","de-AT","de-DE-u-nu-latn","en-US-u-ca-persian"],n),a=t.stringify(i,null,2),o=t.parse(a);expect(o instanceof Intl.DateTimeFormat),Object.keys(r).filter(function(e){return!["localeMatcher","locales","formatMatcher","hour12"].includes(e)}).forEach(function(e){expect(o.resolvedOptions()[e]).to.deep.equal(r[e])})}),it("should return a Intl.NumberFormat",function(){var t=(new Typeson).register(e||[ye]),n={localeMatcher:"lookup",style:"currency",currency:"EUR",currencyDisplay:"symbol",useGrouping:!1},r=JSON.parse(JSON.stringify(n)),i=new Intl.NumberFormat(["hi","de-AT","de-DE-u-nu-bali"],n),a=t.stringify(i,null,2),o=t.parse(a);expect(o instanceof Intl.NumberFormat),Object.keys(r).filter(function(e){return!["localeMatcher","locales"].includes(e)}).forEach(function(e){expect(o.resolvedOptions()[e]).to.deep.equal(r[e])})})})}describe("Built-in",BuiltIn),describe("ImageData",function(){it("should get back an ImageData instance with the original data",function(){var e=(new Typeson).register(Ee),t=new ImageData(1,3),n=e.stringify(t),r=e.parse(n);expect(r.width).to.equal(1),expect(r.height).to.equal(3),expect(r.data).to.deep.equal(new Uint8ClampedArray(12))})}),describe("ImageBitmap",function(){it("should get back an ImageBitmap instance with the original data",function(e){var t=(new Typeson).register(Oe),n=document.createElement("canvas"),r=n.getContext("2d"),i=document.createElement("img");i.onload=function(){r.drawImage(i,0,0),createImageBitmap(n).then(function(e){var n=t.stringify(e);return t.parse(n)}).then(function(t){expect(t.width).to.equal(300),expect(t.height).to.equal(150);var n=document.createElement("canvas");n.getContext("2d").drawImage(t,0,0);try{expect(n.toDataURL()).to.equal("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAACC0lEQVR4nO3UQQ3AIADAwDF7uMMeYpiF/UiTOwV9dcy1zwMQ8N4OAPjLsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwg4wMLwgPj2swUCwAAAABJRU5ErkJggg==")}catch(e){try{expect(n.toDataURL()).to.equal("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC")}catch(e){expect(n.toDataURL()).to.equal("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=")}}e()})},i.src="undefined"!=typeof imageTestFileNode?imageTestFileNode:"../test/Flag_of_the_United_Nations.png"}),it("should get back an ImageBitmap instance with the original data asynchronously",function(e){var t=(new Typeson).register(Oe),n=document.createElement("canvas"),r=n.getContext("2d"),i=document.createElement("img");i.onload=function(){r.drawImage(i,0,0),createImageBitmap(n).then(function(e){var n=t.stringify(e);return t.parseAsync(n)}).then(function(t){expect(t.width).to.equal(300),expect(t.height).to.equal(150);var n=document.createElement("canvas");n.getContext("2d").drawImage(t,0,0);try{expect(n.toDataURL()).to.equal("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAACC0lEQVR4nO3UQQ3AIADAwDF7uMMeYpiF/UiTOwV9dcy1zwMQ8N4OAPjLsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwg4wMLwgPj2swUCwAAAABJRU5ErkJggg==")}catch(e){try{expect(n.toDataURL()).to.equal("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC")}catch(e){expect(n.toDataURL()).to.equal("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=")}}e()})},i.src="undefined"!=typeof imageTestFileNode?imageTestFileNode:"../test/Flag_of_the_United_Nations.png"})}),describe("Blob",function(){it("should get back a Blob instance with the original data",function(e){this.timeout(1e4);var t=(new Typeson).register(Te),n=JSON.stringify("abcሴ"),r=new Blob([n],{type:"application/json"}),i=t.stringify(r),a=t.parse(i);expect(a.type).to.equal("application/json"),expect("name"in a).to.be.false,expect("lastModified"in a).to.be.false;var o=new FileReader;o.addEventListener("load",function(){expect(o.result).to.equal(n),e()}),o.addEventListener("error",function(){assert(!1,"FileReader should not err")}),o.readAsText(a)}),it("should get back a Blob instance with the original data asynchronously",function(e){var t=(new Typeson).register(Te),n=JSON.stringify("abcሴ"),r=new Blob([n],{type:"application/json"});t.stringifyAsync(r).then(function(r){var i=t.parse(r);expect(i.type).to.equal("application/json"),expect("name"in i).to.be.false,expect("lastModified"in i).to.be.false;var a=new FileReader;a.addEventListener("load",function(){expect(a.result).to.equal(n),e()}),a.addEventListener("error",function(){assert(!1,"FileReader should not err")}),a.readAsText(i)})}),it("Handle large (typed array) Blobs",function(e){function largeValue(e,t){for(var n=new Uint8Array(e),r=1e3+t,i=0;i<e;++i)r^=r<<13,r^=r>>17,r^=r<<5,n[i]=255&r;return n}this.timeout(1e4);var t=(new Typeson).register(Te),n=new Blob([largeValue(131072,1)],{type:"text/x-blink-1"}),r=t.stringify(n),i=t.parse(r);expect(i.size,"Sync large val").to.equal(131072);var a=new Blob([largeValue(131072,1)],{type:"text/x-blink-1"});t.stringifyAsync(a).then(function(n){var r=t.parse(n);expect(r.size,"Async large val").to.equal(131072),e()})})}),describe("File",function(){this.timeout(1e4),it("should get back a File instance with the original data",function(e){var t=(new Typeson).register(Se),n=new Date,r=JSON.stringify("abcሴ"),i=new File([r],"aName",{type:"application/json",lastModified:n}),a=t.stringify(i),o=t.parse(a);expect(o.lastModified).to.equal(n.getTime()),expect(o.type).to.equal("application/json"),expect(o.name).to.equal("aName");var s=new FileReader;s.addEventListener("load",function(){expect(s.result).to.equal(r),e()}),s.addEventListener("error",function(){assert(!1,"FileReader should not err")}),s.readAsText(o)}),it("should get back a File instance with the original data asynchronously",function(e){var t=(new Typeson).register(Se),n=new Date,r=JSON.stringify("abcሴ"),i=new File([r],"aName",{type:"application/json",lastModified:n});t.stringifyAsync(i).then(function(i){var a=t.parse(i);expect(a.lastModified).to.equal(n.getTime()),expect(a.type).to.equal("application/json"),expect(a.name).to.equal("aName");var o=new FileReader;o.addEventListener("load",function(){expect(o.result).to.equal(r),e()}),o.addEventListener("error",function(){assert(!1,"FileReader should not err")}),o.readAsText(a)})})}),describe("FileList",function(){this.timeout(1e4),it("should get back a FileList instance with the original data",function(){var e=new Date,t=new Date("1985"),n=document.createElement("input");n.type="file",n.files=[new File(["content1"],"abc",{type:"text/plain",lastModified:e}),new File(["content2"],"def",{type:"text/html",lastModified:t})],expect(n.files).to.be.an.instanceOf(FileList);var r=(new Typeson).register(Qe),i=r.stringify(n.files),a=r.parse(i);expect(a.item(0)).to.be.an.instanceOf(File),expect(a.item(0).lastModified).to.equal(e.getTime()),expect(a.item(0).type).to.equal("text/plain"),expect(a.item(0).name).to.equal("abc"),expect(a.item(1)).to.be.an.instanceOf(File),expect(a.item(1).lastModified).to.equal(t.getTime()),expect(a.item(1).type).to.equal("text/html"),expect(a.item(1).name).to.equal("def")}),it("should get back a FileList instance with the original data asynchronously",function(){var e=new Date,t=new Date("1985"),n=document.createElement("input");n.type="file",n.files=[new File(["content1"],"abc",{type:"text/plain",lastModified:e}),new File(["content2"],"def",{type:"text/html",lastModified:t})],expect(n.files).to.be.an.instanceOf(FileList);var r=(new Typeson).register(Qe);r.stringifyAsync(n.files).then(function(n){var i=r.parse(n);expect(i.item(0)).to.be.an.instanceOf(File),expect(i.item(0).lastModified).to.equal(e.getTime()),expect(i.item(0).type).to.equal("text/plain"),expect(i.item(0).name).to.equal("abc"),expect(i.item(1)).to.be.an.instanceOf(File),expect(i.item(1).lastModified).to.equal(t.getTime()),expect(i.item(1).type).to.equal("text/html"),expect(i.item(1).name).to.equal("def")})})}),describe("Non-built-in object ignoring",function(){it("should ignore non-built-in objects (simulated)",function(){var e=(new Typeson).register(qe),t=new le.Person("John Doe"),n=new le.SimulatedNonBuiltIn,r=e.stringify({a:t,b:n}),i=e.parse(r);expect(i).to.deep.equal({a:{name:"John Doe"}});var a=e.encapsulate(["a",n,5,null]);expect("0"in a).to.be.true,expect("1"in a).to.be.false,expect("2"in a).to.be.true,expect("3"in a).to.be.true})}),describe("User objects",function(){it("should do recursive type checking on user instantiated objects",function(){var e=(new Typeson).register([Ue,me]),t=new le.Person("Bob Smith",30,new Date(2e3,5,20),!0),n=new le.SimulatedNonBuiltIn;n.prop=500;var r=e.stringify({a:t,b:n}),i=e.parse(r);expect(i).to.deep.equal({a:{name:"Bob Smith",age:30,dob:new Date(2e3,5,20),isMarried:!0},b:{aaa:5,prop:500}}),expect("dob"in i.a).to.be.true}),it("should work with nonbuiltin-ignore",function(){var e=(new Typeson).register([Ue,qe]),t=new le.Person("Bob Smith",30,new Date(2e3,5,20),!0);t.nonbuiltin=new le.SimulatedNonBuiltIn;var n=new le.SimulatedNonBuiltIn,r=e.stringify({a:t,b:n}),i=e.parse(r);expect(i).to.deep.equal({a:{name:"Bob Smith",age:30,isMarried:!0,dob:new Date(2e3,5,20).toJSON()}}),expect("nonbuiltin"in i.a).to.be.false})}),describe("Cloneables",function(){it("Should work with custom cloneable objects",function(){var e=(new Typeson).register(je),t={a:1,b:2},n=new le.MyCloneable(t),r=n.nonpersistentStateInfo,i=e.encapsulate(n);expect(n[Symbol.for("cloneEncapsulate")]()).to.deep.equal({obj:JSON.stringify(t)}),expect("nonpersistentStateInfo"in i).to.be.false,expect("prototypeProperty"in i).to.be.false;var a=JSON.stringify(i),o=e.parse(a);expect(o).to.be.an.instanceOf(le.MyCloneable),expect(o).to.not.equal(n),expect(o.obj).to.deep.equal(t),expect(o.hasOwnProperty("nonpersistentStateInfo")).to.be.true,expect(o.nonpersistentStateInfo).to.not.equal(r),expect("prototypeProperty"in o).to.be.true,expect(o.hasOwnProperty("prototypeProperty")).to.be.false})}),describe("Resurrectables",function(){it("Should work with custom resurrectable objects",function(){var e=(new Typeson).register(Le),t=new le.MyResurrectable,n=function resurrectableFunction(){},r=Symbol("resurrectable"),i={},a=[3,4,5],o=e.encapsulate([t,n,r,i,a]),s=JSON.stringify(o),c=e.parse(s);expect(c[0]).to.equal(t),expect(c[1]).to.equal(n),expect(c[2]).to.equal(r),expect(c[3]).to.not.equal(i),expect(c[4]).to.not.equal(a)})}),describe("Presets",function(){describe("Built-in (as preset)",function(){BuiltIn([Ve])}),describe("postMessage",function(){ErrorAndErrors([Je])}),describe("Universal",function(){BuiltIn([Fe])}),describe("Structured cloning",function(){it("should work with Structured cloning with throwing",function(){var e=(new Typeson).register([Ne]),t=!1;try{e.stringify(new Error("test"))}catch(e){t=!0}assert(t,"Caught error");var n=e.stringify(new Date(123456789e4));expect(n).to.deep.equal('{"$":1234567890000,"$types":{"$":{"":"date"}}}')}),it("should work with Structured cloning without throwing",function(){var e=(new Typeson).register([ke]),t=!1;try{e.stringify(new Error("test"))}catch(e){console.log(e),t=!0}assert(!t,"Did not catch error");var n=e.stringify(new Date(123456789e4));expect(n).to.deep.equal('{"$":1234567890000,"$types":{"$":{"":"date"}}}')}),it("should allow recursive type checking on user instantiated objects",function(){var e=(new Typeson).register([ke]),t=new le.Person("John Doe"),n=new le.Person("Bob Smith",30,new Date(2e3,5,20),!0),r=e.parse(e.stringify([t,n]));expect(r).to.have.same.deep.members([{name:"John Doe"},{name:"Bob Smith",dob:new Date(2e3,5,20),age:30,isMarried:!0}])}),it("should work with recursive structures",function(){var e=(new Typeson).register(Ne),t=[];t.push(t);var n=e.parse(e.stringify(t));expect(n[0]).to.equal(n)})}),describe("Special Numbers (as preset)",function(){SpecialNumbers([Re])}),describe("Undefined (as preset)",function(){Undefined$1([Ke])}),describe("Sparse undefined",function(){it("should be possible to restore `undefined` properties",function(){var e=(new Typeson).register([Ye]),t=[void 0,{b:void 0,c:[3,null,,void 0]}],n=e.stringify(t),r=e.parse(n);expect(r.length).to.equal(2),expect(r[0]).to.equal(null),expect("b"in r[1]).to.be.false,expect(r[1].c[0]).to.equal(3),expect(r[1].c[1]).to.equal(null),expect(r[1].c[2]).to.equal(void 0),expect("2"in r[1].c).to.be.false,expect(r[1].c[3]).to.equal(null)})})}),mocha.run()});
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (factory());
+}(this, (function () { 'use strict';
+
+    const {
+      keys
+    } = Object,
+          {
+      isArray
+    } = Array,
+          {
+      toString
+    } = {},
+          getProto = Object.getPrototypeOf,
+          hasOwn = {}.hasOwnProperty,
+          fnToString = hasOwn.toString,
+          internalStateObjPropsToIgnore = ['type', 'replaced', 'iterateIn', 'iterateUnsetNumeric'];
+
+    function isThenable(v, catchCheck) {
+      return Typeson.isObject(v) && typeof v.then === 'function' && (!catchCheck || typeof v.catch === 'function');
+    }
+
+    function toStringTag(val) {
+      return toString.call(val).slice(8, -1);
+    } // This function is dependent on both constructors
+    //   being identical so any minimization is expected of both
+
+
+    function hasConstructorOf(a, b) {
+      if (!a || typeof a !== 'object') {
+        return false;
+      }
+
+      const proto = getProto(a);
+
+      if (!proto) {
+        return false;
+      }
+
+      const Ctor = hasOwn.call(proto, 'constructor') && proto.constructor;
+
+      if (typeof Ctor !== 'function') {
+        return b === null;
+      }
+
+      return typeof Ctor === 'function' && b !== null && fnToString.call(Ctor) === fnToString.call(b);
+    }
+
+    function isPlainObject(val) {
+      // Mirrors jQuery's
+      if (!val || toStringTag(val) !== 'Object') {
+        return false;
+      }
+
+      const proto = getProto(val);
+
+      if (!proto) {
+        // `Object.create(null)`
+        return true;
+      }
+
+      return hasConstructorOf(val, Object);
+    }
+
+    function isUserObject(val) {
+      if (!val || toStringTag(val) !== 'Object') {
+        return false;
+      }
+
+      const proto = getProto(val);
+
+      if (!proto) {
+        // `Object.create(null)`
+        return true;
+      }
+
+      return hasConstructorOf(val, Object) || isUserObject(proto);
+    }
+
+    function isObject(v) {
+      return v && typeof v === 'object';
+    }
+    /* Typeson - JSON with types
+        * License: The MIT License (MIT)
+        * Copyright (c) 2016 David Fahlander
+        */
+
+    /** An instance of this class can be used to call stringify() and parse().
+     * Typeson resolves cyclic references by default. Can also be extended to
+     * support custom types using the register() method.
+     *
+     * @constructor
+     * @param {{cyclic: boolean}} [options] - if cyclic (default true), cyclic references will be handled gracefully.
+     */
+
+
+    function Typeson(options) {
+      // Replacers signature: replace (value). Returns falsy if not replacing. Otherwise ['Date', value.getTime()]
+      const plainObjectReplacers = [];
+      const nonplainObjectReplacers = []; // Revivers: map {type => reviver}. Sample: {'Date': value => new Date(value)}
+
+      const revivers = {};
+      /** Types registered via register() */
+
+      const regTypes = this.types = {};
+      /** Serialize given object to Typeson.
+       *
+       * Arguments works identical to those of JSON.stringify().
+       */
+
+      const stringify = this.stringify = function (obj, replacer, space, opts) {
+        // replacer here has nothing to do with our replacers.
+        opts = Object.assign({}, options, opts, {
+          stringification: true
+        });
+        const encapsulated = encapsulate(obj, null, opts);
+
+        if (isArray(encapsulated)) {
+          return JSON.stringify(encapsulated[0], replacer, space);
+        }
+
+        return encapsulated.then(res => {
+          return JSON.stringify(res, replacer, space);
+        });
+      }; // Also sync but throws on non-sync result
+
+
+      this.stringifySync = function (obj, replacer, space, opts) {
+        return stringify(obj, replacer, space, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      };
+
+      this.stringifyAsync = function (obj, replacer, space, opts) {
+        return stringify(obj, replacer, space, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      };
+      /** Parse Typeson back into an obejct.
+       *
+       * Arguments works identical to those of JSON.parse().
+       */
+
+
+      const parse = this.parse = function (text, reviver, opts) {
+        opts = Object.assign({}, options, opts, {
+          parse: true
+        });
+        return revive(JSON.parse(text, reviver), opts); // This reviver has nothing to do with our revivers.
+      }; // Also sync but throws on non-sync result
+
+
+      this.parseSync = function (text, reviver, opts) {
+        return parse(text, reviver, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        })); // This reviver has nothing to do with our revivers.
+      };
+
+      this.parseAsync = function (text, reviver, opts) {
+        return parse(text, reviver, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        })); // This reviver has nothing to do with our revivers.
+      };
+
+      this.specialTypeNames = function (obj, stateObj, opts = {}) {
+        opts.returnTypeNames = true;
+        return this.encapsulate(obj, stateObj, opts);
+      };
+
+      this.rootTypeName = function (obj, stateObj, opts = {}) {
+        opts.iterateNone = true;
+        return this.encapsulate(obj, stateObj, opts);
+      };
+      /** Encapsulate a complex object into a plain Object by replacing registered types with
+       * plain objects representing the types data.
+       *
+       * This method is used internally by Typeson.stringify().
+       * @param {Object} obj - Object to encapsulate.
+       */
+
+
+      const encapsulate = this.encapsulate = function (obj, stateObj, opts) {
+        opts = Object.assign({
+          sync: true
+        }, options, opts);
+        const {
+          sync
+        } = opts;
+        const types = {},
+              refObjs = [],
+              // For checking cyclic references
+        refKeys = [],
+              // For checking cyclic references
+        promisesDataRoot = []; // Clone the object deeply while at the same time replacing any special types or cyclic reference:
+
+        const cyclic = opts && 'cyclic' in opts ? opts.cyclic : true;
+        const {
+          encapsulateObserver
+        } = opts;
+
+        const ret = _encapsulate('', obj, cyclic, stateObj || {}, promisesDataRoot);
+
+        function finish(ret) {
+          // Add $types to result only if we ever bumped into a special type (or special case where object has own `$types`)
+          const typeNames = Object.values(types);
+
+          if (opts.iterateNone) {
+            if (typeNames.length) {
+              return typeNames[0];
+            }
+
+            return Typeson.getJSONType(ret);
+          }
+
+          if (typeNames.length) {
+            if (opts.returnTypeNames) {
+              return [...new Set(typeNames)];
+            }
+
+            if (!ret || !isPlainObject(ret) || // Special if array (or a primitive) was serialized because JSON would ignore custom `$types` prop on it
+            ret.hasOwnProperty('$types') // Also need to handle if this is an object with its own `$types` property (to avoid ambiguity)
+            ) {
+                ret = {
+                  $: ret,
+                  $types: {
+                    $: types
+                  }
+                };
+              } else {
+              ret.$types = types;
+            }
+          } else if (isObject(ret) && ret.hasOwnProperty('$types')) {
+            // No special types
+            ret = {
+              $: ret,
+              $types: true
+            };
+          }
+
+          if (opts.returnTypeNames) {
+            return false;
+          }
+
+          return ret;
+        }
+
+        function checkPromises(ret, promisesData) {
+          return Promise.all(promisesData.map(pd => {
+            return pd[1].p;
+          })).then(function (promResults) {
+            return Promise.all(promResults.map(function (promResult) {
+              const newPromisesData = [];
+              const prData = promisesData.splice(0, 1)[0];
+              const [keyPath,, cyclic, stateObj, parentObj, key, detectedType] = prData;
+
+              const encaps = _encapsulate(keyPath, promResult, cyclic, stateObj, newPromisesData, true, detectedType);
+
+              const isTypesonPromise = hasConstructorOf(encaps, TypesonPromise);
+
+              if (keyPath && isTypesonPromise) {
+                // Handle case where an embedded custom type itself returns a `Typeson.Promise`
+                return encaps.p.then(function (encaps2) {
+                  parentObj[key] = encaps2;
+                  return checkPromises(ret, newPromisesData);
+                });
+              }
+
+              if (keyPath) parentObj[key] = encaps;else if (isTypesonPromise) {
+                ret = encaps.p;
+              } else ret = encaps; // If this is itself a `Typeson.Promise` (because the original value supplied was a promise or because the supplied custom type value resolved to one), returning it below will be fine since a promise is expected anyways given current config (and if not a promise, it will be ready as the resolve value)
+
+              return checkPromises(ret, newPromisesData);
+            }));
+          }).then(() => ret);
+        }
+        return promisesDataRoot.length ? sync && opts.throwOnBadSyncType ? (() => {
+          throw new TypeError('Sync method requested but async result obtained');
+        })() : Promise.resolve(checkPromises(ret, promisesDataRoot)).then(finish) : !sync && opts.throwOnBadSyncType ? (() => {
+          throw new TypeError('Async method requested but sync result obtained');
+        })() : opts.stringification && sync // If this is a synchronous request for stringification, yet a promise is the result, we don't want to resolve leading to an async result, so we return an array to avoid ambiguity
+        ? [finish(ret)] : sync ? finish(ret) : Promise.resolve(finish(ret));
+
+        function _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, cb) {
+          Object.assign(stateObj, ownKeysObj);
+          const vals = internalStateObjPropsToIgnore.map(prop => {
+            const tmp = stateObj[prop];
+            delete stateObj[prop];
+            return tmp;
+          });
+          cb();
+          internalStateObjPropsToIgnore.forEach((prop, i) => {
+            stateObj[prop] = vals[i];
+          });
+        }
+
+        function _encapsulate(keypath, value, cyclic, stateObj, promisesData, resolvingTypesonPromise, detectedType) {
+          let ret;
+          let observerData = {};
+          const $typeof = typeof value;
+          const runObserver = encapsulateObserver ? function (obj) {
+            const type = detectedType || stateObj.type || Typeson.getJSONType(value);
+            encapsulateObserver(Object.assign(obj || observerData, {
+              keypath,
+              value,
+              cyclic,
+              stateObj,
+              promisesData,
+              resolvingTypesonPromise,
+              awaitingTypesonPromise: hasConstructorOf(value, TypesonPromise)
+            }, type !== undefined ? {
+              type
+            } : {}));
+          } : null;
+
+          if ($typeof in {
+            string: 1,
+            boolean: 1,
+            number: 1,
+            undefined: 1
+          }) {
+            if (value === undefined || $typeof === 'number' && (isNaN(value) || value === -Infinity || value === Infinity)) {
+              ret = replace(keypath, value, stateObj, promisesData, false, resolvingTypesonPromise, runObserver);
+
+              if (ret !== value) {
+                observerData = {
+                  replaced: ret
+                };
+              }
+            } else {
+              ret = value;
+            }
+
+            if (runObserver) runObserver();
+            return ret;
+          }
+
+          if (value === null) {
+            if (runObserver) runObserver();
+            return value;
+          }
+
+          if (cyclic && !stateObj.iterateIn && !stateObj.iterateUnsetNumeric) {
+            // Options set to detect cyclic references and be able to rewrite them.
+            const refIndex = refObjs.indexOf(value);
+
+            if (refIndex < 0) {
+              if (cyclic === true) {
+                refObjs.push(value);
+                refKeys.push(keypath);
+              }
+            } else {
+              types[keypath] = '#';
+
+              if (runObserver) {
+                runObserver({
+                  cyclicKeypath: refKeys[refIndex]
+                });
+              }
+
+              return '#' + refKeys[refIndex];
+            }
+          }
+
+          const isPlainObj = isPlainObject(value);
+          const isArr = isArray(value);
+          const replaced = (isPlainObj || isArr) && (!plainObjectReplacers.length || stateObj.replaced) || stateObj.iterateIn // Running replace will cause infinite loop as will test positive again
+          ? // Optimization: if plain object and no plain-object replacers, don't try finding a replacer
+          value : replace(keypath, value, stateObj, promisesData, isPlainObj || isArr, null, runObserver);
+          let clone;
+
+          if (replaced !== value) {
+            ret = replaced;
+            observerData = {
+              replaced
+            };
+          } else {
+            if (isArr || stateObj.iterateIn === 'array') {
+              clone = new Array(value.length);
+              observerData = {
+                clone
+              };
+            } else if (isPlainObj || stateObj.iterateIn === 'object') {
+              clone = {};
+              observerData = {
+                clone
+              };
+            } else if (keypath === '' && hasConstructorOf(value, TypesonPromise)) {
+              promisesData.push([keypath, value, cyclic, stateObj, undefined, undefined, stateObj.type]);
+              ret = value;
+            } else {
+              ret = value; // Only clone vanilla objects and arrays
+            }
+          }
+
+          if (runObserver) runObserver();
+
+          if (opts.iterateNone) {
+            return clone || ret;
+          }
+
+          if (!clone) {
+            return ret;
+          } // Iterate object or array
+
+
+          if (stateObj.iterateIn) {
+            for (const key in value) {
+              const ownKeysObj = {
+                ownKeys: value.hasOwnProperty(key)
+              };
+
+              _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, () => {
+                const kp = keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key);
+
+                const val = _encapsulate(kp, value[key], !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
+
+                if (hasConstructorOf(val, TypesonPromise)) {
+                  promisesData.push([kp, val, !!cyclic, stateObj, clone, key, stateObj.type]);
+                } else if (val !== undefined) clone[key] = val;
+              });
+            }
+
+            if (runObserver) runObserver({
+              endIterateIn: true,
+              end: true
+            });
+          } else {
+            // Note: Non-indexes on arrays won't survive stringify so somewhat wasteful for arrays, but so too is iterating all numeric indexes on sparse arrays when not wanted or filtering own keys for positive integers
+            keys(value).forEach(function (key) {
+              const kp = keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key);
+              const ownKeysObj = {
+                ownKeys: true
+              };
+
+              _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, () => {
+                const val = _encapsulate(kp, value[key], !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
+
+                if (hasConstructorOf(val, TypesonPromise)) {
+                  promisesData.push([kp, val, !!cyclic, stateObj, clone, key, stateObj.type]);
+                } else if (val !== undefined) clone[key] = val;
+              });
+            });
+            if (runObserver) runObserver({
+              endIterateOwn: true,
+              end: true
+            });
+          } // Iterate array for non-own numeric properties (we can't replace the prior loop though as it iterates non-integer keys)
+
+
+          if (stateObj.iterateUnsetNumeric) {
+            const vl = value.length;
+
+            for (let i = 0; i < vl; i++) {
+              if (!(i in value)) {
+                const kp = keypath + (keypath ? '.' : '') + i; // No need to escape numeric
+
+                const ownKeysObj = {
+                  ownKeys: false
+                };
+
+                _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, () => {
+                  const val = _encapsulate(kp, undefined, !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
+
+                  if (hasConstructorOf(val, TypesonPromise)) {
+                    promisesData.push([kp, val, !!cyclic, stateObj, clone, i, stateObj.type]);
+                  } else if (val !== undefined) clone[i] = val;
+                });
+              }
+            }
+
+            if (runObserver) runObserver({
+              endIterateUnsetNumeric: true,
+              end: true
+            });
+          }
+
+          return clone;
+        }
+
+        function replace(keypath, value, stateObj, promisesData, plainObject, resolvingTypesonPromise, runObserver) {
+          // Encapsulate registered types
+          const replacers = plainObject ? plainObjectReplacers : nonplainObjectReplacers;
+          let i = replacers.length;
+
+          while (i--) {
+            const replacer = replacers[i];
+
+            if (replacer.test(value, stateObj)) {
+              const {
+                type
+              } = replacer;
+
+              if (revivers[type]) {
+                // Record the type only if a corresponding reviver exists.
+                // This is to support specs where only replacement is done.
+                // For example ensuring deep cloning of the object, or
+                // replacing a type to its equivalent without the need to revive it.
+                const existing = types[keypath]; // type can comprise an array of types (see test shouldSupportIntermediateTypes)
+
+                types[keypath] = existing ? [type].concat(existing) : type;
+              } // Now, also traverse the result in case it contains its own types to replace
+
+
+              Object.assign(stateObj, {
+                type,
+                replaced: true
+              });
+
+              if ((sync || !replacer.replaceAsync) && !replacer.replace) {
+                if (runObserver) runObserver({
+                  typeDetected: true
+                });
+                return _encapsulate(keypath, value, cyclic && 'readonly', stateObj, promisesData, resolvingTypesonPromise, type);
+              }
+
+              if (runObserver) runObserver({
+                replacing: true
+              });
+              const replaceMethod = sync || !replacer.replaceAsync ? 'replace' : 'replaceAsync';
+              return _encapsulate(keypath, replacer[replaceMethod](value, stateObj), cyclic && 'readonly', stateObj, promisesData, resolvingTypesonPromise, type);
+            }
+          }
+
+          return value;
+        }
+      }; // Also sync but throws on non-sync result
+
+
+      this.encapsulateSync = function (obj, stateObj, opts) {
+        return encapsulate(obj, stateObj, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      };
+
+      this.encapsulateAsync = function (obj, stateObj, opts) {
+        return encapsulate(obj, stateObj, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      };
+      /** Revive an encapsulated object.
+       * This method is used internally by Typeson.parse().
+       * @param {Object} obj - Object to revive. If it has $types member, the properties that are listed there
+       * will be replaced with its true type instead of just plain objects.
+       */
+
+
+      const revive = this.revive = function (obj, opts) {
+        opts = Object.assign({
+          sync: true
+        }, options, opts);
+        const {
+          sync
+        } = opts;
+        let types = obj && obj.$types,
+            ignore$Types = true;
+        if (!types) return obj; // No type info added. Revival not needed.
+
+        if (types === true) return obj.$; // Object happened to have own `$types` property but with no actual types, so we unescape and return that object
+
+        if (types.$ && isPlainObject(types.$)) {
+          // Special when root object is not a trivial Object, it will be encapsulated in $. It will also be encapsulated in $ if it has its own `$` property to avoid ambiguity
+          obj = obj.$;
+          types = types.$;
+          ignore$Types = false;
+        }
+
+        const keyPathResolutions = [];
+        const stateObj = {};
+
+        let ret = _revive('', obj, null, opts);
+
+        ret = hasConstructorOf(ret, Undefined) ? undefined : ret;
+        return isThenable(ret) ? sync && opts.throwOnBadSyncType ? (() => {
+          throw new TypeError('Sync method requested but async result obtained');
+        })() : ret : !sync && opts.throwOnBadSyncType ? (() => {
+          throw new TypeError('Async method requested but sync result obtained');
+        })() : sync ? ret : Promise.resolve(ret);
+
+        function _revive(keypath, value, target, opts, clone, key) {
+          if (ignore$Types && keypath === '$types') return;
+          const type = types[keypath];
+
+          if (isArray(value) || isPlainObject(value)) {
+            const clone = isArray(value) ? new Array(value.length) : {}; // Iterate object or array
+
+            keys(value).forEach(key => {
+              const val = _revive(keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key), value[key], target || clone, opts, clone, key);
+
+              if (hasConstructorOf(val, Undefined)) clone[key] = undefined;else if (val !== undefined) clone[key] = val;
+            });
+            value = clone;
+
+            while (keyPathResolutions.length) {
+              // Try to resolve cyclic reference as soon as available
+              const [[target, keyPath, clone, key]] = keyPathResolutions;
+              const val = getByKeyPath(target, keyPath);
+              if (hasConstructorOf(val, Undefined)) clone[key] = undefined;else if (val !== undefined) clone[key] = val;else break;
+              keyPathResolutions.splice(0, 1);
+            }
+          }
+
+          if (!type) return value;
+
+          if (type === '#') {
+            const ret = getByKeyPath(target, value.substr(1));
+
+            if (ret === undefined) {
+              // Cyclic reference not yet available
+              keyPathResolutions.push([target, value.substr(1), clone, key]);
+            }
+
+            return ret;
+          }
+
+          const {
+            sync
+          } = opts;
+          return [].concat(type).reduce((val, type) => {
+            const reviver = revivers[type];
+            if (!reviver) throw new Error('Unregistered type: ' + type);
+            return reviver[// eslint-disable-line standard/computed-property-even-spacing
+            sync && reviver.revive ? 'revive' : !sync && reviver.reviveAsync ? 'reviveAsync' : 'revive'](val, stateObj);
+          }, value);
+        }
+      }; // Also sync but throws on non-sync result
+
+
+      this.reviveSync = function (obj, opts) {
+        return revive(obj, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      };
+
+      this.reviveAsync = function (obj, opts) {
+        return revive(obj, Object.assign({}, {
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      };
+      /** Register types.
+       * For examples how to use this method, see https://github.com/dfahlander/typeson-registry/tree/master/types
+       * @param {Array.<Object.<string,Function[]>>} typeSpec - Types and their functions [test, encapsulate, revive];
+       */
+
+
+      this.register = function (typeSpecSets, opts) {
+        opts = opts || {};
+        [].concat(typeSpecSets).forEach(function R(typeSpec) {
+          if (isArray(typeSpec)) return typeSpec.map(R); // Allow arrays of arrays of arrays...
+
+          typeSpec && keys(typeSpec).forEach(function (typeId) {
+            if (typeId === '#') {
+              throw new TypeError('# cannot be used as a type name as it is reserved for cyclic objects');
+            } else if (Typeson.JSON_TYPES.includes(typeId)) {
+              throw new TypeError('Plain JSON object types are reserved as type names');
+            }
+
+            let spec = typeSpec[typeId];
+            const replacers = spec.testPlainObjects ? plainObjectReplacers : nonplainObjectReplacers;
+            const existingReplacer = replacers.filter(function (r) {
+              return r.type === typeId;
+            });
+
+            if (existingReplacer.length) {
+              // Remove existing spec and replace with this one.
+              replacers.splice(replacers.indexOf(existingReplacer[0]), 1);
+              delete revivers[typeId];
+              delete regTypes[typeId];
+            }
+
+            if (spec) {
+              if (typeof spec === 'function') {
+                // Support registering just a class without replacer/reviver
+                const Class = spec;
+                spec = {
+                  test: x => x && x.constructor === Class,
+                  replace: x => assign({}, x),
+                  revive: x => assign(Object.create(Class.prototype), x)
+                };
+              } else if (isArray(spec)) {
+                spec = {
+                  test: spec[0],
+                  replace: spec[1],
+                  revive: spec[2]
+                };
+              }
+
+              const replacerObj = {
+                type: typeId,
+                test: spec.test.bind(spec)
+              };
+
+              if (spec.replace) {
+                replacerObj.replace = spec.replace.bind(spec);
+              }
+
+              if (spec.replaceAsync) {
+                replacerObj.replaceAsync = spec.replaceAsync.bind(spec);
+              }
+
+              const start = typeof opts.fallback === 'number' ? opts.fallback : opts.fallback ? 0 : Infinity;
+
+              if (spec.testPlainObjects) {
+                plainObjectReplacers.splice(start, 0, replacerObj);
+              } else {
+                nonplainObjectReplacers.splice(start, 0, replacerObj);
+              } // Todo: We might consider a testAsync type
+
+
+              if (spec.revive || spec.reviveAsync) {
+                const reviverObj = {};
+                if (spec.revive) reviverObj.revive = spec.revive.bind(spec);
+                if (spec.reviveAsync) reviverObj.reviveAsync = spec.reviveAsync.bind(spec);
+                revivers[typeId] = reviverObj;
+              }
+
+              regTypes[typeId] = spec; // Record to be retrieved via public types property.
+            }
+          });
+        });
+        return this;
+      };
+    }
+
+    function assign(t, s) {
+      keys(s).map(k => {
+        t[k] = s[k];
+      });
+      return t;
+    }
+    /** escapeKeyPathComponent() utility */
+
+
+    function escapeKeyPathComponent(keyPathComponent) {
+      return keyPathComponent.replace(/~/g, '~0').replace(/\./g, '~1');
+    }
+    /** unescapeKeyPathComponent() utility */
+
+
+    function unescapeKeyPathComponent(keyPathComponent) {
+      return keyPathComponent.replace(/~1/g, '.').replace(/~0/g, '~');
+    }
+    /** getByKeyPath() utility */
+
+
+    function getByKeyPath(obj, keyPath) {
+      if (keyPath === '') return obj;
+      const period = keyPath.indexOf('.');
+
+      if (period > -1) {
+        const innerObj = obj[unescapeKeyPathComponent(keyPath.substr(0, period))];
+        return innerObj === undefined ? undefined : getByKeyPath(innerObj, keyPath.substr(period + 1));
+      }
+
+      return obj[unescapeKeyPathComponent(keyPath)];
+    } // We keep these two functions minimized so if using two instances of this
+    //   library, where one is minimized and one is not, it will still work
+
+
+    function Undefined() {} // eslint-disable-line space-before-function-paren, space-before-blocks
+    // With ES6 classes, we may be able to simply use `class TypesonPromise extends Promise` and add a string tag for detection
+
+
+    function TypesonPromise(f) {
+      this.p = new Promise(f);
+    } // eslint-disable-line block-spacing, space-before-function-paren, space-before-blocks, space-infix-ops, semi
+
+
+    if (typeof Symbol !== 'undefined') {
+      // Note: @babel/polyfill provides
+      // Ensure `isUserObject` will return `false` for `TypesonPromise`
+      TypesonPromise.prototype[Symbol.toStringTag] = 'TypesonPromise';
+    }
+
+    TypesonPromise.prototype.then = function (onFulfilled, onRejected) {
+      return new TypesonPromise((typesonResolve, typesonReject) => {
+        this.p.then(function (res) {
+          typesonResolve(onFulfilled ? onFulfilled(res) : res);
+        }, r => {
+          this.p['catch'](function (res) {
+            return onRejected ? onRejected(res) : Promise.reject(res);
+          }).then(typesonResolve, typesonReject);
+        });
+      });
+    };
+
+    TypesonPromise.prototype['catch'] = function (onRejected) {
+      return this.then(null, onRejected);
+    };
+
+    TypesonPromise.resolve = function (v) {
+      return new TypesonPromise(typesonResolve => {
+        typesonResolve(v);
+      });
+    };
+
+    TypesonPromise.reject = function (v) {
+      return new TypesonPromise((typesonResolve, typesonReject) => {
+        typesonReject(v);
+      });
+    };
+
+    ['all', 'race'].map(function (meth) {
+      TypesonPromise[meth] = function (promArr) {
+        return new TypesonPromise(function (typesonResolve, typesonReject) {
+          Promise[meth](promArr.map(prom => {
+            return prom.p;
+          })).then(typesonResolve, typesonReject);
+        });
+      };
+    }); // The following provide classes meant to avoid clashes with other values
+
+    Typeson.Undefined = Undefined; // To insist `undefined` should be added
+
+    Typeson.Promise = TypesonPromise; // To support async encapsulation/stringification
+    // Some fundamental type-checking utilities
+
+    Typeson.isThenable = isThenable;
+    Typeson.toStringTag = toStringTag;
+    Typeson.hasConstructorOf = hasConstructorOf;
+    Typeson.isObject = isObject;
+    Typeson.isPlainObject = isPlainObject;
+    Typeson.isUserObject = isUserObject;
+    Typeson.escapeKeyPathComponent = escapeKeyPathComponent;
+    Typeson.unescapeKeyPathComponent = unescapeKeyPathComponent;
+    Typeson.getByKeyPath = getByKeyPath;
+
+    Typeson.getJSONType = value => value === null ? 'null' : isArray(value) ? 'array' : typeof value;
+
+    Typeson.JSON_TYPES = ['null', 'boolean', 'number', 'string', 'array', 'object'];
+
+    function _typeof(obj) {
+      if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+        _typeof = function (obj) {
+          return typeof obj;
+        };
+      } else {
+        _typeof = function (obj) {
+          return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        };
+      }
+
+      return _typeof(obj);
+    }
+
+    /*
+     * base64-arraybuffer
+     * https://github.com/niklasvh/base64-arraybuffer
+     *
+     * Copyright (c) 2017 Brett Zamir, 2012 Niklas von Hertzen
+     * Licensed under the MIT license.
+     */
+    var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'; // Use a lookup table to find the index.
+
+    var lookup = new Uint8Array(256);
+
+    for (var i = 0; i < chars.length; i++) {
+      lookup[chars.charCodeAt(i)] = i;
+    }
+
+    var encode = function encode(arraybuffer, byteOffset, length) {
+      if (length === null || length === undefined) {
+        length = arraybuffer.byteLength; // Needed for Safari
+      }
+
+      var bytes = new Uint8Array(arraybuffer, byteOffset || 0, // Default needed for Safari
+      length);
+      var len = bytes.length;
+      var base64 = '';
+
+      for (var _i = 0; _i < len; _i += 3) {
+        base64 += chars[bytes[_i] >> 2];
+        base64 += chars[(bytes[_i] & 3) << 4 | bytes[_i + 1] >> 4];
+        base64 += chars[(bytes[_i + 1] & 15) << 2 | bytes[_i + 2] >> 6];
+        base64 += chars[bytes[_i + 2] & 63];
+      }
+
+      if (len % 3 === 2) {
+        base64 = base64.substring(0, base64.length - 1) + '=';
+      } else if (len % 3 === 1) {
+        base64 = base64.substring(0, base64.length - 2) + '==';
+      }
+
+      return base64;
+    };
+
+    var decode = function decode(base64) {
+      var len = base64.length;
+      var bufferLength = base64.length * 0.75;
+      var p = 0;
+      var encoded1, encoded2, encoded3, encoded4;
+
+      if (base64[base64.length - 1] === '=') {
+        bufferLength--;
+
+        if (base64[base64.length - 2] === '=') {
+          bufferLength--;
+        }
+      }
+
+      var arraybuffer = new ArrayBuffer(bufferLength),
+          bytes = new Uint8Array(arraybuffer);
+
+      for (var _i2 = 0; _i2 < len; _i2 += 4) {
+        encoded1 = lookup[base64.charCodeAt(_i2)];
+        encoded2 = lookup[base64.charCodeAt(_i2 + 1)];
+        encoded3 = lookup[base64.charCodeAt(_i2 + 2)];
+        encoded4 = lookup[base64.charCodeAt(_i2 + 3)];
+        bytes[p++] = encoded1 << 2 | encoded2 >> 4;
+        bytes[p++] = (encoded2 & 15) << 4 | encoded3 >> 2;
+        bytes[p++] = (encoded3 & 3) << 6 | encoded4 & 63;
+      }
+
+      return arraybuffer;
+    };
+
+    var arraybuffer = {
+      arraybuffer: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'ArrayBuffer';
+        },
+        replace: function replace(b, stateObj) {
+          if (!stateObj.buffers) {
+            stateObj.buffers = [];
+          }
+
+          var index = stateObj.buffers.indexOf(b);
+
+          if (index > -1) {
+            return {
+              index: index
+            };
+          }
+
+          stateObj.buffers.push(b);
+          return encode(b);
+        },
+        revive: function revive(b64, stateObj) {
+          if (!stateObj.buffers) {
+            stateObj.buffers = [];
+          }
+
+          if (_typeof(b64) === 'object') {
+            return stateObj.buffers[b64.index];
+          }
+
+          var buffer = decode(b64);
+          stateObj.buffers.push(buffer);
+          return buffer;
+        }
+      }
+    }; // See also typed-arrays!
+
+    function string2arraybuffer(str) {
+      /*
+      // UTF-8 approaches
+      const utf8 = unescape(encodeURIComponent(str));
+      const arr = new Uint8Array(utf8.length);
+      for (let i = 0; i < utf8.length; i++) {
+          arr[i] = utf8.charCodeAt(i);
+      }
+      return arr.buffer;
+       const utf8 = [];
+      for (let i = 0; i < str.length; i++) {
+          let charcode = str.charCodeAt(i);
+          if (charcode < 0x80) utf8.push(charcode);
+          else if (charcode < 0x800) {
+              utf8.push(0xc0 | (charcode >> 6),
+                  0x80 | (charcode & 0x3f));
+          } else if (charcode < 0xd800 || charcode >= 0xe000) {
+              utf8.push(0xe0 | (charcode >> 12),
+                  0x80 | ((charcode >> 6) & 0x3f),
+                  0x80 | (charcode & 0x3f));
+          // surrogate pair
+          } else {
+              i++;
+              // UTF-16 encodes 0x10000-0x10FFFF by
+              // subtracting 0x10000 and splitting the
+              // 20 bits of 0x0-0xFFFFF into two halves
+              charcode = 0x10000 + (((charcode & 0x3ff) << 10) |
+                  (str.charCodeAt(i) & 0x3ff));
+              utf8.push(0xf0 | (charcode >> 18),
+                  0x80 | ((charcode >> 12) & 0x3f),
+                  0x80 | ((charcode >> 6) & 0x3f),
+                  0x80 | (charcode & 0x3f));
+          }
+      }
+      return utf8;
+      */
+
+      /*
+      // Working UTF-16 options (equivalents)
+      const buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+      const bufView = new Uint16Array(buf);
+      for (let i = 0, strLen = str.length; i < strLen; i++) {
+          bufView[i] = str.charCodeAt(i);
+      }
+      return buf;
+      */
+      var array = new Uint8Array(str.length);
+
+      for (var i = 0; i < str.length; i++) {
+        array[i] = str.charCodeAt(i); // & 0xff;
+      }
+
+      return array.buffer;
+    }
+
+    var blob = {
+      blob: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Blob';
+        },
+        replace: function replace(b) {
+          // Sync
+          var req = new XMLHttpRequest();
+          req.open('GET', URL.createObjectURL(b), false); // Sync
+
+          if (typeof process === 'undefined') {
+            req.overrideMimeType('text/plain; charset=x-user-defined');
+          }
+
+          if (req.status !== 200 && req.status !== 0) {
+            throw new Error('Bad Blob access: ' + req.status);
+          }
+
+          req.send();
+          return {
+            type: b.type,
+            stringContents: req.responseText
+          };
+        },
+        revive: function revive(_ref) {
+          var type = _ref.type,
+              stringContents = _ref.stringContents;
+          return new Blob([string2arraybuffer(stringContents)], {
+            type: type
+          });
+        },
+        replaceAsync: function replaceAsync(b) {
+          return new Typeson.Promise(function (resolve, reject) {
+            if (b.isClosed) {
+              // On MDN, but not in https://w3c.github.io/FileAPI/#dfn-Blob
+              reject(new Error('The Blob is closed'));
+              return;
+            }
+
+            var reader = new FileReader();
+            reader.addEventListener('load', function () {
+              resolve({
+                type: b.type,
+                stringContents: reader.result
+              });
+            });
+            reader.addEventListener('error', function () {
+              reject(reader.error);
+            });
+            reader.readAsBinaryString(b);
+          });
+        }
+      }
+    };
+
+    var cloneableObjectsByUUID = {}; // TODO: We could use `import generateUUID from 'uuid/v4';` (but it needs crypto library, etc.)
+
+    function generateUUID() {
+      //  Adapted from original: public domain/MIT: http://stackoverflow.com/a/8809472/271577
+      var d = new Date().getTime();
+
+      if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+        d += performance.now(); // use high-precision timer if available
+      }
+
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
+      });
+    }
+
+    var cloneable = {
+      cloneable: {
+        test: function test(x) {
+          return x && _typeof(x) === 'object' && typeof x[Symbol.for('cloneEncapsulate')] === 'function';
+        },
+        replace: function replace(cloneable) {
+          var encapsulated = cloneable[Symbol.for('cloneEncapsulate')]();
+          var uuid = generateUUID();
+          cloneableObjectsByUUID[uuid] = cloneable;
+          return {
+            uuid: uuid,
+            encapsulated: encapsulated
+          };
+        },
+        revive: function revive(_ref) {
+          var uuid = _ref.uuid,
+              encapsulated = _ref.encapsulated;
+          return cloneableObjectsByUUID[uuid][Symbol.for('cloneRevive')](encapsulated);
+        }
+      }
+    };
+
+    var dataview = {
+      dataview: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'DataView';
+        },
+        replace: function replace(_ref, stateObj) {
+          var buffer = _ref.buffer,
+              byteOffset = _ref.byteOffset,
+              byteLength = _ref.byteLength;
+
+          if (!stateObj.buffers) {
+            stateObj.buffers = [];
+          }
+
+          var index = stateObj.buffers.indexOf(buffer);
+
+          if (index > -1) {
+            return {
+              index: index,
+              byteOffset: byteOffset,
+              byteLength: byteLength
+            };
+          }
+
+          stateObj.buffers.push(buffer);
+          return {
+            encoded: encode(buffer),
+            byteOffset: byteOffset,
+            byteLength: byteLength
+          };
+        },
+        revive: function revive(b64Obj, stateObj) {
+          if (!stateObj.buffers) {
+            stateObj.buffers = [];
+          }
+
+          var byteOffset = b64Obj.byteOffset,
+              byteLength = b64Obj.byteLength,
+              encoded = b64Obj.encoded,
+              index = b64Obj.index;
+          var buffer;
+
+          if ('index' in b64Obj) {
+            buffer = stateObj.buffers[index];
+          } else {
+            buffer = decode(encoded);
+            stateObj.buffers.push(buffer);
+          }
+
+          return new DataView(buffer, byteOffset, byteLength);
+        }
+      }
+    };
+
+    var date = {
+      date: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Date';
+        },
+        replace: function replace(date) {
+          var time = date.getTime();
+
+          if (isNaN(time)) {
+            return 'NaN';
+          }
+
+          return time;
+        },
+        revive: function revive(time) {
+          if (time === 'NaN') {
+            return new Date(NaN);
+          }
+
+          return new Date(time);
+        }
+      }
+    };
+
+    var error = {
+      error: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Error';
+        },
+        replace: function replace(_ref) {
+          var name = _ref.name,
+              message = _ref.message;
+          return {
+            name: name,
+            message: message
+          };
+        },
+        revive: function revive(_ref2) {
+          var name = _ref2.name,
+              message = _ref2.message;
+          var e = new Error(message);
+          e.name = name;
+          return e;
+        }
+      }
+    }; // See also errors.js that may be registered after having registered this type.
+
+    /* eslint-env browser, node */
+
+    var _global = typeof self === 'undefined' ? global : self;
+
+    var exportObj = {}; // Comprises all built-in errors.
+
+    ['TypeError', 'RangeError', 'SyntaxError', 'ReferenceError', 'EvalError', 'URIError', 'InternalError' // non-standard
+    ].forEach(function (errName) {
+      var constructor = _global[errName];
+
+      if (constructor) {
+        exportObj[errName.toLowerCase()] = {
+          test: function test(x) {
+            return Typeson.hasConstructorOf(x, constructor);
+          },
+          replace: function replace(e) {
+            return e.message;
+          },
+          revive: function revive(message) {
+            return new constructor(message);
+          }
+        };
+      }
+    });
+
+    var file = {
+      file: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'File';
+        },
+        replace: function replace(f) {
+          // Sync
+          var req = new XMLHttpRequest();
+          req.open('GET', URL.createObjectURL(f), false); // Sync
+
+          if (typeof process === 'undefined') {
+            req.overrideMimeType('text/plain; charset=x-user-defined');
+          }
+
+          if (req.status !== 200 && req.status !== 0) {
+            throw new Error('Bad Blob access: ' + req.status);
+          }
+
+          req.send();
+          return {
+            type: f.type,
+            stringContents: req.responseText,
+            name: f.name,
+            lastModified: f.lastModified
+          };
+        },
+        revive: function revive(_ref) {
+          var name = _ref.name,
+              type = _ref.type,
+              stringContents = _ref.stringContents,
+              lastModified = _ref.lastModified;
+          return new File([string2arraybuffer(stringContents)], name, {
+            type: type,
+            lastModified: lastModified
+          });
+        },
+        replaceAsync: function replaceAsync(f) {
+          return new Typeson.Promise(function (resolve, reject) {
+            if (f.isClosed) {
+              // On MDN, but not in https://w3c.github.io/FileAPI/#dfn-Blob
+              reject(new Error('The File is closed'));
+              return;
+            }
+
+            var reader = new FileReader();
+            reader.addEventListener('load', function () {
+              resolve({
+                type: f.type,
+                stringContents: reader.result,
+                name: f.name,
+                lastModified: f.lastModified
+              });
+            });
+            reader.addEventListener('error', function () {
+              reject(reader.error);
+            });
+            reader.readAsBinaryString(f);
+          });
+        }
+      }
+    };
+
+    var filelist = {
+      file: file.file,
+      filelist: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'FileList';
+        },
+        replace: function replace(fl) {
+          var arr = [];
+
+          for (var i = 0; i < fl.length; i++) {
+            arr[i] = fl.item(i);
+          }
+
+          return arr;
+        },
+        revive: function revive(o) {
+          function FileList() {
+            this._files = arguments[0];
+            this.length = this._files.length;
+          }
+
+          FileList.prototype.item = function (index) {
+            return this._files[index];
+          };
+
+          FileList.prototype[Symbol.toStringTag] = 'FileList';
+          return new FileList(o);
+        }
+      }
+    };
+
+    /** ImageBitmap is browser / DOM specific. It also can only work same-domain (or CORS)
+    */
+    var imagebitmap = {
+      imagebitmap: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'ImageBitmap' || // In Node, our polyfill sets the dataset on a canvas element as JSDom no longer allows overriding toStringTag
+          x && x.dataset && x.dataset.toStringTag === 'ImageBitmap';
+        },
+        replace: function replace(bm) {
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(bm, 0, 0); // Although `width` and `height` are part of `ImageBitMap`, these will
+          //   be auto-created for us when reviving with the data URL (and they are
+          //   not settable even if they weren't)
+          // return {width: bm.width, height: bm.height, dataURL: canvas.toDataURL()};
+
+          return canvas.toDataURL();
+        },
+        revive: function revive(o) {
+          /*
+          var req = new XMLHttpRequest();
+          req.open('GET', o, false); // Sync
+          if (req.status !== 200 && req.status !== 0) throw new Error('Bad ImageBitmap access: ' + req.status);
+          req.send();
+          return req.responseText;
+          */
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          var img = document.createElement('img'); // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+
+          img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+          };
+
+          img.src = o;
+          return canvas; // Works in contexts allowing an ImageBitmap (We might use `OffscreenCanvas.transferToBitmap` when supported)
+        },
+        reviveAsync: function reviveAsync(o) {
+          var canvas = document.createElement('canvas');
+          var ctx = canvas.getContext('2d');
+          var img = document.createElement('img'); // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+
+          img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+          };
+
+          img.src = o; // o.dataURL;
+
+          return createImageBitmap(canvas); // Returns a promise
+        }
+      }
+    };
+
+    /** ImageData is browser / DOM specific (though `node-canvas` has it available on `Canvas`).
+    */
+    var imagedata = {
+      imagedata: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'ImageData';
+        },
+        replace: function replace(d) {
+          return {
+            array: Array.from(d.data),
+            // Ensure `length` gets preserved for revival
+            width: d.width,
+            height: d.height
+          };
+        },
+        revive: function revive(o) {
+          return new ImageData(new Uint8ClampedArray(o.array), o.width, o.height);
+        }
+      }
+    };
+
+    var infinity = {
+      infinity: {
+        test: function test(x) {
+          return x === Infinity;
+        },
+        replace: function replace(n) {
+          return 'Infinity';
+        },
+        revive: function revive(s) {
+          return Infinity;
+        }
+      }
+    };
+
+    var IntlCollator = {
+      test: function test(x) {
+        return Typeson.hasConstructorOf(x, Intl.Collator);
+      },
+      replace: function replace(c) {
+        return c.resolvedOptions();
+      },
+      revive: function revive(options) {
+        return new Intl.Collator(options.locale, options);
+      }
+    };
+    var IntlDateTimeFormat = {
+      test: function test(x) {
+        return Typeson.hasConstructorOf(x, Intl.DateTimeFormat);
+      },
+      replace: function replace(dtf) {
+        return dtf.resolvedOptions();
+      },
+      revive: function revive(options) {
+        return new Intl.DateTimeFormat(options.locale, options);
+      }
+    };
+    var IntlNumberFormat = {
+      test: function test(x) {
+        return Typeson.hasConstructorOf(x, Intl.NumberFormat);
+      },
+      replace: function replace(nf) {
+        return nf.resolvedOptions();
+      },
+      revive: function revive(options) {
+        return new Intl.NumberFormat(options.locale, options);
+      }
+    };
+    var intlTypes = {
+      IntlCollator: IntlCollator,
+      IntlDateTimeFormat: IntlDateTimeFormat,
+      IntlNumberFormat: IntlNumberFormat
+    };
+
+    var map = {
+      map: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Map';
+        },
+        replace: function replace(map) {
+          return Array.from(map.entries());
+        },
+        revive: function revive(entries) {
+          return new Map(entries);
+        }
+      }
+    };
+
+    var nan = {
+      nan: {
+        test: function test(x) {
+          return typeof x === 'number' && isNaN(x);
+        },
+        replace: function replace(n) {
+          return 'NaN';
+        },
+        revive: function revive(s) {
+          return NaN;
+        }
+      }
+    };
+
+    var NegativeInfinity = {
+      negativeInfinity: {
+        test: function test(x) {
+          return x === -Infinity;
+        },
+        replace: function replace(n) {
+          return '-Infinity';
+        },
+        revive: function revive(s) {
+          return -Infinity;
+        }
+      }
+    };
+
+    var nonbuiltinIgnore = {
+      nonbuiltinIgnore: {
+        test: function test(x) {
+          return x && _typeof(x) === 'object' && !Array.isArray(x) && !['Object', // `Proxy` and `Reflect`, two other built-in objects, will also
+          //   have a `toStringTag` of `Object`; we don't want built-in
+          //   function objects, however
+          'Boolean', 'Number', 'String', 'Error', 'RegExp', 'Math', 'Date', 'Map', 'Set', 'JSON', 'ArrayBuffer', 'SharedArrayBuffer', 'DataView', 'Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array', 'Promise', 'String Iterator', 'Array Iterator', 'Map Iterator', 'Set Iterator', 'WeakMap', 'WeakSet', 'Atomics', 'Module'].includes(Typeson.toStringTag(x));
+        },
+        replace: function replace(rexp) {}
+      }
+    };
+
+    var primitiveObjects = {
+      // String Object (not primitive string which need no type spec)
+      StringObject: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'String' && _typeof(x) === 'object';
+        },
+        replace: function replace(s) {
+          return String(s);
+        },
+        // convert to primitive string
+        revive: function revive(s) {
+          return new String(s);
+        } // Revive to an objectified string
+
+      },
+      // Boolean Object (not primitive boolean which need no type spec)
+      BooleanObject: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Boolean' && _typeof(x) === 'object';
+        },
+        replace: function replace(b) {
+          return Boolean(b);
+        },
+        // convert to primitive boolean
+        revive: function revive(b) {
+          return new Boolean(b);
+        } // Revive to an objectified Boolean
+
+      },
+      // Number Object (not primitive number which need no type spec)
+      NumberObject: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Number' && _typeof(x) === 'object';
+        },
+        replace: function replace(n) {
+          return Number(n);
+        },
+        // convert to primitive number
+        revive: function revive(n) {
+          return new Number(n);
+        } // Revive to an objectified number
+
+      }
+    };
+    /* eslint-enable no-new-wrappers */
+
+    var regexp = {
+      regexp: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'RegExp';
+        },
+        replace: function replace(rexp) {
+          return {
+            source: rexp.source,
+            flags: (rexp.global ? 'g' : '') + (rexp.ignoreCase ? 'i' : '') + (rexp.multiline ? 'm' : '') + (rexp.sticky ? 'y' : '') + (rexp.unicode ? 'u' : '')
+          };
+        },
+        revive: function revive(_ref) {
+          var source = _ref.source,
+              flags = _ref.flags;
+          return new RegExp(source, flags);
+        }
+      }
+    };
+
+    // Here we allow the exact same non-plain object, function, and symbol instances to
+    //  be resurrected (assuming the same session/environment); plain objects are
+    //  ignored by Typeson so not presently available and we consciously exclude arrays
+    var resurrectableObjectsByUUID = {}; // TODO: We could use `import generateUUID from 'uuid/v4';` (but it needs crypto library, etc.)
+
+    function generateUUID$1() {
+      //  Adapted from original: public domain/MIT: http://stackoverflow.com/a/8809472/271577
+      var d = new Date().getTime();
+
+      if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+        d += performance.now(); // use high-precision timer if available
+      }
+
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : r & 0x3 | 0x8).toString(16);
+      });
+    }
+
+    var resurrectable = {
+      resurrectable: {
+        test: function test(x) {
+          return x && !Array.isArray(x) && ['object', 'function', 'symbol'].includes(_typeof(x));
+        },
+        replace: function replace(resurrectable) {
+          var uuid = generateUUID$1();
+          resurrectableObjectsByUUID[uuid] = resurrectable;
+          return uuid;
+        },
+        revive: function revive(serializedResurrectable) {
+          return resurrectableObjectsByUUID[serializedResurrectable];
+        }
+      }
+    };
+
+    var set$1 = {
+      set: {
+        test: function test(x) {
+          return Typeson.toStringTag(x) === 'Set';
+        },
+        replace: function replace(set) {
+          return Array.from(set.values());
+        },
+        revive: function revive(values) {
+          return new Set(values);
+        }
+      }
+    };
+
+    /* eslint-env browser, node */
+
+    var _global$1 = typeof self === 'undefined' ? global : self; // Support all kinds of typed arrays (views of ArrayBuffers)
+
+
+    var exportObj$1 = {};
+    ['Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array'].forEach(function (typeName) {
+      var arrType = typeName;
+      var TypedArray = _global$1[typeName];
+
+      if (TypedArray) {
+        exportObj$1[typeName.toLowerCase()] = {
+          test: function test(x) {
+            return Typeson.toStringTag(x) === arrType;
+          },
+          replace: function replace(a) {
+            return (a.byteOffset === 0 && a.byteLength === a.buffer.byteLength ? a // socket.io supports streaming ArrayBuffers. If we have a typed array
+            // representing a portion of the buffer, we need to clone the buffer before leaving it
+            // to socket.io.
+            : a.slice(0)).buffer;
+          },
+          revive: function revive(buf) {
+            // One may configure socket.io to revive binary data as Buffer or Blob.
+            // We should therefore not rely on that the instance we get here is an ArrayBuffer
+            // If not, let's assume user wants to receive it as configured with socket.io.
+            return Typeson.toStringTag(buf) === 'ArrayBuffer' ? new TypedArray(buf) : buf;
+          }
+        };
+      }
+    });
+
+    /* eslint-env browser, node */
+
+    var _global$2 = typeof self === 'undefined' ? global : self;
+
+    var exportObj$2 = {};
+    ['Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array', 'Uint16Array', 'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array'].forEach(function (typeName) {
+      var arrType = typeName;
+      var TypedArray = _global$2[arrType];
+
+      if (TypedArray) {
+        exportObj$2[typeName.toLowerCase()] = {
+          test: function test(x) {
+            return Typeson.toStringTag(x) === arrType;
+          },
+          replace: function replace(_ref, stateObj) {
+            var buffer = _ref.buffer,
+                byteOffset = _ref.byteOffset,
+                length = _ref.length;
+
+            if (!stateObj.buffers) {
+              stateObj.buffers = [];
+            }
+
+            var index = stateObj.buffers.indexOf(buffer);
+
+            if (index > -1) {
+              return {
+                index: index,
+                byteOffset: byteOffset,
+                length: length
+              };
+            }
+
+            stateObj.buffers.push(buffer);
+            return {
+              encoded: encode(buffer),
+              byteOffset: byteOffset,
+              length: length
+            };
+          },
+          revive: function revive(b64Obj, stateObj) {
+            if (!stateObj.buffers) {
+              stateObj.buffers = [];
+            }
+
+            var byteOffset = b64Obj.byteOffset,
+                length = b64Obj.length,
+                encoded = b64Obj.encoded,
+                index = b64Obj.index;
+            var buffer;
+
+            if ('index' in b64Obj) {
+              buffer = stateObj.buffers[index];
+            } else {
+              buffer = decode(encoded);
+              stateObj.buffers.push(buffer);
+            }
+
+            return new TypedArray(buffer, byteOffset, length);
+          }
+        };
+      }
+    });
+
+    // This does not preserve `undefined` in sparse arrays; see the `undefined` or `sparse-undefined` preset
+    var undef = {
+      undef: {
+        test: function test(x, stateObj) {
+          return typeof x === 'undefined' && (stateObj.ownKeys || !('ownKeys' in stateObj));
+        },
+        replace: function replace(n) {
+          return null;
+        },
+        revive: function revive(s) {
+          return new Typeson.Undefined();
+        } // Will add `undefined` (returning `undefined` would instead avoid explicitly setting)
+
+      }
+    };
+
+    var userObject = {
+      userObject: {
+        test: function test(x, stateObj) {
+          return Typeson.isUserObject(x);
+        },
+        replace: function replace(n) {
+          return Object.assign({}, n);
+        },
+        revive: function revive(s) {
+          return s;
+        }
+      }
+    };
+
+    var sparseUndefined = [{
+      sparseArrays: {
+        testPlainObjects: true,
+        test: function test(x) {
+          return Array.isArray(x);
+        },
+        replace: function replace(a, stateObj) {
+          stateObj.iterateUnsetNumeric = true;
+          return a;
+        }
+      }
+    }, {
+      sparseUndefined: {
+        test: function test(x, stateObj) {
+          return typeof x === 'undefined' && stateObj.ownKeys === false;
+        },
+        replace: function replace(n) {
+          return null;
+        },
+        revive: function revive(s) {
+          return undefined;
+        } // Will avoid adding anything
+
+      }
+    }];
+
+    var presetUndefined = [sparseUndefined, undef];
+
+    var specialNumbers = [nan, infinity, NegativeInfinity];
+
+    /* This preset includes types that are built-in into the JavaScript language itself, this
+       should work universally. Types that were added in ES6 or beyond will be checked before inclusion
+       so that this module can be consumed by both ES5 and ES6 environments.
+       Some types cannot be encapsulated because their inner state is private: `WeakMap`, `WeakSet`.
+       The Function type is not included because their closures would not be serialized, so a revived
+       Function that uses closures would not behave as expected. Symbols are similarly not included.
+    */
+    var expObj = [// ES5
+    presetUndefined, primitiveObjects, specialNumbers, date, error, exportObj, regexp].concat( // ES2015 (ES6)
+    typeof Map === 'function' ? map : [], typeof Set === 'function' ? set$1 : [], typeof ArrayBuffer === 'function' ? arraybuffer : [], typeof Uint8Array === 'function' ? exportObj$2 : [], typeof DataView === 'function' ? dataview : [], typeof Intl !== 'undefined' ? intlTypes : []);
+
+    /** When communicating via postMessage() (Worker.postMessage() or window.postMessage()),
+     * the browser will use a similar algorithm as Typeson does to encapsulate and revive all
+     * items in the structure (aka the structured clone algorithm). This algorithm supports all
+     * built-in types as well as many DOM types. Therefore, only types that
+     * are not included in the structured clone algorithm need to be registered, which is:
+     * * Error
+     * * Specific Errors like SyntaxError, TypeError, etc.
+     * * Any custom type you want to send across window- or worker boundraries
+     * This preset will only include the Error types and you can register your custom types
+     * after having registered these.
+     */
+    var postMessage = [error, exportObj];
+
+    var socketio = [expObj, {
+      ArrayBuffer: null
+    }, // Leave ArrayBuffer as is, and let socket.io stream it instead.
+    exportObj$1 // Encapsulate TypedArrays in ArrayBuffers instead of base64 strings.
+    ];
+
+    /* This preset includes types for the Structured Cloning Algorithm. */
+    var expObj$1 = [// Todo: Might also register synchronous `ImageBitmap` and `Blob`/`File`/`FileList`?
+    // ES5
+    userObject, // Processed last (non-builtin)
+    presetUndefined, primitiveObjects, specialNumbers, date, regexp, // Non-built-ins
+    imagedata, imagebitmap, // Async return
+    file, filelist, blob].concat( // ES2015 (ES6)
+    typeof Map === 'function' ? map : [], typeof Set === 'function' ? set$1 : [], typeof ArrayBuffer === 'function' ? arraybuffer : [], typeof Uint8Array === 'function' ? exportObj$2 : [], typeof DataView === 'function' ? dataview : [], typeof Intl !== 'undefined' ? intlTypes : []);
+
+    var structuredCloningThrowing = expObj$1.concat({
+      checkDataCloneException: [function (val) {
+        // Should also throw with:
+        // 1. `IsDetachedBuffer` (a process not called within the ECMAScript spec)
+        // 2. `IsCallable` (covered by `typeof === 'function'` or a function's `toStringTag`)
+        // 3. internal slots besides [[Prototype]] or [[Extensible]] (e.g., [[PromiseState]] or [[WeakMapData]])
+        // 4. exotic object (e.g., `Proxy`) (which does not have default behavior for one or more of the
+        //      essential internal methods that are limited to the following for non-function objects (we auto-exclude functions):
+        //      [[GetPrototypeOf]],[[SetPrototypeOf]],[[IsExtensible]],[[PreventExtensions]],[[GetOwnProperty]],
+        //      [[DefineOwnProperty]],[[HasProperty]],[[Get]],[[Set]],[[Delete]],[[OwnPropertyKeys]]);
+        //      except for the standard, built-in exotic objects, we'd need to know whether these methods had distinct behaviors
+        // Note: There is no apparent way for us to detect a `Proxy` and reject (Chrome at least is not rejecting anyways)
+        var stringTag = {}.toString.call(val).slice(8, -1);
+
+        if (['symbol', // Symbol's `toStringTag` is only "Symbol" for its initial value, so we check `typeof`
+        'function' // All functions including bound function exotic objects
+        ].includes(_typeof(val)) || ['Arguments', // A non-array exotic object
+        'Module', // A non-array exotic object
+        'Error', // `Error` and other errors have the [[ErrorData]] internal slot and give "Error"
+        'Promise', // Promise instances have an extra slot ([[PromiseState]]) but not throwing in Chrome `postMessage`
+        'WeakMap', // WeakMap instances have an extra slot ([[WeakMapData]]) but not throwing in Chrome `postMessage`
+        'WeakSet' // WeakSet instances have an extra slot ([[WeakSetData]]) but not throwing in Chrome `postMessage`
+        ].includes(stringTag) || val === Object.prototype || // A non-array exotic object but not throwing in Chrome `postMessage`
+        (stringTag === 'Blob' || stringTag === 'File') && val.isClosed || val && _typeof(val) === 'object' && // Duck-type DOM node objects (non-array exotic? objects which
+        //    cannot be cloned by the SCA)
+        typeof val.nodeType === 'number' && typeof val.insertBefore === 'function') {
+          throw new DOMException('The object cannot be cloned.', 'DataCloneError');
+        }
+
+        return false;
+      }]
+    });
+
+    var universal = [expObj // TODO: Add types that are de-facto universal even though not built-in into ecmasript standard.
+    ];
+
+    // This file is auto-generated from `build.js`
+    Typeson.types = {
+      arraybuffer: arraybuffer,
+      blob: blob,
+      cloneable: cloneable,
+      dataview: dataview,
+      date: date,
+      error: error,
+      errors: exportObj,
+      file: file,
+      filelist: filelist,
+      imagebitmap: imagebitmap,
+      imagedata: imagedata,
+      infinity: infinity,
+      intlTypes: intlTypes,
+      map: map,
+      nan: nan,
+      negativeInfinity: NegativeInfinity,
+      nonbuiltinIgnore: nonbuiltinIgnore,
+      primitiveObjects: primitiveObjects,
+      regexp: regexp,
+      resurrectable: resurrectable,
+      set: set$1,
+      typedArraysSocketio: exportObj$1,
+      typedArrays: exportObj$2,
+      undef: undef,
+      userObject: userObject
+    };
+    Typeson.presets = {
+      builtin: expObj,
+      postMessage: postMessage,
+      socketio: socketio,
+      sparseUndefined: sparseUndefined,
+      specialNumbers: specialNumbers,
+      structuredCloningThrowing: structuredCloningThrowing,
+      structuredCloning: expObj$1,
+      undef: presetUndefined,
+      universal: universal
+    };
+
+    /* eslint-env node */
+    // Imperfectly polyfill jsdom for testing `Blob`/`File`
+    // Todo: This can be removed once `URL.createObjectURL` may
+    //    be implemented in jsdom: https://github.com/tmpvar/jsdom/issues/1721
+    // These are not working well with Rollup as imports
+    var mod = typeof module !== 'undefined';
+
+    var uuid = mod && require('uuid/v4');
+
+    var whatwgURL = mod && require('whatwg-url') || {}; // We also need to tweak `XMLHttpRequest` which our types
+    //    rely on to obtain the Blob/File content
+
+    var utils = mod && require('jsdom/lib/jsdom/living/generated/utils') || {};
+    var serializeURLOrigin = whatwgURL.serializeURLOrigin,
+        parseURL = whatwgURL.parseURL;
+    var blobURLs = {};
+
+    var createObjectURL = function createObjectURL(blob) {
+      // https://github.com/tmpvar/jsdom/issues/1721#issuecomment-282465529
+      var blobURL = 'blob:' + serializeURLOrigin(parseURL(location.href)) + '/' + uuid();
+      blobURLs[blobURL] = blob;
+      return blobURL;
+    };
+
+    var impl = utils.implSymbol;
+    var _xhropen = XMLHttpRequest.prototype.open; // Add to XMLHttpRequest.prototype.open
+
+    function xmlHttpRequestOpen(method, url, async) {
+      if (/^blob:/.test(url)) {
+        var blob = blobURLs[url];
+        var type = 'text/plain'; // blob.type;
+
+        var encoded = blob[impl]._buffer.toString('binary'); // utf16le and base64 both convert lone surrogates
+
+
+        url = 'data:' + type + ',' + encodeURIComponent(encoded);
+      }
+
+      return _xhropen.call(this, method, url, async);
+    }
+
+    /* eslint-env mocha, node */
+
+    if (!URL.createObjectURL) {
+      URL.createObjectURL = createObjectURL;
+      XMLHttpRequest.prototype.open = xmlHttpRequestOpen;
+    } // Setup Mocha and Chai
+
+
+    mocha.setup({
+      ui: 'bdd',
+      timeout: 5000
+    }); // No means to set a `FileList` currently in jsdom so we
+    //   make our own `FileList`; Todo: jsdom should really support this:
+    //   https://github.com/tmpvar/jsdom/issues/1272
+
+    var glob = typeof module !== 'undefined' ? global : window;
+
+    function FileList$1() {
+      this._files = arguments[0];
+      this.length = this._files.length;
+    }
+
+    FileList$1.prototype.item = function (index) {
+      return this._files[index];
+    };
+
+    FileList$1.prototype[Symbol.toStringTag] = 'FileList';
+    Object.defineProperty(glob.HTMLInputElement.prototype, 'files', {
+      get: function get() {
+        return new FileList$1(this._files);
+      },
+      set: function set(val) {
+        this._files = val;
+      }
+    });
+    glob.FileList = FileList$1;
+    glob.expect = chai.expect;
+    glob.assert = chai.assert;
+     // Just add a placeholder for tests.js
+
+    function Person(name, age, dob, isMarried) {
+      name && (this.name = name);
+      age && (this.age = age);
+      dob && (this.dob = dob);
+      isMarried && (this.isMarried = isMarried);
+    }
+
+    Person.prototype.name = '';
+    Person.prototype.age = 0;
+    Person.prototype.dob = new Date(1900, 0, 1);
+    Person.prototype.isMarried = false;
+
+    function SimulatedNonBuiltIn() {
+      this.aaa = 5;
+    }
+
+    SimulatedNonBuiltIn.prototype.bbb = 8;
+    SimulatedNonBuiltIn.prototype[Symbol.toStringTag] = 'SimulatedNonBuiltIn';
+
+    function MyCloneable(obj) {
+      this.obj = obj;
+      this.nonpersistentStateInfo = Math.random();
+    }
+
+    MyCloneable.prototype[Symbol.for('cloneEncapsulate')] = function () {
+      return {
+        obj: JSON.stringify(this.obj)
+      };
+    };
+
+    MyCloneable.prototype[Symbol.for('cloneRevive')] = function (encapsulatedMyCloneable) {
+      return new MyCloneable(JSON.parse(encapsulatedMyCloneable.obj));
+    };
+
+    MyCloneable.prototype.prototypeProperty = 10;
+
+    function MyResurrectable() {}
+
+    var util = {
+      Person: Person,
+      SimulatedNonBuiltIn: SimulatedNonBuiltIn,
+      MyCloneable: MyCloneable,
+      MyResurrectable: MyResurrectable
+    };
+
+    /* eslint-env mocha */
+    var _Typeson$types = Typeson.types,
+        errors = _Typeson$types.errors,
+        typedArrays = _Typeson$types.typedArrays,
+        intlTypes$1 = _Typeson$types.intlTypes,
+        undef$1 = _Typeson$types.undef,
+        primitiveObjects$1 = _Typeson$types.primitiveObjects,
+        nan$1 = _Typeson$types.nan,
+        infinity$1 = _Typeson$types.infinity,
+        negativeInfinity = _Typeson$types.negativeInfinity,
+        date$1 = _Typeson$types.date,
+        error$1 = _Typeson$types.error,
+        regexp$1 = _Typeson$types.regexp,
+        map$1 = _Typeson$types.map,
+        set$2 = _Typeson$types.set,
+        arraybuffer$1 = _Typeson$types.arraybuffer,
+        dataview$1 = _Typeson$types.dataview,
+        imagedata$1 = _Typeson$types.imagedata,
+        imagebitmap$1 = _Typeson$types.imagebitmap,
+        blob$1 = _Typeson$types.blob,
+        file$1 = _Typeson$types.file,
+        filelist$1 = _Typeson$types.filelist,
+        nonbuiltinIgnore$1 = _Typeson$types.nonbuiltinIgnore,
+        userObject$1 = _Typeson$types.userObject,
+        cloneable$1 = _Typeson$types.cloneable,
+        resurrectable$1 = _Typeson$types.resurrectable,
+        _Typeson$presets = Typeson.presets,
+        builtin = _Typeson$presets.builtin,
+        universal$1 = _Typeson$presets.universal,
+        structuredCloningThrowing$1 = _Typeson$presets.structuredCloningThrowing,
+        structuredCloning = _Typeson$presets.structuredCloning,
+        specialNumbers$1 = _Typeson$presets.specialNumbers,
+        postMessage$1 = _Typeson$presets.postMessage,
+        undefPreset = _Typeson$presets.undef,
+        sparseUndefined$1 = _Typeson$presets.sparseUndefined;
+
+    function ErrorAndErrors(preset) {
+      describe('Error and Errors', function () {
+        it('should get back real Error instances corresponding to their types and with the original name and message', function () {
+          var typeson = new Typeson().register(preset || [error$1, errors]);
+          var json = typeson.stringify({
+            e1: new Error('Error1'),
+            e2: new TypeError('Error2'),
+            e3: new RangeError('Error3'),
+            e4: new SyntaxError('Error4'),
+            e5: new ReferenceError('Error5') // , e6: new InternalError('Error6')
+
+          });
+          var obj = typeson.parse(json);
+          expect(obj.e1).to.be.an.instanceOf(Error);
+          expect(obj.e1.name).to.equal('Error');
+          expect(obj.e2).to.be.an.instanceOf(TypeError);
+          expect(obj.e2.name).to.equal('TypeError');
+          expect(obj.e3).to.be.an.instanceOf(RangeError);
+          expect(obj.e3.name).to.equal('RangeError');
+          expect(obj.e4).to.be.an.instanceOf(SyntaxError);
+          expect(obj.e4.name).to.equal('SyntaxError');
+          expect(obj.e5).to.be.an.instanceOf(ReferenceError);
+          expect(obj.e5.name).to.equal('ReferenceError'); // Non-standard
+          // expect(obj.e6).to.be.an.instanceOf(InternalError);
+          // expect(obj.e6.name).to.equal('InternalError');
+        });
+      });
+    }
+
+    function SpecialNumbers(preset) {
+      describe('Special numbers', function () {
+        it('NaN', function () {
+          var typeson = new Typeson().register(preset || nan$1);
+          var tson = typeson.stringify(NaN, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.be.NaN;
+        });
+        it('Infinity', function () {
+          var typeson = new Typeson().register(preset || infinity$1);
+          var tson = typeson.stringify(Infinity, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.equal(Infinity);
+        });
+        it('-Infinity', function () {
+          var typeson = new Typeson().register(preset || negativeInfinity);
+          var tson = typeson.stringify(-Infinity, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.equal(-Infinity);
+        });
+        it('should not mistake string forms of the special numbers', function () {
+          var typeson = new Typeson().register(preset || [nan$1, infinity$1, negativeInfinity]);
+          var tson = typeson.stringify('NaN', null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.equal('NaN');
+          tson = typeson.stringify('Infinity', null, 2);
+          back = typeson.parse(tson);
+          expect(back).to.equal('Infinity');
+          tson = typeson.stringify('-Infinity', null, 2);
+          back = typeson.parse(tson);
+          expect(back).to.equal('-Infinity');
+        });
+        it('should not disturb encoding of normal numbers', function () {
+          var typeson = new Typeson().register(preset || [nan$1, infinity$1, negativeInfinity]);
+          var tson = typeson.stringify(512, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.equal(512);
+        });
+      });
+    }
+
+    function Undefined$1(preset) {
+      describe('undefined type', function () {
+        it('should be possible to restore `undefined` properties', function () {
+          var typeson = new Typeson().register(preset || undef$1);
+          var a = [undefined, {
+            b: undefined,
+            c: [3, null,, undefined]
+          }]; // eslint-disable-line no-sparse-arrays
+
+          var json = typeson.stringify(a);
+          var a2 = typeson.parse(json);
+          expect(a2.length).to.equal(2);
+          expect(a2[0]).to.equal(undefined);
+          expect(a2[1].b).to.equal(undefined);
+          expect('b' in a2[1]).to.be.true;
+          expect(a2[1].c[0]).to.equal(3);
+          expect(a2[1].c[1]).to.equal(null);
+          expect(a2[1].c[3]).to.equal(undefined);
+          expect('0' in a2).to.be.true;
+          expect('b' in a2[1]).to.be.true;
+          expect('1' in a2[1].c).to.be.true;
+          expect('3' in a2[1].c).to.be.true;
+
+          if (preset) {
+            expect(a2[1].c[2]).to.equal(undefined);
+            expect('2' in a2[1].c).to.be.false;
+          } else {
+            expect(a2[1].c[2]).to.not.equal(undefined);
+            expect(a2[1].c[2]).to.equal(null);
+            expect('2' in a2[1].c).to.be.true;
+          }
+        });
+        it('should be possible to restore `undefined` at root', function () {
+          var typeson = new Typeson().register(preset || undef$1);
+          var tson = typeson.stringify(undefined);
+          expect(tson).to.equal('{"$":null,"$types":{"$":{"":"undef"}}}');
+          var back = typeson.parse(tson);
+          expect(back).to.be.undefined;
+        });
+      });
+    }
+
+    function BuiltIn(preset) {
+      Undefined$1(preset);
+      describe('Primitive objects', function () {
+        it('String object', function () {
+          var typeson = new Typeson().register(preset || primitiveObjects$1);
+          var strObj = new String('hello'); // eslint-disable-line no-new-wrappers
+
+          var tson = typeson.stringify(strObj, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.be.an.instanceOf(String);
+          expect(back.valueOf()).to.equal('hello');
+          expect(back.length).to.equal(5);
+        });
+        it('Boolean object', function () {
+          var typeson = new Typeson().register(preset || primitiveObjects$1);
+          var strObj = new Boolean(true); // eslint-disable-line no-new-wrappers
+
+          var tson = typeson.stringify(strObj, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.be.an.instanceOf(Boolean);
+          expect(back.valueOf()).to.equal(true);
+        });
+        it('Number object', function () {
+          var typeson = new Typeson().register(preset || primitiveObjects$1);
+          var strObj = new Number(456); // eslint-disable-line no-new-wrappers
+
+          var tson = typeson.stringify(strObj, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.be.an.instanceOf(Number);
+          expect(back.valueOf()).to.equal(456);
+        });
+      });
+      SpecialNumbers();
+      describe('Date', function () {
+        it('should get back a real Date instance with the original time milliseconds', function () {
+          var typeson = new Typeson().register(preset || date$1);
+          var json = typeson.stringify(new Date(1234567));
+          var obj = typeson.parse(json);
+          expect(obj).to.be.an.instanceOf(Date);
+          expect(obj.getTime()).to.equal(1234567);
+        });
+        it('should get back a real invalid Date instance', function () {
+          var typeson = new Typeson().register(preset || date$1);
+          var json = typeson.stringify(new Date(NaN));
+          var obj = typeson.parse(json);
+          expect(obj).to.be.an.instanceOf(Date);
+          expect(obj.getTime()).to.be.NaN;
+        });
+      });
+      ErrorAndErrors(preset);
+      describe('RegExp', function () {
+        it('should return a RegExp', function () {
+          var typeson = new Typeson().register(preset || [regexp$1]);
+          var regex = new RegExp('ab?c', 'guy');
+          var tson = typeson.stringify(regex, null, 2);
+          var back = typeson.parse(tson);
+          expect(back instanceof RegExp);
+          expect(back.global).to.equal(true);
+          expect(back.unicode).to.equal(true);
+          expect(back.sticky).to.equal(true);
+          expect(back.ignoreCase).to.equal(false);
+          expect(back.multiline).to.equal(false);
+          expect(back.source).to.equal('ab?c');
+          regex = /ab?c/im;
+          tson = typeson.stringify(regex, null, 2);
+          back = typeson.parse(tson);
+          expect(back instanceof RegExp);
+          expect(back.global).to.equal(false);
+          expect(back.unicode).to.equal(false);
+          expect(back.sticky).to.equal(false);
+          expect(back.ignoreCase).to.equal(true);
+          expect(back.multiline).to.equal(true);
+          expect(back.source).to.equal('ab?c');
+        });
+      });
+      describe('Map', function () {
+        it('should get back a real Map instance with the original data and use complex types also in contained items', function () {
+          var typeson = new Typeson().register(preset || map$1);
+          var map1 = new Map();
+          var error = new Error('Error here'),
+              date = new Date(10000);
+          map1.set(error, date);
+          var json = typeson.stringify({
+            m: map1
+          });
+          var obj = typeson.parse(json);
+          expect(obj.m).to.be.an.instanceOf(Map);
+
+          if (preset) {
+            expect(Array.from(obj.m.keys())[0]).to.be.an.instanceOf(Error);
+            expect(Array.from(obj.m.values())[0]).to.be.an.instanceOf(Date);
+          }
+        });
+      });
+      describe('Set', function () {
+        it('should get back a real Set instance with the original data and use complex types also in contained items', function () {
+          var typeson = new Typeson().register(preset || set$2);
+          var set1 = new Set();
+          var error = new Error('Error here'),
+              date = new Date(10000),
+              str = '',
+              o = {
+            a: error
+          };
+          set1.add(o);
+          set1.add(date);
+          set1.add(str);
+          var json = typeson.stringify({
+            s: set1
+          });
+          var obj = typeson.parse(json);
+          expect(obj.s).to.be.an.instanceOf(Set);
+          var a = Array.from(obj.s.values());
+
+          if (preset) {
+            expect(a[0].a).to.be.an.instanceOf(Error);
+            expect(a[1]).to.be.an.instanceOf(Date);
+          }
+
+          expect(a[2]).to.be.a('string');
+        });
+      });
+      describe('ArrayBuffer', function () {
+        it('should return an ArrayBuffer', function () {
+          var typeson = new Typeson().register(preset || [arraybuffer$1]);
+          var buf = new ArrayBuffer(16);
+          var tson = typeson.stringify(buf, null, 2);
+          var back = typeson.parse(tson);
+          expect(back instanceof ArrayBuffer);
+          expect(back.byteLength).to.equal(16);
+        });
+        it('should return the same ArrayBuffer instance', function () {
+          var typeson = new Typeson().register(preset || [arraybuffer$1]);
+          var buf1 = new ArrayBuffer(16);
+          var buf2 = buf1;
+          var obj = {
+            buf1: buf1,
+            buf2: buf2
+          };
+          var tson = typeson.stringify(obj, null, 2);
+          var back = typeson.parse(tson);
+          expect(back.buf1 instanceof ArrayBuffer);
+          expect(back.buf2 instanceof ArrayBuffer);
+          expect(back.buf1).to.equal(back.buf2);
+        });
+      });
+      describe('TypedArrays', function () {
+        describe('Float64Array', function () {
+          it('should get back real Float64Array instance with original array content', function () {
+            var typeson = new Typeson().register(preset || [arraybuffer$1, typedArrays]);
+            var a = new Float64Array(3);
+            a[0] = 23.8;
+            a[1] = -15;
+            a[2] = 99;
+            var json = typeson.stringify({
+              a: a
+            });
+            var obj = typeson.parse(json);
+            expect(obj.a).to.be.an.instanceOf(Float64Array);
+            expect(obj.a.length).to.equal(3);
+            expect(obj.a[0]).to.equal(23.8);
+            expect(obj.a[1]).to.equal(-15);
+            expect(obj.a[2]).to.equal(99);
+          });
+        });
+        describe('Uint16 arrays over invalid unicode range', function () {
+          it('should work to use any 16-bit number no matter whether it is invalid unicode or not', function () {
+            var typeson = new Typeson().register(preset || [arraybuffer$1, typedArrays]);
+            var a = new Uint16Array(0x0900);
+            var i = a.length;
+
+            while (i--) {
+              a[i] = i + 0xd780;
+            }
+
+            var json = typeson.stringify({
+              a: a
+            }); // console.log(json);
+            // Emulate a textencoder that eliminates invalid UTF chars
+
+            i = json.length;
+            var copy = new Uint16Array(i);
+
+            while (i--) {
+              var ch = json.charCodeAt(i);
+              copy[i] = ch >= 0xd800 && ch < 0xe000 ? 0xfffd : ch;
+            }
+
+            json = String.fromCharCode.apply(null, copy);
+            var obj = typeson.parse(json);
+            expect(obj.a).to.be.an.instanceOf(Uint16Array);
+            expect(obj.a.length).to.equal(a.length);
+            obj.a.forEach(function (x, i) {
+              expect(x).to.equal(i + 0xd780);
+            });
+          });
+        });
+        describe('Int8 arrays with odd length', function () {
+          it('should be possible to use an odd length of an Int8Array', function () {
+            var typeson = new Typeson().register(preset || [arraybuffer$1, typedArrays]);
+            var a = new Int8Array(3);
+            a[0] = 0;
+            a[1] = 1;
+            a[2] = 2;
+            var json = typeson.stringify(a); // console.log(json);
+
+            var a2 = typeson.parse(json);
+            expect(a2.length).to.equal(3);
+            expect(a2[0]).to.equal(0);
+            expect(a2[1]).to.equal(1);
+            expect(a2[2]).to.equal(2);
+          });
+        });
+        describe('Uint8 arrays with shared buffer object', function () {
+          it('should return the same buffer object from different wrappers (or data views or buffer itself)', function () {
+            var typeson = new Typeson().register(preset || [arraybuffer$1, typedArrays, dataview$1]);
+            var shared = new ArrayBuffer(7);
+            var dataView = new DataView(shared, 3, 4);
+            var obj = {
+              wrapper1: new Uint8Array(shared),
+              wrapper2: new Uint16Array(shared, 2, 2),
+              buffer: shared,
+              dataView: dataView
+            };
+            obj.wrapper1[0] = 1;
+            obj.wrapper2[1] = 0xffff;
+            var json = typeson.stringify(obj); // console.log(json);
+
+            var obj2 = typeson.parse(json);
+            expect(obj2.wrapper1.buffer).to.equal(obj2.wrapper2.buffer);
+            expect(obj2.wrapper1.buffer).to.equal(obj2.buffer);
+            expect(obj2.wrapper1.buffer).to.equal(obj2.dataView.buffer);
+          });
+        });
+      });
+      /*
+      // TODO: Add for typed-arrays-socketio
+      describe('TypedArrays Socket-IO', () => {
+      });
+      */
+
+      describe('DataView', function () {
+        it('should return a DataView', function () {
+          var typeson = new Typeson().register(preset || [dataview$1]);
+          var sample = [0x44, 0x33, 0x22, 0x11, 0xFF, 0xEE, 0xDD, 0xCC];
+          var buffer = new Uint8Array(sample).buffer;
+          var dataView = new DataView(buffer, 3, 4);
+          expect(dataView.byteLength).to.equal(4);
+          var tson = typeson.stringify(dataView, null, 2);
+          var back = typeson.parse(tson);
+          expect(back).to.be.an.instanceOf(DataView);
+          expect(back.byteLength).to.equal(4);
+        });
+        it('should reproduce DataView with the same buffer', function () {
+          var typeson = new Typeson().register(preset || [dataview$1]);
+          var sample = [0x44, 0x33, 0x22, 0x11, 0xFF, 0xEE, 0xDD, 0xCC];
+          var buffer = new Uint8Array(sample).buffer;
+          var dataView1 = new DataView(buffer, 3, 4);
+          var dataView2 = new DataView(buffer, 3, 4);
+          var dataView3 = new DataView(buffer, 3, 4);
+          var obj = {
+            dataView1: dataView1,
+            dataView2: dataView2,
+            dataView3: dataView3
+          };
+          var tson = typeson.stringify(obj, null, 2);
+          var back = typeson.parse(tson);
+          expect(back.dataView1).to.be.an.instanceOf(DataView);
+          expect(back.dataView2).to.be.an.instanceOf(DataView);
+          expect(back.dataView3).to.be.an.instanceOf(DataView);
+          expect(back.dataView1.byteLength).to.equal(4);
+        });
+      });
+      describe('Intl types', function () {
+        it('should return a Intl.Collator', function () {
+          var typeson = new Typeson().register(preset || [intlTypes$1]); // After `-u-`, the values don't appear to be validated in Node or Chrome
+
+          var locales = ['en', 'hi', 'de-AT', 'de-DE-u-co-phonebk', 'en-US-u-kn-true', 'en-US-u-kf-upper'];
+          var opts = {
+            localeMatcher: 'lookup',
+            usage: 'search',
+            sensitivity: 'base',
+            ignorePunctuation: true,
+            numeric: true,
+            caseFirst: 'upper'
+          };
+          var optsClone = JSON.parse(JSON.stringify(opts));
+          var collator = new Intl.Collator(locales, opts);
+          var expectedLocale = collator.resolvedOptions().locale;
+          var tson = typeson.stringify(collator, null, 2);
+          var back = typeson.parse(tson);
+          expect(back instanceof Intl.Collator); // console.log(Intl.Collator.supportedLocalesOf(Object.keys(optsClone.locales), optsClone.localeMatcher));
+
+          expect(back.resolvedOptions().locale).to.deep.equal(expectedLocale);
+          Object.keys(optsClone).filter(function (k) {
+            return ![// These would ideally be present but are not available for inspection
+            'localeMatcher', 'locales'].includes(k);
+          }).forEach(function (prop) {
+            expect(back.resolvedOptions()[prop]).to.deep.equal(optsClone[prop]);
+          });
+        });
+        it('should return a Intl.DateTimeFormat', function () {
+          var typeson = new Typeson().register(preset || [intlTypes$1]);
+          var locales = ['hi', 'de-AT', 'de-DE-u-nu-latn', 'en-US-u-ca-persian'];
+          var opts = {
+            localeMatcher: 'lookup',
+            timeZone: 'Asia/Shanghai',
+            hour12: false,
+            formatMatcher: 'basic'
+          };
+          var optsClone = JSON.parse(JSON.stringify(opts));
+          var dtf = new Intl.DateTimeFormat(locales, opts);
+          var tson = typeson.stringify(dtf, null, 2);
+          var back = typeson.parse(tson);
+          expect(back instanceof Intl.DateTimeFormat);
+          Object.keys(optsClone).filter(function (k) {
+            return ![// These would ideally be present but are not available for inspection
+            'localeMatcher', 'locales', 'formatMatcher', 'hour12' // Not currently working in Node or Chrome
+            ].includes(k);
+          }).forEach(function (prop) {
+            expect(back.resolvedOptions()[prop]).to.deep.equal(optsClone[prop]);
+          });
+        });
+        it('should return a Intl.NumberFormat', function () {
+          var typeson = new Typeson().register(preset || [intlTypes$1]);
+          var locales = ['hi', 'de-AT', 'de-DE-u-nu-bali'];
+          var opts = {
+            localeMatcher: 'lookup',
+            style: 'currency',
+            currency: 'EUR',
+            currencyDisplay: 'symbol',
+            useGrouping: false
+          };
+          var optsClone = JSON.parse(JSON.stringify(opts));
+          var dtf = new Intl.NumberFormat(locales, opts);
+          var tson = typeson.stringify(dtf, null, 2);
+          var back = typeson.parse(tson);
+          expect(back instanceof Intl.NumberFormat);
+          Object.keys(optsClone).filter(function (k) {
+            return ![// These would ideally be present but are not available for inspection
+            'localeMatcher', 'locales'].includes(k);
+          }).forEach(function (prop) {
+            expect(back.resolvedOptions()[prop]).to.deep.equal(optsClone[prop]);
+          });
+        });
+      });
+    }
+
+    describe('Built-in', BuiltIn);
+    describe('ImageData', function () {
+      it('should get back an ImageData instance with the original data', function () {
+        var typeson = new Typeson().register(imagedata$1);
+        var imageData = new ImageData(1, 3);
+        var tson = typeson.stringify(imageData);
+        var back = typeson.parse(tson);
+        expect(back.width).to.equal(1);
+        expect(back.height).to.equal(3);
+        expect(back.data).to.deep.equal(new Uint8ClampedArray(12));
+      });
+    });
+    describe('ImageBitmap', function () {
+      it('should get back an ImageBitmap instance with the original data', function (done) {
+        var typeson = new Typeson().register(imagebitmap$1);
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = document.createElement('img'); // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+
+        img.onload = function () {
+          ctx.drawImage(img, 0, 0);
+          createImageBitmap(canvas).then(function (imageBitmap) {
+            var tson = typeson.stringify(imageBitmap);
+            return typeson.parse(tson);
+          }).then(function (back) {
+            expect(back.width).to.equal(300
+            /* img.width */
+            );
+            expect(back.height).to.equal(150
+            /* img.height */
+            );
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(back, 0, 0); // Not getting a URL that is displaying properly or exactly consistent between Node/browser
+
+            try {
+              // Node
+              expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=');
+            } catch (err) {
+              try {
+                // Chrome
+                expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC');
+              } catch (err) {
+                // Firefox
+                expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=');
+              }
+            }
+
+            done();
+          });
+        }; // Didn't work with a relative path nor with an SVG file in node-canvas
+
+
+        img.src = typeof imageTestFileNode !== 'undefined' ? imageTestFileNode : '../test/Flag_of_the_United_Nations.png'; // browserify-test uses testem which assumes cwd() resolution (in `Config.prototype.resolvePath` of `node_modules/testem/lib/config.js`)
+      });
+      it('should get back an ImageBitmap instance with the original data asynchronously', function (done) {
+        var typeson = new Typeson().register(imagebitmap$1);
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = document.createElement('img'); // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+
+        img.onload = function () {
+          ctx.drawImage(img, 0, 0);
+          createImageBitmap(canvas).then(function (imageBitmap) {
+            var tson = typeson.stringify(imageBitmap);
+            return typeson.parseAsync(tson);
+          }).then(function (back) {
+            expect(back.width).to.equal(300); // img.width
+
+            expect(back.height).to.equal(150); // img.height
+
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            ctx.drawImage(back, 0, 0); // Not getting a URL that is displaying properly or exactly consistent between Node/browser
+
+            try {
+              // Node
+              expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=');
+            } catch (err) {
+              try {
+                // Chrome
+                expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC');
+              } catch (err) {
+                // Firefox
+                expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=');
+              }
+            }
+
+            done();
+          });
+        }; // Didn't work with a relative path nor with an SVG file in node-canvas
+
+
+        img.src = typeof imageTestFileNode !== 'undefined' ? imageTestFileNode : '../test/Flag_of_the_United_Nations.png'; // browserify-test uses testem which assumes cwd() resolution (in `Config.prototype.resolvePath` of `node_modules/testem/lib/config.js`)
+      });
+    });
+    describe('Blob', function () {
+      it('should get back a Blob instance with the original data', function (done) {
+        this.timeout(10000);
+        var typeson = new Typeson().register(blob$1);
+        var contentType = 'application/json';
+        var stringContents = JSON.stringify("abc\u1234");
+        var blob1 = new Blob([// BufferSource (ArrayBufferView (Int8Array, etc. or DataView) or ArrayBuffer), Blob, or USVString (strings without unpaired surrogates)
+        stringContents], {
+          type: contentType // DOMString
+
+        });
+        var tson = typeson.stringify(blob1);
+        var back = typeson.parse(tson);
+        expect(back.type).to.equal(contentType);
+        expect('name' in back).to.be.false; // No file properties
+
+        expect('lastModified' in back).to.be.false; // No file properties
+
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          expect(reader.result).to.equal(stringContents);
+          done();
+        });
+        reader.addEventListener('error', function () {
+          assert(false, 'FileReader should not err');
+        });
+        reader.readAsText(back);
+      });
+      it('should get back a Blob instance with the original data asynchronously', function (done) {
+        var typeson = new Typeson().register(blob$1);
+        var contentType = 'application/json';
+        var stringContents = JSON.stringify("abc\u1234");
+        var blob1 = new Blob([// BufferSource (ArrayBufferView (Int8Array, etc. or DataView) or ArrayBuffer), Blob, or USVString (strings without unpaired surrogates)
+        stringContents], {
+          type: contentType // DOMString
+
+        });
+        typeson.stringifyAsync(blob1).then(function (tson) {
+          var back = typeson.parse(tson);
+          expect(back.type).to.equal(contentType);
+          expect('name' in back).to.be.false; // No file properties
+
+          expect('lastModified' in back).to.be.false; // No file properties
+
+          var reader = new FileReader();
+          reader.addEventListener('load', function () {
+            expect(reader.result).to.equal(stringContents);
+            done();
+          });
+          reader.addEventListener('error', function () {
+            assert(false, 'FileReader should not err');
+          });
+          reader.readAsText(back);
+        });
+      });
+      it('Handle large (typed array) Blobs', function (done) {
+        this.timeout(10000); // From https://github.com/web-platform-tests/wpt/blob/master/IndexedDB/support-promises.js#L291
+
+        function largeValue(size, seed) {
+          var buffer = new Uint8Array(size); // 32-bit xorshift - must be non-zero seed
+
+          var state = 1000 + seed;
+
+          for (var i = 0; i < size; ++i) {
+            state ^= state << 13;
+            state ^= state >> 17;
+            state ^= state << 5;
+            buffer[i] = state & 0xff;
+          }
+
+          return buffer;
+        }
+
+        var typeson = new Typeson().register(structuredCloningThrowing$1);
+        var largeVal = 131072;
+        var b5 = new Blob([largeValue(largeVal, 1)], {
+          type: 'text/x-blink-1'
+        });
+        var t5 = typeson.stringify(b5);
+        var tback = typeson.parse(t5);
+        expect(tback.size, 'Sync large val').to.equal(largeVal);
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+          var view = new Uint8Array(reader.result);
+          expect(view.join(',')).to.equal(largeValue(largeVal, 1).join(','));
+          var b6 = new Blob([largeValue(largeVal, 1)], {
+            type: 'text/x-blink-1'
+          });
+          typeson.stringifyAsync(b6).then(function (t6) {
+            var tback = typeson.parse(t6);
+            expect(tback.size, 'Async large val').to.equal(largeVal);
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+              var view = new Uint8Array(reader.result);
+              expect(view.join(',')).to.equal(largeValue(largeVal, 1).join(','));
+              done();
+            };
+
+            reader.readAsArrayBuffer(tback);
+          });
+        };
+
+        reader.readAsArrayBuffer(tback);
+      });
+    });
+    describe('File', function () {
+      this.timeout(10000);
+      it('should get back a File instance with the original data', function (done) {
+        var typeson = new Typeson().register(file$1);
+        var currTime = new Date();
+        var contentType = 'application/json';
+        var fileName = 'aName';
+        var stringContents = JSON.stringify("abc\u1234");
+        var file1 = new File([// BufferSource (ArrayBufferView (Int8Array, etc. or DataView) or ArrayBuffer), Blob, or USVString (strings without unpaired surrogates)
+        stringContents], fileName, // USVString (strings without unpaired surrogates)
+        {
+          type: contentType,
+          // DOMString
+          lastModified: currTime // Or number
+
+        });
+        var tson = typeson.stringify(file1);
+        var back = typeson.parse(tson);
+        expect(back.lastModified).to.equal(currTime.getTime());
+        expect(back.type).to.equal(contentType);
+        expect(back.name).to.equal(fileName);
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          expect(reader.result).to.equal(stringContents);
+          done();
+        });
+        reader.addEventListener('error', function () {
+          assert(false, 'FileReader should not err');
+        });
+        reader.readAsText(back);
+      });
+      it('should get back a File instance with the original data asynchronously', function (done) {
+        var typeson = new Typeson().register(file$1);
+        var currTime = new Date();
+        var contentType = 'application/json';
+        var fileName = 'aName';
+        var stringContents = JSON.stringify("abc\u1234");
+        var file1 = new File([// BufferSource (ArrayBufferView (Int8Array, etc. or DataView) or ArrayBuffer), Blob, or USVString (strings without unpaired surrogates)
+        stringContents], fileName, // USVString (strings without unpaired surrogates)
+        {
+          type: contentType,
+          // DOMString
+          lastModified: currTime // Or number
+
+        });
+        typeson.stringifyAsync(file1).then(function (tson) {
+          var back = typeson.parse(tson);
+          expect(back.lastModified).to.equal(currTime.getTime());
+          expect(back.type).to.equal(contentType);
+          expect(back.name).to.equal(fileName);
+          var reader = new FileReader();
+          reader.addEventListener('load', function () {
+            expect(reader.result).to.equal(stringContents);
+            done();
+          });
+          reader.addEventListener('error', function () {
+            assert(false, 'FileReader should not err');
+          });
+          reader.readAsText(back);
+        });
+      });
+    });
+    describe('FileList', function () {
+      this.timeout(10000);
+      it('should get back a FileList instance with the original data', function () {
+        var currTime = new Date();
+        var anotherTime = new Date('1985');
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.files = [// See the test-environment for our adapter to make this settable
+        new File(['content1'], 'abc', {
+          type: 'text/plain',
+          // DOMString
+          lastModified: currTime // Or number
+
+        }), new File(['content2'], 'def', {
+          type: 'text/html',
+          // DOMString
+          lastModified: anotherTime // Or number
+
+        })];
+        expect(input.files).to.be.an.instanceOf(FileList);
+        var typeson = new Typeson().register(filelist$1);
+        var tson = typeson.stringify(input.files);
+        var back = typeson.parse(tson);
+        expect(back.item(0)).to.be.an.instanceOf(File);
+        expect(back.item(0).lastModified).to.equal(currTime.getTime());
+        expect(back.item(0).type).to.equal('text/plain');
+        expect(back.item(0).name).to.equal('abc');
+        expect(back.item(1)).to.be.an.instanceOf(File);
+        expect(back.item(1).lastModified).to.equal(anotherTime.getTime());
+        expect(back.item(1).type).to.equal('text/html');
+        expect(back.item(1).name).to.equal('def');
+      });
+      it('should get back a FileList instance with the original data asynchronously', function () {
+        var currTime = new Date();
+        var anotherTime = new Date('1985');
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.files = [// See the test-environment for our adapter to make this settable
+        new File(['content1'], 'abc', {
+          type: 'text/plain',
+          // DOMString
+          lastModified: currTime // Or number
+
+        }), new File(['content2'], 'def', {
+          type: 'text/html',
+          // DOMString
+          lastModified: anotherTime // Or number
+
+        })];
+        expect(input.files).to.be.an.instanceOf(FileList);
+        var typeson = new Typeson().register(filelist$1);
+        typeson.stringifyAsync(input.files).then(function (tson) {
+          var back = typeson.parse(tson);
+          expect(back.item(0)).to.be.an.instanceOf(File);
+          expect(back.item(0).lastModified).to.equal(currTime.getTime());
+          expect(back.item(0).type).to.equal('text/plain');
+          expect(back.item(0).name).to.equal('abc');
+          expect(back.item(1)).to.be.an.instanceOf(File);
+          expect(back.item(1).lastModified).to.equal(anotherTime.getTime());
+          expect(back.item(1).type).to.equal('text/html');
+          expect(back.item(1).name).to.equal('def');
+        });
+      });
+    });
+    describe('Non-built-in object ignoring', function () {
+      it('should ignore non-built-in objects (simulated)', function () {
+        var typeson = new Typeson().register(nonbuiltinIgnore$1);
+        var john = new util.Person('John Doe');
+        var simulatedNonBuiltInObject = new util.SimulatedNonBuiltIn();
+        var tson = typeson.stringify({
+          a: john,
+          b: simulatedNonBuiltInObject
+        });
+        var back = typeson.parse(tson);
+        expect(back).to.deep.equal({
+          a: {
+            name: 'John Doe'
+          }
+        });
+        var a = typeson.encapsulate(['a', simulatedNonBuiltInObject, 5, null]);
+        expect('0' in a).to.be.true;
+        expect('1' in a).to.be.false;
+        expect('2' in a).to.be.true;
+        expect('3' in a).to.be.true;
+      });
+    });
+    describe('User objects', function () {
+      it('should do recursive type checking on user instantiated objects', function () {
+        var typeson = new Typeson().register([userObject$1, date$1]);
+        var bob = new util.Person('Bob Smith', 30, new Date(2000, 5, 20), true);
+        var simulatedNonBuiltInObject = new util.SimulatedNonBuiltIn();
+        simulatedNonBuiltInObject.prop = 500;
+        var tson = typeson.stringify({
+          a: bob,
+          b: simulatedNonBuiltInObject
+        });
+        var back = typeson.parse(tson);
+        expect(back).to.deep.equal({
+          a: {
+            name: 'Bob Smith',
+            age: 30,
+            dob: new Date(2000, 5, 20),
+            isMarried: true
+          },
+          b: {
+            aaa: 5,
+            prop: 500
+          }
+        });
+        expect('dob' in back.a).to.be.true;
+      });
+      it('should work with nonbuiltin-ignore', function () {
+        var typeson = new Typeson().register([userObject$1, nonbuiltinIgnore$1]);
+        var bob = new util.Person('Bob Smith', 30, new Date(2000, 5, 20), true);
+        bob.nonbuiltin = new util.SimulatedNonBuiltIn();
+        var simulatedNonBuiltInObject = new util.SimulatedNonBuiltIn();
+        var tson = typeson.stringify({
+          a: bob,
+          b: simulatedNonBuiltInObject
+        });
+        var back = typeson.parse(tson);
+        expect(back).to.deep.equal({
+          a: {
+            name: 'Bob Smith',
+            age: 30,
+            isMarried: true,
+            dob: new Date(2000, 5, 20).toJSON()
+          }
+        });
+        expect('nonbuiltin' in back.a).to.be.false;
+      });
+    });
+    describe('Cloneables', function () {
+      it('Should work with custom cloneable objects', function () {
+        var typeson = new Typeson().register(cloneable$1);
+        var objArg = {
+          a: 1,
+          b: 2
+        };
+        var mc = new util.MyCloneable(objArg);
+        var originalNonpersistentStateInfo = mc.nonpersistentStateInfo;
+        var encapsulated = typeson.encapsulate(mc);
+        expect(mc[Symbol.for('cloneEncapsulate')]()).to.deep.equal({
+          obj: JSON.stringify(objArg)
+        });
+        expect('nonpersistentStateInfo' in encapsulated).to.be.false;
+        expect('prototypeProperty' in encapsulated).to.be.false;
+        var tson = JSON.stringify(encapsulated);
+        var back = typeson.parse(tson);
+        expect(back).to.be.an.instanceOf(util.MyCloneable);
+        expect(back).to.not.equal(mc);
+        expect(back.obj).to.deep.equal(objArg);
+        expect(back.hasOwnProperty('nonpersistentStateInfo')).to.be.true;
+        expect(back.nonpersistentStateInfo).to.not.equal(originalNonpersistentStateInfo);
+        expect('prototypeProperty' in back).to.be.true;
+        expect(back.hasOwnProperty('prototypeProperty')).to.be.false;
+      });
+    });
+    describe('Resurrectables', function () {
+      it('Should work with custom resurrectable objects', function () {
+        var typeson = new Typeson().register(resurrectable$1);
+        var mr = new util.MyResurrectable();
+
+        var mr2 = function resurrectableFunction() {};
+
+        var mr3 = Symbol('resurrectable');
+        var mr4 = {};
+        var mr5 = [3, 4, 5];
+        var encapsulated = typeson.encapsulate([mr, mr2, mr3, mr4, mr5]);
+        var tson = JSON.stringify(encapsulated);
+        var back = typeson.parse(tson);
+        expect(back[0]).to.equal(mr);
+        expect(back[1]).to.equal(mr2);
+        expect(back[2]).to.equal(mr3);
+        expect(back[3]).to.not.equal(mr4);
+        expect(back[4]).to.not.equal(mr5);
+      });
+    });
+    describe('Presets', function () {
+      describe('Built-in (as preset)', function () {
+        BuiltIn([builtin]);
+      }); // TODO: Could add a shimmed postMessage test though covered by worker test
+
+      describe('postMessage', function () {
+        ErrorAndErrors([postMessage$1]);
+      });
+      describe('Universal', function () {
+        BuiltIn([universal$1]);
+      });
+      describe('Structured cloning', function () {
+        it('should work with Structured cloning with throwing', function () {
+          var typeson = new Typeson().register([structuredCloningThrowing$1]);
+          var caught = false;
+
+          try {
+            typeson.stringify(new Error('test'));
+          } catch (err) {
+            caught = true;
+          }
+
+          assert(caught, 'Caught error');
+          var expected = '{"$":1234567890000,"$types":{"$":{"":"date"}}}';
+          var result = typeson.stringify(new Date(1234567890000));
+          expect(result).to.deep.equal(expected);
+        });
+        it('should work with Structured cloning without throwing', function () {
+          var typeson = new Typeson().register([structuredCloning]);
+          var caught = false;
+
+          try {
+            typeson.stringify(new Error('test'));
+          } catch (err) {
+            console.log(err);
+            caught = true;
+          }
+
+          assert(!caught, 'Did not catch error');
+          var expected = '{"$":1234567890000,"$types":{"$":{"":"date"}}}';
+          var result = typeson.stringify(new Date(1234567890000));
+          expect(result).to.deep.equal(expected);
+        });
+        it('should allow recursive type checking on user instantiated objects', function () {
+          var typeson = new Typeson().register([structuredCloning]);
+          var john = new util.Person('John Doe');
+          var bob = new util.Person('Bob Smith', 30, new Date(2000, 5, 20), true);
+          var clonedData = typeson.parse(typeson.stringify([john, bob]));
+          expect(clonedData).to.have.same.deep.members([{
+            name: 'John Doe'
+          }, {
+            name: 'Bob Smith',
+            dob: new Date(2000, 5, 20),
+            age: 30,
+            isMarried: true
+          }]);
+        });
+        it('should work with recursive structures', function () {
+          var typeson = new Typeson().register(structuredCloningThrowing$1);
+          var obj = [];
+          obj.push(obj);
+          var clonedData = typeson.parse(typeson.stringify(obj));
+          expect(clonedData[0]).to.equal(clonedData);
+        });
+      });
+      describe('Special Numbers (as preset)', function () {
+        SpecialNumbers([specialNumbers$1]);
+      }); // TODO: Add test for socketio
+
+      describe('Undefined (as preset)', function () {
+        Undefined$1([undefPreset]);
+      });
+      describe('Sparse undefined', function () {
+        it('should be possible to restore `undefined` properties', function () {
+          var typeson = new Typeson().register([sparseUndefined$1]);
+          var a = [undefined, {
+            b: undefined,
+            c: [3, null,, undefined]
+          }]; // eslint-disable-line no-sparse-arrays
+
+          var json = typeson.stringify(a);
+          var a2 = typeson.parse(json);
+          expect(a2.length).to.equal(2);
+          expect(a2[0]).to.equal(null);
+          expect('b' in a2[1]).to.be.false;
+          expect(a2[1].c[0]).to.equal(3);
+          expect(a2[1].c[1]).to.equal(null);
+          expect(a2[1].c[2]).to.equal(undefined);
+          expect('2' in a2[1].c).to.be.false;
+          expect(a2[1].c[3]).to.equal(null);
+        });
+      });
+    });
+    mocha.run();
+
+})));
 //# sourceMappingURL=test-polyglot.js.map

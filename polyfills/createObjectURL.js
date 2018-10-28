@@ -29,8 +29,8 @@ function xmlHttpRequestOpen (method, url, async) {
     if ((/^blob:/).test(url)) {
         const blob = blobURLs[url];
         const type = 'text/plain'; // blob.type;
-        const utf16 = blob[impl]._buffer.toString('utf16le');
-        url = 'data:' + type + ',' + utf16;
+        const encoded = blob[impl]._buffer.toString('binary'); // utf16le and base64 both convert lone surrogates
+        url = 'data:' + type + ',' + encodeURIComponent(encoded);
     }
     return _xhropen.call(this, method, url, async);
 };

@@ -549,7 +549,7 @@ describe('ImageBitmap', () => {
                 ctx.drawImage(back, 0, 0);
                 // Not getting a URL that is displaying properly or exactly consistent between Node/browser
                 try { // Node
-                    expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAACC0lEQVR4nO3UQQ3AIADAwDF7uMMeYpiF/UiTOwV9dcy1zwMQ8N4OAPjLsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwg4wMLwgPj2swUCwAAAABJRU5ErkJggg=='
+                    expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII='
                     );
                 } catch (err) {
                     try { // Chrome
@@ -586,7 +586,7 @@ describe('ImageBitmap', () => {
                 ctx.drawImage(back, 0, 0);
                 // Not getting a URL that is displaying properly or exactly consistent between Node/browser
                 try { // Node
-                    expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAACC0lEQVR4nO3UQQ3AIADAwDF7uMMeYpiF/UiTOwV9dcy1zwMQ8N4OAPjLsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwg4wMLwgPj2swUCwAAAABJRU5ErkJggg=='
+                    expect(canvas.toDataURL()).to.equal('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII='
                     );
                 } catch (err) {
                     try { // Chrome
@@ -663,6 +663,7 @@ describe('Blob', function () {
     });
     it('Handle large (typed array) Blobs', function (done) {
         this.timeout(10000);
+        // From https://github.com/web-platform-tests/wpt/blob/master/IndexedDB/support-promises.js#L291
         function largeValue (size, seed) {
             const buffer = new Uint8Array(size);
             // 32-bit xorshift - must be non-zero seed
@@ -676,19 +677,33 @@ describe('Blob', function () {
             return buffer;
         }
 
-        const typeson = new Typeson().register(blob);
+        const typeson = new Typeson().register(structuredCloningThrowing);
         const largeVal = 131072;
         const b5 = new Blob([largeValue(largeVal, 1)], {type: 'text/x-blink-1'});
         const t5 = typeson.stringify(b5);
         const tback = typeson.parse(t5);
         expect(tback.size, 'Sync large val').to.equal(largeVal);
 
-        const b6 = new Blob([largeValue(largeVal, 1)], {type: 'text/x-blink-1'});
-        typeson.stringifyAsync(b6).then((t6) => {
-            const tback = typeson.parse(t6);
-            expect(tback.size, 'Async large val').to.equal(largeVal);
-            done();
-        });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const view = new Uint8Array(reader.result);
+            expect(view.join(',')).to.equal(largeValue(largeVal, 1).join(','));
+
+            const b6 = new Blob([largeValue(largeVal, 1)], {type: 'text/x-blink-1'});
+            typeson.stringifyAsync(b6).then((t6) => {
+                const tback = typeson.parse(t6);
+                expect(tback.size, 'Async large val').to.equal(largeVal);
+
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    const view = new Uint8Array(reader.result);
+                    expect(view.join(',')).to.equal(largeValue(largeVal, 1).join(','));
+                    done();
+                };
+                reader.readAsArrayBuffer(tback);
+            });
+        };
+        reader.readAsArrayBuffer(tback);
     });
 });
 

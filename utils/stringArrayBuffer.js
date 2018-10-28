@@ -1,5 +1,5 @@
 function arraybuffer2string (buf) {
-    return new Uint16Array(buf).reduce((s, byte) => s + String.fromCharCode(byte), '');
+    return new Uint8Array(buf).reduce((s, byte) => s + String.fromCharCode(byte), '');
 }
 
 function string2arraybuffer (str) {
@@ -49,9 +49,9 @@ function string2arraybuffer (str) {
     return buf;
     */
 
-    const array = new Uint16Array(str.length);
+    const array = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i++) {
-        array[i] = str.charCodeAt(i);
+        array[i] = str.charCodeAt(i); // & 0xff;
     }
     return array.buffer;
 }
