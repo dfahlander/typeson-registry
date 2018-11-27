@@ -3,10 +3,10 @@
 
 // For Node (we put here as this is exported and to be usable externally in ES6 module syntax
 //     whereas the `test-node.js` file has not been converted to ES6)
-import {createObjectURL, xmlHttpRequestOpen} from '../polyfills/createObjectURL.js';
+import {createObjectURL, xmlHttpRequestOverrideMimeType} from '../polyfills/createObjectURL.js';
 if (!URL.createObjectURL) {
     URL.createObjectURL = createObjectURL;
-    XMLHttpRequest.prototype.open = xmlHttpRequestOpen;
+    XMLHttpRequest.prototype.overrideMimeType = xmlHttpRequestOverrideMimeType();
 }
 
 // Setup Mocha and Chai

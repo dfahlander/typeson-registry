@@ -1031,11 +1031,8 @@
         replace: function replace(b) {
           // Sync
           var req = new XMLHttpRequest();
+          req.overrideMimeType('text/plain; charset=x-user-defined');
           req.open('GET', URL.createObjectURL(b), false); // Sync
-
-          if (typeof process === 'undefined') {
-            req.overrideMimeType('text/plain; charset=x-user-defined');
-          }
 
           if (req.status !== 200 && req.status !== 0) {
             throw new Error('Bad Blob access: ' + req.status);
@@ -1251,11 +1248,8 @@
         replace: function replace(f) {
           // Sync
           var req = new XMLHttpRequest();
+          req.overrideMimeType('text/plain; charset=x-user-defined');
           req.open('GET', URL.createObjectURL(f), false); // Sync
-
-          if (typeof process === 'undefined') {
-            req.overrideMimeType('text/plain; charset=x-user-defined');
-          }
 
           if (req.status !== 200 && req.status !== 0) {
             throw new Error('Bad Blob access: ' + req.status);
@@ -1904,8 +1898,8 @@
 
     /* eslint-env node */
     // Imperfectly polyfill jsdom for testing `Blob`/`File`
-    // Todo: This can be removed once `URL.createObjectURL` may
-    //    be implemented in jsdom: https://github.com/tmpvar/jsdom/issues/1721
+    // Todo: These can be removed once `URL.createObjectURL` may
+    //    be implemented in jsdom: https://github.com/jsdom/jsdom/issues/1721
     // These are not working well with Rollup as imports
     var mod = typeof module !== 'undefined';
 
@@ -1920,34 +1914,62 @@
     var blobURLs = {};
 
     var createObjectURL = function createObjectURL(blob) {
-      // https://github.com/tmpvar/jsdom/issues/1721#issuecomment-282465529
+      // https://github.com/jsdom/jsdom/issues/1721#issuecomment-282465529
       var blobURL = 'blob:' + serializeURLOrigin(parseURL(location.href)) + '/' + uuid();
       blobURLs[blobURL] = blob;
       return blobURL;
     };
 
     var impl = utils.implSymbol;
-    var _xhropen = XMLHttpRequest.prototype.open; // Add to XMLHttpRequest.prototype.open
+    var _xhropen = XMLHttpRequest.prototype.open;
+    var _xhrOverrideMimeType = XMLHttpRequest.prototype.overrideMimeType; // We only handle the case of binary, so no need to override `open`
+    //   in all cases; but this only works if override is called first
 
-    function xmlHttpRequestOpen(method, url, async) {
-      if (/^blob:/.test(url)) {
-        var blob = blobURLs[url];
-        var type = 'text/plain'; // blob.type;
+    var xmlHttpRequestOverrideMimeType = function xmlHttpRequestOverrideMimeType() {
+      var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+          polyfillDataURLs = _ref.polyfillDataURLs;
 
-        var encoded = blob[impl]._buffer.toString('binary'); // utf16le and base64 both convert lone surrogates
+      return function (mimeType) {
+        if (mimeType === 'text/plain; charset=x-user-defined') {
+          this.open = function (method, url, async) {
+            if (/^blob:/.test(url)) {
+              var blob = blobURLs[url];
+              var responseType = 'text/plain'; // blob.type;
+
+              var encoded = blob[impl]._buffer.toString('binary'); // utf16le and base64 both convert lone surrogates
 
 
-        url = 'data:' + type + ',' + encodeURIComponent(encoded);
-      }
+              if (polyfillDataURLs) {
+                // Not usable in jsdom which makes properties readonly, but local-xmlhttprequest can use
+                this.status = 200;
 
-      return _xhropen.call(this, method, url, async);
-    }
+                this.send = function () {};
+
+                this.responseType = responseType;
+                this.responseText = encoded || '';
+                return;
+              }
+
+              url = 'data:' + responseType + ',' + encodeURIComponent(encoded);
+            }
+
+            return _xhropen.call(this, method, url, async);
+          };
+        }
+
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+
+        return _xhrOverrideMimeType.call.apply(_xhrOverrideMimeType, [this, mimeType].concat(args));
+      };
+    };
 
     /* eslint-env mocha, node */
 
     if (!URL.createObjectURL) {
       URL.createObjectURL = createObjectURL;
-      XMLHttpRequest.prototype.open = xmlHttpRequestOpen;
+      XMLHttpRequest.prototype.overrideMimeType = xmlHttpRequestOverrideMimeType();
     } // Setup Mocha and Chai
 
 

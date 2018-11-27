@@ -6,10 +6,8 @@ export default {
         test (x) { return Typeson.toStringTag(x) === 'Blob'; },
         replace (b) { // Sync
             const req = new XMLHttpRequest();
+            req.overrideMimeType('text/plain; charset=x-user-defined');
             req.open('GET', URL.createObjectURL(b), false); // Sync
-            if (typeof process === 'undefined') {
-                req.overrideMimeType('text/plain; charset=x-user-defined');
-            }
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
             }
