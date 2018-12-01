@@ -2,6 +2,7 @@
 // Imperfectly polyfill jsdom for testing `Blob`/`File`
 // Todo: These can be removed once `URL.createObjectURL` may
 //    be implemented in jsdom: https://github.com/jsdom/jsdom/issues/1721
+//    though local-xmlhttprequest may need to be adapted
 
 // These are not working well with Rollup as imports
 const mod = typeof module !== 'undefined';
