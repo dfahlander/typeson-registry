@@ -9,6 +9,7 @@
   "main": "./dist/all.js",
   "module": "./index.js",
   "scripts": {
+    "prepublishOnly": "yarn",
     "eslint": "eslint .",
     "test": "npm run rollup && npm run eslint && mocha test/test-node",
     "browser-test": "npm run rollup && npm run eslint && npm start browser-test/",
