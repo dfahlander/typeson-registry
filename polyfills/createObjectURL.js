@@ -34,7 +34,10 @@ const xmlHttpRequestOverrideMimeType = function ({polyfillDataURLs} = {}) {
                     const blob = blobURLs[url];
                     const responseType = 'text/plain'; // blob.type;
                     const encoded = blob[impl]._buffer.toString('binary'); // utf16le and base64 both convert lone surrogates
-                    if (polyfillDataURLs) { // Not usable in jsdom which makes properties readonly, but local-xmlhttprequest can use
+                    // Not usable in jsdom which makes properties readonly,
+                    //   but local-xmlhttprequest can use (and jsdom can
+                    //   handle data URLs anyways)
+                    if (polyfillDataURLs) {
                         this.status = 200;
                         this.send = function () { };
                         this.responseType = responseType || '';
