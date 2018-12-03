@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-/* globals expect, assert, imageTestFileNode */
+/* globals expect, assert, BigInt, imageTestFileNode */
 /* eslint-disable no-unused-expressions */
 import Typeson from '../index.js';
 import testEnvironment from '../test/test-environment.js'; // eslint-disable-line no-unused-vars
@@ -13,7 +13,8 @@ const {
         regexp, map, set, arraybuffer,
         dataview, imagedata, imagebitmap,
         blob, file, filelist, nonbuiltinIgnore,
-        userObject, cloneable, resurrectable
+        userObject, cloneable, resurrectable,
+        bigint, bigintObject
     },
     presets: {
         builtin, universal, structuredCloningThrowing,
@@ -512,6 +513,25 @@ function BuiltIn (preset) {
             });
         });
     });
+
+    if (typeof BigInt !== 'undefined') {
+        describe('BigInt', () => {
+            it('bigint', () => {
+                const typeson = new Typeson().register(preset || bigint);
+                const tson = typeson.stringify(BigInt('9007199254740993'), null, 2);
+                const back = typeson.parse(tson);
+                expect(typeof back).to.equal('bigint');
+                expect(back).to.equal(BigInt('9007199254740993'));
+            });
+            it('bigintObject', () => {
+                const typeson = new Typeson().register(preset || bigintObject);
+                const tson = typeson.stringify(Object(BigInt('9007199254740993')), null, 2);
+                const back = typeson.parse(tson);
+                expect(typeof back).to.equal('object');
+                expect(back).to.deep.equal(Object(BigInt('9007199254740993')));
+            });
+        });
+    }
 }
 describe('Built-in', BuiltIn);
 
@@ -527,8 +547,9 @@ describe('ImageData', () => {
     });
 });
 
-describe('ImageBitmap', () => {
-    it('should get back an ImageBitmap instance with the original data', (done) => {
+describe('ImageBitmap', function () {
+    it('should get back an ImageBitmap instance with the original data', function (done) {
+        this.timeout(10000);
         const typeson = new Typeson().register(imagebitmap);
 
         const canvas = document.createElement('canvas');

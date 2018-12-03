@@ -34,8 +34,10 @@
 - Breaking change: For `cloneable`, look for `cloneEncapsulate` and
     `cloneRevive` global symbols instead of pseudo-private methods (Babel
     polyfills Symbol)
-- Breaking and other changes: Upgraded version of Typeson from
-    3.0.0 to 5.8.1 (has own `module`)
+- Breaking change: Store arrays using new `arrayNonindexKeys` rather than
+    `sparseUndefined` type to allow storage of non-index array keys
+- Breaking and other changes: Upgraded version of Typeson (has own
+    `module`)
 - Breaking change: Make `SpecialNumbers` a preset consisting of new
     individual types for `NaN`, `Infinity`, `-Infinity`
 - Breaking change: Node must reference `dist` subdirectory (except for
@@ -53,6 +55,8 @@
     `typeson`)
 - Fix (SCA): Remove `Proxy` from list of structured clone throwing to throw
     as not available as such
+- Fix (SCA): Ensure SCA can preserve arrays with non-index keys and
+    support BigInts
 - Fix (DataView): Get `dataview` to properly encode and decode `buffer`
     property
 - Fix (ImageData): Get `imagedata` type to work properly (as `data` is not
@@ -74,6 +78,9 @@
 - Enhancement: Add `ImageBitmap` type (with sync and async revival)
 - Enhancement: Add `File`, `Blob`, and `FileList` types (with sync and
     async replacement/encapsulation)
+- Enhancement: Add new type `arrayNonindexKeys` for preserving non-index
+    properties of arrays
+- Enhancement: Add new types `bigint` and `bigintObject`
 - Enhancement: Add `user-object` type and utilize in structured cloning
     to allow for non-plain user objects to be cloned; add test
 - Enhancement: Add `nonbuiltin-ignore` type to roughly detect non-builtin
@@ -118,7 +125,7 @@
 - Testing: Add a property and prototype property to simulated built in
     class
 - Testing: Add user objects test; simplify non-built-in test
-- Testing: Provide simple `server.js` to avoid Chrome origin restrictions
+- Testing: Use static server to avoid Chrome origin restrictions
     when run on file system; auto-open test file
 - Testing: Restore `undefined` at root
 - Testing (Workers): Display results on HTML page

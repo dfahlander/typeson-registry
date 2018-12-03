@@ -2,7 +2,10 @@
 import Typeson from 'typeson';
 
 // TYPES
+import arrayNonindexKeys from './types/array-nonindex-keys.js';
 import arraybuffer from './types/arraybuffer.js';
+import bigintObject from './types/bigint-object.js';
+import bigint from './types/bigint.js';
 import blob from './types/blob.js';
 import cloneable from './types/cloneable.js';
 import dataview from './types/dataview.js';
@@ -40,10 +43,11 @@ import undef2 from './presets/undef.js';
 import universal from './presets/universal.js';
 
 Typeson.types = {
-    arraybuffer, blob, cloneable, dataview, date, error, errors, file, filelist,
-    imagebitmap, imagedata, infinity, intlTypes, map, nan, negativeInfinity,
-    nonbuiltinIgnore, primitiveObjects, regexp, resurrectable, set,
-    typedArraysSocketio, typedArrays, undef, userObject
+    arrayNonindexKeys, arraybuffer, bigintObject, bigint, blob, cloneable, dataview,
+    date, error, errors, file, filelist, imagebitmap, imagedata, infinity,
+    intlTypes, map, nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects,
+    regexp, resurrectable, set, typedArraysSocketio, typedArrays, undef,
+    userObject
 };
 Typeson.presets = {
     builtin, postMessage, socketio, sparseUndefined, specialNumbers,
