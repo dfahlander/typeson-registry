@@ -299,7 +299,7 @@ function BuiltIn (preset) {
                 a[0] = 23.8;
                 a[1] = -15;
                 a[2] = 99;
-                const json = typeson.stringify({a: a});
+                const json = typeson.stringify({a});
                 const obj = typeson.parse(json);
                 expect(obj.a).to.be.an.instanceOf(Float64Array);
                 expect(obj.a.length).to.equal(3);
@@ -318,7 +318,7 @@ function BuiltIn (preset) {
                 const a = new Uint16Array(0x0900);
                 let i = a.length;
                 while (i--) a[i] = i + 0xd780;
-                let json = typeson.stringify({a: a});
+                let json = typeson.stringify({a});
                 // console.log(json);
 
                 // Emulate a textencoder that eliminates invalid UTF chars
@@ -662,7 +662,7 @@ describe('Blob', function () {
         });
     });
     it('Handle large (typed array) Blobs', function (done) {
-        this.timeout(10000);
+        this.timeout(30000);
         // From https://github.com/web-platform-tests/wpt/blob/master/IndexedDB/support-promises.js#L291
         function largeValue (size, seed) {
             const buffer = new Uint8Array(size);
