@@ -121,8 +121,16 @@ async function bundle ({input, output, name, format = 'umd'}) {
         })
     ];
     if (format !== 'es') {
-        plugins.unshift(babel());
+        plugins.unshift(babel({
+            // This was otherwise not picking up `.babelrc` for some reason
+            presets: [
+                ['@babel/env', {
+                    targets: 'cover 100%'
+                }]
+            ]
+        }));
     }
+
     // Todo: Setup rollup.watch() dev routine
     const bundle = await rollup.rollup({
         input,

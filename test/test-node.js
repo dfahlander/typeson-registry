@@ -76,6 +76,7 @@ if (process.env.npm_config_test) {
     ];
 }
 tests.forEach(function (path) {
+    require('../node_modules/@babel/polyfill/dist/polyfill.js');
     require('./test-polyglot.js');
 });
 }());

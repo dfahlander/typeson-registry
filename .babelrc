@@ -1,5 +1,7 @@
 {
   "presets": [
-      ["@babel/env"]
+    ["@babel/env", {
+      "targets": "cover 100%"
+    }]
   ]
 }

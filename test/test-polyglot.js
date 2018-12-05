@@ -18,12 +18,120 @@
     return _typeof(obj);
   }
 
+  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+      var info = gen[key](arg);
+      var value = info.value;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    if (info.done) {
+      resolve(value);
+    } else {
+      Promise.resolve(value).then(_next, _throw);
+    }
+  }
+
+  function _asyncToGenerator(fn) {
+    return function () {
+      var self = this,
+          args = arguments;
+      return new Promise(function (resolve, reject) {
+        var gen = fn.apply(self, args);
+
+        function _next(value) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+        }
+
+        function _throw(err) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+        }
+
+        _next(undefined);
+      });
+    };
+  }
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function _objectSpread(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+      var ownKeys = Object.keys(source);
+
+      if (typeof Object.getOwnPropertySymbols === 'function') {
+        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+        }));
+      }
+
+      ownKeys.forEach(function (key) {
+        _defineProperty(target, key, source[key]);
+      });
+    }
+
+    return target;
+  }
+
   function _slicedToArray(arr, i) {
     return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
   }
 
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
+    }
+  }
+
   function _arrayWithHoles(arr) {
     if (Array.isArray(arr)) return arr;
+  }
+
+  function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
   }
 
   function _iterableToArrayLimit(arr, i) {
@@ -52,6 +160,10 @@
     return _arr;
   }
 
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
+  }
+
   function _nonIterableRest() {
     throw new TypeError("Invalid attempt to destructure non-iterable instance");
   }
@@ -64,12 +176,11 @@
    *   extends Promise` and add a string tag for detection
    * @param {function} f
    */
-  class TypesonPromise {
-    constructor(f) {
-      this.p = new Promise(f);
-    }
+  var TypesonPromise = function TypesonPromise(f) {
+    _classCallCheck(this, TypesonPromise);
 
-  } // eslint-disable-line block-spacing, space-before-function-paren, space-before-blocks, space-infix-ops, semi
+    this.p = new Promise(f);
+  }; // eslint-disable-line block-spacing, space-before-function-paren, space-before-blocks, space-infix-ops, semi
   // class TypesonPromise extends Promise {get[Symbol.toStringTag](){return 'TypesonPromise'};} // eslint-disable-line keyword-spacing, space-before-function-paren, space-before-blocks, block-spacing, semi
   // Note: @babel/polyfill provides a `Symbol` polyfill
 
@@ -87,11 +198,13 @@
 
 
   TypesonPromise.prototype.then = function (onFulfilled, onRejected) {
-    return new TypesonPromise((typesonResolve, typesonReject) => {
-      this.p.then(function (res) {
+    var _this = this;
+
+    return new TypesonPromise(function (typesonResolve, typesonReject) {
+      _this.p.then(function (res) {
         typesonResolve(onFulfilled ? onFulfilled(res) : res);
-      }, r => {
-        this.p['catch'](function (res) {
+      }, function (r) {
+        _this.p['catch'](function (res) {
           return onRejected ? onRejected(res) : Promise.reject(res);
         }).then(typesonResolve, typesonReject);
       });
@@ -115,7 +228,7 @@
 
 
   TypesonPromise.resolve = function (v) {
-    return new TypesonPromise(typesonResolve => {
+    return new TypesonPromise(function (typesonResolve) {
       typesonResolve(v);
     });
   };
@@ -127,7 +240,7 @@
 
 
   TypesonPromise.reject = function (v) {
-    return new TypesonPromise((typesonResolve, typesonReject) => {
+    return new TypesonPromise(function (typesonResolve, typesonReject) {
       typesonReject(v);
     });
   };
@@ -140,19 +253,18 @@
      */
     TypesonPromise[meth] = function (promArr) {
       return new TypesonPromise(function (typesonResolve, typesonReject) {
-        Promise[meth](promArr.map(prom => {
+        Promise[meth](promArr.map(function (prom) {
           return prom.p;
         })).then(typesonResolve, typesonReject);
       });
     };
   });
 
-  const {
-    toString
-  } = {},
-        hasOwn = {}.hasOwnProperty,
-        getProto = Object.getPrototypeOf,
-        fnToString = hasOwn.toString;
+  var _ref = {},
+      toString = _ref.toString,
+      hasOwn = {}.hasOwnProperty,
+      getProto = Object.getPrototypeOf,
+      fnToString = hasOwn.toString;
   /**
    *
    * @param {*} v
@@ -183,17 +295,17 @@
 
 
   function hasConstructorOf(a, b) {
-    if (!a || typeof a !== 'object') {
+    if (!a || _typeof(a) !== 'object') {
       return false;
     }
 
-    const proto = getProto(a);
+    var proto = getProto(a);
 
     if (!proto) {
       return false;
     }
 
-    const Ctor = hasOwn.call(proto, 'constructor') && proto.constructor;
+    var Ctor = hasOwn.call(proto, 'constructor') && proto.constructor;
 
     if (typeof Ctor !== 'function') {
       return b === null;
@@ -214,7 +326,7 @@
       return false;
     }
 
-    const proto = getProto(val);
+    var proto = getProto(val);
 
     if (!proto) {
       // `Object.create(null)`
@@ -235,7 +347,7 @@
       return false;
     }
 
-    const proto = getProto(val);
+    var proto = getProto(val);
 
     if (!proto) {
       // `Object.create(null)`
@@ -252,7 +364,7 @@
 
 
   function isObject(v) {
-    return v && typeof v === 'object';
+    return v && _typeof(v) === 'object';
   }
   /**
    *
@@ -286,10 +398,10 @@
       return obj;
     }
 
-    const period = keyPath.indexOf('.');
+    var period = keyPath.indexOf('.');
 
     if (period > -1) {
-      const innerObj = obj[unescapeKeyPathComponent(keyPath.substr(0, period))];
+      var innerObj = obj[unescapeKeyPathComponent(keyPath.substr(0, period))];
       return innerObj === undefined ? undefined : getByKeyPath(innerObj, keyPath.substr(period + 1));
     }
 
@@ -301,10 +413,10 @@
       return value;
     }
 
-    const period = keyPath.indexOf('.');
+    var period = keyPath.indexOf('.');
 
     if (period > -1) {
-      const innerObj = obj[unescapeKeyPathComponent(keyPath.substr(0, period))];
+      var innerObj = obj[unescapeKeyPathComponent(keyPath.substr(0, period))];
       return setAtKeyPath(innerObj, keyPath.substr(period + 1), value);
     }
 
@@ -319,26 +431,17 @@
 
 
   function getJSONType(value) {
-    return value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
+    return value === null ? 'null' : Array.isArray(value) ? 'array' : _typeof(value);
   }
 
-  /**
-   * Typeson - JSON with types
-   * @license The MIT License (MIT)
-   * @copyright (c) 2016-2018 David Fahlander, Brett Zamir
-  */
-  const {
-    keys
-  } = Object,
-        {
-    isArray
-  } = Array,
-        hasOwn$1 = {}.hasOwnProperty,
-        internalStateObjPropsToIgnore = ['type', 'replaced', 'iterateIn', 'iterateUnsetNumeric'];
+  var keys = Object.keys,
+      isArray = Array.isArray,
+      hasOwn$1 = {}.hasOwnProperty,
+      internalStateObjPropsToIgnore = ['type', 'replaced', 'iterateIn', 'iterateUnsetNumeric'];
 
   function nestedPathsFirst(a, b) {
-    let as = a.keypath.match(/\./g);
-    let bs = a.keypath.match(/\./g);
+    var as = a.keypath.match(/\./g);
+    var bs = a.keypath.match(/\./g);
 
     if (as) {
       as = as.length;
@@ -361,8 +464,12 @@
    */
 
 
-  class Typeson {
-    constructor(options) {
+  var Typeson =
+  /*#__PURE__*/
+  function () {
+    function Typeson(options) {
+      _classCallCheck(this, Typeson);
+
       this.options = options; // Replacers signature: replace (value). Returns falsy if not
       //   replacing. Otherwise ['Date', value.getTime()]
 
@@ -387,997 +494,1095 @@
      */
 
 
-    stringify(obj, replacer, space, opts) {
-      opts = { ...this.options,
-        ...opts,
-        stringification: true
-      };
-      const encapsulated = this.encapsulate(obj, null, opts);
+    _createClass(Typeson, [{
+      key: "stringify",
+      value: function stringify(obj, replacer, space, opts) {
+        opts = _objectSpread({}, this.options, opts, {
+          stringification: true
+        });
+        var encapsulated = this.encapsulate(obj, null, opts);
 
-      if (isArray(encapsulated)) {
-        return JSON.stringify(encapsulated[0], replacer, space);
+        if (isArray(encapsulated)) {
+          return JSON.stringify(encapsulated[0], replacer, space);
+        }
+
+        return encapsulated.then(function (res) {
+          return JSON.stringify(res, replacer, space);
+        });
       }
+      /**
+       * Also sync but throws on non-sync result
+       * @param {*} obj
+       * @param {function|string[]} replacer
+       * @param {number|string} space
+       * @param {object} opts
+       * @returns {string}
+       */
 
-      return encapsulated.then(res => {
-        return JSON.stringify(res, replacer, space);
-      });
-    }
-    /**
-     * Also sync but throws on non-sync result
-     * @param {*} obj
-     * @param {function|string[]} replacer
-     * @param {number|string} space
-     * @param {object} opts
-     * @returns {string}
-     */
+    }, {
+      key: "stringifySync",
+      value: function stringifySync(obj, replacer, space, opts) {
+        return this.stringify(obj, replacer, space, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      }
+      /**
+       *
+       * @param {*} obj
+       * @param {function|string[]} replacer
+       * @param {number|string} space
+       * @param {object} opts
+       * @returns {Promise} Resolves to string
+       */
 
+    }, {
+      key: "stringifyAsync",
+      value: function stringifyAsync(obj, replacer, space, opts) {
+        return this.stringify(obj, replacer, space, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      }
+      /**
+       * Parse Typeson back into an obejct.
+       * Initial arguments works identical to those of `JSON.parse()`.
+       * @param {string} text
+       * @param {function} reviver This JSON reviver has nothing to do with
+       *   our revivers.
+       * @param {object} opts
+       * @returns {external:JSON}
+       */
 
-    stringifySync(obj, replacer, space, opts) {
-      return this.stringify(obj, replacer, space, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: true
-      });
-    }
-    /**
-     *
-     * @param {*} obj
-     * @param {function|string[]} replacer
-     * @param {number|string} space
-     * @param {object} opts
-     * @returns {Promise} Resolves to string
-     */
+    }, {
+      key: "parse",
+      value: function parse(text, reviver, opts) {
+        opts = _objectSpread({}, this.options, opts, {
+          parse: true
+        });
+        return this.revive(JSON.parse(text, reviver), opts);
+      }
+      /**
+      * Also sync but throws on non-sync result
+      * @param {string} text
+      * @param {function} reviver This JSON reviver has nothing to do with
+      *   our revivers.
+      * @param {object} opts
+      * @returns {external:JSON}
+      */
 
+    }, {
+      key: "parseSync",
+      value: function parseSync(text, reviver, opts) {
+        return this.parse(text, reviver, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      }
+      /**
+      * @param {string} text
+      * @param {function} reviver This JSON reviver has nothing to do with
+      *   our revivers.
+      * @param {object} opts
+      * @returns {Promise} Resolves to `external:JSON`
+      */
 
-    stringifyAsync(obj, replacer, space, opts) {
-      return this.stringify(obj, replacer, space, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: false
-      });
-    }
-    /**
-     * Parse Typeson back into an obejct.
-     * Initial arguments works identical to those of `JSON.parse()`.
-     * @param {string} text
-     * @param {function} reviver This JSON reviver has nothing to do with
-     *   our revivers.
-     * @param {object} opts
-     * @returns {external:JSON}
-     */
+    }, {
+      key: "parseAsync",
+      value: function parseAsync(text, reviver, opts) {
+        return this.parse(text, reviver, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      }
+      /**
+       *
+       * @param {*} obj
+       * @param {object} stateObj
+       * @param {object} [opts={}]
+       * @returns {string[]|false}
+       */
 
+    }, {
+      key: "specialTypeNames",
+      value: function specialTypeNames(obj, stateObj) {
+        var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        opts.returnTypeNames = true;
+        return this.encapsulate(obj, stateObj, opts);
+      }
+      /**
+       *
+       * @param {*} obj
+       * @param {object} stateObj
+       * @param {object} [opts={}]
+       * @returns {Promise|Array|object|string|false}
+       */
 
-    parse(text, reviver, opts) {
-      opts = { ...this.options,
-        ...opts,
-        parse: true
-      };
-      return this.revive(JSON.parse(text, reviver), opts);
-    }
-    /**
-    * Also sync but throws on non-sync result
-    * @param {string} text
-    * @param {function} reviver This JSON reviver has nothing to do with
-    *   our revivers.
-    * @param {object} opts
-    * @returns {external:JSON}
-    */
+    }, {
+      key: "rootTypeName",
+      value: function rootTypeName(obj, stateObj) {
+        var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        opts.iterateNone = true;
+        return this.encapsulate(obj, stateObj, opts);
+      }
+      /**
+       * Encapsulate a complex object into a plain Object by replacing
+       * registered types with plain objects representing the types data.
+       *
+       * This method is used internally by T`ypeson.stringify()`.
+       * @param {Object} obj - Object to encapsulate.
+       * @param {object} stateObj
+       * @param {object} opts
+       * @returns {Promise|Array|object|string|false}
+       */
 
-
-    parseSync(text, reviver, opts) {
-      return this.parse(text, reviver, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: true
-      });
-    }
-    /**
-    * @param {string} text
-    * @param {function} reviver This JSON reviver has nothing to do with
-    *   our revivers.
-    * @param {object} opts
-    * @returns {Promise} Resolves to `external:JSON`
-    */
-
-
-    parseAsync(text, reviver, opts) {
-      return this.parse(text, reviver, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: false
-      });
-    }
-    /**
-     *
-     * @param {*} obj
-     * @param {object} stateObj
-     * @param {object} [opts={}]
-     * @returns {string[]|false}
-     */
-
-
-    specialTypeNames(obj, stateObj, opts = {}) {
-      opts.returnTypeNames = true;
-      return this.encapsulate(obj, stateObj, opts);
-    }
-    /**
-     *
-     * @param {*} obj
-     * @param {object} stateObj
-     * @param {object} [opts={}]
-     * @returns {Promise|Array|object|string|false}
-     */
-
-
-    rootTypeName(obj, stateObj, opts = {}) {
-      opts.iterateNone = true;
-      return this.encapsulate(obj, stateObj, opts);
-    }
-    /**
-     * Encapsulate a complex object into a plain Object by replacing
-     * registered types with plain objects representing the types data.
-     *
-     * This method is used internally by T`ypeson.stringify()`.
-     * @param {Object} obj - Object to encapsulate.
-     * @param {object} stateObj
-     * @param {object} opts
-     * @returns {Promise|Array|object|string|false}
-     */
-
-
-    encapsulate(obj, stateObj, opts) {
-      opts = {
-        sync: true,
-        ...this.options,
-        ...opts
-      };
-      const {
-        sync
-      } = opts;
-      const that = this,
+    }, {
+      key: "encapsulate",
+      value: function encapsulate(obj, stateObj, opts) {
+        opts = _objectSpread({
+          sync: true
+        }, this.options, opts);
+        var _opts = opts,
+            sync = _opts.sync;
+        var that = this,
             types = {},
             refObjs = [],
             // For checking cyclic references
-      refKeys = [],
+        refKeys = [],
             // For checking cyclic references
-      promisesDataRoot = []; // Clone the object deeply while at the same time replacing any
-      //   special types or cyclic reference:
+        promisesDataRoot = []; // Clone the object deeply while at the same time replacing any
+        //   special types or cyclic reference:
 
-      const cyclic = opts && 'cyclic' in opts ? opts.cyclic : true;
-      const {
-        encapsulateObserver
-      } = opts;
+        var cyclic = opts && 'cyclic' in opts ? opts.cyclic : true;
+        var _opts2 = opts,
+            encapsulateObserver = _opts2.encapsulateObserver;
 
-      const ret = _encapsulate('', obj, cyclic, stateObj || {}, promisesDataRoot);
-      /**
-       *
-       * @param {*} ret
-       * @returns {Array|object|string|false}
-       */
+        var ret = _encapsulate('', obj, cyclic, stateObj || {}, promisesDataRoot);
+        /**
+         *
+         * @param {*} ret
+         * @returns {Array|object|string|false}
+         */
 
 
-      function finish(ret) {
-        // Add `$types` to result only if we ever bumped into a
-        //  special type (or special case where object has own `$types`)
-        const typeNames = Object.values(types);
+        function finish(ret) {
+          // Add `$types` to result only if we ever bumped into a
+          //  special type (or special case where object has own `$types`)
+          var typeNames = Object.values(types);
 
-        if (opts.iterateNone) {
-          if (typeNames.length) {
-            return typeNames[0];
+          if (opts.iterateNone) {
+            if (typeNames.length) {
+              return typeNames[0];
+            }
+
+            return Typeson.getJSONType(ret);
           }
 
-          return Typeson.getJSONType(ret);
-        }
-
-        if (typeNames.length) {
-          if (opts.returnTypeNames) {
-            return [...new Set(typeNames)];
-          } // Special if array (or a primitive) was serialized
-          //   because JSON would ignore custom `$types` prop on it
+          if (typeNames.length) {
+            if (opts.returnTypeNames) {
+              return _toConsumableArray(new Set(typeNames));
+            } // Special if array (or a primitive) was serialized
+            //   because JSON would ignore custom `$types` prop on it
 
 
-          if (!ret || !isPlainObject(ret) || // Also need to handle if this is an object with its
-          //   own `$types` property (to avoid ambiguity)
-          hasOwn$1.call(ret, '$types')) {
+            if (!ret || !isPlainObject(ret) || // Also need to handle if this is an object with its
+            //   own `$types` property (to avoid ambiguity)
+            hasOwn$1.call(ret, '$types')) {
+              ret = {
+                $: ret,
+                $types: {
+                  $: types
+                }
+              };
+            } else {
+              ret.$types = types;
+            } // No special types
+
+          } else if (isObject(ret) && hasOwn$1.call(ret, '$types')) {
             ret = {
               $: ret,
-              $types: {
-                $: types
-              }
+              $types: true
             };
-          } else {
-            ret.$types = types;
-          } // No special types
-
-        } else if (isObject(ret) && hasOwn$1.call(ret, '$types')) {
-          ret = {
-            $: ret,
-            $types: true
-          };
-        }
-
-        if (opts.returnTypeNames) {
-          return false;
-        }
-
-        return ret;
-      }
-      /**
-       *
-       * @param {*} ret
-       * @param {array} promisesData
-       * @returns {Promise} Resolves to ...
-       */
-
-
-      async function checkPromises(ret, promisesData) {
-        const promResults = await Promise.all(promisesData.map(pd => {
-          return pd[1].p;
-        }));
-        await Promise.all(promResults.map(async function (promResult) {
-          const newPromisesData = [];
-          const [prData] = promisesData.splice(0, 1);
-          const [keyPath,, cyclic, stateObj, parentObj, key, detectedType] = prData;
-
-          const encaps = _encapsulate(keyPath, promResult, cyclic, stateObj, newPromisesData, true, detectedType);
-
-          const isTypesonPromise = hasConstructorOf(encaps, TypesonPromise); // Handle case where an embedded custom type itself
-          //   returns a `Typeson.Promise`
-
-          if (keyPath && isTypesonPromise) {
-            const encaps2 = await encaps.p;
-            parentObj[key] = encaps2;
-            return checkPromises(ret, newPromisesData);
           }
 
-          if (keyPath) {
-            parentObj[key] = encaps;
-          } else if (isTypesonPromise) {
-            ret = encaps.p;
-          } else {
-            // If this is itself a `Typeson.Promise` (because the
-            //   original value supplied was a `Promise` or
-            //   because the supplied custom type value resolved
-            //   to one), returning it below will be fine since
-            //   a `Promise` is expected anyways given current
-            //   config (and if not a `Promise`, it will be ready
-            //   as the resolve value)
-            ret = encaps;
-          }
-
-          return checkPromises(ret, newPromisesData);
-        }));
-        return ret;
-      }
-      /**
-       *
-       * @param {object} stateObj
-       * @param {object} ownKeysObj
-       * @param {function} cb
-       * @returns {undefined}
-       */
-
-
-      function _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, cb) {
-        Object.assign(stateObj, ownKeysObj);
-        const vals = internalStateObjPropsToIgnore.map(prop => {
-          const tmp = stateObj[prop];
-          delete stateObj[prop];
-          return tmp;
-        });
-        cb();
-        internalStateObjPropsToIgnore.forEach((prop, i) => {
-          stateObj[prop] = vals[i];
-        });
-      }
-      /**
-       *
-       * @param {string} keypath
-       * @param {*} value
-       * @param {boolean} cyclic
-       * @param {object} stateObj
-       * @param {boolean} promisesData
-       * @param {boolean} resolvingTypesonPromise
-       * @param {string} detectedType
-       * @returns {*}
-       */
-
-
-      function _encapsulate(keypath, value, cyclic, stateObj, promisesData, resolvingTypesonPromise, detectedType) {
-        let ret;
-        let observerData = {};
-        const $typeof = typeof value;
-        const runObserver = encapsulateObserver ? function (obj) {
-          const type = detectedType || stateObj.type || Typeson.getJSONType(value);
-          encapsulateObserver(Object.assign(obj || observerData, {
-            keypath,
-            value,
-            cyclic,
-            stateObj,
-            promisesData,
-            resolvingTypesonPromise,
-            awaitingTypesonPromise: hasConstructorOf(value, TypesonPromise)
-          }, type !== undefined ? {
-            type
-          } : {}));
-        } : null;
-
-        if (['string', 'boolean', 'number', 'undefined'].includes($typeof)) {
-          if (value === undefined || $typeof === 'number' && (isNaN(value) || value === -Infinity || value === Infinity)) {
-            ret = replace(keypath, value, stateObj, promisesData, false, resolvingTypesonPromise, runObserver);
-
-            if (ret !== value) {
-              observerData = {
-                replaced: ret
-              };
-            }
-          } else {
-            ret = value;
-          }
-
-          if (runObserver) {
-            runObserver();
+          if (opts.returnTypeNames) {
+            return false;
           }
 
           return ret;
         }
+        /**
+         *
+         * @param {*} ret
+         * @param {array} promisesData
+         * @returns {Promise} Resolves to ...
+         */
 
-        if (value === null) {
-          if (runObserver) {
-            runObserver();
-          }
 
-          return value;
+        function checkPromises(_x, _x2) {
+          return _checkPromises.apply(this, arguments);
+        }
+        /**
+         *
+         * @param {object} stateObj
+         * @param {object} ownKeysObj
+         * @param {function} cb
+         * @returns {undefined}
+         */
+
+
+        function _checkPromises() {
+          _checkPromises = _asyncToGenerator(
+          /*#__PURE__*/
+          regeneratorRuntime.mark(function _callee2(ret, promisesData) {
+            var promResults;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+              while (1) {
+                switch (_context2.prev = _context2.next) {
+                  case 0:
+                    _context2.next = 2;
+                    return Promise.all(promisesData.map(function (pd) {
+                      return pd[1].p;
+                    }));
+
+                  case 2:
+                    promResults = _context2.sent;
+                    _context2.next = 5;
+                    return Promise.all(promResults.map(
+                    /*#__PURE__*/
+                    function () {
+                      var _ref = _asyncToGenerator(
+                      /*#__PURE__*/
+                      regeneratorRuntime.mark(function _callee(promResult) {
+                        var newPromisesData, _promisesData$splice, _promisesData$splice2, prData, _prData, keyPath, cyclic, stateObj, parentObj, key, detectedType, encaps, isTypesonPromise, encaps2;
+
+                        return regeneratorRuntime.wrap(function _callee$(_context) {
+                          while (1) {
+                            switch (_context.prev = _context.next) {
+                              case 0:
+                                newPromisesData = [];
+                                _promisesData$splice = promisesData.splice(0, 1), _promisesData$splice2 = _slicedToArray(_promisesData$splice, 1), prData = _promisesData$splice2[0];
+                                _prData = _slicedToArray(prData, 7), keyPath = _prData[0], cyclic = _prData[2], stateObj = _prData[3], parentObj = _prData[4], key = _prData[5], detectedType = _prData[6];
+                                encaps = _encapsulate(keyPath, promResult, cyclic, stateObj, newPromisesData, true, detectedType);
+                                isTypesonPromise = hasConstructorOf(encaps, TypesonPromise); // Handle case where an embedded custom type itself
+                                //   returns a `Typeson.Promise`
+
+                                if (!(keyPath && isTypesonPromise)) {
+                                  _context.next = 11;
+                                  break;
+                                }
+
+                                _context.next = 8;
+                                return encaps.p;
+
+                              case 8:
+                                encaps2 = _context.sent;
+                                parentObj[key] = encaps2;
+                                return _context.abrupt("return", checkPromises(ret, newPromisesData));
+
+                              case 11:
+                                if (keyPath) {
+                                  parentObj[key] = encaps;
+                                } else if (isTypesonPromise) {
+                                  ret = encaps.p;
+                                } else {
+                                  // If this is itself a `Typeson.Promise` (because the
+                                  //   original value supplied was a `Promise` or
+                                  //   because the supplied custom type value resolved
+                                  //   to one), returning it below will be fine since
+                                  //   a `Promise` is expected anyways given current
+                                  //   config (and if not a `Promise`, it will be ready
+                                  //   as the resolve value)
+                                  ret = encaps;
+                                }
+
+                                return _context.abrupt("return", checkPromises(ret, newPromisesData));
+
+                              case 13:
+                              case "end":
+                                return _context.stop();
+                            }
+                          }
+                        }, _callee, this);
+                      }));
+
+                      return function (_x3) {
+                        return _ref.apply(this, arguments);
+                      };
+                    }()));
+
+                  case 5:
+                    return _context2.abrupt("return", ret);
+
+                  case 6:
+                  case "end":
+                    return _context2.stop();
+                }
+              }
+            }, _callee2, this);
+          }));
+          return _checkPromises.apply(this, arguments);
         }
 
-        if (cyclic && !stateObj.iterateIn && !stateObj.iterateUnsetNumeric) {
-          // Options set to detect cyclic references and be able
-          //   to rewrite them.
-          const refIndex = refObjs.indexOf(value);
+        function _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, cb) {
+          Object.assign(stateObj, ownKeysObj);
+          var vals = internalStateObjPropsToIgnore.map(function (prop) {
+            var tmp = stateObj[prop];
+            delete stateObj[prop];
+            return tmp;
+          });
+          cb();
+          internalStateObjPropsToIgnore.forEach(function (prop, i) {
+            stateObj[prop] = vals[i];
+          });
+        }
+        /**
+         *
+         * @param {string} keypath
+         * @param {*} value
+         * @param {boolean} cyclic
+         * @param {object} stateObj
+         * @param {boolean} promisesData
+         * @param {boolean} resolvingTypesonPromise
+         * @param {string} detectedType
+         * @returns {*}
+         */
 
-          if (refIndex < 0) {
-            if (cyclic === true) {
-              refObjs.push(value);
-              refKeys.push(keypath);
+
+        function _encapsulate(keypath, value, cyclic, stateObj, promisesData, resolvingTypesonPromise, detectedType) {
+          var ret;
+          var observerData = {};
+
+          var $typeof = _typeof(value);
+
+          var runObserver = encapsulateObserver ? function (obj) {
+            var type = detectedType || stateObj.type || Typeson.getJSONType(value);
+            encapsulateObserver(Object.assign(obj || observerData, {
+              keypath: keypath,
+              value: value,
+              cyclic: cyclic,
+              stateObj: stateObj,
+              promisesData: promisesData,
+              resolvingTypesonPromise: resolvingTypesonPromise,
+              awaitingTypesonPromise: hasConstructorOf(value, TypesonPromise)
+            }, type !== undefined ? {
+              type: type
+            } : {}));
+          } : null;
+
+          if (['string', 'boolean', 'number', 'undefined'].includes($typeof)) {
+            if (value === undefined || $typeof === 'number' && (isNaN(value) || value === -Infinity || value === Infinity)) {
+              ret = replace(keypath, value, stateObj, promisesData, false, resolvingTypesonPromise, runObserver);
+
+              if (ret !== value) {
+                observerData = {
+                  replaced: ret
+                };
+              }
+            } else {
+              ret = value;
             }
-          } else {
-            types[keypath] = '#';
 
             if (runObserver) {
-              runObserver({
-                cyclicKeypath: refKeys[refIndex]
-              });
+              runObserver();
             }
 
-            return '#' + refKeys[refIndex];
+            return ret;
           }
-        }
 
-        const isPlainObj = isPlainObject(value);
-        const isArr = isArray(value);
-        const replaced = // Running replace will cause infinite loop as will test
-        //   positive again
-        (isPlainObj || isArr) && (!that.plainObjectReplacers.length || stateObj.replaced) || stateObj.iterateIn ? // Optimization: if plain object and no plain-object
-        //   replacers, don't try finding a replacer
-        value : replace(keypath, value, stateObj, promisesData, isPlainObj || isArr, null, runObserver);
-        let clone;
-
-        if (replaced !== value) {
-          ret = replaced;
-          observerData = {
-            replaced
-          };
-        } else {
-          if (isArr && stateObj.iterateIn !== 'object' || stateObj.iterateIn === 'array') {
-            clone = new Array(value.length);
-            observerData = {
-              clone
-            };
-          } else if (isPlainObj || stateObj.iterateIn === 'object') {
-            clone = {};
-
-            if (stateObj.addLength) {
-              clone.length = value.length;
+          if (value === null) {
+            if (runObserver) {
+              runObserver();
             }
 
-            observerData = {
-              clone
-            };
-          } else if (keypath === '' && hasConstructorOf(value, TypesonPromise)) {
-            promisesData.push([keypath, value, cyclic, stateObj, undefined, undefined, stateObj.type]);
-            ret = value;
-          } else {
-            ret = value; // Only clone vanilla objects and arrays
+            return value;
           }
-        }
 
-        if (runObserver) {
-          runObserver();
-        }
+          if (cyclic && !stateObj.iterateIn && !stateObj.iterateUnsetNumeric) {
+            // Options set to detect cyclic references and be able
+            //   to rewrite them.
+            var refIndex = refObjs.indexOf(value);
 
-        if (opts.iterateNone) {
-          return clone || ret;
-        }
-
-        if (!clone) {
-          return ret;
-        } // Iterate object or array
-
-
-        if (stateObj.iterateIn) {
-          for (const key in value) {
-            const ownKeysObj = {
-              ownKeys: hasOwn$1.call(value, key)
-            };
-
-            _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, () => {
-              const kp = keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key);
-
-              const val = _encapsulate(kp, value[key], !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
-
-              if (hasConstructorOf(val, TypesonPromise)) {
-                promisesData.push([kp, val, !!cyclic, stateObj, clone, key, stateObj.type]);
-              } else if (val !== undefined) {
-                clone[key] = val;
+            if (refIndex < 0) {
+              if (cyclic === true) {
+                refObjs.push(value);
+                refKeys.push(keypath);
               }
-            });
-          }
+            } else {
+              types[keypath] = '#';
 
-          if (runObserver) {
-            runObserver({
-              endIterateIn: true,
-              end: true
-            });
-          }
-        } else {
-          // Note: Non-indexes on arrays won't survive stringify so
-          //  somewhat wasteful for arrays, but so too is iterating
-          //  all numeric indexes on sparse arrays when not wanted
-          //  or filtering own keys for positive integers
-          keys(value).forEach(function (key) {
-            const kp = keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key);
-            const ownKeysObj = {
-              ownKeys: true
-            };
-
-            _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, () => {
-              const val = _encapsulate(kp, value[key], !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
-
-              if (hasConstructorOf(val, TypesonPromise)) {
-                promisesData.push([kp, val, !!cyclic, stateObj, clone, key, stateObj.type]);
-              } else if (val !== undefined) {
-                clone[key] = val;
-              }
-            });
-          });
-
-          if (runObserver) {
-            runObserver({
-              endIterateOwn: true,
-              end: true
-            });
-          }
-        } // Iterate array for non-own numeric properties (we can't
-        //   replace the prior loop though as it iterates non-integer
-        //   keys)
-
-
-        if (stateObj.iterateUnsetNumeric) {
-          const vl = value.length;
-
-          for (let i = 0; i < vl; i++) {
-            if (!(i in value)) {
-              // No need to escape numeric
-              const kp = keypath + (keypath ? '.' : '') + i;
-              const ownKeysObj = {
-                ownKeys: false
-              };
-
-              _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, () => {
-                const val = _encapsulate(kp, undefined, !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
-
-                if (hasConstructorOf(val, TypesonPromise)) {
-                  promisesData.push([kp, val, !!cyclic, stateObj, clone, i, stateObj.type]);
-                } else if (val !== undefined) {
-                  clone[i] = val;
-                }
-              });
-            }
-          }
-
-          if (runObserver) {
-            runObserver({
-              endIterateUnsetNumeric: true,
-              end: true
-            });
-          }
-        }
-
-        return clone;
-      }
-      /**
-       *
-       * @param {string} keypath
-       * @param {*} value
-       * @param {object} stateObj
-       * @param {array} promisesData
-       * @param {boolean} plainObject
-       * @param {boolean} resolvingTypesonPromise
-       * @param {function} [runObserver]
-       * @returns {*}
-       */
-
-
-      function replace(keypath, value, stateObj, promisesData, plainObject, resolvingTypesonPromise, runObserver) {
-        // Encapsulate registered types
-        const replacers = plainObject ? that.plainObjectReplacers : that.nonplainObjectReplacers;
-        let i = replacers.length;
-
-        while (i--) {
-          const replacer = replacers[i];
-
-          if (replacer.test(value, stateObj)) {
-            const {
-              type
-            } = replacer;
-
-            if (that.revivers[type]) {
-              // Record the type only if a corresponding reviver
-              //   exists. This is to support specs where only
-              //   replacement is done.
-              // For example, ensuring deep cloning of the object,
-              //   or replacing a type to its equivalent without
-              //   the need to revive it.
-              const existing = types[keypath]; // type can comprise an array of types (see test
-              //   `shouldSupportIntermediateTypes`)
-
-              types[keypath] = existing ? [type].concat(existing) : type;
-            } // Now, also traverse the result in case it contains its
-            //   own types to replace
-
-
-            Object.assign(stateObj, {
-              type,
-              replaced: true
-            });
-
-            if ((sync || !replacer.replaceAsync) && !replacer.replace) {
               if (runObserver) {
                 runObserver({
-                  typeDetected: true
+                  cyclicKeypath: refKeys[refIndex]
                 });
               }
 
-              return _encapsulate(keypath, value, cyclic && 'readonly', stateObj, promisesData, resolvingTypesonPromise, type);
+              return '#' + refKeys[refIndex];
+            }
+          }
+
+          var isPlainObj = isPlainObject(value);
+          var isArr = isArray(value);
+          var replaced = // Running replace will cause infinite loop as will test
+          //   positive again
+          (isPlainObj || isArr) && (!that.plainObjectReplacers.length || stateObj.replaced) || stateObj.iterateIn ? // Optimization: if plain object and no plain-object
+          //   replacers, don't try finding a replacer
+          value : replace(keypath, value, stateObj, promisesData, isPlainObj || isArr, null, runObserver);
+          var clone;
+
+          if (replaced !== value) {
+            ret = replaced;
+            observerData = {
+              replaced: replaced
+            };
+          } else {
+            if (isArr && stateObj.iterateIn !== 'object' || stateObj.iterateIn === 'array') {
+              clone = new Array(value.length);
+              observerData = {
+                clone: clone
+              };
+            } else if (isPlainObj || stateObj.iterateIn === 'object') {
+              clone = {};
+
+              if (stateObj.addLength) {
+                clone.length = value.length;
+              }
+
+              observerData = {
+                clone: clone
+              };
+            } else if (keypath === '' && hasConstructorOf(value, TypesonPromise)) {
+              promisesData.push([keypath, value, cyclic, stateObj, undefined, undefined, stateObj.type]);
+              ret = value;
+            } else {
+              ret = value; // Only clone vanilla objects and arrays
+            }
+          }
+
+          if (runObserver) {
+            runObserver();
+          }
+
+          if (opts.iterateNone) {
+            return clone || ret;
+          }
+
+          if (!clone) {
+            return ret;
+          } // Iterate object or array
+
+
+          if (stateObj.iterateIn) {
+            var _loop = function _loop(key) {
+              var ownKeysObj = {
+                ownKeys: hasOwn$1.call(value, key)
+              };
+
+              _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, function () {
+                var kp = keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key);
+
+                var val = _encapsulate(kp, value[key], !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
+
+                if (hasConstructorOf(val, TypesonPromise)) {
+                  promisesData.push([kp, val, !!cyclic, stateObj, clone, key, stateObj.type]);
+                } else if (val !== undefined) {
+                  clone[key] = val;
+                }
+              });
+            };
+
+            for (var key in value) {
+              _loop(key);
             }
 
             if (runObserver) {
               runObserver({
-                replacing: true
+                endIterateIn: true,
+                end: true
               });
             }
+          } else {
+            // Note: Non-indexes on arrays won't survive stringify so
+            //  somewhat wasteful for arrays, but so too is iterating
+            //  all numeric indexes on sparse arrays when not wanted
+            //  or filtering own keys for positive integers
+            keys(value).forEach(function (key) {
+              var kp = keypath + (keypath ? '.' : '') + escapeKeyPathComponent(key);
+              var ownKeysObj = {
+                ownKeys: true
+              };
 
-            const replaceMethod = sync || !replacer.replaceAsync ? 'replace' : 'replaceAsync';
-            return _encapsulate(keypath, replacer[replaceMethod](value, stateObj), cyclic && 'readonly', stateObj, promisesData, resolvingTypesonPromise, type);
-          }
-        }
+              _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, function () {
+                var val = _encapsulate(kp, value[key], !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
 
-        return value;
-      }
-
-      return promisesDataRoot.length ? sync && opts.throwOnBadSyncType ? (() => {
-        throw new TypeError('Sync method requested but async result obtained');
-      })() : Promise.resolve(checkPromises(ret, promisesDataRoot)).then(finish) : !sync && opts.throwOnBadSyncType ? (() => {
-        throw new TypeError('Async method requested but sync result obtained');
-      })() // If this is a synchronous request for stringification, yet
-      //   a promise is the result, we don't want to resolve leading
-      //   to an async result, so we return an array to avoid
-      //   ambiguity
-      : opts.stringification && sync ? [finish(ret)] : sync ? finish(ret) : Promise.resolve(finish(ret));
-    }
-    /**
-     * Also sync but throws on non-sync result
-     * @param {*} obj
-     * @param {object} stateObj
-     * @param {object} opts
-     * @returns {*}
-     */
-
-
-    encapsulateSync(obj, stateObj, opts) {
-      return this.encapsulate(obj, stateObj, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: true
-      });
-    }
-    /**
-     * @param {*} obj
-     * @param {object} stateObj
-     * @param {object} opts
-     * @returns {*}
-     */
-
-
-    encapsulateAsync(obj, stateObj, opts) {
-      return this.encapsulate(obj, stateObj, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: false
-      });
-    }
-    /**
-     * Revive an encapsulated object.
-     * This method is used internally by `Typeson.parse()`.
-     * @param {object} obj - Object to revive. If it has `$types` member, the
-     *   properties that are listed there will be replaced with its true type
-     *   instead of just plain objects.
-     * @param {object} opts
-     * @throws TypeError If mismatch between sync/async type and result
-     * @returns {Promise|*} If async, returns a Promise that resolves to `*`
-     */
-
-
-    revive(obj, opts) {
-      let types = obj && obj.$types; // No type info added. Revival not needed.
-
-      if (!types) {
-        return obj;
-      } // Object happened to have own `$types` property but with
-      //   no actual types, so we unescape and return that object
-
-
-      if (types === true) {
-        return obj.$;
-      }
-
-      opts = {
-        sync: true,
-        ...this.options,
-        ...opts
-      };
-      const {
-        sync
-      } = opts;
-      const keyPathResolutions = [];
-      const stateObj = {};
-      let ignore$Types = true; // Special when root object is not a trivial Object, it will
-      //   be encapsulated in `$`. It will also be encapsulated in
-      //   `$` if it has its own `$` property to avoid ambiguity
-
-      if (types.$ && isPlainObject(types.$)) {
-        obj = obj.$;
-        types = types.$;
-        ignore$Types = false;
-      }
-
-      const that = this;
-
-      function revivePlainObjects() {
-        // const references = [];
-        // const reviveTypes = [];
-        const plainObjectTypes = [];
-        Object.entries(types).forEach(([keypath, type]) => {
-          if (type === '#') {
-            /*
-            references.push({
-                keypath,
-                reference: getByKeyPath(obj, keypath)
+                if (hasConstructorOf(val, TypesonPromise)) {
+                  promisesData.push([kp, val, !!cyclic, stateObj, clone, key, stateObj.type]);
+                } else if (val !== undefined) {
+                  clone[key] = val;
+                }
+              });
             });
-            */
-            return;
-          }
 
-          [].concat(type).forEach(function (type) {
-            const [, {
-              plain
-            }] = that.revivers[type];
+            if (runObserver) {
+              runObserver({
+                endIterateOwn: true,
+                end: true
+              });
+            }
+          } // Iterate array for non-own numeric properties (we can't
+          //   replace the prior loop though as it iterates non-integer
+          //   keys)
 
-            if (!plain) {
-              // reviveTypes.push({keypath, type});
-              return;
+
+          if (stateObj.iterateUnsetNumeric) {
+            var vl = value.length;
+
+            var _loop2 = function _loop2(i) {
+              if (!(i in value)) {
+                // No need to escape numeric
+                var kp = keypath + (keypath ? '.' : '') + i;
+                var ownKeysObj = {
+                  ownKeys: false
+                };
+
+                _adaptBuiltinStateObjectProperties(stateObj, ownKeysObj, function () {
+                  var val = _encapsulate(kp, undefined, !!cyclic, stateObj, promisesData, resolvingTypesonPromise);
+
+                  if (hasConstructorOf(val, TypesonPromise)) {
+                    promisesData.push([kp, val, !!cyclic, stateObj, clone, i, stateObj.type]);
+                  } else if (val !== undefined) {
+                    clone[i] = val;
+                  }
+                });
+              }
+            };
+
+            for (var i = 0; i < vl; i++) {
+              _loop2(i);
             }
 
-            plainObjectTypes.push({
-              keypath,
-              type
-            });
-            delete types[keypath]; // Avoid repeating
-          });
-        });
-
-        if (!plainObjectTypes.length) {
-          return;
-        } // Handle plain object revivers first so reference
-        //   setting can use revived type (e.g., array instead
-        //   of object); assumes revived has same structure
-        //   or will otherwise break subsequent references
-
-
-        return plainObjectTypes.sort(nestedPathsFirst).reduce(function reducer(possibleTypesonPromise, {
-          keypath,
-          type
-        }) {
-          if (hasConstructorOf(possibleTypesonPromise, TypesonPromise)) {
-            // TypesonPromise here too
-            return possibleTypesonPromise.then(v => {
-              return reducer(v, type);
-            });
-          }
-
-          let val = getByKeyPath(obj, keypath);
-
-          if (hasConstructorOf(val, TypesonPromise)) {
-            return val.then(v => {
-              // TypesonPromise here too
-              return reducer(v, type);
-            });
-          }
-
-          const [reviver] = that.revivers[type];
-
-          if (!reviver) {
-            throw new Error('Unregistered type: ' + type);
-          }
-
-          val = reviver[sync && reviver.revive ? 'revive' : !sync && reviver.reviveAsync ? 'reviveAsync' : 'revive'](val, stateObj);
-
-          if (val === undefined) {
-            return undefined;
-          }
-
-          if (hasConstructorOf(val, Undefined)) {
-            val = undefined;
-          }
-
-          const newVal = setAtKeyPath(obj, keypath, val);
-
-          if (newVal === val) {
-            obj = val;
-          }
-
-          return undefined;
-        }, undefined // This argument must be explicit
-        ); // references.forEach(({keypath, reference}) => {});
-        // reviveTypes.sort(nestedPathsFirst).forEach(() => {});
-      }
-      /**
-       *
-       * @param {string} keypath
-       * @param {*} value
-       * @param {?(Array|object)} target
-       * @param {Array|object} [clone]
-       * @param {string} [key]
-       * @returns {*}
-       */
-
-
-      function _revive(keypath, value, target, clone, key) {
-        if (ignore$Types && keypath === '$types') {
-          return undefined;
-        }
-
-        const type = types[keypath];
-
-        if (isArray(value) || isPlainObject(value)) {
-          const clone = isArray(value) ? new Array(value.length) : {}; // Iterate object or array
-
-          keys(value).forEach(k => {
-            const val = _revive(keypath + (keypath ? '.' : '') + escapeKeyPathComponent(k), value[k], target || clone, clone, k);
-
-            if (hasConstructorOf(val, Undefined)) {
-              clone[k] = undefined;
-            } else if (val !== undefined) {
-              clone[k] = val;
+            if (runObserver) {
+              runObserver({
+                endIterateUnsetNumeric: true,
+                end: true
+              });
             }
-          });
-          value = clone; // Try to resolve cyclic reference as soon as available
-
-          while (keyPathResolutions.length) {
-            const [[target, keyPath, clone, k]] = keyPathResolutions;
-            const val = getByKeyPath(target, keyPath);
-
-            if (hasConstructorOf(val, Undefined)) {
-              clone[k] = undefined;
-            } else if (val !== undefined) {
-              clone[k] = val;
-            } else {
-              break;
-            }
-
-            keyPathResolutions.splice(0, 1);
           }
-        }
 
-        if (!type) {
+          return clone;
+        }
+        /**
+         *
+         * @param {string} keypath
+         * @param {*} value
+         * @param {object} stateObj
+         * @param {array} promisesData
+         * @param {boolean} plainObject
+         * @param {boolean} resolvingTypesonPromise
+         * @param {function} [runObserver]
+         * @returns {*}
+         */
+
+
+        function replace(keypath, value, stateObj, promisesData, plainObject, resolvingTypesonPromise, runObserver) {
+          // Encapsulate registered types
+          var replacers = plainObject ? that.plainObjectReplacers : that.nonplainObjectReplacers;
+          var i = replacers.length;
+
+          while (i--) {
+            var replacer = replacers[i];
+
+            if (replacer.test(value, stateObj)) {
+              var type = replacer.type;
+
+              if (that.revivers[type]) {
+                // Record the type only if a corresponding reviver
+                //   exists. This is to support specs where only
+                //   replacement is done.
+                // For example, ensuring deep cloning of the object,
+                //   or replacing a type to its equivalent without
+                //   the need to revive it.
+                var existing = types[keypath]; // type can comprise an array of types (see test
+                //   `shouldSupportIntermediateTypes`)
+
+                types[keypath] = existing ? [type].concat(existing) : type;
+              } // Now, also traverse the result in case it contains its
+              //   own types to replace
+
+
+              Object.assign(stateObj, {
+                type: type,
+                replaced: true
+              });
+
+              if ((sync || !replacer.replaceAsync) && !replacer.replace) {
+                if (runObserver) {
+                  runObserver({
+                    typeDetected: true
+                  });
+                }
+
+                return _encapsulate(keypath, value, cyclic && 'readonly', stateObj, promisesData, resolvingTypesonPromise, type);
+              }
+
+              if (runObserver) {
+                runObserver({
+                  replacing: true
+                });
+              }
+
+              var replaceMethod = sync || !replacer.replaceAsync ? 'replace' : 'replaceAsync';
+              return _encapsulate(keypath, replacer[replaceMethod](value, stateObj), cyclic && 'readonly', stateObj, promisesData, resolvingTypesonPromise, type);
+            }
+          }
+
           return value;
         }
 
-        if (type === '#') {
-          const ret = getByKeyPath(target, value.slice(1));
+        return promisesDataRoot.length ? sync && opts.throwOnBadSyncType ? function () {
+          throw new TypeError('Sync method requested but async result obtained');
+        }() : Promise.resolve(checkPromises(ret, promisesDataRoot)).then(finish) : !sync && opts.throwOnBadSyncType ? function () {
+          throw new TypeError('Async method requested but sync result obtained');
+        }() // If this is a synchronous request for stringification, yet
+        //   a promise is the result, we don't want to resolve leading
+        //   to an async result, so we return an array to avoid
+        //   ambiguity
+        : opts.stringification && sync ? [finish(ret)] : sync ? finish(ret) : Promise.resolve(finish(ret));
+      }
+      /**
+       * Also sync but throws on non-sync result
+       * @param {*} obj
+       * @param {object} stateObj
+       * @param {object} opts
+       * @returns {*}
+       */
 
-          if (ret === undefined) {
-            // Cyclic reference not yet available
-            keyPathResolutions.push([target, value.slice(1), clone, key]);
-          }
+    }, {
+      key: "encapsulateSync",
+      value: function encapsulateSync(obj, stateObj, opts) {
+        return this.encapsulate(obj, stateObj, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      }
+      /**
+       * @param {*} obj
+       * @param {object} stateObj
+       * @param {object} opts
+       * @returns {*}
+       */
 
-          return ret;
+    }, {
+      key: "encapsulateAsync",
+      value: function encapsulateAsync(obj, stateObj, opts) {
+        return this.encapsulate(obj, stateObj, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      }
+      /**
+       * Revive an encapsulated object.
+       * This method is used internally by `Typeson.parse()`.
+       * @param {object} obj - Object to revive. If it has `$types` member, the
+       *   properties that are listed there will be replaced with its true type
+       *   instead of just plain objects.
+       * @param {object} opts
+       * @throws TypeError If mismatch between sync/async type and result
+       * @returns {Promise|*} If async, returns a Promise that resolves to `*`
+       */
+
+    }, {
+      key: "revive",
+      value: function revive(obj, opts) {
+        var types = obj && obj.$types; // No type info added. Revival not needed.
+
+        if (!types) {
+          return obj;
+        } // Object happened to have own `$types` property but with
+        //   no actual types, so we unescape and return that object
+
+
+        if (types === true) {
+          return obj.$;
         }
 
-        return [].concat(type).reduce(function reducer(val, type) {
-          if (hasConstructorOf(val, TypesonPromise)) {
-            return val.then(v => {
-              // TypesonPromise here too
-              return reducer(v, type);
+        opts = _objectSpread({
+          sync: true
+        }, this.options, opts);
+        var _opts3 = opts,
+            sync = _opts3.sync;
+        var keyPathResolutions = [];
+        var stateObj = {};
+        var ignore$Types = true; // Special when root object is not a trivial Object, it will
+        //   be encapsulated in `$`. It will also be encapsulated in
+        //   `$` if it has its own `$` property to avoid ambiguity
+
+        if (types.$ && isPlainObject(types.$)) {
+          obj = obj.$;
+          types = types.$;
+          ignore$Types = false;
+        }
+
+        var that = this;
+
+        function revivePlainObjects() {
+          // const references = [];
+          // const reviveTypes = [];
+          var plainObjectTypes = [];
+          Object.entries(types).forEach(function (_ref2) {
+            var _ref3 = _slicedToArray(_ref2, 2),
+                keypath = _ref3[0],
+                type = _ref3[1];
+
+            if (type === '#') {
+              /*
+              references.push({
+                  keypath,
+                  reference: getByKeyPath(obj, keypath)
+              });
+              */
+              return;
+            }
+
+            [].concat(type).forEach(function (type) {
+              var _that$revivers$type = _slicedToArray(that.revivers[type], 2),
+                  plain = _that$revivers$type[1].plain;
+
+              if (!plain) {
+                // reviveTypes.push({keypath, type});
+                return;
+              }
+
+              plainObjectTypes.push({
+                keypath: keypath,
+                type: type
+              });
+              delete types[keypath]; // Avoid repeating
             });
-          }
-
-          const [reviver] = that.revivers[type];
-
-          if (!reviver) {
-            throw new Error('Unregistered type: ' + type);
-          }
-
-          return reviver[sync && reviver.revive ? 'revive' : !sync && reviver.reviveAsync ? 'reviveAsync' : 'revive'](val, stateObj);
-        }, value);
-      }
-
-      function checkUndefined(retrn) {
-        return hasConstructorOf(retrn, Undefined) ? undefined : retrn;
-      }
-
-      const possibleTypesonPromise = revivePlainObjects();
-      let ret;
-
-      if (hasConstructorOf(possibleTypesonPromise, TypesonPromise)) {
-        ret = possibleTypesonPromise.then(() => {
-          return _revive('', obj, null);
-        });
-      } else {
-        ret = _revive('', obj, null);
-      }
-
-      return isThenable(ret) ? sync && opts.throwOnBadSyncType ? (() => {
-        throw new TypeError('Sync method requested but async result obtained');
-      })() : hasConstructorOf(ret, TypesonPromise) ? ret.p.then(checkUndefined) : ret : !sync && opts.throwOnBadSyncType ? (() => {
-        throw new TypeError('Async method requested but sync result obtained');
-      })() : sync ? checkUndefined(ret) : Promise.resolve(checkUndefined(ret));
-    }
-    /**
-     * Also sync but throws on non-sync result
-     * @param {*} obj
-     * @param {object} opts
-     * @returns {*}
-     */
-
-
-    reviveSync(obj, opts) {
-      return this.revive(obj, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: true
-      });
-    }
-    /**
-    * @param {*} obj
-    * @param {object} opts
-    * @returns {Promise} Resolves to `*`
-    */
-
-
-    reviveAsync(obj, opts) {
-      return this.revive(obj, {
-        throwOnBadSyncType: true,
-        ...opts,
-        sync: false
-      });
-    }
-    /**
-     * Register types.
-     * For examples on how to use this method, see
-     *   {@link https://github.com/dfahlander/typeson-registry/tree/master/types}
-     * @param {Array.<Object.<string,Function[]>>} typeSpecSets - Types and
-     *   their functions [test, encapsulate, revive];
-     * @param {object} opts
-     * @returns {Typeson}
-     */
-
-
-    register(typeSpecSets, opts) {
-      opts = opts || {};
-      [].concat(typeSpecSets).forEach(function R(typeSpec) {
-        // Allow arrays of arrays of arrays...
-        if (isArray(typeSpec)) {
-          return typeSpec.map(R, this);
-        }
-
-        typeSpec && keys(typeSpec).forEach(function (typeId) {
-          if (typeId === '#') {
-            throw new TypeError('# cannot be used as a type name as it is reserved ' + 'for cyclic objects');
-          } else if (Typeson.JSON_TYPES.includes(typeId)) {
-            throw new TypeError('Plain JSON object types are reserved as type names');
-          }
-
-          let spec = typeSpec[typeId];
-          const replacers = spec.testPlainObjects ? this.plainObjectReplacers : this.nonplainObjectReplacers;
-          const existingReplacer = replacers.filter(function (r) {
-            return r.type === typeId;
           });
 
-          if (existingReplacer.length) {
-            // Remove existing spec and replace with this one.
-            replacers.splice(replacers.indexOf(existingReplacer[0]), 1);
-            delete this.revivers[typeId];
-            delete this.types[typeId];
-          }
-
-          if (!spec) {
+          if (!plainObjectTypes.length) {
             return;
-          }
-
-          if (typeof spec === 'function') {
-            // Support registering just a class without replacer/reviver
-            const Class = spec;
-            spec = {
-              test: x => x && x.constructor === Class,
-              replace: x => Object.assign({}, x),
-              revive: x => Object.assign(Object.create(Class.prototype), x)
-            };
-          } else if (isArray(spec)) {
-            const [test, replace, revive] = spec;
-            spec = {
-              test,
-              replace,
-              revive
-            };
-          }
-
-          const replacerObj = {
-            type: typeId,
-            test: spec.test.bind(spec)
-          };
-
-          if (spec.replace) {
-            replacerObj.replace = spec.replace.bind(spec);
-          }
-
-          if (spec.replaceAsync) {
-            replacerObj.replaceAsync = spec.replaceAsync.bind(spec);
-          }
-
-          const start = typeof opts.fallback === 'number' ? opts.fallback : opts.fallback ? 0 : Infinity;
-
-          if (spec.testPlainObjects) {
-            this.plainObjectReplacers.splice(start, 0, replacerObj);
-          } else {
-            this.nonplainObjectReplacers.splice(start, 0, replacerObj);
-          } // Todo: We might consider a testAsync type
+          } // Handle plain object revivers first so reference
+          //   setting can use revived type (e.g., array instead
+          //   of object); assumes revived has same structure
+          //   or will otherwise break subsequent references
 
 
-          if (spec.revive || spec.reviveAsync) {
-            const reviverObj = {};
+          return plainObjectTypes.sort(nestedPathsFirst).reduce(function reducer(possibleTypesonPromise, _ref4) {
+            var keypath = _ref4.keypath,
+                type = _ref4.type;
 
-            if (spec.revive) {
-              reviverObj.revive = spec.revive.bind(spec);
+            if (hasConstructorOf(possibleTypesonPromise, TypesonPromise)) {
+              // TypesonPromise here too
+              return possibleTypesonPromise.then(function (v) {
+                return reducer(v, type);
+              });
             }
 
-            if (spec.reviveAsync) {
-              reviverObj.reviveAsync = spec.reviveAsync.bind(spec);
+            var val = getByKeyPath(obj, keypath);
+
+            if (hasConstructorOf(val, TypesonPromise)) {
+              return val.then(function (v) {
+                // TypesonPromise here too
+                return reducer(v, type);
+              });
             }
 
-            this.revivers[typeId] = [reviverObj, {
-              plain: spec.testPlainObjects
-            }];
-          } // Record to be retrieved via public types property.
+            var _that$revivers$type2 = _slicedToArray(that.revivers[type], 1),
+                reviver = _that$revivers$type2[0];
+
+            if (!reviver) {
+              throw new Error('Unregistered type: ' + type);
+            }
+
+            val = reviver[sync && reviver.revive ? 'revive' : !sync && reviver.reviveAsync ? 'reviveAsync' : 'revive'](val, stateObj);
+
+            if (val === undefined) {
+              return undefined;
+            }
+
+            if (hasConstructorOf(val, Undefined)) {
+              val = undefined;
+            }
+
+            var newVal = setAtKeyPath(obj, keypath, val);
+
+            if (newVal === val) {
+              obj = val;
+            }
+
+            return undefined;
+          }, undefined // This argument must be explicit
+          ); // references.forEach(({keypath, reference}) => {});
+          // reviveTypes.sort(nestedPathsFirst).forEach(() => {});
+        }
+        /**
+         *
+         * @param {string} keypath
+         * @param {*} value
+         * @param {?(Array|object)} target
+         * @param {Array|object} [clone]
+         * @param {string} [key]
+         * @returns {*}
+         */
 
 
-          this.types[typeId] = spec;
+        function _revive(keypath, value, target, clone, key) {
+          if (ignore$Types && keypath === '$types') {
+            return undefined;
+          }
+
+          var type = types[keypath];
+
+          if (isArray(value) || isPlainObject(value)) {
+            var _clone = isArray(value) ? new Array(value.length) : {}; // Iterate object or array
+
+
+            keys(value).forEach(function (k) {
+              var val = _revive(keypath + (keypath ? '.' : '') + escapeKeyPathComponent(k), value[k], target || _clone, _clone, k);
+
+              if (hasConstructorOf(val, Undefined)) {
+                _clone[k] = undefined;
+              } else if (val !== undefined) {
+                _clone[k] = val;
+              }
+            });
+            value = _clone; // Try to resolve cyclic reference as soon as available
+
+            while (keyPathResolutions.length) {
+              var _keyPathResolutions$ = _slicedToArray(keyPathResolutions[0], 4),
+                  _target = _keyPathResolutions$[0],
+                  keyPath = _keyPathResolutions$[1],
+                  _clone2 = _keyPathResolutions$[2],
+                  k = _keyPathResolutions$[3];
+
+              var val = getByKeyPath(_target, keyPath);
+
+              if (hasConstructorOf(val, Undefined)) {
+                _clone2[k] = undefined;
+              } else if (val !== undefined) {
+                _clone2[k] = val;
+              } else {
+                break;
+              }
+
+              keyPathResolutions.splice(0, 1);
+            }
+          }
+
+          if (!type) {
+            return value;
+          }
+
+          if (type === '#') {
+            var _ret = getByKeyPath(target, value.slice(1));
+
+            if (_ret === undefined) {
+              // Cyclic reference not yet available
+              keyPathResolutions.push([target, value.slice(1), clone, key]);
+            }
+
+            return _ret;
+          }
+
+          return [].concat(type).reduce(function reducer(val, type) {
+            if (hasConstructorOf(val, TypesonPromise)) {
+              return val.then(function (v) {
+                // TypesonPromise here too
+                return reducer(v, type);
+              });
+            }
+
+            var _that$revivers$type3 = _slicedToArray(that.revivers[type], 1),
+                reviver = _that$revivers$type3[0];
+
+            if (!reviver) {
+              throw new Error('Unregistered type: ' + type);
+            }
+
+            return reviver[sync && reviver.revive ? 'revive' : !sync && reviver.reviveAsync ? 'reviveAsync' : 'revive'](val, stateObj);
+          }, value);
+        }
+
+        function checkUndefined(retrn) {
+          return hasConstructorOf(retrn, Undefined) ? undefined : retrn;
+        }
+
+        var possibleTypesonPromise = revivePlainObjects();
+        var ret;
+
+        if (hasConstructorOf(possibleTypesonPromise, TypesonPromise)) {
+          ret = possibleTypesonPromise.then(function () {
+            return _revive('', obj, null);
+          });
+        } else {
+          ret = _revive('', obj, null);
+        }
+
+        return isThenable(ret) ? sync && opts.throwOnBadSyncType ? function () {
+          throw new TypeError('Sync method requested but async result obtained');
+        }() : hasConstructorOf(ret, TypesonPromise) ? ret.p.then(checkUndefined) : ret : !sync && opts.throwOnBadSyncType ? function () {
+          throw new TypeError('Async method requested but sync result obtained');
+        }() : sync ? checkUndefined(ret) : Promise.resolve(checkUndefined(ret));
+      }
+      /**
+       * Also sync but throws on non-sync result
+       * @param {*} obj
+       * @param {object} opts
+       * @returns {*}
+       */
+
+    }, {
+      key: "reviveSync",
+      value: function reviveSync(obj, opts) {
+        return this.revive(obj, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: true
+        }));
+      }
+      /**
+      * @param {*} obj
+      * @param {object} opts
+      * @returns {Promise} Resolves to `*`
+      */
+
+    }, {
+      key: "reviveAsync",
+      value: function reviveAsync(obj, opts) {
+        return this.revive(obj, _objectSpread({
+          throwOnBadSyncType: true
+        }, opts, {
+          sync: false
+        }));
+      }
+      /**
+       * Register types.
+       * For examples on how to use this method, see
+       *   {@link https://github.com/dfahlander/typeson-registry/tree/master/types}
+       * @param {Array.<Object.<string,Function[]>>} typeSpecSets - Types and
+       *   their functions [test, encapsulate, revive];
+       * @param {object} opts
+       * @returns {Typeson}
+       */
+
+    }, {
+      key: "register",
+      value: function register(typeSpecSets, opts) {
+        opts = opts || {};
+        [].concat(typeSpecSets).forEach(function R(typeSpec) {
+          // Allow arrays of arrays of arrays...
+          if (isArray(typeSpec)) {
+            return typeSpec.map(R, this);
+          }
+
+          typeSpec && keys(typeSpec).forEach(function (typeId) {
+            if (typeId === '#') {
+              throw new TypeError('# cannot be used as a type name as it is reserved ' + 'for cyclic objects');
+            } else if (Typeson.JSON_TYPES.includes(typeId)) {
+              throw new TypeError('Plain JSON object types are reserved as type names');
+            }
+
+            var spec = typeSpec[typeId];
+            var replacers = spec.testPlainObjects ? this.plainObjectReplacers : this.nonplainObjectReplacers;
+            var existingReplacer = replacers.filter(function (r) {
+              return r.type === typeId;
+            });
+
+            if (existingReplacer.length) {
+              // Remove existing spec and replace with this one.
+              replacers.splice(replacers.indexOf(existingReplacer[0]), 1);
+              delete this.revivers[typeId];
+              delete this.types[typeId];
+            }
+
+            if (!spec) {
+              return;
+            }
+
+            if (typeof spec === 'function') {
+              // Support registering just a class without replacer/reviver
+              var Class = spec;
+              spec = {
+                test: function test(x) {
+                  return x && x.constructor === Class;
+                },
+                replace: function replace(x) {
+                  return Object.assign({}, x);
+                },
+                revive: function revive(x) {
+                  return Object.assign(Object.create(Class.prototype), x);
+                }
+              };
+            } else if (isArray(spec)) {
+              var _spec = spec,
+                  _spec2 = _slicedToArray(_spec, 3),
+                  test = _spec2[0],
+                  replace = _spec2[1],
+                  revive = _spec2[2];
+
+              spec = {
+                test: test,
+                replace: replace,
+                revive: revive
+              };
+            }
+
+            var replacerObj = {
+              type: typeId,
+              test: spec.test.bind(spec)
+            };
+
+            if (spec.replace) {
+              replacerObj.replace = spec.replace.bind(spec);
+            }
+
+            if (spec.replaceAsync) {
+              replacerObj.replaceAsync = spec.replaceAsync.bind(spec);
+            }
+
+            var start = typeof opts.fallback === 'number' ? opts.fallback : opts.fallback ? 0 : Infinity;
+
+            if (spec.testPlainObjects) {
+              this.plainObjectReplacers.splice(start, 0, replacerObj);
+            } else {
+              this.nonplainObjectReplacers.splice(start, 0, replacerObj);
+            } // Todo: We might consider a testAsync type
+
+
+            if (spec.revive || spec.reviveAsync) {
+              var reviverObj = {};
+
+              if (spec.revive) {
+                reviverObj.revive = spec.revive.bind(spec);
+              }
+
+              if (spec.reviveAsync) {
+                reviverObj.reviveAsync = spec.reviveAsync.bind(spec);
+              }
+
+              this.revivers[typeId] = [reviverObj, {
+                plain: spec.testPlainObjects
+              }];
+            } // Record to be retrieved via public types property.
+
+
+            this.types[typeId] = spec;
+          }, this);
         }, this);
-      }, this);
-      return this;
-    }
+        return this;
+      }
+    }]);
 
-  }
+    return Typeson;
+  }();
   /**
    * We keep this function minimized so if using two instances of this
    * library, where one is minimized and one is not, it will still work
@@ -1386,7 +1591,9 @@
    */
 
 
-  class Undefined {} // eslint-disable-line space-before-blocks
+  var Undefined = function Undefined() {
+    _classCallCheck(this, Undefined);
+  }; // eslint-disable-line space-before-blocks
   // The following provide classes meant to avoid clashes with other values
   // To insist `undefined` should be added
 
