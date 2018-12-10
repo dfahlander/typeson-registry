@@ -2,7 +2,6 @@
 import Typeson from 'typeson';
 
 // TYPES
-import arrayNonindexKeys from './types/array-nonindex-keys.js';
 import arraybuffer from './types/arraybuffer.js';
 import bigintObject from './types/bigint-object.js';
 import bigint from './types/bigint.js';
@@ -32,6 +31,7 @@ import undef from './types/undef.js';
 import userObject from './types/user-object.js';
 
 // PRESETS
+import arrayNonindexKeys from './presets/array-nonindex-keys.js';
 import builtin from './presets/builtin.js';
 import postMessage from './presets/post-message.js';
 import socketio from './presets/socketio.js';
@@ -43,15 +43,15 @@ import undef2 from './presets/undef.js';
 import universal from './presets/universal.js';
 
 Typeson.types = {
-    arrayNonindexKeys, arraybuffer, bigintObject, bigint, blob, cloneable, dataview,
-    date, error, errors, file, filelist, imagebitmap, imagedata, infinity,
-    intlTypes, map, nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects,
-    regexp, resurrectable, set, typedArraysSocketio, typedArrays, undef,
-    userObject
+    arraybuffer, bigintObject, bigint, blob, cloneable, dataview, date, error,
+    errors, file, filelist, imagebitmap, imagedata, infinity, intlTypes, map,
+    nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects, regexp,
+    resurrectable, set, typedArraysSocketio, typedArrays, undef, userObject
 };
 Typeson.presets = {
-    builtin, postMessage, socketio, sparseUndefined, specialNumbers,
-    structuredCloningThrowing, structuredCloning, undef: undef2, universal
+    arrayNonindexKeys, builtin, postMessage, socketio, sparseUndefined,
+    specialNumbers, structuredCloningThrowing, structuredCloning, undef: undef2,
+    universal
 };
 
 export default Typeson;

@@ -1,7 +1,7 @@
 /* This preset includes types for the Structured Cloning Algorithm. */
 
 import userObject from '../types/user-object.js';
-import arrayNonindexKeys from '../types/array-nonindex-keys.js';
+import arrayNonindexKeys from '../presets/array-nonindex-keys.js';
 import undef from '../types/undef.js';
 import primitiveObjects from '../types/primitive-objects.js';
 import specialNumbers from '../presets/special-numbers.js';

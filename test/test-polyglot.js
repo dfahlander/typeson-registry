@@ -1614,34 +1614,6 @@
   Typeson.getJSONType = getJSONType;
   Typeson.JSON_TYPES = ['null', 'boolean', 'number', 'string', 'array', 'object'];
 
-  var arrayNonindexKeys = {
-    arrayNonindexKeys: {
-      testPlainObjects: true,
-      test: function test(x, stateObj) {
-        if (Array.isArray(x)) {
-          stateObj.iterateIn = 'object';
-          stateObj.addLength = true;
-          return true;
-        }
-
-        return false;
-      },
-      revive: function revive(o) {
-        var arr = []; // No map here as may be a sparse array (including
-        //   with `length` set)
-
-        Object.entries(o).forEach(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              key = _ref2[0],
-              val = _ref2[1];
-
-          arr[key] = val;
-        });
-        return arr;
-      }
-    }
-  };
-
   /*
    * base64-arraybuffer
    * https://github.com/niklasvh/base64-arraybuffer
@@ -2540,7 +2512,7 @@
         return typeof x === 'undefined' && (stateObj.ownKeys || !('ownKeys' in stateObj));
       },
       replace: function replace(n) {
-        return null;
+        return 0;
       },
       revive: function revive(s) {
         return new Typeson.Undefined();
@@ -2562,6 +2534,74 @@
       }
     }
   };
+
+  var arrayNonindexKeys = [{
+    arrayNonindexKeys: {
+      testPlainObjects: true,
+      test: function test(x, stateObj) {
+        if (Array.isArray(x)) {
+          if ( // By avoiding serializing arrays into objects which
+          //  have only positive-integer keys, we reduce
+          //  size and improve revival performance; arrays with
+          //  non-index keys will be larger however
+          Object.keys(x).some(function (k) {
+            //  No need to check for `isNaN` or
+            //   `isNaN(parseInt())` as `NaN` will be treated as a
+            //   string.
+            //  No need to do check as `parseInt(Number())` since
+            //   scientific notation will be pre-resolved if a
+            //   number was given, and it will otherwise be a string
+            return String(parseInt(k)) !== k;
+          })) {
+            stateObj.iterateIn = 'object';
+            stateObj.addLength = true;
+          }
+
+          return true;
+        }
+
+        return false;
+      },
+      replace: function replace(a, stateObj) {
+        if (Array.isArray(a)) {
+          // Catch sparse undefined
+          stateObj.iterateUnsetNumeric = true;
+        }
+
+        return a;
+      },
+      revive: function revive(o) {
+        if (Array.isArray(o)) {
+          return o;
+        }
+
+        var arr = []; // No map here as may be a sparse array (including
+        //   with `length` set)
+
+        Object.entries(o).forEach(function (_ref) {
+          var _ref2 = _slicedToArray(_ref, 2),
+              key = _ref2[0],
+              val = _ref2[1];
+
+          arr[key] = val;
+        });
+        return arr;
+      }
+    }
+  }, {
+    sparseUndefined: {
+      test: function test(x, stateObj) {
+        return typeof x === 'undefined' && stateObj.ownKeys === false;
+      },
+      replace: function replace(n) {
+        return 0;
+      },
+      revive: function revive(s) {
+        return undefined;
+      } // Will avoid adding anything
+
+    }
+  }];
 
   var specialNumbers = [nan, infinity, NegativeInfinity];
 
@@ -2620,7 +2660,7 @@
         return typeof x === 'undefined' && stateObj.ownKeys === false;
       },
       replace: function replace(n) {
-        return null;
+        return 0;
       },
       revive: function revive(s) {
         return undefined;
@@ -2678,7 +2718,6 @@
 
   // This file is auto-generated from `build.js`
   Typeson.types = {
-    arrayNonindexKeys: arrayNonindexKeys,
     arraybuffer: arraybuffer,
     bigintObject: bigintObject,
     bigint: bigint,
@@ -2708,6 +2747,7 @@
     userObject: userObject
   };
   Typeson.presets = {
+    arrayNonindexKeys: arrayNonindexKeys,
     builtin: expObj,
     postMessage: postMessage,
     socketio: socketio,
@@ -2904,6 +2944,7 @@
       bigint$1 = _Typeson$types.bigint,
       bigintObject$1 = _Typeson$types.bigintObject,
       _Typeson$presets = Typeson.presets,
+      arrayNonindexKeys$1 = _Typeson$presets.arrayNonindexKeys,
       builtin = _Typeson$presets.builtin,
       universal$1 = _Typeson$presets.universal,
       structuredCloningThrowing$1 = _Typeson$presets.structuredCloningThrowing,
@@ -3018,15 +3059,69 @@
       it('should be possible to restore `undefined` at root', function () {
         var typeson = new Typeson().register(preset || undef$1);
         var tson = typeson.stringify(undefined);
-        expect(tson).to.equal('{"$":null,"$types":{"$":{"":"undef"}}}');
+        expect(tson).to.equal('{"$":0,"$types":{"$":{"":"undef"}}}');
         var back = typeson.parse(tson);
         expect(back).to.be.undefined;
       });
     });
   }
 
+  function NonindexKeys(preset) {
+    describe('arrayNonindexKeys', function () {
+      it('should preserve sparse arrays with non-index keys', function () {
+        var typeson = new Typeson().register(preset || arrayNonindexKeys$1);
+        var arr = [,, 3, 4, 5]; // eslint-disable-line no-sparse-arrays
+
+        arr.length = 10;
+        arr[7] = 6;
+        arr[-2] = 'abc';
+        arr.ghi = 'xyz';
+        var tson = typeson.stringify(arr); // console.log('tson', tson);
+
+        var back = typeson.parse(tson);
+        expect(back).to.be.an('array');
+        expect(back).to.deep.equal(arr);
+      });
+      it('should preserve sparse arrays without non-index keys', function () {
+        var typeson = new Typeson().register(preset || arrayNonindexKeys$1);
+        var arr = [,, 3, 4, 5]; // eslint-disable-line no-sparse-arrays
+
+        arr.length = 10;
+        arr[7] = 6;
+        var tson = typeson.stringify(arr); // console.log('tson', tson);
+
+        var back = typeson.parse(tson);
+        expect(back).to.be.an('array');
+        expect(back).to.deep.equal(arr);
+      });
+      it('should preserve non-sparse arrays with non-index keys', function () {
+        var typeson = new Typeson().register(preset || arrayNonindexKeys$1);
+        var arr = [3, 4, 5, 6]; // eslint-disable-line no-sparse-arrays
+
+        arr[-2] = 'abc';
+        arr.ghi = 'xyz';
+        var tson = typeson.stringify(arr); // console.log('tson', tson);
+
+        var back = typeson.parse(tson);
+        expect(back).to.be.an('array');
+        expect(back).to.deep.equal(arr);
+      });
+      it('should preserve non-sparse arrays without non-index keys', function () {
+        var typeson = new Typeson().register(preset || arrayNonindexKeys$1);
+        var arr = [3, 4, 5, 6]; // eslint-disable-line no-sparse-arrays
+
+        var tson = typeson.stringify(arr); // console.log('tson', tson);
+
+        var back = typeson.parse(tson);
+        expect(back).to.be.an('array');
+        expect(back).to.deep.equal(arr);
+      });
+    });
+  }
+
   function BuiltIn(preset) {
     Undefined$1(preset);
+    NonindexKeys(preset);
     describe('Primitive objects', function () {
       it('String object', function () {
         var typeson = new Typeson().register(preset || primitiveObjects$1);
@@ -3848,6 +3943,7 @@
       BuiltIn([universal$1]);
     });
     describe('Structured cloning', function () {
+      NonindexKeys(structuredCloningThrowing$1);
       it('should work with Structured cloning with throwing', function () {
         var typeson = new Typeson().register([structuredCloningThrowing$1]);
         var caught = false;
@@ -3907,6 +4003,9 @@
 
     describe('Undefined (as preset)', function () {
       Undefined$1([undefPreset]);
+    });
+    describe('arrayNonindexKeys', function () {
+      NonindexKeys([arrayNonindexKeys$1]);
     });
     describe('Sparse undefined', function () {
       it('should be possible to restore `undefined` properties', function () {

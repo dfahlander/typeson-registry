@@ -7,7 +7,7 @@ export default {
             return typeof x === 'undefined' &&
                 (stateObj.ownKeys || !('ownKeys' in stateObj));
         },
-        replace (n) { return null; },
+        replace (n) { return 0; },
         revive (s) { return new Typeson.Undefined(); } // Will add `undefined` (returning `undefined` would instead avoid explicitly setting)
     }
 };

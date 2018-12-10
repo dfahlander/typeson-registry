@@ -17,6 +17,7 @@ const {
         bigint, bigintObject
     },
     presets: {
+        arrayNonindexKeys,
         builtin, universal, structuredCloningThrowing,
         structuredCloning, specialNumbers, postMessage,
         undef: undefPreset, sparseUndefined
@@ -131,15 +132,65 @@ function Undefined (preset) {
         it('should be possible to restore `undefined` at root', () => {
             const typeson = new Typeson().register(preset || undef);
             const tson = typeson.stringify(undefined);
-            expect(tson).to.equal('{"$":null,"$types":{"$":{"":"undef"}}}');
+            expect(tson).to.equal('{"$":0,"$types":{"$":{"":"undef"}}}');
             const back = typeson.parse(tson);
             expect(back).to.be.undefined;
         });
     });
 }
 
+function NonindexKeys (preset) {
+    describe('arrayNonindexKeys', () => {
+        it('should preserve sparse arrays with non-index keys', () => {
+            const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            const arr = [, , 3, 4, 5]; // eslint-disable-line no-sparse-arrays
+            arr.length = 10;
+            arr[7] = 6;
+            arr[-2] = 'abc';
+            arr.ghi = 'xyz';
+            const tson = typeson.stringify(arr);
+            // console.log('tson', tson);
+            const back = typeson.parse(tson);
+            expect(back).to.be.an('array');
+            expect(back).to.deep.equal(arr);
+        });
+        it('should preserve sparse arrays without non-index keys', () => {
+            const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            const arr = [, , 3, 4, 5]; // eslint-disable-line no-sparse-arrays
+            arr.length = 10;
+            arr[7] = 6;
+            const tson = typeson.stringify(arr);
+            // console.log('tson', tson);
+            const back = typeson.parse(tson);
+            expect(back).to.be.an('array');
+            expect(back).to.deep.equal(arr);
+        });
+        it('should preserve non-sparse arrays with non-index keys', () => {
+            const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            const arr = [3, 4, 5, 6]; // eslint-disable-line no-sparse-arrays
+            arr[-2] = 'abc';
+            arr.ghi = 'xyz';
+            const tson = typeson.stringify(arr);
+            // console.log('tson', tson);
+            const back = typeson.parse(tson);
+            expect(back).to.be.an('array');
+            expect(back).to.deep.equal(arr);
+        });
+        it('should preserve non-sparse arrays without non-index keys', () => {
+            const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            const arr = [3, 4, 5, 6]; // eslint-disable-line no-sparse-arrays
+            const tson = typeson.stringify(arr);
+            // console.log('tson', tson);
+            const back = typeson.parse(tson);
+            expect(back).to.be.an('array');
+            expect(back).to.deep.equal(arr);
+        });
+    });
+}
+
 function BuiltIn (preset) {
     Undefined(preset);
+    NonindexKeys(preset);
 
     describe('Primitive objects', () => {
         it('String object', () => {
@@ -985,6 +1036,7 @@ describe('Presets', () => {
         BuiltIn([universal]);
     });
     describe('Structured cloning', () => {
+        NonindexKeys(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             let caught = false;
@@ -1039,6 +1091,10 @@ describe('Presets', () => {
 
     describe('Undefined (as preset)', () => {
         Undefined([undefPreset]);
+    });
+
+    describe('arrayNonindexKeys', () => {
+        NonindexKeys([arrayNonindexKeys]);
     });
 
     describe('Sparse undefined', () => {

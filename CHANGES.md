@@ -42,6 +42,8 @@
     individual types for `NaN`, `Infinity`, `-Infinity`
 - Breaking change: Node must reference `dist` subdirectory (except for
     main `dist/all.js`)
+- Breaking change: For `undefined` and `sparseUndefined`, store as 0
+    instead of `null` to save space; `revival` will be backward compatible
 
 - Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
     get cross-frame/cross-module class detection (replacing `constructor`
