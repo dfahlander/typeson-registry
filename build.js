@@ -39,7 +39,7 @@ await Promise.all(dirs.map(async dir => {
     const dirPath = path.join(__dirname, '/', dir);
     // Todo: Would be faster to Promise.all on concatenation of all
     const promiseAll = await Promise.all(fs.readdirSync(dirPath)
-        .filter(f => f.lastIndexOf('.js') === f.length - '.js'.length)
+        .filter(f => f.endsWith('.js'))
         .map((f, i) => {
             const name = nameFromFile(f);
             let fileName = name; // `${name[0].toUpperCase() + name.slice(1)}`;
