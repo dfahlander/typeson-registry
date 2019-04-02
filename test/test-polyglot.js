@@ -1,8 +1,7 @@
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+(function (factory) {
   typeof define === 'function' && define.amd ? define(factory) :
-  (factory());
-}(this, (function () { 'use strict';
+  factory();
+}(function () { 'use strict';
 
   function _typeof(obj) {
     if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
@@ -451,7 +450,7 @@
       bs = bs.length;
     }
 
-    return as > bs ? -1 : bs < as ? 1 : a.keypath < b.keypath ? -1 : a.keypath > b.keypath;
+    return as > bs ? -1 : as < bs ? 1 : a.keypath < b.keypath ? -1 : a.keypath > b.keypath;
   }
   /**
    * An instance of this class can be used to call `stringify()` and `parse()`.
@@ -657,7 +656,7 @@
         promisesDataRoot = []; // Clone the object deeply while at the same time replacing any
         //   special types or cyclic reference:
 
-        var cyclic = opts && 'cyclic' in opts ? opts.cyclic : true;
+        var cyclic = 'cyclic' in opts ? opts.cyclic : true;
         var _opts2 = opts,
             encapsulateObserver = _opts2.encapsulateObserver;
 
@@ -807,7 +806,7 @@
                                 return _context.stop();
                             }
                           }
-                        }, _callee, this);
+                        }, _callee);
                       }));
 
                       return function (_x3) {
@@ -823,7 +822,7 @@
                     return _context2.stop();
                 }
               }
-            }, _callee2, this);
+            }, _callee2);
           }));
           return _checkPromises.apply(this, arguments);
         }
@@ -2269,7 +2268,7 @@
     }
   };
 
-  var NegativeInfinity = {
+  var negativeInfinity = {
     negativeInfinity: {
       test: function test(x) {
         return x === -Infinity;
@@ -2396,7 +2395,7 @@
     }
   };
 
-  var set$1 = {
+  var set = {
     set: {
       test: function test(x) {
         return Typeson.toStringTag(x) === 'Set';
@@ -2603,7 +2602,7 @@
     }
   }];
 
-  var specialNumbers = [nan, infinity, NegativeInfinity];
+  var specialNumbers = [nan, infinity, negativeInfinity];
 
   /* This preset includes types that are built-in into the JavaScript
       language itself, this should work universally.
@@ -2622,7 +2621,7 @@
   */
   var expObj = [undef, // ES5
   arrayNonindexKeys, primitiveObjects, specialNumbers, date, error, exportObj, regexp].concat( // ES2015 (ES6)
-  typeof Map === 'function' ? map : [], typeof Set === 'function' ? set$1 : [], typeof ArrayBuffer === 'function' ? arraybuffer : [], typeof Uint8Array === 'function' ? exportObj$2 : [], typeof DataView === 'function' ? dataview : [], typeof Intl !== 'undefined' ? intlTypes : [], typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []);
+  typeof Map === 'function' ? map : [], typeof Set === 'function' ? set : [], typeof ArrayBuffer === 'function' ? arraybuffer : [], typeof Uint8Array === 'function' ? exportObj$2 : [], typeof DataView === 'function' ? dataview : [], typeof Intl !== 'undefined' ? intlTypes : [], typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []);
 
   /** When communicating via postMessage() (Worker.postMessage() or window.postMessage()),
    * the browser will use a similar algorithm as Typeson does to encapsulate and revive all
@@ -2676,7 +2675,7 @@
   undef, arrayNonindexKeys, primitiveObjects, specialNumbers, date, regexp, // Non-built-ins
   imagedata, imagebitmap, // Async return
   file, filelist, blob].concat( // ES2015 (ES6)
-  typeof Map === 'function' ? map : [], typeof Set === 'function' ? set$1 : [], typeof ArrayBuffer === 'function' ? arraybuffer : [], typeof Uint8Array === 'function' ? exportObj$2 : [], typeof DataView === 'function' ? dataview : [], typeof Intl !== 'undefined' ? intlTypes : [], typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []);
+  typeof Map === 'function' ? map : [], typeof Set === 'function' ? set : [], typeof ArrayBuffer === 'function' ? arraybuffer : [], typeof Uint8Array === 'function' ? exportObj$2 : [], typeof DataView === 'function' ? dataview : [], typeof Intl !== 'undefined' ? intlTypes : [], typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []);
 
   var structuredCloningThrowing = expObj$1.concat({
     checkDataCloneException: [function (val) {
@@ -2735,12 +2734,12 @@
     intlTypes: intlTypes,
     map: map,
     nan: nan,
-    negativeInfinity: NegativeInfinity,
+    negativeInfinity: negativeInfinity,
     nonbuiltinIgnore: nonbuiltinIgnore,
     primitiveObjects: primitiveObjects,
     regexp: regexp,
     resurrectable: resurrectable,
-    set: set$1,
+    set: set,
     typedArraysSocketio: exportObj$1,
     typedArrays: exportObj$2,
     undef: undef,
@@ -2811,7 +2810,7 @@
 
               this.send = function () {};
 
-              this.responseType = responseType;
+              this.responseType = responseType || '';
               this.responseText = encoded || '';
               return;
             }
@@ -2924,12 +2923,12 @@
       primitiveObjects$1 = _Typeson$types.primitiveObjects,
       nan$1 = _Typeson$types.nan,
       infinity$1 = _Typeson$types.infinity,
-      negativeInfinity = _Typeson$types.negativeInfinity,
+      negativeInfinity$1 = _Typeson$types.negativeInfinity,
       date$1 = _Typeson$types.date,
       error$1 = _Typeson$types.error,
       regexp$1 = _Typeson$types.regexp,
       map$1 = _Typeson$types.map,
-      set$2 = _Typeson$types.set,
+      set$1 = _Typeson$types.set,
       arraybuffer$1 = _Typeson$types.arraybuffer,
       dataview$1 = _Typeson$types.dataview,
       imagedata$1 = _Typeson$types.imagedata,
@@ -2998,13 +2997,13 @@
         expect(back).to.equal(Infinity);
       });
       it('-Infinity', function () {
-        var typeson = new Typeson().register(preset || negativeInfinity);
+        var typeson = new Typeson().register(preset || negativeInfinity$1);
         var tson = typeson.stringify(-Infinity, null, 2);
         var back = typeson.parse(tson);
         expect(back).to.equal(-Infinity);
       });
       it('should not mistake string forms of the special numbers', function () {
-        var typeson = new Typeson().register(preset || [nan$1, infinity$1, negativeInfinity]);
+        var typeson = new Typeson().register(preset || [nan$1, infinity$1, negativeInfinity$1]);
         var tson = typeson.stringify('NaN', null, 2);
         var back = typeson.parse(tson);
         expect(back).to.equal('NaN');
@@ -3016,7 +3015,7 @@
         expect(back).to.equal('-Infinity');
       });
       it('should not disturb encoding of normal numbers', function () {
-        var typeson = new Typeson().register(preset || [nan$1, infinity$1, negativeInfinity]);
+        var typeson = new Typeson().register(preset || [nan$1, infinity$1, negativeInfinity$1]);
         var tson = typeson.stringify(512, null, 2);
         var back = typeson.parse(tson);
         expect(back).to.equal(512);
@@ -3216,7 +3215,7 @@
     });
     describe('Set', function () {
       it('should get back a real Set instance with the original data and use complex types also in contained items', function () {
-        var typeson = new Typeson().register(preset || set$2);
+        var typeson = new Typeson().register(preset || set$1);
         var set1 = new Set();
         var error = new Error('Error here'),
             date = new Date(10000),
@@ -4030,5 +4029,5 @@
   });
   mocha.run();
 
-})));
+}));
 //# sourceMappingURL=test-polyglot.js.map
