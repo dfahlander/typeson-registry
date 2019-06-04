@@ -1,6 +1,7 @@
 import Typeson from 'typeson';
 import file from './file.js';
-export default {
+
+const filelist = {
     file: file.file,
     filelist: {
         test (x) { return Typeson.toStringTag(x) === 'FileList'; },
@@ -12,15 +13,23 @@ export default {
             return arr;
         },
         revive (o) {
-            function FileList () {
-                this._files = arguments[0];
-                this.length = this._files.length;
+            class FileList {
+                constructor () {
+                    // eslint-disable-next-line prefer-rest-params
+                    this._files = arguments[0];
+                    this.length = this._files.length;
+                }
+                item (index) {
+                    return this._files[index];
+                }
+                // eslint-disable-next-line class-methods-use-this
+                get [Symbol.toStringTag] () {
+                    return 'FileList';
+                }
             }
-            FileList.prototype.item = function (index) {
-                return this._files[index];
-            };
-            FileList.prototype[Symbol.toStringTag] = 'FileList';
             return new FileList(o);
         }
     }
 };
+
+export default filelist;

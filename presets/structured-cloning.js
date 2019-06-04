@@ -1,10 +1,10 @@
 /* This preset includes types for the Structured Cloning Algorithm. */
 
 import userObject from '../types/user-object.js';
-import arrayNonindexKeys from '../presets/array-nonindex-keys.js';
+import arrayNonindexKeys from './array-nonindex-keys.js';
 import undef from '../types/undef.js';
 import primitiveObjects from '../types/primitive-objects.js';
-import specialNumbers from '../presets/special-numbers.js';
+import specialNumbers from './special-numbers.js';
 import date from '../types/date.js';
 import regexp from '../types/regexp.js';
 import map from '../types/map.js';
@@ -23,7 +23,8 @@ import bigint from '../types/bigint.js';
 import bigintObject from '../types/bigint-object.js';
 
 const expObj = [
-    // Todo: Might also register synchronous `ImageBitmap` and `Blob`/`File`/`FileList`?
+    // Todo: Might also register synchronous `ImageBitmap` and
+    //    `Blob`/`File`/`FileList`?
     // ES5
     userObject, // Processed last (non-builtin)
 

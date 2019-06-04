@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-jsdoc */
+
 function Person (name, age, dob, isMarried) {
     name && (this.name = name);
     age && (this.age = age);
@@ -20,16 +22,21 @@ function MyCloneable (obj) {
 MyCloneable.prototype[Symbol.for('cloneEncapsulate')] = function () {
     return {obj: JSON.stringify(this.obj)};
 };
-MyCloneable.prototype[Symbol.for('cloneRevive')] = function (encapsulatedMyCloneable) {
+MyCloneable.prototype[Symbol.for('cloneRevive')] = function (
+    encapsulatedMyCloneable
+) {
     return new MyCloneable(JSON.parse(encapsulatedMyCloneable.obj));
 };
 MyCloneable.prototype.prototypeProperty = 10;
 
-function MyResurrectable () {}
+function MyResurrectable () {
+    // Empty
+}
 
-export default {
+const util = {
     Person,
     SimulatedNonBuiltIn,
     MyCloneable,
     MyResurrectable
 };
+export default util;

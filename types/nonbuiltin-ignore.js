@@ -1,5 +1,6 @@
 import Typeson from 'typeson';
-export default {
+
+const nonbuiltinIgnore = {
     nonbuiltinIgnore: {
         test (x) {
             return x && typeof x === 'object' && !Array.isArray(x) && ![
@@ -13,13 +14,19 @@ export default {
                 'JSON',
                 'ArrayBuffer', 'SharedArrayBuffer', 'DataView',
                 'Int8Array', 'Uint8Array', 'Uint8ClampedArray', 'Int16Array',
-                'Uint16Array', 'Int32Array', 'Uint32Array', 'Float32Array', 'Float64Array',
+                'Uint16Array', 'Int32Array', 'Uint32Array',
+                'Float32Array', 'Float64Array',
                 'Promise',
-                'String Iterator', 'Array Iterator', 'Map Iterator', 'Set Iterator',
+                'String Iterator', 'Array Iterator',
+                'Map Iterator', 'Set Iterator',
                 'WeakMap', 'WeakSet',
                 'Atomics', 'Module'
             ].includes(Typeson.toStringTag(x));
         },
-        replace (rexp) { }
+        replace (rexp) {
+            // Not in use
+        }
     }
 };
+
+export default nonbuiltinIgnore;

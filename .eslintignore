@@ -1,3 +1,2 @@
-test/test-polyglot.js
 dist/
-polyfills/createObjectURL-polyglot.js
+polyfills/createObjectURL-cjs.js

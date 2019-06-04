@@ -15,9 +15,52 @@ See the testing environment of `test/test.js` for some examples.
 
 ## Installation
 
-You must run `npm run build` if you wish to get the individual browser
-scripts built locally (into `dist`) (or in development to get
-`index.js` to be rebuilt based on existing presets and types).
+Note that for Node.js, to use the `file` or `blob` types (or the `filelist`
+type or `structuredCloning` and `structuredCloningThrowing` presets which
+include them), you will need a polyfill for `Blob` or `File`, respectively,
+as well as `FileReader` and `URL.createObjectURL` (and a
+polyfill for `URL` if you are using Node < 10.0.0 or an older browser).
+Note that our `URL.createObjectURL` polyfill expects a global
+`XMLHttpRequest` and `location.href` predefined before it as well (and one
+which can handle `data:` URLs). For Node, you can add it like this:
+
+```js
+const url = require('url'); // This line only needed to support Node < 10.0.0
+const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL-cjs');
+
+const URL = url.Url; // This line only needed to support Node < 10.0.0
+URL.createObjectURL = createObjectURL;
+```
+
+We have not added `jsdom` as a dependency, but it is required if this
+polyfill is used.
+
+Besides the polyfills for `file` or `blob`, the `structuredCloningThrowing`
+preset also needs a global `DOMException` polyfill.
+
+The `filelist` type, in addition to the polyfills for `file`, will need
+a `FileList` polyfill (including a `FileList` string tag).
+
+The `imagebitmap` type requires a global `createImageBitmap` polyfill (and
+an `ImageBitmap` polyfill (including an `ImageBitmap` string tag).
+
+The `imagedata` type requires a global `ImageData` polyfill (including an
+`ImageData` string tag).
+
+You may wish to see our `test-node.js` and `test-environment.js` files
+for how some polyfilling may be done (largely using `jsdom`).
+
+The `cloneable` and `resurrectable` types (and the `createObjectURL`
+polyill) each accept an optional global `performance` polyfill (through
+the common file `utils/generateUUID.js`).
+
+### Building files from Git clone (as opposed to npm installs)
+
+If you have cloned the repo (and not the npm package), you must run
+`npm install` to get the `devDependencies` and then run
+`npm run rollup` to get the individual browser scripts built locally
+(into `dist`) or to get `index.js` to be rebuilt based on existing
+presets and types).
 
 ## Usage (Pre-rollup in Node or browser)
 
@@ -37,16 +80,16 @@ const TSON = new Typeson().register([
 ]);
 
 const tson = TSON.stringify({
-    Hello: "world",
+    Hello: 'world',
     date: new Date(),
     error: new Error(),
     inner: {
-        x: /foo/ig,
+        x: /foo/gui,
         bin: new Uint8Array(64)
     }
 }, null, 2);
 
-console.log(tson);        
+console.log(tson);
 /* Output:
 
 {
@@ -84,7 +127,7 @@ console.log(parsedBack.inner.bin instanceof Uint8Array);
 const Typeson = require('typeson-registry/dist/all.js');
 
 const {presets: {builtin}} = Typeson;
-const TSON = new Typeson().register([
+const tson = new Typeson().register([
     builtin
 ]);
 ```
@@ -264,14 +307,15 @@ another context).
 ```js
 const functionType = {functionType: [
     function (x) { return typeof x === 'function'; },
-    function (functionType) { return '(' + functionType.toString() + ')'; },
+    function (funcType) { return '(' + funcType.toString() + ')'; },
+    // eslint-disable-next-line no-eval
     function (o) { return eval(o); }
 ]};
 
 const typeson = new Typeson().register(functionType);
 const tson = typeson.stringify(function () { return 'abc'; });
 const back = typeson.parse(tson);
-back() // 'abc'
+back(); // 'abc'
 ```
 
 ## Development

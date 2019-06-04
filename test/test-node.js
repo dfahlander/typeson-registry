@@ -1,7 +1,17 @@
+/* globals mocha, run */
 /* eslint-env node */
-const path = require('path');
+import path from 'path';
 
-const jsdom = require('jsdom');
+import chai from 'chai';
+import jsdom from 'jsdom';
+import canvas from 'canvas';
+import typeson from 'typeson';
+
+const __dirname = path.resolve(path.dirname(decodeURI(
+    // eslint-disable-next-line node/no-unsupported-features/node-builtins
+    new URL(import.meta.url).pathname
+)));
+
 const {JSDOM} = jsdom;
 
 const dom = new JSDOM('', {
@@ -14,69 +24,75 @@ global.document = dom.window.document;
 global.window = dom.window;
 global.HTMLElement = global.window.HTMLElement; // https://github.com/chaijs/type-detect/issues/98
 
-// Todo: Check whether this is still an issue now that we're using Rollup
-// We set this up separately from test-environment.js as browserify doesn't seem to be able to handle them properly
-// Should be made available automatically by jsdom anyways: https://github.com/tmpvar/jsdom/issues/1749
-global.ImageData = require('canvas').ImageData;
+// This should be made available automatically by jsdom: https://github.com/jsdom/jsdom/issues/1749
+global.ImageData = canvas.ImageData;
 
 global.FileReader = window.FileReader;
-global.HTMLInputElement = window.HTMLInputElement; // Used by our test-environment FileList polyfill
+// Used by our test-environment `FileList` polyfill
+global.HTMLInputElement = window.HTMLInputElement;
 
 global.FileList = window.FileList;
-FileList.prototype[Symbol.toStringTag] = 'FileList';
 
 global.XMLHttpRequest = window.XMLHttpRequest;
+
+// eslint-disable-next-line node/no-unsupported-features/node-builtins
 global.URL = window.URL;
 global.location = window.location;
 
 global.Blob = window.Blob;
-Blob.prototype[Symbol.toStringTag] = 'Blob';
 global.File = window.File;
-File.prototype[Symbol.toStringTag] = 'File';
+global.DOMException = window.DOMException;
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
-global.createImageBitmap = function (canvas) {
+global.createImageBitmap = function (cvs) {
+    // eslint-disable-next-line promise/avoid-new
     return new Promise(function (resolve, reject) {
-        // This really ought not be a canvas, but it works as a simple shim for our tests
-        canvas[Symbol.toStringTag] = 'ImageBitmap';
-        // Above line not working in current jsdom now
-        if (!canvas.dataset) {
-            canvas.dataset = {};
+        // This really ought not be a canvas, but it works as a simple shim
+        //   for our tests
+        // cvs[Symbol.toStringTag] = 'ImageBitmap';
+        // Above line throwing in current jsdom now
+        if (!cvs.dataset) {
+            cvs.dataset = {};
         }
-        canvas.dataset.toStringTag = 'ImageBitmap';
-        resolve(canvas);
+        cvs.dataset.toStringTag = 'ImageBitmap';
+        resolve(cvs);
     });
 };
 
 // We set this up separately from test-environment.js as it uses its own mocha
+// eslint-disable-next-line no-empty-function
 global.mocha = {setup () {}, globals () {}, checkLeaks () {}, run () {}};
 
 global.imageTestFileNode = 'file://' + path.resolve(__dirname, 'Flag_of_the_United_Nations.png');
 
-/* eslint-env node */
-if (typeof global === 'undefined') {
-    global = window; // eslint-disable-line no-global-assign
-}
-global.chai = window.chai = require('chai');
+global.chai = window.chai = chai;
 
-global.Typeson = window.Typeson = require('typeson');
+global.Typeson = window.Typeson = typeson;
 // var Typeson = require('../dist/all.js');
 
-(function () {
+// Remove after engines supporting Node 7.6.0
+// eslint-disable-next-line node/no-unsupported-features/es-syntax
+(async function () {
 // require('./test-environment.js');
 
 var tests; // eslint-disable-line no-var
 
+// Filed https://github.com/eslint/eslint/issues/11808 to allow
+/* eslint-disable no-process-env */
 if (process.env.npm_config_test) {
     tests = [process.env.npm_config_test];
     console.log('Running test: ' + process.env.npm_config_test);
+    /* eslint-enable no-process-env */
 } else {
     tests = [
-        'test.js'
+        './test.js'
     ];
 }
-tests.forEach(function (path) {
-    require('../node_modules/@babel/polyfill/dist/polyfill.js');
-    require('./test-polyglot.js');
-});
+await Promise.all(tests.map(function (test) {
+    return import(test);
+}));
+
+// See https://mochajs.org/#delayed-root-suite
+run();
+mocha.run();
 }());

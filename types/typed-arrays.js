@@ -4,7 +4,7 @@ import {encode, decode} from 'base64-arraybuffer-es6';
 
 const _global = typeof self === 'undefined' ? global : self;
 
-const exportObj = {};
+const typedArrays = {};
 [
     'Int8Array',
     'Uint8Array',
@@ -19,28 +19,28 @@ const exportObj = {};
     const arrType = typeName;
     const TypedArray = _global[arrType];
     if (TypedArray) {
-        exportObj[typeName.toLowerCase()] = {
+        typedArrays[typeName.toLowerCase()] = {
             test (x) { return Typeson.toStringTag(x) === arrType; },
-            replace ({buffer, byteOffset, length}, stateObj) {
+            replace ({buffer, byteOffset, length: l}, stateObj) {
                 if (!stateObj.buffers) {
                     stateObj.buffers = [];
                 }
                 const index = stateObj.buffers.indexOf(buffer);
                 if (index > -1) {
-                    return {index, byteOffset, length};
+                    return {index, byteOffset, length: l};
                 }
                 stateObj.buffers.push(buffer);
                 return {
                     encoded: encode(buffer),
                     byteOffset,
-                    length
+                    length: l
                 };
             },
             revive (b64Obj, stateObj) {
                 if (!stateObj.buffers) {
                     stateObj.buffers = [];
                 }
-                const {byteOffset, length, encoded, index} = b64Obj;
+                const {byteOffset, length: len, encoded, index} = b64Obj;
                 let buffer;
                 if ('index' in b64Obj) {
                     buffer = stateObj.buffers[index];
@@ -48,10 +48,10 @@ const exportObj = {};
                     buffer = decode(encoded);
                     stateObj.buffers.push(buffer);
                 }
-                return new TypedArray(buffer, byteOffset, length);
+                return new TypedArray(buffer, byteOffset, len);
             }
         };
     }
 });
 
-export default exportObj;
+export default typedArrays;

@@ -1,7 +1,7 @@
 import Typeson from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
-export default {
+const arraybuffer = {
     arraybuffer: {
         test (x) { return Typeson.toStringTag(x) === 'ArrayBuffer'; },
         replace (b, stateObj) {
@@ -28,5 +28,7 @@ export default {
         }
     }
 };
+
+export default arraybuffer;
 
 // See also typed-arrays!

@@ -1,5 +1,6 @@
 import Typeson from 'typeson';
-export default {
+
+const regexp = {
     regexp: {
         test (x) { return Typeson.toStringTag(x) === 'RegExp'; },
         replace (rexp) {
@@ -15,3 +16,5 @@ export default {
         revive ({source, flags}) { return new RegExp(source, flags); }
     }
 };
+
+export default regexp;

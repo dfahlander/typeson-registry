@@ -1,9 +1,18 @@
 /* globals BigInt */
 import Typeson from 'typeson';
-export default {
+
+const bigintObject = {
     bigintObject: {
-        test (x) { return typeof x === 'object' && Typeson.hasConstructorOf(x, BigInt); },
+        test (x) {
+            return typeof x === 'object' && Typeson.hasConstructorOf(x, BigInt);
+        },
         replace (n) { return String(n); },
-        revive (s) { return Object(BigInt(s)); }
+        revive (s) {
+            // Filed this to avoid error: https://github.com/eslint/eslint/issues/11810
+            // eslint-disable-next-line no-new-object
+            return new Object(BigInt(s));
+        }
     }
 };
+
+export default bigintObject;

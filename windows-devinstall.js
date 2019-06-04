@@ -1,42 +1,79 @@
 /* eslint-env node */
-const fs = require('fs');
-const path = require('path');
-const isWin = /^win/.test(process.platform);
+import fs from 'fs';
+import path from 'path';
+import util from 'util';
 
-function copy (fromPath, toPath) {
-    fs.writeFileSync(toPath, fs.readFileSync(fromPath));
+// Todo: Remove after engines supporting Node 11 (and use fs.promises instead)
+/* eslint-disable node/no-unsupported-features/node-builtins */
+const readdir = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
+/* eslint-enable node/no-unsupported-features/node-builtins */
+
+const isWin = process.platform.startsWith('win');
+
+// Todo: Remove after engines supporting Node 7.6.0
+/* eslint-disable node/no-unsupported-features/es-syntax */
+/**
+ *
+ * @param {string} fromPath
+ * @param {string} toPath
+ * @returns {void}
+ */
+async function copy (fromPath, toPath) {
+    let fileContents;
+    try {
+        fileContents = await readFile(fromPath);
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            throw new Error('Could not find ' + fromPath);
+        }
+        throw err;
+    }
+    try {
+        return writeFile(toPath, fileContents);
+    } catch (err) {
+        if (err.code === 'EEXIST') {
+            throw new Error(
+                'File already exists at target path: ' + toPath
+            );
+        }
+        throw err;
+    }
 }
 
+(async () => {
 if (isWin) {
     const pathToGTKBin = 'C:\\GTK\\bin\\';
-    const pathToIEShims = 'C:\\Program Files (x86)\\Internet Explorer\\IEShims.dll';
-    const targetDir = path.join(require.resolve('canvas'), '../../build/Release');
+    const pathToIEShims =
+        'C:\\Program Files (x86)\\Internet Explorer\\IEShims.dll';
+    const targetDir = path.join(
+        // eslint-disable-next-line no-undef
+        require.resolve('canvas'), '../../build/Release'
+    );
 
-    [pathToGTKBin, pathToIEShims, targetDir].forEach((path) => {
-        if (!fs.existsSync(path)) {
-            console.log('Could not find path: ' + path);
-            process.exit(1);
+    await copy(pathToIEShims, targetDir + '\\IEShims.dll');
+
+    let files;
+    try {
+        files = await readdir(pathToGTKBin);
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            throw new Error('Could not find ' + pathToGTKBin);
         }
+        throw new Error('Could not list the directory contents.');
+    }
+    files.filter((f) => f.endsWith('.dll')).forEach(async (file) => {
+        /* eslint-enable node/no-unsupported-features/es-syntax */
+        const targetPath = targetDir + '\\' + file;
+        await copy(pathToGTKBin + file, targetPath);
+        console.log('Copied missing file to: ' + targetPath);
     });
-
-    copy(pathToIEShims, targetDir + '\\IEShims.dll');
-
-    fs.readdir(pathToGTKBin, function (err, files) {
-        if (err) {
-            console.error('Could not list the directory contents.', err);
-            process.exit(1);
-        }
-        files.filter((f) => (/\.dll$/).test(f)).forEach((file) => {
-            const targetPath = targetDir + '\\' + file;
-            if (fs.existsSync(targetPath)) {
-                console.log('File already exists at target path: ' + targetPath);
-            } else {
-                copy(pathToGTKBin + file, targetPath);
-                console.log('Copied missing file to: ' + targetPath);
-            }
-        });
-        console.log('Successfully installed Canvas files for Windows build.');
-    });
+    console.log('Successfully installed Canvas files for Windows build.');
 } else {
-    console.log('Windows not detected, so skipping Windows-specific (Canvas) installation steps');
+    console.log(
+        'Windows not detected, so skipping Windows-specific (Canvas) ' +
+        'installation steps'
+    );
 }
+})();

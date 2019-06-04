@@ -1,8 +1,13 @@
 import Typeson from 'typeson';
-export default {
+
+const set = {
     set: {
         test (x) { return Typeson.toStringTag(x) === 'Set'; },
-        replace (set) { return Array.from(set.values()); },
+        replace (st) {
+            return [...st.values()];
+        },
         revive (values) { return new Set(values); }
     }
 };
+
+export default set;

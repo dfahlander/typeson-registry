@@ -1,9 +1,10 @@
 import Typeson from 'typeson';
-export default {
+
+const date = {
     date: {
         test (x) { return Typeson.toStringTag(x) === 'Date'; },
-        replace (date) {
-            const time = date.getTime();
+        replace (dt) {
+            const time = dt.getTime();
             if (isNaN(time)) {
                 return 'NaN';
             }
@@ -17,3 +18,5 @@ export default {
         }
     }
 };
+
+export default date;

@@ -15,10 +15,9 @@
         <script src="../node_modules/chai/chai.js"></script>
         <!-- <script src="../node_modules/sinon/pkg/sinon-no-sourcemaps.js"></script> -->
 
-        <!--
-        Todo: We could export as a module and load here as such instead
-        -->
-        <script src="../node_modules/@babel/polyfill/dist/polyfill.js"></script>
-        <script src="../test/test-polyglot.js"></script>
+        <script type="module" src="../test/test.js"></script>
+        <script type="module">
+        mocha.run();
+        </script>
     </body>
 </html>

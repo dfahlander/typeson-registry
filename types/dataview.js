@@ -1,6 +1,7 @@
 import Typeson from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
-export default {
+
+const dataview = {
     dataview: {
         test (x) { return Typeson.toStringTag(x) === 'DataView'; },
         replace ({buffer, byteOffset, byteLength}, stateObj) {
@@ -34,3 +35,5 @@ export default {
         }
     }
 };
+
+export default dataview;

@@ -33,13 +33,14 @@ import userObject from './types/user-object.js';
 // PRESETS
 import arrayNonindexKeys from './presets/array-nonindex-keys.js';
 import builtin from './presets/builtin.js';
-import postMessage from './presets/post-message.js';
+import postmessage from './presets/postmessage.js';
 import socketio from './presets/socketio.js';
 import sparseUndefined from './presets/sparse-undefined.js';
 import specialNumbers from './presets/special-numbers.js';
-import structuredCloningThrowing from './presets/structured-cloning-throwing.js';
+import structuredCloningThrowing from
+    './presets/structured-cloning-throwing.js';
 import structuredCloning from './presets/structured-cloning.js';
-import undef2 from './presets/undef.js';
+import undefPreset from './presets/undef.js';
 import universal from './presets/universal.js';
 
 Typeson.types = {
@@ -49,9 +50,9 @@ Typeson.types = {
     resurrectable, set, typedArraysSocketio, typedArrays, undef, userObject
 };
 Typeson.presets = {
-    arrayNonindexKeys, builtin, postMessage, socketio, sparseUndefined,
-    specialNumbers, structuredCloningThrowing, structuredCloning, undef: undef2,
-    universal
+    arrayNonindexKeys, builtin, postmessage, socketio, sparseUndefined,
+    specialNumbers, structuredCloningThrowing, structuredCloning,
+    undef: undefPreset, universal
 };
 
 export default Typeson;

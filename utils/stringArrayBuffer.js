@@ -1,7 +1,19 @@
+/**
+ *
+ * @param {ArrayBuffer} buf
+ * @returns {Uint8Array}
+ */
 function arraybuffer2string (buf) {
-    return new Uint8Array(buf).reduce((s, byte) => s + String.fromCharCode(byte), '');
+    return new Uint8Array(buf).reduce(
+        (s, byte) => s + String.fromCharCode(byte), ''
+    );
 }
 
+/**
+ *
+ * @param {string} str
+ * @returns {ArrayBuffer}
+ */
 function string2arraybuffer (str) {
     /*
     // UTF-8 approaches

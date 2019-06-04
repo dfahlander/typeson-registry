@@ -14,10 +14,10 @@
   Symbols are similarly not included.
 */
 
-import arrayNonindexKeys from '../presets/array-nonindex-keys.js';
+import arrayNonindexKeys from './array-nonindex-keys.js';
 import undef from '../types/undef.js';
 import primitiveObjects from '../types/primitive-objects.js';
-import specialNumbers from '../presets/special-numbers.js';
+import specialNumbers from './special-numbers.js';
 import date from '../types/date.js';
 import error from '../types/error.js';
 import errors from '../types/errors.js';

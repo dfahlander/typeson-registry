@@ -1,9 +1,10 @@
 /* eslint-env browser, node */
 import Typeson from 'typeson';
+
 const _global = typeof self === 'undefined' ? global : self;
 
 // Support all kinds of typed arrays (views of ArrayBuffers)
-const exportObj = {};
+const typedArraysSocketIO = {};
 [
     'Int8Array',
     'Uint8Array',
@@ -18,20 +19,25 @@ const exportObj = {};
     const arrType = typeName;
     const TypedArray = _global[typeName];
     if (TypedArray) {
-        exportObj[typeName.toLowerCase()] = {
+        typedArraysSocketIO[typeName.toLowerCase()] = {
             test (x) { return Typeson.toStringTag(x) === arrType; },
             replace (a) {
-                return (a.byteOffset === 0 && a.byteLength === a.buffer.byteLength
+                return (a.byteOffset === 0 &&
+                    a.byteLength === a.buffer.byteLength
                     ? a
-                    // socket.io supports streaming ArrayBuffers. If we have a typed array
-                    // representing a portion of the buffer, we need to clone the buffer before leaving it
-                    // to socket.io.
+                    // socket.io supports streaming ArrayBuffers.
+                    //   If we have a typed array
+                    // representing a portion of the buffer, we need to clone
+                    //   the buffer before leaving it to socket.io.
                     : a.slice(0)).buffer;
             },
             revive (buf) {
-                // One may configure socket.io to revive binary data as Buffer or Blob.
-                // We should therefore not rely on that the instance we get here is an ArrayBuffer
-                // If not, let's assume user wants to receive it as configured with socket.io.
+                // One may configure socket.io to revive binary data as
+                //    Buffer or Blob.
+                // We should therefore not rely on that the instance we
+                //   get here is an ArrayBuffer
+                // If not, let's assume user wants to receive it as
+                //   configured with socket.io.
                 return Typeson.toStringTag(buf) === 'ArrayBuffer'
                     ? new TypedArray(buf)
                     : buf;
@@ -40,4 +46,4 @@ const exportObj = {};
     }
 });
 
-export default exportObj;
+export default typedArraysSocketIO;

@@ -1,11 +1,17 @@
-/* globals Typeson */
-// import Typeson from '../dist/index.js'; // Works in Chrome but we'll wait for other browser support
+/* eslint-env browser */
+import Typeson from '../dist/index.js';
 
+/**
+ *
+ * @param {string} msg
+ * @returns {void}
+ */
 function log (msg) {
     console.log(msg);
-    document.getElementById('log').textContent += msg + '\n';
+    // eslint-disable-next-line compat/compat
+    document.querySelector('#log').textContent += msg + '\n';
 }
-const TSON = new Typeson().register(Typeson.presets.postMessage);
+const TSON = new Typeson().register(Typeson.presets.postmessage);
 
 const worker = new Worker('worker.js');
 worker.postMessage(TSON.encapsulate({
@@ -14,7 +20,7 @@ worker.postMessage(TSON.encapsulate({
     c: -Infinity,
     d: new Error('oops')
 }));
-worker.onmessage = function (ev) {
+worker.addEventListener('message', function (ev) {
     if (typeof ev.data === 'string') {
         log(ev.data);
         return;
@@ -23,5 +29,6 @@ worker.onmessage = function (ev) {
     log('Got back: ' + ev.data.b);
     log('Got back: ' + ev.data.c);
     log('Main thread revival of original error is an `Error`: ' +
+        // eslint-disable-next-line no-restricted-syntax
         (TSON.revive(ev.data).d instanceof Error));
-};
+});

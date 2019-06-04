@@ -1,12 +1,29 @@
 /* eslint-env node */
-const fs = require('fs');
-const path = require('path');
+/* eslint-disable no-console,
+    node/no-unsupported-features/es-syntax */
+import fs from 'fs';
+import {join, dirname, resolve} from 'path';
+import util from 'util';
 
-const rollup = require('rollup');
-const babel = require('rollup-plugin-babel');
-const resolve = require('rollup-plugin-node-resolve');
+import {rollup} from 'rollup';
+import babel from 'rollup-plugin-babel';
+import nodeResolve from 'rollup-plugin-node-resolve';
+import commonjs from 'rollup-plugin-commonjs';
+import {terser} from 'rollup-plugin-terser';
 
-const {terser} = require('rollup-plugin-terser');
+// fs.promises is not available until Node 11 (and need for URL until 10.0.0)
+/* eslint-disable node/no-unsupported-features/node-builtins */
+
+// Use this instead of the following when engines >= 10.12.0
+// import {fileURLToPath} from 'url';
+// const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = resolve(
+    dirname(decodeURI(new URL(import.meta.url).pathname))
+);
+
+const mkdir = util.promisify(fs.mkdir);
+const readdir = util.promisify(fs.readdir);
+/* eslint-enable node/no-unsupported-features/node-builtins */
 
 const prologue =
 // Todo: Integrate source-map-support?
@@ -17,29 +34,36 @@ import Typeson from 'typeson';
 `;
 const epilogue = `export default Typeson;\n`;
 
-if (!fs.existsSync('dist')) {
-    fs.mkdirSync('dist');
-}
-
 const ws = fs.createWriteStream('index.js');
 ws.write(prologue);
 const moduleStrings = {};
 
 (async () => { // eslint-disable-line padded-blocks
 
+try {
+    await mkdir('dist');
+} catch (err) {
+    if (err.code !== 'EEXIST') {
+        throw err;
+    }
+}
+
 const dirs = ['types', 'presets'];
-await Promise.all(dirs.map(async dir => {
+const dirsOutput = await Promise.all(dirs.map(async (dir) => {
     // While building the general file, we write the individual files too
-    if (!fs.existsSync(`dist/${dir}`)) {
-        fs.mkdirSync(`dist/${dir}`);
+    try {
+        await mkdir(`dist/${dir}`);
+    } catch (err) {
+        if (err.code !== 'EEXIST') {
+            throw err;
+        }
     }
     let currentLine = '';
     moduleStrings[dir] = '';
-    ws.write(`\n// ${dir.toUpperCase()}\n`);
-    const dirPath = path.join(__dirname, '/', dir);
-    // Todo: Would be faster to Promise.all on concatenation of all
-    const promiseAll = await Promise.all(fs.readdirSync(dirPath)
-        .filter(f => f.endsWith('.js'))
+    const dirPath = join(__dirname, '/', dir);
+    // Todo: Would be faster to `Promise.all` on concatenation of all
+    const promiseAll = await Promise.all((await readdir(dirPath))
+        .filter((f) => f.endsWith('.js'))
         .map((f, i) => {
             const name = nameFromFile(f);
             let fileName = name; // `${name[0].toUpperCase() + name.slice(1)}`;
@@ -47,22 +71,17 @@ await Promise.all(dirs.map(async dir => {
 
             // Todo: We really should auto-detect duplicates instead
             if (['undef'].includes(fileName) && dir === 'presets') {
-                fileName += '2';
+                fileName += 'Preset';
                 fileString += ': ' + fileName;
             }
-            /*
-            if (['Infinity', 'NaN', 'undefined'].includes(fileName)) {
-                fileName = `${dir.slice(0, -1)}${fileName.charAt().toUpperCase() + fileName.slice(1)}`;
-                fileString += ': ' + fileName;
-            }
-            */
             let currentAddition;
             const wouldbeLength =
                 currentLine.length + // Previously existing line length adjusted
                 (i === 0 ? 0 : 1) + // space
                 fileString.length +
                 1; // comma
-            if (wouldbeLength / 80 > 1) { // Shouldn't be adding more than 80 chars
+            // Shouldn't be adding more than 80 chars
+            if (wouldbeLength / 80 > 1) {
                 moduleStrings[dir] += '\n';
                 currentLine = currentAddition = `    ${fileString},`;
             } else {
@@ -71,19 +90,25 @@ await Promise.all(dirs.map(async dir => {
             }
             moduleStrings[dir] += currentAddition;
 
-            const reqStr = `import ${fileName} from './${dir}/${f}';\n`;
-            ws.write(reqStr);
-            return bundle({
+            let reqStr = `import ${fileName} from './${dir}/${f}';\n`;
+            if (reqStr.length >= 80) {
+                reqStr = `import ${fileName} from\n    './${dir}/${f}';\n`;
+            }
+            bundle({
                 name: `Typeson.${dir}.${name}`,
-                input: path.join(dirPath, f),
+                input: join(dirPath, f),
                 output: `./dist/${dir}/${f}`
             });
-        })
-    );
+            return reqStr;
+        }));
     moduleStrings[dir] = moduleStrings[dir].slice(0, -1);
     return promiseAll;
 }));
 
+dirs.forEach((dir, i) => {
+    ws.write(`\n// ${dir.toUpperCase()}\n`);
+    ws.write(dirsOutput[i].join(''));
+});
 dirs.forEach((dir) => {
     ws.write(
         `\nTypeson.${dir} = {
@@ -97,27 +122,47 @@ ws.end(epilogue);
 ws.on('finish', async () => {
     await Promise.all([
         bundle({input: 'index.js', output: './dist/all.js', name: 'Typeson'}),
-        bundle({input: 'index.js', output: './dist/index.js', name: 'Typeson', format: 'es'}),
-
-        bundle({input: 'test/test.js', output: 'test/test-polyglot.js', name: 'TypesonTest'}),
+        bundle({
+            input: 'index.js', output: './dist/index.js',
+            name: 'Typeson', format: 'es'
+        }),
         bundle({
             input: 'polyfills/createObjectURL.js',
-            output: 'polyfills/createObjectURL-polyglot.js',
+            output: 'polyfills/createObjectURL-cjs.js',
             name: 'createObjectURL'
         })
+
     ]);
     console.log('Finished build');
 });
 })();
 
+/**
+* @external RollupOutput
+* @see https://github.com/rollup/rollup/blob/master/src/rollup/types.d.ts#L478
+*/
+
+/* eslint-disable jsdoc/check-types */
+/**
+ * @param {PlainObject} cfg
+ * @param {string} cfg.input
+ * @param {string} cfg.output
+ * @param {string} cfg.name
+ * @param {string} [cfg.format='umd'}]
+ * @returns {Promise<external:RollupOutput[]>}
+ */
 async function bundle ({input, output, name, format = 'umd'}) {
+    /* eslint-enable jsdoc/check-types */
     const plugins = [
-        input.includes('test') ? null : terser({
-            keep_fnames: true, // Needed for `Typeson.Undefined` and other constructor detection
-            keep_classnames: true // Keep in case implementing above as classes
+        nodeResolve({
+            mainFields: ['module']
         }),
-        resolve({
-            main: false
+        commonjs(),
+        terser({
+            // Needed for `Typeson.Undefined` and other constructor detection
+            keep_fnames: true,
+            // Keep in case implementing above as classes
+            keep_classnames: true
         })
     ];
     if (format !== 'es') {
@@ -132,24 +177,30 @@ async function bundle ({input, output, name, format = 'umd'}) {
     }
 
     // Todo: Setup rollup.watch() dev routine
-    const bundle = await rollup.rollup({
+    const bndle = await rollup({
         input,
         plugins
     });
     // const {imports, exports, modules} = bundle;
-    // console.log('imports/exports/modules', Object.keys(imports), exports, Object.keys(modules));
+    // console.log(Object.keys(imports), exports, Object.keys(modules));
     try {
-        return bundle.write({
+        return bndle.write({
             file: output,
             format,
             name,
             sourcemap: true
         });
     } catch (err) {
-        console.log('error writing bundle: ', output, err);
+        console.log('error writing bundle:', output, err);
     }
-};
+    return undefined;
+}
 
+/**
+ *
+ * @param {string} f
+ * @returns {string}
+ */
 function nameFromFile (f) {
     let name = f.substr(0, f.length - '.js'.length);
     let dash;

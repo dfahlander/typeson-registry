@@ -1,9 +1,11 @@
 import Typeson from 'typeson';
 
-export default {
+const userObject = {
     userObject: {
         test (x, stateObj) { return Typeson.isUserObject(x); },
-        replace (n) { return Object.assign({}, n); },
+        replace (n) { return {...n}; },
         revive (s) { return s; }
     }
 };
+
+export default userObject;

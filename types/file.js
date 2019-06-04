@@ -1,12 +1,15 @@
+/* globals XMLHttpRequest, File, FileReader */
 import Typeson from 'typeson';
 import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
 
-export default {
+const file = {
     file: {
         test (x) { return Typeson.toStringTag(x) === 'File'; },
         replace (f) { // Sync
             const req = new XMLHttpRequest();
             req.overrideMimeType('text/plain; charset=x-user-defined');
+            // eslint-disable-next-line max-len
+            // eslint-disable-next-line node/no-unsupported-features/node-builtins
             req.open('GET', URL.createObjectURL(f), false); // Sync
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
@@ -48,3 +51,5 @@ export default {
         }
     }
 };
+
+export default file;

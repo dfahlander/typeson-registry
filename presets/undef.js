@@ -1,7 +1,9 @@
-import sparseUndefined from '../presets/sparse-undefined.js';
-import undef from '../types/undef.js';
+import sparseUndefined from './sparse-undefined.js';
+import undf from '../types/undef.js';
 
-export default [
+const undef = [
     sparseUndefined,
-    undef
+    undf
 ];
+
+export default undef;

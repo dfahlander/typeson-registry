@@ -1,4 +1,4 @@
-export default [
+const sparseUndefined = [
     {
         sparseArrays: {
             testPlainObjects: true,
@@ -19,3 +19,5 @@ export default [
         }
     }
 ];
+
+export default sparseUndefined;

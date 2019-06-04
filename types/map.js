@@ -1,8 +1,11 @@
 import Typeson from 'typeson';
-export default {
+
+const map = {
     map: {
         test (x) { return Typeson.toStringTag(x) === 'Map'; },
-        replace (map) { return Array.from(map.entries()); },
+        replace (mp) { return [...mp.entries()]; },
         revive (entries) { return new Map(entries); }
     }
 };
+
+export default map;

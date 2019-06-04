@@ -9,7 +9,9 @@ const IntlCollator = {
 const IntlDateTimeFormat = {
     test (x) { return Typeson.hasConstructorOf(x, Intl.DateTimeFormat); },
     replace (dtf) { return dtf.resolvedOptions(); },
-    revive (options) { return new Intl.DateTimeFormat(options.locale, options); }
+    revive (options) {
+        return new Intl.DateTimeFormat(options.locale, options);
+    }
 };
 
 const IntlNumberFormat = {
@@ -18,8 +20,10 @@ const IntlNumberFormat = {
     revive (options) { return new Intl.NumberFormat(options.locale, options); }
 };
 
-export default {
+const intlTypes = {
     IntlCollator,
     IntlDateTimeFormat,
     IntlNumberFormat
 };
+
+export default intlTypes;

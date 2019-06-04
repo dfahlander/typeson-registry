@@ -1,5 +1,6 @@
 import Typeson from 'typeson';
-export default {
+
+const error = {
     error: {
         test (x) { return Typeson.toStringTag(x) === 'Error'; },
         replace ({name, message}) {
@@ -13,3 +14,5 @@ export default {
     }
 };
 // See also errors.js that may be registered after having registered this type.
+
+export default error;
