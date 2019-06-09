@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-/* globals expect, assert, BigInt, imageTestFileNode */
+/* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
     FileList, DOMException */
 // Remove `node/no-unsupported-features/es-syntax` after engines
@@ -84,23 +84,33 @@ function ErrorAndErrors (preset) {
                 e2: new TypeError('Error2'),
                 e3: new RangeError('Error3'),
                 e4: new SyntaxError('Error4'),
-                e5: new ReferenceError('Error5')
-                // , e6: new InternalError('Error6')
+                e5: new ReferenceError('Error5'),
+                e6: typeof InternalError !== 'undefined'
+                    ? new InternalError('Error6')
+                    : undefined
             });
             const obj = typeson.parse(json);
             expect(obj.e1).to.be.an.instanceOf(Error);
             expect(obj.e1.name).to.equal('Error');
+            expect(obj.e1.message).to.equal('Error1');
             expect(obj.e2).to.be.an.instanceOf(TypeError);
             expect(obj.e2.name).to.equal('TypeError');
+            expect(obj.e2.message).to.equal('Error2');
             expect(obj.e3).to.be.an.instanceOf(RangeError);
             expect(obj.e3.name).to.equal('RangeError');
+            expect(obj.e3.message).to.equal('Error3');
             expect(obj.e4).to.be.an.instanceOf(SyntaxError);
             expect(obj.e4.name).to.equal('SyntaxError');
+            expect(obj.e4.message).to.equal('Error4');
             expect(obj.e5).to.be.an.instanceOf(ReferenceError);
             expect(obj.e5.name).to.equal('ReferenceError');
+            expect(obj.e5.message).to.equal('Error5');
             // Non-standard
-            // expect(obj.e6).to.be.an.instanceOf(InternalError);
-            // expect(obj.e6.name).to.equal('InternalError');
+            if (typeof InternalError !== 'undefined') {
+                expect(obj.e6).to.be.an.instanceOf(InternalError);
+                expect(obj.e6.name).to.equal('InternalError');
+                expect(obj.e6.message).to.equal('Error6');
+            }
         });
     });
 }
