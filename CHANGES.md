@@ -125,7 +125,6 @@
 - Building: Package all types/presets into one (rolled-up/minified)
     file as well as to individual files
 - Building: Minify and build source maps (preserving source files)
-- Building: Add `yarn.lock`
 
 - Test building: Add Windows-specific routine for copying node-canvas DLLs
 - Testing: Partial `URL.createObjectURL` polyfill
