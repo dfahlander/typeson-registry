@@ -76,11 +76,13 @@ With Typeson update, empty string components of key paths are now escaped
 - Breaking change: Change from deprecated `@babel/polyfill` to
     `regenerator-runtime` and `core-js-bundle` (may have no impact
     since `@babel/polyfill` included them)
+- Breaking change: Add `stack`, `fileName`, `lineNumber`, `columnNumber`, `cause`, and for `AggregateError`, `errors`
+    and `name` to `errors` (default `name` can be changed after construction);
+    also impacts `builtin`, `universal`, `postmessage`, and `socketio`
 
 - Fix: Use new `Typeson.toStringTag` and `Typeson.hasConstructorOf` to
     get cross-frame/cross-module class detection (replacing `constructor`
     and `instanceof` checks)
-
 - Fix (RegExp): Get `regexp` type to work properly with `multiline`
 - Fix (RegExp): Add `unicode` and `sticky` flag support for cloning
 - Fix (Date): Support invalid dates (with `NaN` value)
@@ -120,6 +122,10 @@ With Typeson update, empty string components of key paths are now escaped
     to allow for non-plain user objects to be cloned; add test
 - Enhancement: Add `nonbuiltin-ignore` type to roughly detect non-builtin
     objects and avoid adding them as properties
+- Enhancement: Add `stack`, `fileName`, `lineNumber`, `columnNumber`,
+    `cause`, and `errors` (for `AggregateError`)
+    to `error` (changes representation, but less likely than `errors` to be
+    breaking); fixes #10
 - Enhancement (minor): Check `typeof` for functions in SCA since can avoid
     false positives
 
