@@ -3,12 +3,21 @@ import {toStringTag} from 'typeson';
 const error = {
     error: {
         test (x) { return toStringTag(x) === 'Error'; },
-        replace ({name, message}) {
-            return {name, message};
+        replace ({
+            name, message, cause, stack, fileName, lineNumber, columnNumber
+        }) {
+            return {
+                name, message, cause, stack, fileName, lineNumber, columnNumber
+            };
         },
-        revive ({name, message}) {
-            const e = new Error(message);
-            e.name = name;
+        revive (obj) {
+            const e = new Error(obj.message);
+            [
+                'name', 'cause', 'stack', 'fileName', 'lineNumber',
+                'columnNumber'
+            ].forEach((prop) => {
+                e[prop] = obj[prop];
+            });
             return e;
         }
     }
