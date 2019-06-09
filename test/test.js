@@ -94,20 +94,27 @@ function ErrorAndErrors (preset) {
         it('should get back real Error instances corresponding to their ' +
             'types and with the original name and message', () => {
             const typeson = new Typeson().register(preset || [error, errors]);
+            const e1 = new Error('Error1');
+            const e2 = new TypeError('Error2');
+            const e3 = new RangeError('Error3');
+            const e4 = new SyntaxError('Error4');
+            const e5 = new ReferenceError('Error5');
+            const e6 = typeof InternalError !== 'undefined'
+                ? new InternalError('Error6')
+                : undefined;
+
             const json = typeson.stringify({
-                e1: new Error('Error1'),
-                e2: new TypeError('Error2'),
-                e3: new RangeError('Error3'),
-                e4: new SyntaxError('Error4'),
-                e5: new ReferenceError('Error5'),
-                e6: typeof InternalError !== 'undefined'
-                    ? new InternalError('Error6')
-                    : undefined
+                e1, e2, e3, e4, e5, e6
             });
             const obj = typeson.parse(json);
             expect(obj.e1).to.be.an.instanceOf(Error);
             expect(obj.e1.name).to.equal('Error');
             expect(obj.e1.message).to.equal('Error1');
+            expect(obj.e1.fileName).to.equal(e1.fileName);
+            expect(obj.e1.lineNumber).to.equal(e1.lineNumber);
+            expect(obj.e1.columnNumber).to.equal(e1.columnNumber);
+            expect(obj.e1.stack).to.equal(e1.stack);
+            expect(obj.e1.stack).to.not.be.undefined;
             expect(obj.e2).to.be.an.instanceOf(TypeError);
             expect(obj.e2.name).to.equal('TypeError');
             expect(obj.e2.message).to.equal('Error2');
