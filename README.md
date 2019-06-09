@@ -223,6 +223,8 @@ Note that the type name corresponds to the file name in the following manner:
 ### Types
 
 - `arraybuffer`
+- `bigintObject`
+- `bigint`
 - `blob` - Has sync and async encapsulation/replacements (though sync only
     via deprecated means)
 - `cloneable` - Looks for `Symbol.for('cloneEncapsulate')` and
@@ -274,13 +276,15 @@ Note that the type name corresponds to the file name in the following manner:
 
 ### Presets
 
+- `array-nonindex-keys.js`
 - `builtin.js` - Types that are built into the JavaScript language itself.
     Types that were added in ES6 or beyond will be checked before inclusion
     so that this module can be consumed by both ES5 and ES6 environments.
     Some imperfectly serializable objects (such as functions and Symbols)
     are not included in this preset.
-- `post-message.js` - This preset is intended as a utility to expand on what is
+- `postmessage.js` - This preset is intended as a utility to expand on what is
     cloneable via `strcutured-cloning.js` and supports Error objects.
+- `socketio.js`
 - `sparse-undefined.js` (`sparseArrays` and `sparseUndefined`) - Supports
     reconstructing sparse arrays (with missing properties not even assigned
     an explicit `undefined`). See `types/undefined.js` for the explicit case
@@ -290,7 +294,7 @@ Note that the type name corresponds to the file name in the following manner:
     likes of `postMessage` and `indexedDB`. See also the `cloneable` type.
 - `structured-cloning-throwing.js` - Same as `structured-cloning.js` but
     throws with non-recognized types. See also the `cloneable` type.
-- `undefined.js` - Supports reconstructing explicit and implicit (sparse)
+- `undef.js` - Supports reconstructing explicit and implicit (sparse)
     uses of `undefined`.
 - `universal.js`- Meant for de-facto universal types. Currently includes
     built-ins only.
