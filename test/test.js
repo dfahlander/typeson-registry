@@ -334,6 +334,7 @@ function BuiltIn (preset) {
     describe('RegExp', () => {
         it('should return a RegExp', () => {
             const typeson = new Typeson().register(preset || [regexp]);
+            // eslint-disable-next-line prefer-regex-literals
             let regex = new RegExp('ab?c', 'guy');
             let tson = typeson.stringify(regex, null, 2);
             let back = typeson.parse(tson);

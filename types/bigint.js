@@ -3,7 +3,6 @@
 const bigint = {
     bigint: {
         test (x) {
-            // eslint-disable-next-line valid-typeof
             return typeof x === 'bigint';
         },
         replace (n) { return String(n); },

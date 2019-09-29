@@ -32,7 +32,7 @@ const prologue =
 `// This file is auto-generated from \`build.js\`
 import Typeson from 'typeson';
 `;
-const epilogue = `export default Typeson;\n`;
+const epilogue = 'export default Typeson;\n';
 
 const ws = fs.createWriteStream('index.js');
 ws.write(prologue);
@@ -200,14 +200,14 @@ async function bundle ({input, output, name, format = 'umd'}) {
  * @returns {string}
  */
 function nameFromFile (f) {
-    let name = f.substr(0, f.length - '.js'.length);
+    let name = f.slice(0, f.length - '.js'.length);
     let dash;
     do {
         dash = name.indexOf('-');
         if (dash >= 0) {
-            name = name.substr(0, dash) +
-                name.substr(dash + 1, 1).toUpperCase() +
-                name.substr(dash + 2);
+            name = name.slice(0, dash) +
+                name.slice(dash + 1, dash + 2).toUpperCase() +
+                name.slice(dash + 2);
         }
     } while (dash >= 0);
     return name.split('.')[0];

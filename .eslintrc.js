@@ -6,7 +6,7 @@ module.exports = {
   },
   "env": {
       // We set these to `false` in order to make explicit in each file which
-      //  polyfills are expected 
+      //  polyfills are expected
       "node": false,
       "browser": false
   },
@@ -53,6 +53,12 @@ module.exports = {
           }
       },
       {
+          files: ['**/*.html'],
+          rules: {
+              'import/unambiguous': 'off'
+          }
+      },
+      {
         files: ["**/*.md"],
         settings: {
           polyfills: ["Float64Array", "Int8Array"]
@@ -84,6 +90,9 @@ module.exports = {
       }
   ],
   "rules": {
-    "indent": ["error", 4, {"outerIIFEBody": 0}]
+    "indent": ["error", 4, {"outerIIFEBody": 0}],
+    "node/no-unsupported-features/es-builtins": ["error", {
+        ignores: ['BigInt']
+    }]
   }
 };
