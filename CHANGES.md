@@ -62,6 +62,7 @@
 - Fix (undefined/sparseUndefined): Label `undefined` at root as regular
     `undef` type rather than `sparseUndefined` (will rely on update to
     `typeson`)
+- Fix (SCA): Throw upon `Event` or `MessageChannel`
 - Fix (SCA): Remove `Proxy` from list of structured clone throwing to throw
     as not available as such
 - Fix (SCA): Ensure SCA can preserve arrays with non-index keys and

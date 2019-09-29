@@ -47,7 +47,12 @@ export default structuredCloning.concat({
                 'WeakMap',
                 // WeakSet instances have an extra slot ([[WeakSetData]])
                 //    but not throwing in Chrome `postMessage`
-                'WeakSet'
+                'WeakSet',
+
+                // HTML-SPECIFIC
+                'Event',
+                // Also in Node `worker_threads` (currently experimental)
+                'MessageChannel'
             ].includes(stringTag) ||
             // A non-array exotic object but not throwing in
             //   Chrome `postMessage`

@@ -142,7 +142,6 @@ ws.on('finish', async () => {
 * @see https://github.com/rollup/rollup/blob/master/src/rollup/types.d.ts#L478
 */
 
-/* eslint-disable jsdoc/check-types */
 /**
  * @param {PlainObject} cfg
  * @param {string} cfg.input
@@ -152,7 +151,6 @@ ws.on('finish', async () => {
  * @returns {Promise<external:RollupOutput[]>}
  */
 async function bundle ({input, output, name, format = 'umd'}) {
-    /* eslint-enable jsdoc/check-types */
     const plugins = [
         nodeResolve({
             mainFields: ['module']
