@@ -9,6 +9,7 @@
   "main": "./dist/all.js",
   "module": "./index.js",
   "scripts": {
+    "prepublishOnly": "yarn",
     "eslint": "eslint --ext js,md,html .",
     "start": "static -p 8085",
     "rollup": "node -r esm ./build.js",
