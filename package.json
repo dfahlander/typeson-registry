@@ -14,11 +14,19 @@
     "start": "static -p 8085",
     "rollup": "node -r esm ./build.js",
     "mocha": "mocha --delay --require esm test/test-node",
+    "open-coverage": "open-cli http://localhost:8085/coverage/ && npm start",
+    "coverage": "rm -Rf node_modules/.cache/esm && nyc npm run mocha",
+    "test-cov": "npm run rollup && npm run eslint && npm run coverage",
     "test": "npm run rollup && npm run eslint && npm run mocha",
     "test:worker-open": "open-cli http://localhost:8085/browser-test/worker.html && npm start",
     "test:browser-open": "open-cli http://localhost:8085/browser-test/ && npm start",
     "test:browser": "npm run rollup && npm run eslint && npm run test:browser-open",
     "windows": "node -r esm windows-devinstall"
+  },
+  "nyc": {
+    "exclude-after-remap": false,
+    "reporter": ["text", "html"],
+    "exclude": ["instrumented/**", "test/**"]
   },
   "repository": {
     "type": "git",
@@ -69,11 +77,13 @@
     "jsdom": "15.2.1",
     "mocha": "^6.2.2",
     "node-static": "0.7.11",
+    "nyc": "^15.0.0-beta.1",
     "open-cli": "^5.0.0",
     "regenerator-runtime": "^0.13.3",
     "rollup": "1.27.8",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-istanbul": "^2.0.1",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-terser": "^5.1.2",
     "typescript": "^3.7.2"

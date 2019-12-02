@@ -4,3 +4,6 @@
 *.log
 build
 .__browserify_string_empty.js
+instrumented
+.nyc_output
+coverage
