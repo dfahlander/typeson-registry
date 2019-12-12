@@ -42,6 +42,7 @@ global.location = window.location;
 global.Blob = window.Blob;
 global.File = window.File;
 global.DOMException = window.DOMException;
+global.performance = window.performance;
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 global.createImageBitmap = function (cvs) {

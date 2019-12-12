@@ -10,12 +10,13 @@
  * @returns {string}
  */
 export default function generateUUID () { //  Adapted from original: public domain/MIT: http://stackoverflow.com/a/8809472/271577
-    let d = new Date().getTime();
-    if (typeof performance !== 'undefined' &&
-        typeof performance.now === 'function'
-    ) {
-        d += performance.now(); // use high-precision timer if available
-    }
+    /* istanbul ignore next */
+    let d = new Date().getTime() +
+    // use high-precision timer if available
+    (typeof performance !== 'undefined' && typeof performance.now === 'function'
+        ? performance.now()
+        : 0);
+
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/gu, function (c) {
         /* eslint-disable no-bitwise */
         const r = (d + Math.random() * 16) % 16 | 0;

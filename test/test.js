@@ -7,7 +7,7 @@
 /* eslint-disable no-unused-expressions, no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
 
-import '../node_modules/core-js-bundle/minified.js';
+// import '../node_modules/core-js-bundle/minified.js';
 import '../node_modules/regenerator-runtime/runtime.js';
 
 import Typeson from '../instrumented/index.js';
