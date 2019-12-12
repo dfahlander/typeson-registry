@@ -10,7 +10,7 @@
 // import '../node_modules/core-js-bundle/minified.js';
 import '../node_modules/regenerator-runtime/runtime.js';
 
-import Typeson from '../instrumented/index.js';
+import Typeson from '../index.js';
 import './test-environment.js';
 import util from './test-utils.js';
 

@@ -24,14 +24,13 @@
     "windows": "node -r esm windows-devinstall"
   },
   "nyc": {
-    "exclude-after-remap": false,
     "reporter": [
       "text",
       "html"
     ],
     "exclude": [
-      "instrumented/**",
-      "test/**"
+      "test/**",
+      "node_modules/**"
     ]
   },
   "repository": {
@@ -89,7 +88,6 @@
     "rollup": "1.27.11",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-istanbul": "^2.0.1",
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-terser": "^5.1.3",
     "typescript": "^3.7.3"

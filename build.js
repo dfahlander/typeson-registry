@@ -10,7 +10,6 @@ import babel from 'rollup-plugin-babel';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
-import istanbul from 'rollup-plugin-istanbul';
 
 // fs.promises is not available until Node 11 (and need for URL until 10.0.0)
 /* eslint-disable node/no-unsupported-features/node-builtins */
@@ -128,10 +127,6 @@ ws.on('finish', async () => {
             name: 'Typeson', format: 'es'
         }),
         bundle({
-            input: 'index.js', output: './instrumented/index.js',
-            name: 'Typeson', format: 'es', coverage: true
-        }),
-        bundle({
             input: 'polyfills/createObjectURL.js',
             output: 'polyfills/createObjectURL-cjs.js',
             name: 'createObjectURL'
@@ -153,12 +148,9 @@ ws.on('finish', async () => {
  * @param {string} cfg.output
  * @param {string} cfg.name
  * @param {string} [cfg.format='umd'}]
- * @param {boolean} [cfg.coverage=false}]
  * @returns {Promise<external:RollupOutput[]>}
  */
-async function bundle ({
-    input, output, name, format = 'umd', coverage = false
-}) {
+async function bundle ({input, output, name, format = 'umd'}) {
     const plugins = [
         nodeResolve({
             mainFields: ['module']
@@ -180,9 +172,6 @@ async function bundle ({
                 }]
             ]
         }));
-    }
-    if (coverage) {
-        plugins.unshift(istanbul());
     }
 
     // Todo: Setup rollup.watch() dev routine
