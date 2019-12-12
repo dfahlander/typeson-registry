@@ -1070,6 +1070,7 @@ describe('FileList', function () {
         expect(back.item(1).lastModified).to.equal(anotherTime.getTime());
         expect(back.item(1).type).to.equal('text/html');
         expect(back.item(1).name).to.equal('def');
+        expect(back[Symbol.toStringTag]).to.equal('FileList');
     });
     it('should get back a FileList instance with the ' +
         'original data asynchronously', async () => {
