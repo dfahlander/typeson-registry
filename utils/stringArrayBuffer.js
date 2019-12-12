@@ -1,5 +1,5 @@
 /**
- *
+ * Not currently in use internally, but provided for parity.
  * @param {ArrayBuffer} buf
  * @returns {Uint8Array}
  */

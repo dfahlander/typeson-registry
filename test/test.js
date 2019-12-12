@@ -14,6 +14,10 @@ import Typeson from '../instrumented/index.js';
 import './test-environment.js';
 import util from './test-utils.js';
 
+import {
+    string2arraybuffer, arraybuffer2string
+} from '../utils/stringArrayBuffer.js';
+
 /**
 * @typedef {PlainObject} TypesonSpecObject
 * @property {boolean} testPlainObjects
@@ -1346,5 +1350,13 @@ describe('Presets', () => {
             expect('2' in a2[1].c).to.be.false;
             expect(a2[1].c[3]).to.equal(null);
         });
+    });
+});
+
+describe('Utilities', () => {
+    it('arraybuffer2string', () => {
+        const buffer = string2arraybuffer('test');
+        const back = arraybuffer2string(buffer);
+        assert(back === 'test', 'Round trip after string2arraybuffer');
     });
 });
