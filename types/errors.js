@@ -1,6 +1,7 @@
 /* eslint-env browser, node */
 import Typeson from 'typeson';
 
+/* istanbul ignore next */
 const _global = typeof self === 'undefined' ? global : self;
 
 const errors = {};

@@ -38,13 +38,20 @@ const expObj = [
     date, error, errors, regexp
 ].concat(
     // ES2015 (ES6)
+    /* istanbul ignore next */
     typeof Map === 'function' ? map : [],
+    /* istanbul ignore next */
     typeof Set === 'function' ? set : [],
+    /* istanbul ignore next */
     typeof ArrayBuffer === 'function' ? arraybuffer : [],
+    /* istanbul ignore next */
     typeof Uint8Array === 'function' ? typedArrays : [],
+    /* istanbul ignore next */
     typeof DataView === 'function' ? dataview : [],
+    /* istanbul ignore next */
     typeof Intl !== 'undefined' ? intlTypes : [],
 
+    /* istanbul ignore next */
     typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []
 );
 export default expObj;
