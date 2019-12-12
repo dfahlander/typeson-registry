@@ -15,6 +15,11 @@
         <script src="../node_modules/chai/chai.js"></script>
         <!-- <script src="../node_modules/sinon/pkg/sinon-no-sourcemaps.js"></script> -->
 
+        <script type="module">
+        import Typeson from '../dist/index.js';
+
+        window.Typeson = Typeson;
+        </script>
         <script type="module" src="../test/test.js"></script>
         <script type="module">
         /* globals mocha */

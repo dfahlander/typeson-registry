@@ -1,16 +1,15 @@
 /* eslint-env mocha */
+/* globals Typeson */
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
     FileList, DOMException */
-// Remove `node/no-unsupported-features/es-syntax` after engines
-//   supporting Node 7.6.0
+// Todo [engine:node@>=7.6.0]: Remove `node/no-unsupported-features/es-syntax`
 /* eslint-disable no-unused-expressions, no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
 
 // import '../node_modules/core-js-bundle/minified.js';
 import '../node_modules/regenerator-runtime/runtime.js';
 
-import Typeson from '../index.js';
 import './test-environment.js';
 import util from './test-utils.js';
 

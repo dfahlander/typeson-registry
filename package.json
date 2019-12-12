@@ -52,7 +52,7 @@
   },
   "homepage": "https://github.com/dfahlander/typeson-registry#readme",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">=6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",

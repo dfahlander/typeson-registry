@@ -5,7 +5,7 @@ import path from 'path';
 import chai from 'chai';
 import jsdom from 'jsdom';
 import canvas from 'canvas';
-import typeson from 'typeson';
+import Typeson from '../index.js';
 
 const __dirname = path.resolve(path.dirname(decodeURI(
     // eslint-disable-next-line node/no-unsupported-features/node-builtins
@@ -68,7 +68,7 @@ global.imageTestFileNode = 'file://' + path.resolve(__dirname, 'Flag_of_the_Unit
 
 global.chai = window.chai = chai;
 
-global.Typeson = window.Typeson = typeson;
+global.Typeson = window.Typeson = Typeson;
 // var Typeson = require('../dist/all.js');
 
 // Remove after engines supporting Node 7.6.0
