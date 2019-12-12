@@ -28,10 +28,8 @@ const arrayNonindexKeys = [
                 return false;
             },
             replace (a, stateObj) {
-                if (Array.isArray(a)) {
-                    // Catch sparse undefined
-                    stateObj.iterateUnsetNumeric = true;
-                }
+                // Catch sparse undefined
+                stateObj.iterateUnsetNumeric = true;
                 return a;
             },
             revive (o) {
