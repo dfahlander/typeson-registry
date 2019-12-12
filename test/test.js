@@ -1257,6 +1257,17 @@ describe('Presets', () => {
             expect(() => {
                 typeson.stringify(new Error('test'));
             }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(Symbol('test'));
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(document.createElement('br'));
+            }).to.throw(DOMException);
+            expect(() => {
+                const blb = new Blob(['test']);
+                blb.isClosed = true;
+                typeson.stringify(blb);
+            }).to.throw(DOMException);
 
             const expected = '{"$":1234567890000,"$types":{"$":{"":"date"}}}';
             const result = typeson.stringify(new Date(1234567890000));
