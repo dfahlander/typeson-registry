@@ -15,7 +15,7 @@
     "rollup": "node -r esm ./build.js",
     "mocha": "mocha --delay --require esm test/test-node",
     "open-coverage": "open-cli http://localhost:8085/coverage/ && npm start",
-    "coverage": "rm -Rf node_modules/.cache/esm && nyc npm run mocha",
+    "coverage": "rm -Rf node_modules/.cache/esm && nyc --all npm run mocha",
     "test-cov": "npm run rollup && npm run eslint && npm run coverage",
     "test": "npm run rollup && npm run eslint && npm run mocha",
     "test:worker-open": "open-cli http://localhost:8085/browser-test/worker.html && npm start",
@@ -29,6 +29,11 @@
       "html"
     ],
     "exclude": [
+      "build.js",
+      "windows-devinstall.js",
+      ".eslintrc.js",
+      "browser-test",
+      "coverage",
       "test/**",
       "node_modules/**"
     ]

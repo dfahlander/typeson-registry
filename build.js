@@ -27,7 +27,9 @@ const readdir = util.promisify(fs.readdir);
 
 const prologue =
 // Todo: Integrate source-map-support?
-// `//# sourceMappingURL=path/to/source.map
+// `//# sourceMappingURL (break from next line as nyc --all will otherwise
+//   try to read)
+//                       =path/to/source.map
 // require("source-map-support").install();
 `// This file is auto-generated from \`build.js\`
 import Typeson from 'typeson';
