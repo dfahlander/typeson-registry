@@ -25,10 +25,12 @@ const blob = {
         },
         replaceAsync (b) {
             return new Typeson.Promise((resolve, reject) => {
+                /*
                 if (b.isClosed) { // On MDN, but not in https://w3c.github.io/FileAPI/#dfn-Blob
                     reject(new Error('The Blob is closed'));
                     return;
                 }
+                */
                 const reader = new FileReader();
                 reader.addEventListener('load', () => {
                     resolve({

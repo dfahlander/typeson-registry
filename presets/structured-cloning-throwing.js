@@ -57,7 +57,8 @@ export default structuredCloning.concat({
             // A non-array exotic object but not throwing in
             //   Chrome `postMessage`
             val === Object.prototype ||
-            ((stringTag === 'Blob' || stringTag === 'File') && val.isClosed) ||
+            // eslint-disable-next-line max-len
+            // ((stringTag === 'Blob' || stringTag === 'File') && val.isClosed) ||
             (val && typeof val === 'object' &&
                 // Duck-type DOM node objects (non-array exotic? objects which
                 //    cannot be cloned by the SCA)
