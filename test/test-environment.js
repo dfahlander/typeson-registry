@@ -1,21 +1,6 @@
 /* eslint-env mocha, node */
 /* globals chai */
-/* globals XMLHttpRequest */
 /* eslint-disable import/unambiguous */
-
-/* eslint-disable node/no-unsupported-features/node-builtins */
-if (!URL.createObjectURL && typeof require !== 'undefined') {
-    // Does not work for the browser
-    const {
-        createObjectURL, xmlHttpRequestOverrideMimeType
-        // eslint-disable-next-line global-require, no-undef
-    } = require('../polyfills/createObjectURL-cjs.js');
-
-    URL.createObjectURL = createObjectURL;
-    /* eslint-enable node/no-unsupported-features/node-builtins */
-    XMLHttpRequest.prototype.overrideMimeType =
-        xmlHttpRequestOverrideMimeType();
-}
 
 // Setup Mocha and Chai
 mocha.setup({ui: 'bdd', timeout: 5000});

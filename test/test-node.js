@@ -1,4 +1,4 @@
-/* globals mocha, run */
+/* globals mocha, run, XMLHttpRequest */
 /* eslint-env node */
 import path from 'path';
 
@@ -71,12 +71,32 @@ global.chai = window.chai = chai;
 global.Typeson = window.Typeson = Typeson;
 // var Typeson = require('../dist/all.js');
 
-// Remove after engines supporting Node 7.6.0
+// Todo[engine:node@>=7.6.0]: Remove after engines supporting
 // eslint-disable-next-line node/no-unsupported-features/es-syntax
 (async function () {
 // require('./test-environment.js');
-
 var tests; // eslint-disable-line no-var
+
+const {
+    createObjectURL, revokeObjectURL, xmlHttpRequestOverrideMimeType
+} = await import('../polyfills/createObjectURL.js');
+
+// eslint-disable-next-line node/no-unsupported-features/node-builtins
+if (!URL.createObjectURL) {
+    // Does not work for the browser
+    // eslint-disable-next-line node/no-unsupported-features/node-builtins
+    URL.createObjectURL = createObjectURL;
+    XMLHttpRequest.prototype.overrideMimeType =
+        xmlHttpRequestOverrideMimeType();
+}
+
+// eslint-disable-next-line node/no-unsupported-features/node-builtins
+if (!URL.revokeObjectURL) {
+    // eslint-disable-next-line node/no-unsupported-features/node-builtins
+    URL.revokeObjectURL = revokeObjectURL;
+}
+
+global.xmlHttpRequestOverrideMimeType = xmlHttpRequestOverrideMimeType;
 
 // Filed https://github.com/eslint/eslint/issues/11808 to allow
 /* eslint-disable no-process-env */

@@ -2,7 +2,7 @@
 /* globals Typeson */
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
-    FileList, DOMException */
+    FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 // Todo [engine:node@>=7.6.0]: Remove `node/no-unsupported-features/es-syntax`
 /* eslint-disable no-unused-expressions, no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
@@ -899,6 +899,7 @@ describe('Blob', function () {
             reader.readAsText(back);
         });
     });
+
     it('Handle large (typed array) Blobs', function (done) {
         this.timeout(30000);
         /**
@@ -1358,4 +1359,65 @@ describe('Utilities', () => {
         const back = arraybuffer2string(buffer);
         assert(back === 'test', 'Round trip after string2arraybuffer');
     });
+});
+
+describe('Polyfills', () => {
+    describe('URL.revokeObjectURL and XMLHttpRequest polyfill', () => {
+        it('should throw with a revoked Blob URL', function () {
+            const blob1 = new Blob([
+                'test'
+            ]);
+
+            /* eslint-disable node/no-unsupported-features/node-builtins */
+            const blobURL = URL.createObjectURL(blob1);
+            URL.revokeObjectURL(blobURL);
+            /* eslint-enable node/no-unsupported-features/node-builtins */
+
+            const req = new XMLHttpRequest();
+            req.overrideMimeType('text/plain; charset=x-user-defined');
+            req.open('GET', blobURL, false); // Sync
+            expect(() => {
+                req.send();
+            }).to.throw(DOMException, `Failed to execute 'send' on ` +
+                `'XMLHttpRequest': Failed to ` +
+                `load '${blobURL}'`);
+        });
+        it('should not negatively impact other `overrideMimeType`', () => {
+            const req = new XMLHttpRequest();
+            expect(() => {
+                req.overrideMimeType('text/plain');
+            }).to.not.throw();
+        });
+        it('should not negatively impact non-Blob URLs', () => {
+            const req = new XMLHttpRequest();
+            req.overrideMimeType('text/plain; charset=x-user-defined');
+            req.open('GET', 'data:text/plain,abc', false);
+            expect(() => {
+                req.send();
+            }).to.not.throw();
+        });
+    });
+
+    // Node only
+    if (typeof process !== 'undefined') {
+        it('URL.createObjectURL polyfill', () => {
+            const temp = XMLHttpRequest.prototype.overrideMimeType;
+            XMLHttpRequest.prototype.overrideMimeType = () => {
+                //
+            };
+            const xhr = {
+                overrideMimeType: xmlHttpRequestOverrideMimeType({
+                    polyfillDataURLs: true
+                })
+            };
+            const blb = new Blob(['test']);
+            xhr.overrideMimeType('text/plain; charset=x-user-defined');
+            /* eslint-disable node/no-unsupported-features/node-builtins */
+            xhr.open('GET', URL.createObjectURL(blb), false); // Sync
+            /* eslint-enable node/no-unsupported-features/node-builtins */
+            xhr.send();
+            XMLHttpRequest.prototype.overrideMimeType = temp;
+            expect(xhr.status).to.equal(200);
+        });
+    }
 });

@@ -11,10 +11,10 @@ const blob = {
             // eslint-disable-next-line max-len
             // eslint-disable-next-line node/no-unsupported-features/node-builtins
             req.open('GET', URL.createObjectURL(b), false); // Sync
+            req.send();
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
             }
-            req.send();
             return {
                 type: b.type,
                 stringContents: req.responseText
