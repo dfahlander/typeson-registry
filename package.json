@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "1.0.0-alpha.32",
+  "version": "1.0.0-alpha.33",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -64,7 +64,7 @@
     "@babel/preset-env": "^7.7.6",
     "@mysticatea/eslint-plugin": "^13.0.0",
     "babel-eslint": "^10.0.3",
-    "canvas": "2.6.0",
+    "canvas": "2.6.1",
     "chai": "4.2.0",
     "core-js-bundle": "^3.5.0",
     "eslint": "^6.7.2",
@@ -90,7 +90,7 @@
     "nyc": "^15.0.0-beta.1",
     "open-cli": "^5.0.0",
     "regenerator-runtime": "^0.13.3",
-    "rollup": "1.27.12",
+    "rollup": "1.27.13",
     "rollup-plugin-babel": "4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "5.2.0",
@@ -101,7 +101,7 @@
   },
   "dependencies": {
     "base64-arraybuffer-es6": "0.5.0",
-    "typeson": "5.16.0",
+    "typeson": "5.18.1",
     "whatwg-url": "7.1.0"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"

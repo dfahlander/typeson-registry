@@ -1,6 +1,5 @@
 /* eslint-env mocha */
-/* globals Typeson */
-/* io, socketIOClient */
+/* globals Typeson, io, socketIOClient */
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
     FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
@@ -17,6 +16,18 @@ import util from './test-utils.js';
 import {
     string2arraybuffer, arraybuffer2string
 } from '../utils/stringArrayBuffer.js';
+
+const debug = false;
+/**
+ *
+ * @param {...any} args
+ * @returns {void}
+ */
+function log (...args) {
+    if (debug) {
+        console.log(...args);
+    }
+}
 
 /**
 * @typedef {PlainObject} TypesonSpecObject
@@ -56,7 +67,7 @@ import {
 
 const {
     types: {
-        errors, typedArrays, intlTypes, // typedArraysSocketio,
+        errors, typedArrays, intlTypes, typedArraysSocketio,
         undef, primitiveObjects, nan, infinity,
         negativeInfinity, date, error,
         regexp, map, set, arraybuffer,
@@ -69,7 +80,7 @@ const {
         arrayNonindexKeys,
         builtin, universal, structuredCloningThrowing,
         structuredCloning, specialNumbers, postmessage,
-        undef: undefPreset, sparseUndefined // , socketio
+        undef: undefPreset, sparseUndefined, socketio
     }
 } = Typeson;
 
@@ -709,18 +720,27 @@ function BuiltIn (preset) {
 describe('Built-in', BuiltIn);
 
 /**
- * @todo Fix issues with preset, remove logging, add assertions
  * @param {TypesonSpec} preset
+ * @param {boolean} [typeWithBufferEncoding=false]
  * @returns {void}
  */
-/*
-function socketIO (preset) {
+function socketIO (preset, typeWithBufferEncoding) {
     it(
-        'can pass on typed arrays without Base64/JSON encoding',
+        typeWithBufferEncoding
+            ? 'can pass on typed arrays with Base64/JSON encoding'
+            : 'can pass on typed arrays without Base64/JSON encoding',
         function () {
-            class CustomClass {}
+            class CustomClass {
+                constructor (foo, bar) {
+                    this.foo = foo;
+                    this.bar = bar;
+                }
+            }
             const TSON = new Typeson()
-                .register(preset || typedArraysSocketio).register({
+                .register(
+                    preset ||
+                    typedArraysSocketio
+                ).register({
                     CustomClass: [
                         (x) => x instanceof CustomClass,
                         (c) => ({foo: c.foo, bar: c.bar}),
@@ -734,6 +754,14 @@ function socketIO (preset) {
             const array2 = new Float64Array(array.buffer, 64);
             array2.fill(42, 0, 65536);
 
+            assert(array.byteOffset === 0);
+            assert(array.byteLength === 524288);
+            assert(array.buffer.byteLength === 524288);
+
+            assert(array2.byteOffset === 64);
+            assert(array2.byteLength === 524224);
+            assert(array2.buffer.byteLength === 524288);
+
             const data = {
                 date: new Date(),
                 error: new SyntaxError('Ooops!'),
@@ -742,26 +770,106 @@ function socketIO (preset) {
                 custom: new CustomClass('foo', 'bar')
             };
 
+            /**
+             *
+             * @param {PlainObject} obj
+             * @param {boolean} postSockets
+             * @returns {void}
+             */
+            function checkPreRevival (obj, postSockets) {
+                assert(obj.custom.foo === 'foo');
+                assert(obj.custom.bar === 'bar');
+                if (preset && !typeWithBufferEncoding) {
+                    assert(typeof obj.date === 'number', 'Date as number');
+                    assert(obj.error === 'Ooops!', 'Error as string');
+                } else {
+                    // Just a type or a type only with buffer encoding
+                    if (!postSockets) {
+                        assert(
+                            obj.date instanceof Date,
+                            'Date as Date object'
+                        );
+                    } else {
+                        assert(
+                            typeof obj.date === 'string',
+                            'Date as string (toJSON)'
+                        );
+                    }
+                    assert(typeof obj.error === 'object', 'Error as object');
+                    assert(!Object.keys(obj.error).length, 'Error empty');
+                }
+                if (typeWithBufferEncoding) {
+                    assert(typeof obj.array === 'string');
+                    assert(typeof obj.array2 === 'string');
+                } else if (!postSockets) {
+                    assert(obj.array instanceof ArrayBuffer);
+                    assert(obj.array2 instanceof ArrayBuffer);
+                } else { // Preset or not
+                    assert(obj.array instanceof Uint8Array);
+                    assert(obj.array instanceof Buffer);
+                    assert(obj.array2 instanceof Uint8Array);
+                    assert(obj.array2 instanceof Buffer);
+                }
+            }
+
             io.on('connection', (socket) => {
                 const encapsulated = TSON.encapsulate(data);
+
+                checkPreRevival(encapsulated);
+
+                // console.log('encapsulated', encapsulated);
                 socket.emit('myEvent', encapsulated);
             });
-            const port = preset ? 3001 : 3002;
+            const port = typeWithBufferEncoding ? 3001 : preset ? 3002 : 3003;
             io.listen(port);
 
             const socket = socketIOClient(`http://localhost:${port}`);
             socket.on('connect', function () {
-                console.log('client connect');
-            });
-            socket.on('disconnect', function () {
-                socket.close();
+                log('client connect');
             });
             // eslint-disable-next-line promise/avoid-new
             return new Promise((resolve, reject) => {
                 socket.on('myEvent', function (e) {
-                    console.log('e', e.array instanceof Buffer);
-                    console.log('Got', TSON.revive(e).array instanceof Buffer);
+                    socket.close();
                     io.close();
+                    io.removeAllListeners();
+
+                    checkPreRevival(e, true);
+
+                    const revived = TSON.revive(e);
+                    if (typeWithBufferEncoding) {
+                        assert(typeof revived.date === 'string');
+                        assert(typeof revived.error === 'object');
+                        assert(!Object.keys(revived.error).length);
+
+                        assert(revived.array instanceof Float64Array);
+                        assert(revived.array2 instanceof Float64Array);
+                    } else if (preset) {
+                        assert(revived.date instanceof Date);
+                        assert(revived.error instanceof SyntaxError);
+
+                        assert(revived.array instanceof Uint8Array);
+                        assert(revived.array2 instanceof Uint8Array);
+                        assert(revived.array instanceof Buffer);
+                        assert(revived.array2 instanceof Buffer);
+                    } else {
+                        assert(typeof revived.date === 'string');
+                        assert(typeof revived.error === 'object');
+                        assert(!Object.keys(revived.error).length);
+
+                        assert(revived.array instanceof Uint8Array);
+                        assert(revived.array2 instanceof Uint8Array);
+                        assert(revived.array instanceof Buffer);
+                        assert(revived.array2 instanceof Buffer);
+                    }
+                    assert(revived.custom instanceof CustomClass);
+                    assert(revived.array.byteOffset === 0);
+                    assert(revived.array.byteLength === 524288);
+                    assert(revived.array.buffer.byteLength === 524288);
+
+                    assert(revived.array2.byteOffset === 0);
+                    assert(revived.array2.byteLength === 524224);
+                    assert(revived.array2.buffer.byteLength === 524224);
                     resolve();
                 });
                 socket.connect();
@@ -775,13 +883,18 @@ if (typeof io !== 'undefined') {
         this.timeout(10000);
         socketIO();
     });
-
     describe('TypedArrays Socket-IO (as preset)', function () {
         this.timeout(10000);
         socketIO([socketio]);
     });
+    describe(
+        'TypedArrays Socket-IO (as type with arraybuffer)',
+        function () {
+            this.timeout(10000);
+            socketIO([arraybuffer, typedArraysSocketio], true);
+        }
+    );
 }
-*/
 
 describe('ImageData', () => {
     it('should get back an ImageData instance with the original data', () => {
@@ -1348,7 +1461,7 @@ describe('Presets', () => {
             try {
                 typeson.stringify(new Error('test'));
             } catch (err) {
-                console.log(err);
+                log(err);
                 caught = true;
             }
             assert(!caught, 'Did not catch error');
