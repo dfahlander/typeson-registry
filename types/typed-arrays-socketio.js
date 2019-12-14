@@ -1,6 +1,7 @@
 /* eslint-env browser, node */
 import Typeson from 'typeson';
 
+/* istanbul ignore next */
 const _global = typeof self === 'undefined' ? global : self;
 
 // Support all kinds of typed arrays (views of ArrayBuffers)
@@ -29,8 +30,8 @@ const typedArraysSocketIO = {};
                 a.byteLength === a.buffer.byteLength
                 ? a
                 // socket.io supports streaming ArrayBuffers.
-                //   If we have a typed array
-                // representing a portion of the buffer, we need to clone
+                // If we have a typed array representing a portion
+                //   of the buffer, we need to clone
                 //   the buffer before leaving it to socket.io.
                 : a.slice(0)).buffer;
         },

@@ -5,6 +5,8 @@ import path from 'path';
 import chai from 'chai';
 import jsdom from 'jsdom';
 import canvas from 'canvas';
+import socketIO from 'socket.io';
+import socketIOClient from 'socket.io-client';
 import Typeson from '../index.js';
 
 const __dirname = path.resolve(path.dirname(decodeURI(
@@ -66,6 +68,9 @@ global.mocha = {setup () {}, globals () {}, checkLeaks () {}, run () {}};
 
 global.imageTestFileNode = 'file://' + path.resolve(__dirname, 'Flag_of_the_United_Nations.png');
 
+global.io = socketIO();
+global.socketIOClient = socketIOClient;
+
 global.chai = window.chai = chai;
 
 global.Typeson = window.Typeson = Typeson;
@@ -78,7 +83,10 @@ global.Typeson = window.Typeson = Typeson;
 var tests; // eslint-disable-line no-var
 
 const {
-    createObjectURL, revokeObjectURL, xmlHttpRequestOverrideMimeType
+    createObjectURL, revokeObjectURL,
+
+    // NODE-ONLY
+    xmlHttpRequestOverrideMimeType
 } = await import('../polyfills/createObjectURL.js');
 
 // eslint-disable-next-line node/no-unsupported-features/node-builtins

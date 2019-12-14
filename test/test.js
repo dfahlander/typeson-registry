@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 /* globals Typeson */
+/* io, socketIOClient */
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
     FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
@@ -55,7 +56,7 @@ import {
 
 const {
     types: {
-        errors, typedArrays, intlTypes,
+        errors, typedArrays, intlTypes, // typedArraysSocketio,
         undef, primitiveObjects, nan, infinity,
         negativeInfinity, date, error,
         regexp, map, set, arraybuffer,
@@ -68,7 +69,7 @@ const {
         arrayNonindexKeys,
         builtin, universal, structuredCloningThrowing,
         structuredCloning, specialNumbers, postmessage,
-        undef: undefPreset, sparseUndefined
+        undef: undefPreset, sparseUndefined // , socketio
     }
 } = Typeson;
 
@@ -539,12 +540,6 @@ function BuiltIn (preset) {
         });
     });
 
-    /*
-    // TODO: Add for typed-arrays-socketio
-    describe('TypedArrays Socket-IO', () => {
-    });
-    */
-
     describe('DataView', () => {
         it('should return a DataView', () => {
             const typeson = new Typeson().register(preset || [dataview]);
@@ -712,6 +707,81 @@ function BuiltIn (preset) {
     }
 }
 describe('Built-in', BuiltIn);
+
+/**
+ * @todo Fix issues with preset, remove logging, add assertions
+ * @param {TypesonSpec} preset
+ * @returns {void}
+ */
+/*
+function socketIO (preset) {
+    it(
+        'can pass on typed arrays without Base64/JSON encoding',
+        function () {
+            class CustomClass {}
+            const TSON = new Typeson()
+                .register(preset || typedArraysSocketio).register({
+                    CustomClass: [
+                        (x) => x instanceof CustomClass,
+                        (c) => ({foo: c.foo, bar: c.bar}),
+                        (o) => new CustomClass(o.foo, o.bar)
+                    ]
+                });
+
+            const array = new Float64Array(65536);
+            array.fill(42, 0, 65536);
+
+            const array2 = new Float64Array(array.buffer, 64);
+            array2.fill(42, 0, 65536);
+
+            const data = {
+                date: new Date(),
+                error: new SyntaxError('Ooops!'),
+                array,
+                array2,
+                custom: new CustomClass('foo', 'bar')
+            };
+
+            io.on('connection', (socket) => {
+                const encapsulated = TSON.encapsulate(data);
+                socket.emit('myEvent', encapsulated);
+            });
+            const port = preset ? 3001 : 3002;
+            io.listen(port);
+
+            const socket = socketIOClient(`http://localhost:${port}`);
+            socket.on('connect', function () {
+                console.log('client connect');
+            });
+            socket.on('disconnect', function () {
+                socket.close();
+            });
+            // eslint-disable-next-line promise/avoid-new
+            return new Promise((resolve, reject) => {
+                socket.on('myEvent', function (e) {
+                    console.log('e', e.array instanceof Buffer);
+                    console.log('Got', TSON.revive(e).array instanceof Buffer);
+                    io.close();
+                    resolve();
+                });
+                socket.connect();
+            });
+        }
+    );
+}
+
+if (typeof io !== 'undefined') {
+    describe('TypedArrays Socket-IO (as type)', function () {
+        this.timeout(10000);
+        socketIO();
+    });
+
+    describe('TypedArrays Socket-IO (as preset)', function () {
+        this.timeout(10000);
+        socketIO([socketio]);
+    });
+}
+*/
 
 describe('ImageData', () => {
     it('should get back an ImageData instance with the original data', () => {
@@ -1317,8 +1387,6 @@ describe('Presets', () => {
         SpecialNumbers([specialNumbers]);
     });
 
-    // TODO: Add test for socketio
-
     describe('Undefined (as preset)', () => {
         Undefined([undefPreset]);
     });
@@ -1373,9 +1441,7 @@ describe('Polyfills', () => {
             req.open('GET', blobURL, false); // Sync
             expect(() => {
                 req.send();
-            }).to.throw(DOMException, `Failed to execute 'send' on ` +
-                `'XMLHttpRequest': Failed to ` +
-                `load '${blobURL}'`);
+            }).to.throw(DOMException);
         });
         it('should not negatively impact other `overrideMimeType`', () => {
             const req = new XMLHttpRequest();
