@@ -12,6 +12,9 @@ const blob = {
             // eslint-disable-next-line node/no-unsupported-features/node-builtins
             req.open('GET', URL.createObjectURL(b), false); // Sync
             req.send();
+
+            // Seems not feasible to accurately simulate
+            /* istanbul ignore next */
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
             }
@@ -38,6 +41,8 @@ const blob = {
                         stringContents: reader.result
                     });
                 });
+                // Seems not feasible to accurately simulate
+                /* istanbul ignore next */
                 reader.addEventListener('error', () => {
                     reject(reader.error);
                 });

@@ -12,6 +12,9 @@ const file = {
             // eslint-disable-next-line node/no-unsupported-features/node-builtins
             req.open('GET', URL.createObjectURL(f), false); // Sync
             req.send();
+
+            // Seems not feasible to accurately simulate
+            /* istanbul ignore next */
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad File access: ' + req.status);
             }
@@ -45,6 +48,8 @@ const file = {
                         lastModified: f.lastModified
                     });
                 });
+                // Seems not feasible to accurately simulate
+                /* istanbul ignore next */
                 reader.addEventListener('error', function () {
                     reject(reader.error);
                 });
