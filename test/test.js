@@ -1447,6 +1447,12 @@ describe('Presets', () => {
             expect(() => {
                 typeson.stringify(Symbol('test'));
             }).to.throw(DOMException);
+            // Todo: Waiting on https://github.com/whatwg/html/issues/5158
+            /*
+            expect(() => {
+                typeson.stringify(Object.prototype);
+            }).to.throw(DOMException);
+            */
             expect(() => {
                 typeson.stringify(document.createElement('br'));
             }).to.throw(DOMException);
