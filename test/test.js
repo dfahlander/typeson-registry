@@ -1426,6 +1426,18 @@ describe('Resurrectables', () => {
 describe('Presets', () => {
     describe('Built-in (as preset)', () => {
         BuiltIn([builtin]);
+        it('bigint and Map (Issue #15)', function () {
+            const typeson = new Typeson().register([builtin]);
+            const tson = typeson.stringify({
+                map: new Map([[1, 1n], [0, 1n]])
+            }, null, 2);
+            console.log('tson', tson);
+            const back = typeson.parse(tson);
+            console.log('back', back);
+            expect(back).to.deep.equal({
+                map: new Map([[1, 1n], [0, 1n]])
+            });
+        });
     });
 
     // TODO: Could add a shimmed `postMessage` test though covered
