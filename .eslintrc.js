@@ -48,6 +48,10 @@ module.exports = {
     },
     "overrides": [
         {
+            extends: [
+                'plugin:chai-friendly/recommended',
+                'plugin:chai-expect/recommended'
+            ],
             files: ["test/**.js", "browser-test/**.js", "windows-devinstall.js"],
             rules: {
                 'no-console': 'off'

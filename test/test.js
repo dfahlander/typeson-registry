@@ -4,7 +4,7 @@
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
     FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 // Todo [engine:node@>=7.6.0]: Remove `node/no-unsupported-features/es-syntax`
-/* eslint-disable no-unused-expressions, no-restricted-syntax,
+/* eslint-disable no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
 
 // import '../node_modules/core-js-bundle/minified.js';
@@ -353,7 +353,7 @@ function BuiltIn (preset) {
             let regex = new RegExp('ab?c', 'guy');
             let tson = typeson.stringify(regex, null, 2);
             let back = typeson.parse(tson);
-            expect(back instanceof RegExp);
+            assert(back instanceof RegExp);
             expect(back.global).to.equal(true);
             expect(back.unicode).to.equal(true);
             expect(back.sticky).to.equal(true);
@@ -364,7 +364,7 @@ function BuiltIn (preset) {
             regex = /ab?c/mi; // eslint-disable-line require-unicode-regexp
             tson = typeson.stringify(regex, null, 2);
             back = typeson.parse(tson);
-            expect(back instanceof RegExp);
+            assert(back instanceof RegExp);
             expect(back.global).to.equal(false);
             expect(back.unicode).to.equal(false);
             expect(back.sticky).to.equal(false);
@@ -429,7 +429,7 @@ function BuiltIn (preset) {
             const buf = new ArrayBuffer(16);
             const tson = typeson.stringify(buf, null, 2);
             const back = typeson.parse(tson);
-            expect(back instanceof ArrayBuffer);
+            assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
         });
         it('should return the same ArrayBuffer instance', () => {
@@ -442,8 +442,8 @@ function BuiltIn (preset) {
             };
             const tson = typeson.stringify(obj, null, 2);
             const back = typeson.parse(tson);
-            expect(back.buf1 instanceof ArrayBuffer);
-            expect(back.buf2 instanceof ArrayBuffer);
+            assert(back.buf1 instanceof ArrayBuffer);
+            assert(back.buf2 instanceof ArrayBuffer);
             expect(back.buf1).to.equal(back.buf2);
         });
     });
@@ -609,7 +609,7 @@ function BuiltIn (preset) {
             const expectedLocale = collator.resolvedOptions().locale;
             const tson = typeson.stringify(collator, null, 2);
             const back = typeson.parse(tson);
-            expect(back instanceof Intl.Collator);
+            assert(back instanceof Intl.Collator);
             // console.log(Intl.Collator.supportedLocalesOf(
             //    Object.keys(optsClone.locales), optsClone.localeMatcher
             // ));
@@ -644,7 +644,7 @@ function BuiltIn (preset) {
             const dtf = new Intl.DateTimeFormat(locales, opts);
             const tson = typeson.stringify(dtf, null, 2);
             const back = typeson.parse(tson);
-            expect(back instanceof Intl.DateTimeFormat);
+            assert(back instanceof Intl.DateTimeFormat);
             Object.keys(optsClone).filter(
                 (k) => ![
                     // These would ideally be present but are not
@@ -673,7 +673,7 @@ function BuiltIn (preset) {
             const dtf = new Intl.NumberFormat(locales, opts);
             const tson = typeson.stringify(dtf, null, 2);
             const back = typeson.parse(tson);
-            expect(back instanceof Intl.NumberFormat);
+            assert(back instanceof Intl.NumberFormat);
             Object.keys(optsClone).filter(
                 (k) => ![
                     // These would ideally be present but are not

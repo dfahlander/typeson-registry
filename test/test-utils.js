@@ -1,4 +1,4 @@
-/* eslint-disable jsdoc/require-jsdoc */
+/* eslint-disable jsdoc/require-jsdoc, chai-friendly/no-unused-expressions */
 
 function Person (name, age, dob, isMarried) {
     name && (this.name = name);
