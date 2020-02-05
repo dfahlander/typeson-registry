@@ -730,7 +730,14 @@ function socketIO (preset, typeWithBufferEncoding) {
             ? 'can pass on typed arrays with Base64/JSON encoding'
             : 'can pass on typed arrays without Base64/JSON encoding',
         function () {
+            /**
+             * A sample custom class.
+             */
             class CustomClass {
+                /**
+                 * @param {any} foo
+                 * @param {any} bar
+                 */
                 constructor (foo, bar) {
                     this.foo = foo;
                     this.bar = bar;
