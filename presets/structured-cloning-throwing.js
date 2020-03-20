@@ -2,22 +2,6 @@
 import structuredCloning from './structured-cloning.js';
 
 export default structuredCloning.concat({
-    // Todo: Waiting on https://github.com/whatwg/html/issues/5158
-    /*
-    checkDataCloneExceptionPrototype: {
-        testPlainObjects: true,
-        test (val) {
-            // A non-array exotic object but note this is not throwing in
-            //   Chrome `postMessage`
-            if (val === Object.prototype) {
-                throw new DOMException(
-                    'The object cannot be cloned.', 'DataCloneError'
-                );
-            }
-            return false;
-        }
-    },
-    */
     checkDataCloneException: {
         test (val) {
             // Should also throw with:
@@ -27,7 +11,8 @@ export default structuredCloning.concat({
             //       function's `toStringTag`)
             // 3. internal slots besides [[Prototype]] or [[Extensible]] (e.g.,
             //        [[PromiseState]] or [[WeakMapData]])
-            // 4. exotic object (e.g., `Proxy`) (which does not have default
+            // 4. exotic object (e.g., `Proxy`) (unless an `%ObjectPrototype%`
+            //      intrinsic object) (which does not have default
             //      behavior for one or more of the essential internal methods
             //      that are limited to the following for non-function objects
             //      (we auto-exclude functions):
