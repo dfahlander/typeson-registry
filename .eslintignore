@@ -2,3 +2,4 @@ dist/
 polyfills/createObjectURL-cjs.js
 coverage
 node_modules
+!.*.js

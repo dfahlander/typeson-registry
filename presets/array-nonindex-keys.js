@@ -11,13 +11,13 @@ const arrayNonindexKeys = [
                         //  non-index keys will be larger however
                         Object.keys(x).some((k) => {
                             //  No need to check for `isNaN` or
-                            //   `isNaN(parseInt())` as `NaN` will be treated
-                            //   as a string.
-                            //  No need to do check as `parseInt(Number())`
-                            //   since scientific notation will be
-                            //   pre-resolved if a number was given, and it
-                            //   will otherwise be a string
-                            return String(parseInt(k)) !== k;
+                            //   `isNaN(Number.parseInt())` as `NaN` will be
+                            //   treated as a string.
+                            //  No need to do check as
+                            //   `Number.parseInt(Number())` since scientific
+                            //   notation will be pre-resolved if a number
+                            //   was given, and it will otherwise be a string
+                            return String(Number.parseInt(k)) !== k;
                         })
                     ) {
                         stateObj.iterateIn = 'object';

@@ -15,7 +15,7 @@ const TSON = new Typeson().register(Typeson.presets.postmessage);
 
 const worker = new Worker('worker.js');
 worker.postMessage(TSON.encapsulate({
-    a: NaN,
+    a: Number.NaN,
     b: Infinity,
     c: -Infinity,
     d: new Error('oops')

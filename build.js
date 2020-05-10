@@ -6,7 +6,7 @@ import {join, dirname, resolve} from 'path';
 import util from 'util';
 
 import {rollup} from 'rollup';
-import babel from 'rollup-plugin-babel';
+import babel from '@rollup/plugin-babel';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
@@ -167,6 +167,7 @@ async function bundle ({input, output, name, format = 'umd'}) {
     ];
     if (format !== 'es') {
         plugins.unshift(babel({
+            babelHelpers: 'bundled',
             // This was otherwise not picking up `.babelrc` for some reason
             presets: [
                 ['@babel/env', {

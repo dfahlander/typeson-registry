@@ -1,4 +1,3 @@
-/* globals mocha, run, XMLHttpRequest */
 /* eslint-env node */
 import path from 'path';
 
@@ -94,7 +93,7 @@ if (!URL.createObjectURL) {
     // Does not work for the browser
     // eslint-disable-next-line node/no-unsupported-features/node-builtins
     URL.createObjectURL = createObjectURL;
-    XMLHttpRequest.prototype.overrideMimeType =
+    global.XMLHttpRequest.prototype.overrideMimeType =
         xmlHttpRequestOverrideMimeType();
 }
 
@@ -107,18 +106,18 @@ if (!URL.revokeObjectURL) {
 global.xmlHttpRequestOverrideMimeType = xmlHttpRequestOverrideMimeType;
 
 // Filed https://github.com/eslint/eslint/issues/11808 to allow
-/* eslint-disable no-process-env */
+/* eslint-disable node/no-process-env */
 if (process.env.npm_config_test) {
     tests = [process.env.npm_config_test];
     console.log('Running test: ' + process.env.npm_config_test);
-    /* eslint-enable no-process-env */
+    /* eslint-enable node/no-process-env */
 } else {
     tests = [
         './test.js'
     ];
 }
-await Promise.all(tests.map(function (test) {
-    return import(test);
+await Promise.all(tests.map(function (tst) {
+    return import(tst);
 }));
 
 // See https://mochajs.org/#delayed-root-suite
