@@ -46,10 +46,13 @@ const revokeObjectURL = function (blobURL) {
 };
 
 const impl = utils.implSymbol;
-const _xhropen = XMLHttpRequest.prototype.open;
+
 // We only handle the case of binary, so no need to override `open`
 //   in all cases; but this only works if override is called first
 const xmlHttpRequestOverrideMimeType = function ({polyfillDataURLs} = {}) {
+    // Set these references late in case global `XMLHttpRequest` has since
+    //  been changed/set
+    const _xhropen = XMLHttpRequest.prototype.open;
     const _xhrOverrideMimeType = XMLHttpRequest.prototype.overrideMimeType;
     return function (mimeType, ...args) {
         if (mimeType === 'text/plain; charset=x-user-defined') {
