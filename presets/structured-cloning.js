@@ -55,7 +55,7 @@ const expObj = [
     /* istanbul ignore next */
     typeof Intl !== 'undefined' ? intlTypes : [],
     /* istanbul ignore next */
-    typeof CryptoKey !== 'undefined' ? crypto : [],
+    typeof global.crypto !== 'undefined' ? crypto : [],
     /* istanbul ignore next */
     typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []
 );

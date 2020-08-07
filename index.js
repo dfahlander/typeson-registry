@@ -7,6 +7,7 @@ import bigintObject from './types/bigint-object.js';
 import bigint from './types/bigint.js';
 import blob from './types/blob.js';
 import cloneable from './types/cloneable.js';
+import crypto from './types/crypto.js';
 import dataview from './types/dataview.js';
 import date from './types/date.js';
 import error from './types/error.js';
@@ -44,7 +45,7 @@ import undefPreset from './presets/undef.js';
 import universal from './presets/universal.js';
 
 Typeson.types = {
-    arraybuffer, bigintObject, bigint, blob, cloneable, dataview, date, error,
+    arraybuffer, bigintObject, bigint, blob, cloneable, crypto, dataview, date, error,
     errors, file, filelist, imagebitmap, imagedata, infinity, intlTypes, map,
     nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects, regexp,
     resurrectable, set, typedArraysSocketio, typedArrays, undef, userObject
