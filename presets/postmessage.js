@@ -16,12 +16,10 @@ custom types after having registered these.
 
 import error from '../types/error.js';
 import errors from '../types/errors.js';
-import crypto from '../types/crypto.js'
 
 const postmessage = [
     error,
-    errors,
-    crypto,
+    errors
 ];
 
 export default postmessage;
