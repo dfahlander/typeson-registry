@@ -372,6 +372,29 @@ function BuiltIn (preset) {
             expect(back.multiline).to.equal(true);
             expect(back.source).to.equal('ab?c');
         });
+
+        it('should return a RegExp (lastIndex)', () => {
+            const typeson = new Typeson().register(preset || [regexp]);
+            const regex = /foo/ug;
+            const input = 'table football, foosball';
+
+            regex.test(input);
+            expect(regex.lastIndex).to.equal(9);
+
+            const tson = typeson.stringify(regex, null, 2);
+            const back = typeson.parse(tson);
+            assert(back instanceof RegExp);
+            expect(back.lastIndex).to.equal(9);
+            expect(back.global).to.equal(true);
+            expect(back.unicode).to.equal(true);
+            expect(back.sticky).to.equal(false);
+            expect(back.ignoreCase).to.equal(false);
+            expect(back.multiline).to.equal(false);
+            expect(back.source).to.equal('ab?c');
+
+            regex.test(input);
+            expect(back.lastIndex).to.equal(19);
+        });
     });
 
     describe('Map', () => {

@@ -6,14 +6,15 @@ const regexp = {
         replace (rexp) {
             return {
                 source: rexp.source,
-                flags: (rexp.global ? 'g' : '') +
-                    (rexp.ignoreCase ? 'i' : '') +
-                    (rexp.multiline ? 'm' : '') +
-                    (rexp.sticky ? 'y' : '') +
-                    (rexp.unicode ? 'u' : '')
+                flags: rexp.flags,
+                lastIndex: rexp.lastIndex,
             };
         },
-        revive ({source, flags}) { return new RegExp(source, flags); }
+        revive ({source, flags, lastIndex}) {
+            const rexp = new RegExp(source, flags);
+            rexp.lastIndex = lastIndex || 0;
+            return rexp;
+        }
     }
 };
 
