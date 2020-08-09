@@ -8,8 +8,6 @@ const blob = {
         replace (b) { // Sync
             const req = new XMLHttpRequest();
             req.overrideMimeType('text/plain; charset=x-user-defined');
-            // eslint-disable-next-line max-len
-            // eslint-disable-next-line node/no-unsupported-features/node-builtins
             req.open('GET', URL.createObjectURL(b), false); // Sync
             req.send();
 
