@@ -6,6 +6,7 @@ import jsdom from 'jsdom';
 import canvas from 'canvas';
 import socketIO from 'socket.io';
 import socketIOClient from 'socket.io-client';
+import {Crypto} from 'node-webcrypto-ossl';
 import Typeson from '../index.js';
 
 const __dirname = path.resolve(path.dirname(decodeURI(
@@ -42,6 +43,10 @@ global.Blob = window.Blob;
 global.File = window.File;
 global.DOMException = window.DOMException;
 global.performance = window.performance;
+
+const crypto = new Crypto();
+
+global.crypto = crypto;
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 global.createImageBitmap = function (cvs) {
