@@ -7,7 +7,6 @@ import canvas from 'canvas';
 import socketIO from 'socket.io';
 import socketIOClient from 'socket.io-client';
 import {Crypto} from 'node-webcrypto-ossl';
-import Typeson from '../index.js';
 
 const __dirname = path.resolve(path.dirname(decodeURI(
     new URL(import.meta.url).pathname
@@ -47,6 +46,10 @@ global.performance = window.performance;
 const crypto = new Crypto();
 
 global.crypto = crypto;
+
+// Require after defining `crypto` globally
+// eslint-disable-next-line no-undef, import/no-commonjs
+const Typeson = require('../index.js').default;
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 global.createImageBitmap = function (cvs) {

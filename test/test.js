@@ -1497,7 +1497,7 @@ describe('Presets', () => {
     });
     describe('Structured cloning', () => {
         NonindexKeys(structuredCloningThrowing);
-        // CryptoKey(structuredCloningThrowing);
+        CryptoKey(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             expect(() => {
