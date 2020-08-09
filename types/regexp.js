@@ -7,7 +7,7 @@ const regexp = {
             return {
                 source: rexp.source,
                 flags: rexp.flags,
-                lastIndex: rexp.lastIndex,
+                lastIndex: rexp.lastIndex
             };
         },
         revive ({source, flags, lastIndex}) {
