@@ -57,7 +57,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             throw err;
         }
     }
-    let currentLine = '';
+    let currentLine = '    ';
     moduleStrings[dir] = '';
     const dirPath = join(__dirname, '/', dir);
     // Todo: Would be faster to `Promise.all` on concatenation of all
@@ -79,8 +79,9 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
                 (i === 0 ? 0 : 1) + // space
                 fileString.length +
                 1; // comma
+            const maxWidth = 80;
             // Shouldn't be adding more than 80 chars
-            if (wouldbeLength / 80 > 1) {
+            if (wouldbeLength / maxWidth > 1) {
                 moduleStrings[dir] += '\n';
                 currentLine = currentAddition = `    ${fileString},`;
             } else {
@@ -90,7 +91,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             moduleStrings[dir] += currentAddition;
 
             let reqStr = `import ${fileName} from './${dir}/${f}';\n`;
-            if (reqStr.length >= 80) {
+            if (reqStr.length >= maxWidth) {
                 reqStr = `import ${fileName} from\n    './${dir}/${f}';\n`;
             }
             bundle({

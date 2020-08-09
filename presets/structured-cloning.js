@@ -22,7 +22,7 @@ import blob from '../types/blob.js';
 import bigint from '../types/bigint.js';
 import bigintObject from '../types/bigint-object.js';
 
-import crypto from '../types/crypto.js';
+import cryptokey from '../types/cryptokey.js';
 
 const expObj = [
     // Todo: Might also register synchronous `ImageBitmap` and
@@ -55,7 +55,7 @@ const expObj = [
     /* istanbul ignore next */
     typeof Intl !== 'undefined' ? intlTypes : [],
     /* istanbul ignore next */
-    typeof global.crypto !== 'undefined' ? crypto : [],
+    typeof crypto !== 'undefined' ? cryptokey : [],
     /* istanbul ignore next */
     typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []
 );

@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 /* globals Typeson, io, socketIOClient */
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
-/* globals ImageData, createImageBitmap, Blob, FileReader, File,
+/* globals ImageData, createImageBitmap, Blob, FileReader, File, crypto,
     FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
@@ -73,7 +73,8 @@ const {
         dataview, imagedata, imagebitmap,
         blob, file, filelist, nonbuiltinIgnore,
         userObject, cloneable, resurrectable,
-        bigint, bigintObject
+        bigint, bigintObject,
+        cryptokey
     },
     presets: {
         arrayNonindexKeys,
@@ -717,6 +718,37 @@ function BuiltIn (preset) {
     }
 }
 describe('Built-in', BuiltIn);
+
+/**
+* @param {TypesonPreset} [preset]
+* @returns {void}
+ */
+function CryptoKey (preset) {
+    describe('CryptoKey', () => {
+        it('CryptoKey', async () => {
+            const typeson = new Typeson().register(preset || cryptokey);
+            const key = await crypto.subtle.generateKey(
+                {
+                    name: 'HMAC',
+                    hash: {name: 'SHA-512'}
+                },
+                true, // Extractable
+                ['sign', 'verify']
+            );
+            const jwk = await crypto.subtle.exportKey('jwk', key);
+            const tson = await typeson.stringifyAsync(
+                key, null, 2
+            );
+            const back = await typeson.parseAsync(tson);
+            // console.log('back', back);
+            const jwkResult = await crypto.subtle.exportKey('jwk', back);
+            expect(Typeson.toStringTag(back)).to.equal('CryptoKey');
+            expect(JSON.stringify(jwk)).to.equal(JSON.stringify(jwkResult));
+        });
+    });
+}
+
+CryptoKey();
 
 /**
  * @param {TypesonSpec} preset
@@ -1465,6 +1497,7 @@ describe('Presets', () => {
     });
     describe('Structured cloning', () => {
         NonindexKeys(structuredCloningThrowing);
+        // CryptoKey(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             expect(() => {

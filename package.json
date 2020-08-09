@@ -93,6 +93,7 @@
     "jsdom": "16.2.2",
     "mocha": "^7.1.2",
     "node-static": "0.7.11",
+    "node-webcrypto-ossl": "^2.1.0",
     "nyc": "^15.0.1",
     "open-cli": "^6.0.1",
     "regenerator-runtime": "^0.13.5",
