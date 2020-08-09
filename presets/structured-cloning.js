@@ -22,7 +22,7 @@ import blob from '../types/blob.js';
 import bigint from '../types/bigint.js';
 import bigintObject from '../types/bigint-object.js';
 
-import crypto from '../types/crypto.js'
+import crypto from '../types/crypto.js';
 
 const expObj = [
     // Todo: Might also register synchronous `ImageBitmap` and
