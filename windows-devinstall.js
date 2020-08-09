@@ -4,16 +4,13 @@ import path from 'path';
 import util from 'util';
 
 // Todo: Remove after engines supporting Node 11 (and use fs.promises instead)
-/* eslint-disable node/no-unsupported-features/node-builtins */
 const readdir = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
-/* eslint-enable node/no-unsupported-features/node-builtins */
 
 const isWin = process.platform.startsWith('win');
 
 // Todo: Remove after engines supporting Node 7.6.0
-/* eslint-disable node/no-unsupported-features/es-syntax */
 /**
  *
  * @param {string} fromPath
@@ -64,7 +61,6 @@ if (isWin) {
         throw new Error('Could not list the directory contents.');
     }
     files.filter((f) => f.endsWith('.dll')).forEach(async (file) => {
-        /* eslint-enable node/no-unsupported-features/es-syntax */
         const targetPath = targetDir + '\\' + file;
         await copy(pathToGTKBin + file, targetPath);
         console.log('Copied missing file to: ' + targetPath);

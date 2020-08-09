@@ -45,10 +45,11 @@ import undefPreset from './presets/undef.js';
 import universal from './presets/universal.js';
 
 Typeson.types = {
-    arraybuffer, bigintObject, bigint, blob, cloneable, crypto, dataview, date, error,
-    errors, file, filelist, imagebitmap, imagedata, infinity, intlTypes, map,
-    nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects, regexp,
-    resurrectable, set, typedArraysSocketio, typedArrays, undef, userObject
+    arraybuffer, bigintObject, bigint, blob, cloneable, crypto, dataview,
+    date, error, errors, file, filelist, imagebitmap, imagedata, infinity,
+    intlTypes, map, nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects,
+    regexp, resurrectable, set, typedArraysSocketio, typedArrays, undef,
+    userObject
 };
 Typeson.presets = {
     arrayNonindexKeys, builtin, postmessage, socketio, sparseUndefined,

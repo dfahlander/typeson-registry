@@ -3,7 +3,6 @@
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File,
     FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
-// Todo [engine:node@>=7.6.0]: Remove `node/no-unsupported-features/es-syntax`
 /* eslint-disable no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
 
@@ -1577,10 +1576,8 @@ describe('Polyfills', () => {
                 'test'
             ]);
 
-            /* eslint-disable node/no-unsupported-features/node-builtins */
             const blobURL = URL.createObjectURL(blob1);
             URL.revokeObjectURL(blobURL);
-            /* eslint-enable node/no-unsupported-features/node-builtins */
 
             const req = new XMLHttpRequest();
             req.overrideMimeType('text/plain; charset=x-user-defined');
@@ -1619,9 +1616,7 @@ describe('Polyfills', () => {
             };
             const blb = new Blob(['test']);
             xhr.overrideMimeType('text/plain; charset=x-user-defined');
-            /* eslint-disable node/no-unsupported-features/node-builtins */
             xhr.open('GET', URL.createObjectURL(blb), false); // Sync
-            /* eslint-enable node/no-unsupported-features/node-builtins */
             xhr.send();
             XMLHttpRequest.prototype.overrideMimeType = temp;
             expect(xhr.status).to.equal(200);

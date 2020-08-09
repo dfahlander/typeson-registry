@@ -1,6 +1,5 @@
 /* eslint-env node */
-/* eslint-disable no-console,
-    node/no-unsupported-features/es-syntax */
+/* eslint-disable no-console */
 import fs from 'fs';
 import {join, dirname, resolve} from 'path';
 import util from 'util';
@@ -12,9 +11,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
 
 // fs.promises is not available until Node 11 (and need for URL until 10.0.0)
-/* eslint-disable node/no-unsupported-features/node-builtins */
 
-// Use this instead of the following when engines >= 10.12.0
+// Todo[engine:node@>=10.12.0]: Use this instead of the following
 // import {fileURLToPath} from 'url';
 // const __dirname = dirname(fileURLToPath(import.meta.url));
 const __dirname = resolve(
@@ -23,7 +21,6 @@ const __dirname = resolve(
 
 const mkdir = util.promisify(fs.mkdir);
 const readdir = util.promisify(fs.readdir);
-/* eslint-enable node/no-unsupported-features/node-builtins */
 
 const prologue =
 // Todo: Integrate source-map-support?
