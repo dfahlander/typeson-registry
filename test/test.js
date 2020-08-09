@@ -359,7 +359,9 @@ function BuiltIn (preset) {
             expect(back.sticky).to.equal(true);
             expect(back.ignoreCase).to.equal(false);
             expect(back.multiline).to.equal(false);
+            expect(back.dotAll).to.equal(false);
             expect(back.source).to.equal('ab?c');
+            expect(back.flags).to.equal('guy');
 
             regex = /ab?c/im; // eslint-disable-line require-unicode-regexp
             tson = typeson.stringify(regex, null, 2);
@@ -370,7 +372,9 @@ function BuiltIn (preset) {
             expect(back.sticky).to.equal(false);
             expect(back.ignoreCase).to.equal(true);
             expect(back.multiline).to.equal(true);
+            expect(back.dotAll).to.equal(false);
             expect(back.source).to.equal('ab?c');
+            expect(back.flags).to.equal('im');
         });
 
         it('should return a RegExp (lastIndex)', () => {
@@ -390,10 +394,9 @@ function BuiltIn (preset) {
             expect(back.sticky).to.equal(false);
             expect(back.ignoreCase).to.equal(false);
             expect(back.multiline).to.equal(false);
-            expect(back.source).to.equal('ab?c');
-
-            regex.test(input);
-            expect(back.lastIndex).to.equal(19);
+            expect(back.dotAll).to.equal(false);
+            expect(back.source).to.equal('foo');
+            expect(back.flags).to.equal('gu');
         });
     });
 
