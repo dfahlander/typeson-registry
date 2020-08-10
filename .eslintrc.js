@@ -91,6 +91,19 @@ module.exports = {
             }
         },
         {
+            files: [
+                'test/test-node.js',
+                'polyfills/createObjectURL.js',
+                'windows-devinstall.js'
+            ],
+            env: {
+                node: true
+            },
+            rules: {
+                'compat/compat': 0
+            }
+        },
+        {
             files: ['**/*.md'],
             settings: {
                 polyfills: ['Float64Array', 'Int8Array']
@@ -123,6 +136,9 @@ module.exports = {
         }
     ],
     rules: {
+        // Disable for now
+        'eslint-comments/require-description': 0,
+
         indent: ['error', 4, {outerIIFEBody: 0}],
         'node/no-unsupported-features/es-builtins': ['error', {
             ignores: ['BigInt']

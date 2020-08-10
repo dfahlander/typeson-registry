@@ -15,6 +15,7 @@ const isWin = process.platform.startsWith('win');
  *
  * @param {string} fromPath
  * @param {string} toPath
+ * @throws {Error}
  * @returns {void}
  */
 async function copy (fromPath, toPath) {

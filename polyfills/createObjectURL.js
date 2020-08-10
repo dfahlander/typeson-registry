@@ -1,4 +1,3 @@
-/* eslint-env node */
 /* globals location, XMLHttpRequest, DOMException */
 
 // Imperfectly polyfill jsdom for testing `Blob`/`File`

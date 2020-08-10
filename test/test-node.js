@@ -1,4 +1,3 @@
-/* eslint-env node */
 import path from 'path';
 
 import chai from 'chai';
@@ -16,7 +15,7 @@ const {JSDOM} = jsdom;
 
 const dom = new JSDOM('', {
     // Needed to load an image file
-    // https://github.com/tmpvar/jsdom#external-resources
+    // https://github.com/jsdom/jsdom#loading-subresources
     resources: 'usable'
 });
 
@@ -47,10 +46,6 @@ const crypto = new Crypto();
 
 global.crypto = crypto;
 
-// Require after defining `crypto` globally
-// eslint-disable-next-line no-undef, import/no-commonjs
-const Typeson = require('../index.js').default;
-
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 global.createImageBitmap = function (cvs) {
     // eslint-disable-next-line promise/avoid-new
@@ -78,12 +73,15 @@ global.socketIOClient = socketIOClient;
 
 global.chai = window.chai = chai;
 
-global.Typeson = window.Typeson = Typeson;
-// var Typeson = require('../dist/all.js');
-
 (async function () {
 // require('./test-environment.js');
 var tests; // eslint-disable-line no-var
+
+// Require after defining `crypto` globally
+const Typeson = (await import('../index.js')).default;
+
+global.Typeson = window.Typeson = Typeson;
+// var Typeson = require('../dist/all.js');
 
 const {
     createObjectURL, revokeObjectURL,
