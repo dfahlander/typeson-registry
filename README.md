@@ -10,7 +10,7 @@ The type registry for [typeson](https://github.com/dfahlander/typeson).
 See below for notes on these types and presets.
 
 Note that some types will require polyfills in Node such as via
-[`jsdom`](https://github.com/tmpvar/jsdom/).
+[`jsdom`](https://github.com/jsdom/jsdom).
 See the testing environment of `test/test.js` for some examples.
 
 ## Installation
