@@ -35,6 +35,7 @@
     "statements": 100,
     "exclude": [
       "build.js",
+      "dist",
       "windows-devinstall.js",
       ".ncurc.js",
       ".eslintrc.js",
