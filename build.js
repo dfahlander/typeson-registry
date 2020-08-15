@@ -7,7 +7,7 @@ import util from 'util';
 import {rollup} from 'rollup';
 import babel from '@rollup/plugin-babel';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import commonjs from 'rollup-plugin-commonjs';
+import commonjs from '@rollup/plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
 
 // fs.promises is not available until Node 11 (and need for URL until 10.0.0)
