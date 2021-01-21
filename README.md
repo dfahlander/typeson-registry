@@ -82,7 +82,7 @@ const TSON = new Typeson().register([
 const tson = TSON.stringify({
     Hello: 'world',
     date: new Date(),
-    error: new Error(),
+    error: new Error('test'),
     inner: {
         x: /foo/gui,
         bin: new Uint8Array(64)
@@ -97,7 +97,7 @@ console.log(tson);
   "date": 1464049031538,
   "error": {
     "name": "Error",
-    "message": ""
+    "message": "test"
   },
   "inner": {
     "x": {

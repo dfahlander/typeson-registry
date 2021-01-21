@@ -147,7 +147,7 @@ ws.on('finish', async () => {
  * @param {string} cfg.input
  * @param {string} cfg.output
  * @param {string} cfg.name
- * @param {string} [cfg.format='umd'}]
+ * @param {string} [cfg.format="umd"]
  * @returns {Promise<external:RollupOutput[]>}
  */
 async function bundle ({input, output, name, format = 'umd'}) {

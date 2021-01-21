@@ -115,6 +115,7 @@ if (process.env.npm_config_test) {
     ];
 }
 await Promise.all(tests.map(function (tst) {
+    // eslint-disable-next-line no-unsanitized/method
     return import(tst);
 }));
 

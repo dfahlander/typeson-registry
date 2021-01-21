@@ -1,8 +1,8 @@
 const negativeInfinity = {
     negativeInfinity: {
-        test (x) { return x === -Infinity; },
+        test (x) { return x === Number.NEGATIVE_INFINITY; },
         replace (n) { return '-Infinity'; },
-        revive (s) { return -Infinity; }
+        revive (s) { return Number.NEGATIVE_INFINITY; }
     }
 };
 

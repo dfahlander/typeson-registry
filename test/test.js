@@ -145,15 +145,15 @@ function SpecialNumbers (preset) {
         });
         it('Infinity', () => {
             const typeson = new Typeson().register(preset || infinity);
-            const tson = typeson.stringify(Infinity, null, 2);
+            const tson = typeson.stringify(Number.POSITIVE_INFINITY, null, 2);
             const back = typeson.parse(tson);
-            expect(back).to.equal(Infinity);
+            expect(back).to.equal(Number.POSITIVE_INFINITY);
         });
         it('-Infinity', () => {
             const typeson = new Typeson().register(preset || negativeInfinity);
-            const tson = typeson.stringify(-Infinity, null, 2);
+            const tson = typeson.stringify(Number.NEGATIVE_INFINITY, null, 2);
             const back = typeson.parse(tson);
-            expect(back).to.equal(-Infinity);
+            expect(back).to.equal(Number.NEGATIVE_INFINITY);
         });
         it('should not mistake string forms of the special numbers', () => {
             const typeson = new Typeson().register(preset || [
