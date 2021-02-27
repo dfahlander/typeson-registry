@@ -1,5 +1,6 @@
 import path from 'path';
 
+// eslint-disable-next-line no-shadow -- This is not a regular test file
 import chai from 'chai';
 import jsdom from 'jsdom';
 import canvas from 'canvas';

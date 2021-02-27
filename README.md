@@ -161,11 +161,11 @@ require them as AMD modules with requirejs if you prefer.
 
     const TSON = new Typeson().register(Typeson.presets.builtin);
     const tson = TSON.stringify({
-        Hello: "world",
+        Hello: 'world',
         date: new Date(),
-        error: new Error(),
+        error: new Error('err'),
         inner: {
-            x: /foo/ig,
+            x: /foo/giu,
             bin: new Uint8Array(64)
         }
     }, null, 2);
@@ -178,7 +178,7 @@ require them as AMD modules with requirejs if you prefer.
       "date": 1464049031538,
       "error": {
         "name": "Error",
-        "message": ""
+        "message": "err"
       },
       "inner": {
         "x": {

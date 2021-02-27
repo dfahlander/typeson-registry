@@ -6,9 +6,6 @@
 /* eslint-disable no-restricted-syntax,
     node/no-unsupported-features/es-syntax */
 
-// import '../node_modules/core-js-bundle/minified.js';
-import '../node_modules/regenerator-runtime/runtime.js';
-
 import './test-environment.js';
 import util from './test-utils.js';
 
@@ -935,15 +932,21 @@ if (typeof io !== 'undefined') {
 }
 
 describe('ImageData', () => {
-    it('should get back an ImageData instance with the original data', () => {
-        const typeson = new Typeson().register(imagedata);
-        const imageData = new ImageData(1, 3);
-        const tson = typeson.stringify(imageData);
-        const back = typeson.parse(tson);
-        expect(back.width).to.equal(1);
-        expect(back.height).to.equal(3);
-        expect(back.data).to.deep.equal(new Uint8ClampedArray(12));
-    });
+    // https://github.com/Automattic/node-canvas/issues/1646
+    if (typeof process === 'undefined' || !process.version.startsWith('v14')) {
+        it(
+            'should get back an ImageData instance with the original data',
+            () => {
+                const typeson = new Typeson().register(imagedata);
+                const imageData = new ImageData(1, 3);
+                const tson = typeson.stringify(imageData);
+                const back = typeson.parse(tson);
+                expect(back.width).to.equal(1);
+                expect(back.height).to.equal(3);
+                expect(back.data).to.deep.equal(new Uint8ClampedArray(12));
+            }
+        );
+    }
 });
 
 describe('ImageBitmap', function () {
