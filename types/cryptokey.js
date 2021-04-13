@@ -7,25 +7,22 @@ const cryptokey = {
             return Typeson.toStringTag(x) === 'CryptoKey' && x.extractable;
         },
         replaceAsync (key) {
-            return new Typeson.Promise((resolve, reject) => {
-                // eslint-disable-next-line promise/catch-or-return
-                crypto.subtle.exportKey('jwk', key).catch(
-                    /* eslint-disable promise/prefer-await-to-callbacks */
+            return new Typeson.Promise(async (resolve, reject) => {
+                let jwk;
+                try {
+                    jwk = await crypto.subtle.exportKey('jwk', key);
+                // istanbul ignore next
+                } catch (err) {
+                    // eslint-disable-next-line max-len
+                    // istanbul ignore next -- Our format should be valid and our key extractable
+                    reject(err);
                     // istanbul ignore next
-                    (err) => {
-                        /* eslint-enable promise/prefer-await-to-callbacks */
-                        // eslint-disable-next-line max-len
-                        // istanbul ignore next -- Our format should be valid and our key extractable
-                        reject(err);
-                    }
-                // eslint-disable-next-line max-len
-                // eslint-disable-next-line promise/always-return, promise/prefer-await-to-then
-                ).then((jwk) => {
-                    resolve({
-                        jwk,
-                        algorithm: key.algorithm,
-                        usages: key.usages
-                    });
+                    return;
+                }
+                resolve({
+                    jwk,
+                    algorithm: key.algorithm,
+                    usages: key.usages
                 });
             });
         },
