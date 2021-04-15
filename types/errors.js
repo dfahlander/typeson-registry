@@ -19,8 +19,22 @@ const errors = {};
     if (Cnstrctr) {
         errors[errName.toLowerCase()] = {
             test (x) { return Typeson.hasConstructorOf(x, Cnstrctr); },
-            replace (e) { return e.message; },
-            revive (message) { return new Cnstrctr(message); }
+            replace ({
+                name, message, stack, fileName, lineNumber, columnNumber
+            }) {
+                return {
+                    name, message, stack, fileName, lineNumber, columnNumber
+                };
+            },
+            revive (obj) {
+                const e = new Cnstrctr(obj.message);
+                [
+                    'name', 'stack', 'fileName', 'lineNumber', 'columnNumber'
+                ].forEach((prop) => {
+                    e[prop] = obj[prop];
+                });
+                return e;
+            }
         };
     }
 });
