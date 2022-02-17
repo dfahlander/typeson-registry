@@ -1,8 +1,8 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const date = {
     date: {
-        test (x) { return Typeson.toStringTag(x) === 'Date'; },
+        test (x) { return toStringTag(x) === 'Date'; },
         replace (dt) {
             const time = dt.getTime();
             if (Number.isNaN(time)) {

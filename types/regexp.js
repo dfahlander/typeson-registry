@@ -1,8 +1,8 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const regexp = {
     regexp: {
-        test (x) { return Typeson.toStringTag(x) === 'RegExp'; },
+        test (x) { return toStringTag(x) === 'RegExp'; },
         replace (rexp) {
             return {
                 source: rexp.source,

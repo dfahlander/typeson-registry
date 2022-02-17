@@ -1,6 +1,6 @@
-// This does not preserve `undefined` in sparse arrays; see the `undefined`
+// This does not preserve `undefined` in sparse arrays; see the `undef`
 //  or `sparse-undefined` preset
-import Typeson from 'typeson';
+import {Undefined} from 'typeson';
 
 const undef = {
     undef: {
@@ -12,7 +12,7 @@ const undef = {
         revive (s) {
             // Will add `undefined` (returning `undefined` would instead
             //   avoid explicitly setting)
-            return new Typeson.Undefined();
+            return new Undefined();
         }
     }
 };

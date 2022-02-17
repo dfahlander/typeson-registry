@@ -1,29 +1,39 @@
 {
   "name": "typeson-registry",
-  "version": "1.0.0-alpha.39",
+  "version": "2.0.0",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
     "Brett Zamir"
   ],
-  "main": "./dist/all.js",
+  "type": "module",
+  "main": "./dist/index.umd.min.js",
   "module": "./index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.min.js",
+      "require": "./dist/index.umd.min.js",
+      "default": "./dist/index.umd.min.js"
+    },
+    "./*": "./*"
+  },
   "scripts": {
     "prepublishOnly": "pnpm i",
     "eslint": "eslint --ext js,md,html .",
-    "start": "http-server -p 8085",
-    "rollup": "node -r esm ./build.js",
-    "mocha": "mocha --delay --require esm test/test-node",
+    "lint": "npm run eslint --",
+    "start": "static -p 8085",
+    "rollup": "node ./build.js",
+    "mocha": "mocha --delay --require chai/register-expect.js --require chai/register-assert.js test/test-node.js",
     "open-coverage": "open-cli http://localhost:8085/coverage/ && npm start",
-    "coverage": "rm -Rf node_modules/.cache && nyc --all npm run mocha",
+    "coverage": "rm -Rf node_modules/.cache && c8 npm run mocha",
     "test-nocov": "npm run rollup && npm run eslint && npm run coverage",
     "test": "npm run rollup && npm run eslint && npm run coverage",
     "test:worker-open": "open-cli http://localhost:8085/browser-test/worker.html && npm start",
     "test:browser-open": "open-cli http://localhost:8085/browser-test/ && npm start",
     "test:browser": "npm run rollup && npm run eslint && npm run test:browser-open",
-    "windows": "node -r esm windows-devinstall"
+    "windows": "node windows-devinstall"
   },
-  "nyc": {
+  "c8": {
     "reporter": [
       "text",
       "html"
@@ -64,53 +74,52 @@
   },
   "homepage": "https://github.com/dfahlander/typeson-registry#readme",
   "engines": {
-    "node": ">=10.0.0"
+    "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.15",
-    "@babel/eslint-parser": "^7.13.14",
-    "@babel/preset-env": "^7.13.15",
-    "@brettz9/eslint-plugin": "^1.0.3",
-    "@rollup/plugin-babel": "^5.3.0",
-    "@rollup/plugin-commonjs": "^18.0.0",
-    "@rollup/plugin-node-resolve": "^11.2.1",
-    "canvas": "^2.7.0",
-    "chai": "^4.3.4",
-    "eslint": "^7.24.0",
-    "eslint-config-ash-nazg": "^29.10.0",
-    "eslint-config-standard": "^16.0.2",
+    "@babel/core": "^7.17.5",
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/preset-env": "^7.16.11",
+    "@brettz9/eslint-plugin": "^1.0.4",
+    "@brettz9/node-static": "^0.1.1",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "c8": "^7.11.0",
+    "canvas": "^2.9.0",
+    "chai": "^4.3.6",
+    "eslint": "^8.10.0",
+    "eslint-config-ash-nazg": "^32.5.0",
+    "eslint-config-standard": "^16.0.3",
     "eslint-plugin-array-func": "^3.1.7",
-    "eslint-plugin-chai-expect": "^2.2.0",
-    "eslint-plugin-chai-friendly": "^0.6.0",
-    "eslint-plugin-compat": "^3.9.0",
+    "eslint-plugin-chai-expect": "^3.0.0",
+    "eslint-plugin-chai-friendly": "^0.7.2",
+    "eslint-plugin-compat": "^4.0.2",
     "eslint-plugin-eslint-comments": "^3.2.0",
-    "eslint-plugin-html": "^6.1.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsdoc": "^32.3.0",
-    "eslint-plugin-markdown": "^2.0.1",
-    "eslint-plugin-no-unsanitized": "^3.1.4",
+    "eslint-plugin-html": "^6.2.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsdoc": "^37.9.4",
+    "eslint-plugin-markdown": "^2.2.1",
+    "eslint-plugin-no-unsanitized": "^4.0.1",
     "eslint-plugin-no-use-extend-native": "^0.5.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-radar": "^0.2.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-sonarjs": "^0.12.0",
     "eslint-plugin-standard": "^4.1.0",
-    "eslint-plugin-unicorn": "^29.0.0",
-    "esm": "^3.2.25",
-    "http-server": "^0.12.3",
-    "jsdom": "^16.5.3",
-    "mocha": "^8.3.2",
-    "node-webcrypto-ossl": "^2.1.2",
-    "nyc": "^15.1.0",
-    "open-cli": "^6.0.1",
-    "rollup": "^2.45.1",
+    "eslint-plugin-unicorn": "^41.0.0",
+    "jsdom": "^19.0.0",
+    "mocha": "^9.2.1",
+    "node-webcrypto-ossl": "^2.1.3",
+    "open-cli": "^7.0.1",
+    "rollup": "^2.68.0",
     "rollup-plugin-terser": "^7.0.2",
-    "socket.io": "^4.0.1",
-    "socket.io-client": "^4.0.1"
+    "socket.io": "^4.4.1",
+    "socket.io-client": "^4.4.1"
   },
   "dependencies": {
-    "base64-arraybuffer-es6": "^0.7.0",
-    "typeson": "^6.1.0",
-    "whatwg-url": "^8.5.0"
+    "base64-arraybuffer-es6": "^1.0.0",
+    "typeson": "^7.0.0",
+    "whatwg-url": "^11.0.0"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
 }

@@ -1,7 +1,7 @@
 /* eslint-env browser, node */
-import Typeson from 'typeson';
+import {hasConstructorOf} from 'typeson';
 
-/* istanbul ignore next */
+/* c8 ignore next */
 const _global = typeof self === 'undefined' ? global : self;
 
 const errors = {};
@@ -18,7 +18,7 @@ const errors = {};
     const Cnstrctr = _global[errName];
     if (Cnstrctr) {
         errors[errName.toLowerCase()] = {
-            test (x) { return Typeson.hasConstructorOf(x, Cnstrctr); },
+            test (x) { return hasConstructorOf(x, Cnstrctr); },
             replace (e) { return e.message; },
             revive (message) { return new Cnstrctr(message); }
         };

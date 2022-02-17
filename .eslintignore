@@ -1,5 +1,5 @@
 dist/
-polyfills/createObjectURL-cjs.js
+polyfills/createObjectURL.umd.js
 coverage
 node_modules
 !.*.js

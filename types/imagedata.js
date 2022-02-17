@@ -2,11 +2,11 @@
 // `ImageData` is browser / DOM specific (though `node-canvas` has it
 //   available on `Canvas`).
 
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const imagedata = {
     imagedata: {
-        test (x) { return Typeson.toStringTag(x) === 'ImageData'; },
+        test (x) { return toStringTag(x) === 'ImageData'; },
         replace (d) {
             return {
                 // Ensure `length` gets preserved for revival

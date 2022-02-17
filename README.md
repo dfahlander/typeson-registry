@@ -26,7 +26,7 @@ which can handle `data:` URLs). For Node, you can add it like this:
 
 ```js
 const url = require('url'); // This line only needed to support Node < 10.0.0
-const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL-cjs');
+const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL.umd.js');
 
 const URL = url.Url; // This line only needed to support Node < 10.0.0
 URL.createObjectURL = createObjectURL;
@@ -65,11 +65,7 @@ presets and types).
 ## Usage (Pre-rollup in Node or browser)
 
 ```js
-import Typeson from 'typeson';
-import date from 'typeson-registry/types/date';
-import error from 'typeson-registry/types/error';
-import regexp from 'typeson-registry/types/regexp';
-import typedArrays from 'typeson-registry/types/typed-arrays';
+import {Typeson, date, error, regexp, typedArrays} from 'typeson-registry';
 
 const TSON = new Typeson().register([
     date,
@@ -124,9 +120,8 @@ console.log(parsedBack.inner.bin instanceof Uint8Array);
 ## Usage (Node without own Rollup)
 
 ```js
-const Typeson = require('typeson-registry/dist/all.js');
+const {Typeson, builtin} = require('typeson-registry');
 
-const {presets: {builtin}} = Typeson;
 const tson = new Typeson().register([
     builtin
 ]);
@@ -137,9 +132,8 @@ const tson = new Typeson().register([
 ```html
 <script type="module">
 
-import Typeson from './node_modules/typeson-registry/dist/index.js';
+import {Typeson, builtin} from './node_modules/typeson-registry/dist/index.js';
 
-const {presets: {builtin}} = Typeson;
 const TSON = new Typeson().register([
     builtin
 ]);
@@ -155,11 +149,11 @@ require them as AMD modules with requirejs if you prefer.
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="https://unpkg.com/typeson/dist/typeson.js"></script>
-    <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.js"></script>
+    <script src="https://unpkg.com/typeson/dist/typeson.umd.min.js"></script>
+    <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.umd.js"></script>
     <script>
 
-    const TSON = new Typeson().register(Typeson.presets.builtin);
+    const TSON = new Typeson().register(builtin);
     const tson = TSON.stringify({
         Hello: 'world',
         date: new Date(),

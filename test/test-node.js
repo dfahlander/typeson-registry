@@ -1,10 +1,11 @@
 import path from 'path';
+import http from 'http';
 
 // eslint-disable-next-line no-shadow -- This is not a regular test file
 import chai from 'chai';
 import jsdom from 'jsdom';
 import canvas from 'canvas';
-import socketIO from 'socket.io';
+import {Server} from 'socket.io';
 import socketIOClient from 'socket.io-client';
 import {Crypto} from 'node-webcrypto-ossl';
 
@@ -69,7 +70,8 @@ global.mocha = {setup () {}, globals () {}, checkLeaks () {}, run () {}};
 
 global.imageTestFileNode = 'file://' + path.resolve(__dirname, 'Flag_of_the_United_Nations.png');
 
-global.io = socketIO();
+const server = http.createServer();
+global.io = new Server(server);
 global.socketIOClient = socketIOClient;
 
 global.chai = window.chai = chai;
@@ -79,10 +81,11 @@ global.chai = window.chai = chai;
 var tests; // eslint-disable-line no-var
 
 // Require after defining `crypto` globally
-const Typeson = (await import('../index.js')).default;
+const TypesonNamespace = await import('../index.js');
 
-global.Typeson = window.Typeson = Typeson;
-// var Typeson = require('../dist/all.js');
+global.TypesonNamespace = TypesonNamespace;
+global.Typeson = window.Typeson = TypesonNamespace.Typeson;
+// var Typeson = require('../dist/index.umd.js');
 
 const {
     createObjectURL, revokeObjectURL,
@@ -115,10 +118,17 @@ if (process.env.npm_config_test) {
         './test.js'
     ];
 }
-await Promise.all(tests.map(function (tst) {
-    // eslint-disable-next-line no-unsanitized/method
-    return import(tst);
-}));
+
+try {
+    await Promise.all(tests.map(function (tst) {
+        console.log('tst', tst);
+        // eslint-disable-next-line no-unsanitized/method
+        return import(tst);
+    }));
+} catch (err) {
+    console.error('Error', err);
+    return;
+}
 
 // See https://mochajs.org/#delayed-root-suite
 run();

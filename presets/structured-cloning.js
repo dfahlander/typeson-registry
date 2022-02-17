@@ -42,21 +42,21 @@ const expObj = [
     blob
 ].concat(
     // ES2015 (ES6)
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof Map === 'function' ? map : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof Set === 'function' ? set : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof ArrayBuffer === 'function' ? arraybuffer : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof Uint8Array === 'function' ? typedArrays : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof DataView === 'function' ? dataview : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof Intl !== 'undefined' ? intlTypes : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof crypto !== 'undefined' ? cryptokey : [],
-    /* istanbul ignore next */
+    /* c8 ignore next */
     typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []
 );
 export default expObj;

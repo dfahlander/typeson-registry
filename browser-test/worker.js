@@ -1,12 +1,14 @@
-/* globals Typeson */
+/* globals TypesonNamespace */
 /* eslint-env worker */
 
 /* eslint-disable import/unambiguous */
 // Todo: ES6 Modules import not yet supported in workers by Chrome
-// import Typeson from '../dist/index.js';
-importScripts('../dist/all.js');
+// import {Typeson, postmessage} from '../dist/index.js';
+importScripts('../dist/index.umd.js');
 
-const TSON = new Typeson().register(Typeson.presets.postmessage);
+const TSON = new TypesonNamespace.Typeson().register(
+    TypesonNamespace.postmessage
+);
 
 self.addEventListener('message', function (ev) {
     const workerGot = 'Worker got: ' + TSON.stringify(TSON.revive(ev.data));

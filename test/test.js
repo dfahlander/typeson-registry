@@ -1,10 +1,9 @@
 /* eslint-env mocha */
-/* globals Typeson, io, socketIOClient */
+/* globals Typeson, TypesonNamespace, io, socketIOClient */
 /* globals expect, assert, BigInt, imageTestFileNode, InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File, crypto,
-    FileList, DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
-/* eslint-disable no-restricted-syntax,
-    node/no-unsupported-features/es-syntax */
+    DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
+/* eslint-disable no-restricted-syntax */
 
 import './test-environment.js';
 import util from './test-utils.js';
@@ -62,24 +61,23 @@ function log (...args) {
 */
 
 const {
-    types: {
-        errors, typedArrays, intlTypes, typedArraysSocketio,
-        undef, primitiveObjects, nan, infinity,
-        negativeInfinity, date, error,
-        regexp, map, set, arraybuffer,
-        dataview, imagedata, imagebitmap,
-        blob, file, filelist, nonbuiltinIgnore,
-        userObject, cloneable, resurrectable,
-        bigint, bigintObject,
-        cryptokey
-    },
-    presets: {
-        arrayNonindexKeys,
-        builtin, universal, structuredCloningThrowing,
-        structuredCloning, specialNumbers, postmessage,
-        undef: undefPreset, sparseUndefined, socketio
-    }
-} = Typeson;
+    // types
+    errors, typedArrays, intlTypes, typedArraysSocketio,
+    undef, primitiveObjects, nan, infinity,
+    negativeInfinity, date, error,
+    regexp, map, set, arraybuffer,
+    dataview, imagedata, imagebitmap,
+    blob, file, filelist, nonbuiltinIgnore,
+    userObject, cloneable, resurrectable,
+    bigint, bigintObject,
+    cryptokey,
+
+    // presets
+    arrayNonindexKeys,
+    builtin, universal, structuredCloningThrowing,
+    structuredCloning, specialNumbers, postmessage,
+    undefPreset, sparseUndefined, socketio
+} = TypesonNamespace;
 
 /**
  *
@@ -484,6 +482,8 @@ function BuiltIn (preset) {
                 i = json.length;
                 const copy = new Uint16Array(i);
                 while (i--) {
+                    // eslint-disable-next-line max-len -- Long
+                    // eslint-disable-next-line unicorn/prefer-code-point -- Want char code
                     const ch = json.charCodeAt(i);
                     copy[i] = ch >= 0xD800 && ch < 0xE000 ? 0xFFFD : ch;
                 }
@@ -739,7 +739,7 @@ function CryptoKey (preset) {
             const back = await typeson.parseAsync(tson);
             // console.log('back', back);
             const jwkResult = await crypto.subtle.exportKey('jwk', back);
-            expect(Typeson.toStringTag(back)).to.equal('CryptoKey');
+            expect(TypesonNamespace.toStringTag(back)).to.equal('CryptoKey');
             expect(JSON.stringify(jwk)).to.equal(JSON.stringify(jwkResult));
         });
     });
@@ -1275,26 +1275,34 @@ describe('FileList', function () {
         const input = document.createElement('input');
         input.type = 'file';
         // See the test-environment for our adapter to make this settable
-        input.files = [
-            new File([
-                'content1'
-            ],
-            'abc',
-            {
-                type: 'text/plain', // DOMString
-                lastModified: currTime // Or number
-            }),
-            new File([
-                'content2'
-            ],
-            'def',
-            {
-                type: 'text/html', // DOMString
-                lastModified: anotherTime // Or number
-            })
-        ];
 
-        expect(input.files).to.be.an.instanceOf(FileList);
+        (() => {
+            /**
+             * For `instanceof`.
+             */
+            class FileList extends Array {}
+
+            input.files = new FileList(
+                new File([
+                    'content1'
+                ],
+                'abc',
+                {
+                    type: 'text/plain', // DOMString
+                    lastModified: currTime // Or number
+                }),
+                new File([
+                    'content2'
+                ],
+                'def',
+                {
+                    type: 'text/html', // DOMString
+                    lastModified: anotherTime // Or number
+                })
+            );
+        })();
+
+        expect(input.files).to.be.a('FileList');
         const typeson = new Typeson().register(filelist);
         const tson = typeson.stringify(input.files);
         const back = typeson.parse(tson);
@@ -1316,26 +1324,33 @@ describe('FileList', function () {
         const input = document.createElement('input');
         input.type = 'file';
         // See the test-environment for our adapter to make this settable
-        input.files = [
-            new File([
-                'content1'
-            ],
-            'abc',
-            {
-                type: 'text/plain', // DOMString
-                lastModified: currTime // Or number
-            }),
-            new File([
-                'content2'
-            ],
-            'def',
-            {
-                type: 'text/html', // DOMString
-                lastModified: anotherTime // Or number
-            })
-        ];
+        (() => {
+            /**
+             * For `instanceof`.
+             */
+            class FileList extends Array {}
 
-        expect(input.files).to.be.an.instanceOf(FileList);
+            input.files = new FileList(
+                new File([
+                    'content1'
+                ],
+                'abc',
+                {
+                    type: 'text/plain', // DOMString
+                    lastModified: currTime // Or number
+                }),
+                new File([
+                    'content2'
+                ],
+                'def',
+                {
+                    type: 'text/html', // DOMString
+                    lastModified: anotherTime // Or number
+                })
+            );
+        })();
+
+        expect(input.files).to.be.a('FileList');
         const typeson = new Typeson().register(filelist);
         const tson = await typeson.stringifyAsync(input.files);
         const back = typeson.parse(tson);
@@ -1480,9 +1495,9 @@ describe('Presets', () => {
             const tson = typeson.stringify({
                 map: new Map([[1, 1n], [0, 1n]])
             }, null, 2);
-            console.log('tson', tson);
+            // console.log('tson', tson);
             const back = typeson.parse(tson);
-            console.log('back', back);
+            // console.log('back', back);
             expect(back).to.deep.equal({
                 map: new Map([[1, 1n], [0, 1n]])
             });

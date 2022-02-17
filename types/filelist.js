@@ -1,10 +1,10 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 import file from './file.js';
 
 const filelist = {
     file: file.file,
     filelist: {
-        test (x) { return Typeson.toStringTag(x) === 'FileList'; },
+        test (x) { return toStringTag(x) === 'FileList'; },
         replace (fl) {
             const arr = [];
             for (let i = 0; i < fl.length; i++) {

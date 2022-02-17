@@ -8,18 +8,13 @@
 //    though local-xmlhttprequest may need to be adapted
 // import whatwgURL from 'whatwg-url';
 
-// // eslint-disable-next-line node/no-unpublished-import
-// import utils from 'jsdom/lib/jsdom/living/generated/utils.js';
-import generateUUID from '../utils/generateUUID.js';
-
-/* globals require */
 // These are not working well with Rollup as imports
 // We also need to tweak `XMLHttpRequest` which our types
 //    rely on to obtain the Blob/File content
-/* eslint-disable node/no-unpublished-require, import/no-commonjs */
-const whatwgURL = require('whatwg-url');
-const utils = require('jsdom/lib/jsdom/living/generated/utils');
-/* eslint-enable node/no-unpublished-require, import/no-commonjs */
+import whatwgURL from 'whatwg-url';
+// eslint-disable-next-line node/no-unpublished-import
+import * as utils from 'jsdom/lib/jsdom/living/generated/utils.js';
+import generateUUID from '../utils/generateUUID.js';
 
 const {serializeURLOrigin, parseURL} = whatwgURL;
 
@@ -44,7 +39,7 @@ const revokeObjectURL = function (blobURL) {
     delete blobURLs[blobURL];
 };
 
-const impl = utils.implSymbol;
+const {implForWrapper} = utils.default;
 
 // We only handle the case of binary, so no need to override `open`
 //   in all cases; but this only works if override is called first
@@ -71,7 +66,8 @@ const xmlHttpRequestOverrideMimeType = function ({polyfillDataURLs} = {}) {
                     }
                     const responseType = 'text/plain'; // blob.type;
                     // utf16le and base64 both convert lone surrogates
-                    const encoded = blob[impl]._buffer.toString('binary');
+                    // eslint-disable-next-line max-len -- Long
+                    const encoded = implForWrapper(blob)._buffer.toString('binary');
                     // Not usable in jsdom which makes properties readonly,
                     //   but local-xmlhttprequest can use (and jsdom can
                     //   handle data URLs anyways)

@@ -10,10 +10,10 @@
  * @returns {string}
  */
 export default function generateUUID () { //  Adapted from original: public domain/MIT: http://stackoverflow.com/a/8809472/271577
-    /* istanbul ignore next */
+    /* c8 ignore next */
     let d = Date.now() +
         // use high-precision timer if available
-        // istanbul ignore next
+        /* c8 ignore next 4 */
         (typeof performance !== 'undefined' &&
             typeof performance.now === 'function'
             ? performance.now()

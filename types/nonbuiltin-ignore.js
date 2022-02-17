@@ -1,4 +1,4 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const nonbuiltinIgnore = {
     nonbuiltinIgnore: {
@@ -21,7 +21,7 @@ const nonbuiltinIgnore = {
                 'Map Iterator', 'Set Iterator',
                 'WeakMap', 'WeakSet',
                 'Atomics', 'Module'
-            ].includes(Typeson.toStringTag(x));
+            ].includes(toStringTag(x));
         },
         replace (rexp) {
             // Not in use

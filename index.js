@@ -1,5 +1,4 @@
 // This file is auto-generated from `build.js`
-import Typeson from 'typeson';
 
 // TYPES
 import arraybuffer from './types/arraybuffer.js';
@@ -44,17 +43,20 @@ import structuredCloning from './presets/structured-cloning.js';
 import undefPreset from './presets/undef.js';
 import universal from './presets/universal.js';
 
-Typeson.types = {
+/* types */
+export {
     arraybuffer, bigintObject, bigint, blob, cloneable, cryptokey, dataview,
     date, error, errors, file, filelist, imagebitmap, imagedata, infinity,
     intlTypes, map, nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects,
     regexp, resurrectable, set, typedArraysSocketio, typedArrays, undef,
     userObject
 };
-Typeson.presets = {
+
+/* presets */
+export {
     arrayNonindexKeys, builtin, postmessage, socketio, sparseUndefined,
-    specialNumbers, structuredCloningThrowing, structuredCloning,
-    undef: undefPreset, universal
+    specialNumbers, structuredCloningThrowing, structuredCloning, undefPreset,
+    universal
 };
 
-export default Typeson;
+export * from 'typeson';

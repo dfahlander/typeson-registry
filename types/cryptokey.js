@@ -1,22 +1,20 @@
 /* globals crypto */
-import Typeson from 'typeson';
+import {TypesonPromise, toStringTag} from 'typeson';
 
 const cryptokey = {
     cryptokey: {
         test (x) {
-            return Typeson.toStringTag(x) === 'CryptoKey' && x.extractable;
+            return toStringTag(x) === 'CryptoKey' && x.extractable;
         },
         replaceAsync (key) {
-            return new Typeson.Promise(async (resolve, reject) => {
+            return new TypesonPromise(async (resolve, reject) => {
                 let jwk;
                 try {
                     jwk = await crypto.subtle.exportKey('jwk', key);
-                // istanbul ignore next
+                // Our format should be valid and our key extractable
+                /* c8 ignore next 4 */
                 } catch (err) {
-                    // eslint-disable-next-line max-len
-                    // istanbul ignore next -- Our format should be valid and our key extractable
                     reject(err);
-                    // istanbul ignore next
                     return;
                 }
                 resolve({

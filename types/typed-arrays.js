@@ -1,8 +1,8 @@
 /* eslint-env browser, node */
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
-/* istanbul ignore next */
+/* c8 ignore next */
 const _global = typeof self === 'undefined' ? global : self;
 
 const typedArrays = {};
@@ -19,12 +19,12 @@ const typedArrays = {};
 ].forEach(function (typeName) {
     const arrType = typeName;
     const TypedArray = _global[arrType];
-    /* istanbul ignore if */
+    /* c8 ignore next 3 */
     if (!TypedArray) {
         return;
     }
     typedArrays[typeName.toLowerCase()] = {
-        test (x) { return Typeson.toStringTag(x) === arrType; },
+        test (x) { return toStringTag(x) === arrType; },
         replace ({buffer, byteOffset, length: l}, stateObj) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];

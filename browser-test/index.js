@@ -1,5 +1,5 @@
 /* eslint-env browser */
-import Typeson from '../dist/index.js';
+import {Typeson, postmessage} from '../dist/index.js';
 
 /**
  *
@@ -11,7 +11,7 @@ function log (msg) {
     // eslint-disable-next-line compat/compat
     document.querySelector('#log').textContent += msg + '\n';
 }
-const TSON = new Typeson().register(Typeson.presets.postmessage);
+const TSON = new Typeson().register(postmessage);
 
 const worker = new Worker('worker.js');
 worker.postMessage(TSON.encapsulate({
@@ -19,7 +19,9 @@ worker.postMessage(TSON.encapsulate({
     b: Number.POSITIVE_INFINITY,
     c: Number.NEGATIVE_INFINITY,
     d: new Error('oops')
+// eslint-disable-next-line unicorn/require-post-message-target-origin -- Worker
 }));
+
 worker.addEventListener('message', function (ev) {
     if (typeof ev.data === 'string') {
         log(ev.data);

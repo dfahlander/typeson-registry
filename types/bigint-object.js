@@ -1,10 +1,10 @@
 /* globals BigInt */
-import Typeson from 'typeson';
+import {hasConstructorOf} from 'typeson';
 
 const bigintObject = {
     bigintObject: {
         test (x) {
-            return typeof x === 'object' && Typeson.hasConstructorOf(x, BigInt);
+            return typeof x === 'object' && hasConstructorOf(x, BigInt);
         },
         replace (n) { return String(n); },
         revive (s) {

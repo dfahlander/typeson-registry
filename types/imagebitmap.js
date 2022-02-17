@@ -2,12 +2,12 @@
 // `ImageBitmap` is browser / DOM specific. It also can only work
 //  same-domain (or CORS)
 
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const imagebitmap = {
     imagebitmap: {
         test (x) {
-            return Typeson.toStringTag(x) === 'ImageBitmap' ||
+            return toStringTag(x) === 'ImageBitmap' ||
                 // In Node, our polyfill sets the dataset on a canvas
                 //  element as JSDom no longer allows overriding toStringTag
                 (x && x.dataset && x.dataset.toStringTag === 'ImageBitmap');

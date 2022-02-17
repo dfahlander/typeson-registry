@@ -1,23 +1,19 @@
 /* eslint-env node */
 /* eslint-disable no-console */
 import fs from 'fs';
-import {join, dirname, resolve} from 'path';
+import {fileURLToPath} from 'url';
+import {join, dirname} from 'path';
 import util from 'util';
 
 import {rollup} from 'rollup';
-import babel from '@rollup/plugin-babel';
-import nodeResolve from '@rollup/plugin-node-resolve';
+import {babel} from '@rollup/plugin-babel';
+import {nodeResolve} from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
 
 // fs.promises is not available until Node 11 (and need for URL until 10.0.0)
 
-// Todo[engine:node@>=10.12.0]: Use this instead of the following
-// import {fileURLToPath} from 'url';
-// const __dirname = dirname(fileURLToPath(import.meta.url));
-const __dirname = resolve(
-    dirname(decodeURI(new URL(import.meta.url).pathname))
-);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const mkdir = util.promisify(fs.mkdir);
 const readdir = util.promisify(fs.readdir);
@@ -29,9 +25,8 @@ const prologue =
 //                       =path/to/source.map
 // require("source-map-support").install();
 `// This file is auto-generated from \`build.js\`
-import Typeson from 'typeson';
 `;
-const epilogue = 'export default Typeson;\n';
+const epilogue = "export * from 'typeson';\n";
 
 const ws = fs.createWriteStream('index.js');
 ws.write(prologue);
@@ -71,7 +66,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             // Todo: We really should auto-detect duplicates instead
             if (['undef'].includes(fileName) && dir === 'presets') {
                 fileName += 'Preset';
-                fileString += ': ' + fileName;
+                fileString = fileName;
             }
             let currentAddition;
             const wouldbeLength =
@@ -95,9 +90,9 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
                 reqStr = `import ${fileName} from\n    './${dir}/${f}';\n`;
             }
             bundle({
-                name: `Typeson.${dir}.${name}`,
+                name,
                 input: join(dirPath, f),
-                output: `./dist/${dir}/${f}`
+                output: `./dist/${dir}/${f.replace(/\.js$/u, '.umd.js')}`
             });
             return reqStr;
         }));
@@ -111,24 +106,41 @@ dirs.forEach((dir, i) => {
 });
 dirs.forEach((dir) => {
     ws.write(
-        `\nTypeson.${dir} = {
+        `\n/* ${dir} */\nexport {
     ${moduleStrings[dir]}
-};`
+};\n`
     );
 });
-ws.write('\n\n');
+ws.write('\n');
 ws.end(epilogue);
 
 ws.on('finish', async () => {
     await Promise.all([
-        bundle({input: 'index.js', output: './dist/all.js', name: 'Typeson'}),
         bundle({
-            input: 'index.js', output: './dist/index.js',
-            name: 'Typeson', format: 'es'
+            name: 'TypesonNamespace',
+            input: 'index.js',
+            output: './dist/index.umd.min.js'
+        }),
+        bundle({
+            name: 'TypesonNamespace',
+            input: 'index.js',
+            output: './dist/index.umd.js',
+            minified: false
+        }),
+        bundle({
+            input: 'index.js',
+            output: './dist/index.min.js',
+            format: 'es'
+        }),
+        bundle({
+            input: 'index.js',
+            output: './dist/index.js',
+            format: 'es',
+            minified: false
         }),
         bundle({
             input: 'polyfills/createObjectURL.js',
-            output: 'polyfills/createObjectURL-cjs.js',
+            output: 'polyfills/createObjectURL.umd.js',
             name: 'createObjectURL'
         })
 
@@ -148,20 +160,27 @@ ws.on('finish', async () => {
  * @param {string} cfg.output
  * @param {string} cfg.name
  * @param {string} [cfg.format="umd"]
+ * @param {boolean} [cfg.minified=true]
  * @returns {Promise<external:RollupOutput[]>}
  */
-async function bundle ({input, output, name, format = 'umd'}) {
+async function bundle ({input, output, name, format = 'umd', minified = true}) {
     const plugins = [
         nodeResolve({
             mainFields: ['module']
         }),
         commonjs(),
-        terser({
-            // Needed for `Typeson.Undefined` and other constructor detection
-            keep_fnames: true,
-            // Keep in case implementing above as classes
-            keep_classnames: true
-        })
+        ...(
+            minified
+                ? [terser({
+                    // Needed for typeson's `Undefined` and other
+                    //   constructor detection
+                    keep_fnames: true,
+                    // Keep in case implementing above as classes
+                    keep_classnames: true
+                })]
+                : []
+        )
+
     ];
     if (format !== 'es') {
         plugins.unshift(babel({

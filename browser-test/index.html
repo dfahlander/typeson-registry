@@ -16,9 +16,10 @@
         <!-- <script src="../node_modules/sinon/pkg/sinon-no-sourcemaps.js"></script> -->
 
         <script type="module">
-        import Typeson from '../dist/index.js';
+        import * as TypesonNamespace from '../dist/index.js';
 
-        window.Typeson = Typeson;
+        window.TypesonNamespace = TypesonNamespace;
+        window.Typeson = TypesonNamespace.Typeson;
         </script>
         <script type="module" src="../test/test.js"></script>
         <script type="module">

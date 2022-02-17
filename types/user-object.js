@@ -1,8 +1,8 @@
-import Typeson from 'typeson';
+import {isUserObject} from 'typeson';
 
 const userObject = {
     userObject: {
-        test (x, stateObj) { return Typeson.isUserObject(x); },
+        test (x, stateObj) { return isUserObject(x); },
         replace (n) { return {...n}; },
         revive (s) { return s; }
     }

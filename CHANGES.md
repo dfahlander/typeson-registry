@@ -1,8 +1,18 @@
 # typeson-registry
 
+## Version 2.0.0
+
+- BREAKING feat: switch to using genuine ESM (keeping CJS), adding `exports`
+- test: switch to c8 over nyc for ESM support
+- test: check for import errors; avoid logging
+- chore: bump base64-arraybuffer-es6, whatwg-url
+- chore: update devDeps.
+
 ## Version 1.0.0
 
-- Breaking change: Indicate minimum Node version as 6.0.0.
+- Breaking change: Indicate minimum Node version as
+    ^12.22.0 || ^14.17.0 || >=16.0.0.
+- Breaking change: use native Node ESM
 - Breaking fix: Preserve the full underlying buffer for `DataView` and
     typed arrays; add tests
 - Breaking fix: If buffer is reused across `ArrayBuffer`, `DataView`,

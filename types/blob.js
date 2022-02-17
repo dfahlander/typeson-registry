@@ -1,10 +1,10 @@
 /* globals XMLHttpRequest, Blob, FileReader */
-import Typeson from 'typeson';
+import {TypesonPromise, toStringTag} from 'typeson';
 import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
 
 const blob = {
     blob: {
-        test (x) { return Typeson.toStringTag(x) === 'Blob'; },
+        test (x) { return toStringTag(x) === 'Blob'; },
         replace (b) { // Sync
             const req = new XMLHttpRequest();
             req.overrideMimeType('text/plain; charset=x-user-defined');
@@ -12,7 +12,7 @@ const blob = {
             req.send();
 
             // Seems not feasible to accurately simulate
-            /* istanbul ignore next */
+            /* c8 ignore next 3 */
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
             }
@@ -25,7 +25,7 @@ const blob = {
             return new Blob([string2arraybuffer(stringContents)], {type});
         },
         replaceAsync (b) {
-            return new Typeson.Promise((resolve, reject) => {
+            return new TypesonPromise((resolve, reject) => {
                 /*
                 if (b.isClosed) { // On MDN, but not in https://w3c.github.io/FileAPI/#dfn-Blob
                     reject(new Error('The Blob is closed'));
@@ -40,7 +40,7 @@ const blob = {
                     });
                 });
                 // Seems not feasible to accurately simulate
-                /* istanbul ignore next */
+                /* c8 ignore next 3 */
                 reader.addEventListener('error', () => {
                     reject(reader.error);
                 });

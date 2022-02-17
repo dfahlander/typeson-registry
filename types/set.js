@@ -1,8 +1,8 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const set = {
     set: {
-        test (x) { return Typeson.toStringTag(x) === 'Set'; },
+        test (x) { return toStringTag(x) === 'Set'; },
         replace (st) {
             return [...st.values()];
         },

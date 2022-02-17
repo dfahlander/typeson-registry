@@ -1,9 +1,9 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
 const arraybuffer = {
     arraybuffer: {
-        test (x) { return Typeson.toStringTag(x) === 'ArrayBuffer'; },
+        test (x) { return toStringTag(x) === 'ArrayBuffer'; },
         replace (b, stateObj) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];

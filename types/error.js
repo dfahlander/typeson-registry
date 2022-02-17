@@ -1,8 +1,8 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const error = {
     error: {
-        test (x) { return Typeson.toStringTag(x) === 'Error'; },
+        test (x) { return toStringTag(x) === 'Error'; },
         replace ({name, message}) {
             return {name, message};
         },

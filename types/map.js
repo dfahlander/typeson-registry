@@ -1,8 +1,8 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 
 const map = {
     map: {
-        test (x) { return Typeson.toStringTag(x) === 'Map'; },
+        test (x) { return toStringTag(x) === 'Map'; },
         replace (mp) { return [...mp.entries()]; },
         revive (entries) { return new Map(entries); }
     }

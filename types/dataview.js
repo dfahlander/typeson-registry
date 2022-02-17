@@ -1,9 +1,9 @@
-import Typeson from 'typeson';
+import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
 const dataview = {
     dataview: {
-        test (x) { return Typeson.toStringTag(x) === 'DataView'; },
+        test (x) { return toStringTag(x) === 'DataView'; },
         replace ({buffer, byteOffset, byteLength}, stateObj) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];

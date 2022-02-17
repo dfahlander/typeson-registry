@@ -5,4 +5,5 @@
 build
 .__browserify_string_empty.js
 .nyc_output
+.idea
 coverage
