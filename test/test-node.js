@@ -28,6 +28,13 @@ global.HTMLElement = global.window.HTMLElement; // https://github.com/chaijs/typ
 // This should be made available automatically by jsdom: https://github.com/jsdom/jsdom/issues/1749
 global.ImageData = canvas.ImageData;
 
+// https://github.com/Automattic/node-canvas/issues/1646
+Object.defineProperty(global.ImageData.prototype, Symbol.toStringTag, {
+    get () {
+        return 'ImageData';
+    }
+});
+
 global.FileReader = window.FileReader;
 // Used by our test-environment `FileList` polyfill
 global.HTMLInputElement = window.HTMLInputElement;
