@@ -1,5 +1,9 @@
 # typeson-registry
 
+## ?
+
+- chore: update typeson and devDeps.
+
 ## Version 2.0.0
 
 - BREAKING feat: switch to using genuine ESM (keeping CJS), adding `exports`
