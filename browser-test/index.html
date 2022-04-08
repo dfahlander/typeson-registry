@@ -21,9 +21,10 @@
         window.TypesonNamespace = TypesonNamespace;
         window.Typeson = TypesonNamespace.Typeson;
         </script>
-        <script type="module" src="../test/test.js"></script>
         <script type="module">
         /* globals mocha */
+        import '../test/test.js';
+
         mocha.run();
         </script>
     </body>
