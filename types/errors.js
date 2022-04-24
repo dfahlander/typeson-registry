@@ -1,28 +1,32 @@
+/* globals InternalError */
 /* eslint-env browser, node */
 import {hasConstructorOf} from 'typeson';
 
-/* c8 ignore next */
-const _global = typeof self === 'undefined' ? global : self;
-
 const errors = {};
-// Comprises all built-in errors.
+
+// JS standard
 [
-    'TypeError',
-    'RangeError',
-    'SyntaxError',
-    'ReferenceError',
-    'EvalError',
-    'URIError',
-    'InternalError' // non-standard
-].forEach((errName) => {
-    const Cnstrctr = _global[errName];
-    if (Cnstrctr) {
-        errors[errName.toLowerCase()] = {
-            test (x) { return hasConstructorOf(x, Cnstrctr); },
-            replace (e) { return e.message; },
-            revive (message) { return new Cnstrctr(message); }
-        };
-    }
-});
+    TypeError, RangeError, SyntaxError, ReferenceError, EvalError, URIError
+].forEach((error) => create(error));
+
+/* c8 ignore next 2 */
+// @ts-ignore Non-standard
+typeof InternalError === 'function' && create(InternalError);
+
+/**
+ * Comprises all built-in errors.
+ * @param {
+ *   TypeError|RangeError|SyntaxError|ReferenceError|EvalError|URIError|
+ *   InternalError
+ * } Ctor
+ * @returns {void}
+ */
+function create (Ctor) {
+    errors[Ctor.name.toLowerCase()] = {
+        test (x) { return hasConstructorOf(x, Ctor); },
+        replace (e) { return e.message; },
+        revive (message) { return new Ctor(message); }
+    };
+}
 
 export default errors;

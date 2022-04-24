@@ -2,29 +2,19 @@
 import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
-/* c8 ignore next */
-const _global = typeof self === 'undefined' ? global : self;
-
 const typedArrays = {};
-[
-    'Int8Array',
-    'Uint8Array',
-    'Uint8ClampedArray',
-    'Int16Array',
-    'Uint16Array',
-    'Int32Array',
-    'Uint32Array',
-    'Float32Array',
-    'Float64Array'
-].forEach(function (typeName) {
-    const arrType = typeName;
-    const TypedArray = _global[arrType];
-    /* c8 ignore next 3 */
-    if (!TypedArray) {
-        return;
-    }
+
+/**
+ * @param {
+ *   Int8Array|Uint8Array|Uint8ClampedArray|Int16Array|Uint16Array|Int32Array|
+ *   Uint32Array|Float32Array|Float64Array
+ * } TypedArray
+ * @returns {void}
+ */
+function create (TypedArray) {
+    const typeName = TypedArray.name;
     typedArrays[typeName.toLowerCase()] = {
-        test (x) { return toStringTag(x) === arrType; },
+        test (x) { return toStringTag(x) === typeName; },
         replace ({buffer, byteOffset, length: l}, stateObj) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
@@ -55,6 +45,22 @@ const typedArrays = {};
             return new TypedArray(buffer, byteOffset, len);
         }
     };
-});
+}
+
+if (typeof Int8Array === 'function') {
+    // Those constructors are added in ES6 as a group.
+    // If we have Int8Array, we can assume the rest also exists.
+    [
+        Int8Array,
+        Uint8Array,
+        Uint8ClampedArray,
+        Int16Array,
+        Uint16Array,
+        Int32Array,
+        Uint32Array,
+        Float32Array,
+        Float64Array
+    ].forEach((TypedArray) => create(TypedArray));
+}
 
 export default typedArrays;
