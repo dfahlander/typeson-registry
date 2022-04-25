@@ -1,8 +1,12 @@
 # typeson-registry
 
-## ?
+## Version 3.0.0
 
+- BREAKING fix: Drop Node 12
+- fix: global fetching
 - chore: update typeson and devDeps.
+- test: avoid skipping test in favor of temporarily setting up Node environment
+    to work; simplify
 
 ## Version 2.0.0
 

@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
