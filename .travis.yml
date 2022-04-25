@@ -1,8 +1,8 @@
 language: node_js
 os: linux
-dist: xenial
+dist: focal
 
 node_js:
+  - "18"
   - "16"
   - "14.17.0"
-  - "12.22.0"
