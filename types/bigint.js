@@ -5,8 +5,8 @@ const bigint = {
         test (x) {
             return typeof x === 'bigint';
         },
-        replace (n) { return String(n); },
-        revive (s) { return BigInt(s); }
+        replace: String,
+        revive: BigInt
     }
 };
 

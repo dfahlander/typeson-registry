@@ -12,7 +12,7 @@
 // We also need to tweak `XMLHttpRequest` which our types
 //    rely on to obtain the Blob/File content
 import whatwgURL from 'whatwg-url';
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import
 import * as utils from 'jsdom/lib/jsdom/living/generated/utils.js';
 import generateUUID from '../utils/generateUUID.js';
 
@@ -20,8 +20,8 @@ const {serializeURLOrigin, parseURL} = whatwgURL;
 
 /*
 both are problematic:
-eslint-disable-next-line node/no-unpublished-import
-eslint-disable node/file-extension-in-import, import/extensions
+eslint-disable-next-line n/no-unpublished-import
+eslint-disable n/file-extension-in-import, import/extensions
 import {serializeURLOrigin, parseURL} from 'whatwg-url';
 import utils from 'jsdom/lib/jsdom/living/generated/utils';
 */

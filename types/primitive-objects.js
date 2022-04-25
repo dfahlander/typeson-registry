@@ -9,7 +9,7 @@ const primitiveObjects = {
         test (x) {
             return toStringTag(x) === 'String' && typeof x === 'object';
         },
-        replace (s) { return String(s); }, // convert to primitive string
+        replace: String, // convert to primitive string
         revive (s) { return new String(s); } // Revive to an objectified string
     },
     // Boolean Object (not primitive boolean which need no type spec)
@@ -18,7 +18,7 @@ const primitiveObjects = {
             return toStringTag(x) === 'Boolean' &&
                 typeof x === 'object';
         },
-        replace (b) { return Boolean(b); }, // convert to primitive boolean
+        replace: Boolean, // convert to primitive boolean
         revive (b) {
             // Revive to an objectified Boolean
             return new Boolean(b);
@@ -29,7 +29,7 @@ const primitiveObjects = {
         test (x) {
             return toStringTag(x) === 'Number' && typeof x === 'object';
         },
-        replace (n) { return Number(n); }, // convert to primitive number
+        replace: Number, // convert to primitive number
         revive (n) { return new Number(n); } // Revive to an objectified number
     }
 };

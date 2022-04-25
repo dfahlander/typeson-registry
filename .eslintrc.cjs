@@ -70,7 +70,7 @@ module.exports = {
         {
             files: ['test/*.js'],
             rules: {
-                'node/no-unsupported-features/es-syntax': ['error', {
+                'n/no-unsupported-features/es-syntax': ['error', {
                     ignores: ['modules', 'dynamicImport']
                 }]
             }
@@ -107,7 +107,7 @@ module.exports = {
                 'padded-blocks': 'off',
                 'max-len': 'off',
                 'no-restricted-syntax': 'off',
-                'node/no-missing-import': 'off',
+                'n/no-missing-import': 'off',
                 'no-multi-spaces': 'off',
                 'no-multiple-empty-lines': ['error', {
                     max: 1, maxBOF: 2, maxEOF: 1
@@ -124,9 +124,9 @@ module.exports = {
                 'import/no-unresolved': 'off',
                 'import/no-commonjs': 'off',
                 'import/no-extraneous-dependencies': 'off',
-                'node/no-extraneous-import': 'off',
-                'node/file-extension-in-import': 'off',
-                'node/global-require': 'off'
+                'n/no-extraneous-import': 'off',
+                'n/file-extension-in-import': 'off',
+                'n/global-require': 'off'
             }
         }
     ],
@@ -135,7 +135,7 @@ module.exports = {
         'eslint-comments/require-description': 0,
 
         indent: ['error', 4, {outerIIFEBody: 0}],
-        'node/no-unsupported-features/es-builtins': ['error', {
+        'n/no-unsupported-features/es-builtins': ['error', {
             ignores: ['BigInt']
         }],
         'unicorn/prefer-spread': 0

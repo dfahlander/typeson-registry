@@ -753,6 +753,9 @@ CryptoKey();
  * @returns {void}
  */
 function socketIO (preset, typeWithBufferEncoding) {
+    /**
+    * @typedef {any} AnyArgument
+    */
     it(
         typeWithBufferEncoding
             ? 'can pass on typed arrays with Base64/JSON encoding'
@@ -763,8 +766,8 @@ function socketIO (preset, typeWithBufferEncoding) {
              */
             class CustomClass {
                 /**
-                 * @param {any} foo
-                 * @param {any} bar
+                 * @param {AnyArgument} foo
+                 * @param {AnyArgument} bar
                  */
                 constructor (foo, bar) {
                     this.foo = foo;
