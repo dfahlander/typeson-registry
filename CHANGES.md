@@ -1,5 +1,9 @@
 # typeson-registry
 
+## ?
+
+- chore: update `typeson` and devDeps.
+
 ## Version 3.0.0
 
 - BREAKING fix: Drop Node 12
