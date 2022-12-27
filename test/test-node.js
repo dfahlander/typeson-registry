@@ -1,5 +1,6 @@
 import path from 'node:path';
 import http from 'node:http';
+import {webcrypto} from 'node:crypto';
 
 // eslint-disable-next-line no-shadow -- This is not a regular test file
 import chai from 'chai';
@@ -7,7 +8,6 @@ import jsdom from 'jsdom';
 import canvas from 'canvas';
 import {Server} from 'socket.io';
 import socketIOClient from 'socket.io-client';
-import {Crypto} from 'node-webcrypto-ossl';
 
 const __dirname = path.resolve(path.dirname(decodeURI(
     new URL(import.meta.url).pathname
@@ -51,9 +51,7 @@ global.File = window.File;
 global.DOMException = window.DOMException;
 global.performance = window.performance;
 
-const crypto = new Crypto();
-
-global.crypto = crypto;
+global.crypto = webcrypto;
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 global.createImageBitmap = function (cvs) {
