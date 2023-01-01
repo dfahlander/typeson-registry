@@ -1,6 +1,9 @@
 # typeson-registry
 
-## ?
+## Version 4.0.0
+
+With Typeson update, empty string components of key paths are now escaped
+(as `''`) while `''` is escaped as `''''`.
 
 - chore: update `typeson` and devDeps.
 
