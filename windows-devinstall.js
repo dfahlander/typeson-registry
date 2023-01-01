@@ -40,7 +40,6 @@ async function copy (fromPath, toPath) {
     }
 }
 
-(async () => {
 if (isWin) {
     const pathToGTKBin = 'C:\\GTK\\bin\\';
     const pathToIEShims =
@@ -73,4 +72,3 @@ if (isWin) {
         'installation steps'
     );
 }
-})();

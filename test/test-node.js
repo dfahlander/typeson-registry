@@ -1,5 +1,5 @@
-import path from 'path';
-import http from 'http';
+import path from 'node:path';
+import http from 'node:http';
 
 // eslint-disable-next-line no-shadow -- This is not a regular test file
 import chai from 'chai';
@@ -83,9 +83,8 @@ global.socketIOClient = socketIOClient;
 
 global.chai = window.chai = chai;
 
-(async function () {
 // require('./test-environment.js');
-var tests; // eslint-disable-line no-var
+var tests; // eslint-disable-line no-var, vars-on-top
 
 // Require after defining `crypto` globally
 const TypesonNamespace = await import('../index.js');
@@ -134,10 +133,4 @@ try {
     }));
 } catch (err) {
     console.error('Error', err);
-    return;
 }
-
-// See https://mochajs.org/#delayed-root-suite
-run();
-mocha.run();
-}());

@@ -32,8 +32,6 @@ const ws = fs.createWriteStream('index.js');
 ws.write(prologue);
 const moduleStrings = {};
 
-(async () => { // eslint-disable-line padded-blocks
-
 try {
     await mkdir('dist');
 } catch (err) {
@@ -147,7 +145,6 @@ ws.on('finish', async () => {
     ]);
     console.log('Finished build');
 });
-})();
 
 /**
 * @external RollupOutput
