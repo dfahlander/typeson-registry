@@ -122,6 +122,8 @@ With Typeson update, empty string components of key paths are now escaped
     to allow for non-plain user objects to be cloned; add test
 - Enhancement: Add `nonbuiltin-ignore` type to roughly detect non-builtin
     objects and avoid adding them as properties
+- Enhancement: Add `error` and `errors` to SCA
+- Enhancement: Support `AggregateError` with `errors.js`
 - Enhancement: Add `stack`, `fileName`, `lineNumber`, `columnNumber`,
     `cause`, and `errors` (for `AggregateError`)
     to `error` (changes representation, but less likely than `errors` to be
