@@ -9,6 +9,8 @@ import date from '../types/date.js';
 import regexp from '../types/regexp.js';
 import map from '../types/map.js';
 import set from '../types/set.js';
+import error from '../types/error.js';
+import errors from '../types/errors.js';
 import arraybuffer from '../types/arraybuffer.js';
 import typedArrays from '../types/typed-arrays.js';
 import dataview from '../types/dataview.js';
@@ -39,7 +41,9 @@ const expObj = [
     imagebitmap, // Async return
     file,
     filelist,
-    blob
+    blob,
+    error,
+    errors
 ].concat(
     // ES2015 (ES6)
     /* c8 ignore next */
