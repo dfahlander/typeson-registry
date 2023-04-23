@@ -20,6 +20,8 @@ module.exports = {
             'BigInt',
             'Blob',
             'console',
+            'createImageBitmap',
+            'crypto',
             'DataView',
             'Error',
             'File',
