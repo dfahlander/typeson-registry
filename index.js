@@ -20,6 +20,7 @@ import intlTypes from './types/intl-types.js';
 import map from './types/map.js';
 import nan from './types/nan.js';
 import negativeInfinity from './types/negative-infinity.js';
+import negativeZero from './types/negative-zero.js';
 import nonbuiltinIgnore from './types/nonbuiltin-ignore.js';
 import primitiveObjects from './types/primitive-objects.js';
 import regexp from './types/regexp.js';
@@ -47,9 +48,9 @@ import universal from './presets/universal.js';
 export {
     arraybuffer, bigintObject, bigint, blob, cloneable, cryptokey, dataview,
     date, error, errors, file, filelist, imagebitmap, imagedata, infinity,
-    intlTypes, map, nan, negativeInfinity, nonbuiltinIgnore, primitiveObjects,
-    regexp, resurrectable, set, typedArraysSocketio, typedArrays, undef,
-    userObject
+    intlTypes, map, nan, negativeInfinity, negativeZero, nonbuiltinIgnore,
+    primitiveObjects, regexp, resurrectable, set, typedArraysSocketio,
+    typedArrays, undef, userObject
 };
 
 /* presets */

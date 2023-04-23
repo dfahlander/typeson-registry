@@ -70,7 +70,7 @@ const {
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
     bigint, bigintObject,
-    cryptokey,
+    cryptokey, negativeZero,
 
     // presets
     arrayNonindexKeys,
@@ -297,6 +297,28 @@ function NonindexKeys (preset) {
 function BuiltIn (preset) {
     Undefined(preset);
     NonindexKeys(preset);
+
+    describe('Negative zero', function () {
+        it('serializes +0', () => {
+            const typeson = new Typeson().register(preset || negativeZero);
+            const zer = 0;
+            const tson = typeson.stringify(zer, null, 2);
+            const back = typeson.parse(tson);
+            expect(typeof back).to.equal('number');
+            expect(back.valueOf()).to.equal(0);
+            expect(Object.is(back, 0)).to.equal(true);
+        });
+
+        it('serializes -0', () => {
+            const typeson = new Typeson().register(preset || negativeZero);
+            const zer = -0;
+            const tson = typeson.stringify(zer, null, 2);
+            const back = typeson.parse(tson);
+            expect(typeof back).to.equal('number');
+            expect(back.valueOf()).to.equal(0);
+            expect(Object.is(back, -0)).to.equal(true);
+        });
+    });
 
     describe('Primitive objects', () => {
         /* eslint-disable unicorn/new-for-builtins */

@@ -1,5 +1,24 @@
 # typeson-registry
 
+## Version 6.0.0
+
+- fix: add negative 0 to SpecialNumbers so it can be serialized distinctly
+- chore: update typeson and devDeps.
+
+## Version 5.0.0
+
+- feat: Add `stack`, `fileName`, `lineNumber`, `columnNumber`, `cause`,
+    `errors` (for `AggregateError`) and `name` to `errors` (default `name`
+    can be changed after construction); also impacts `builtin`, `universal`,
+    `postmessage`, `socketio`, and SCA
+- feat: Add `stack`, `fileName`, `lineNumber`, `columnNumber`, `cause`,
+    `errors` (for `AggregateError`) to `error` (changes representation, but
+    less likely than `errors` to be breaking); fixes #10
+- test: use built-in webcrypto, updating for latest Node
+- chore: bump `whatwg-url` dep.
+- chore: update devDeps.
+- chore(ci): bump Node to 18.15.0 (but works as early as 18.14.0)
+
 ## Version 4.0.0
 
 With Typeson update, empty string components of key paths are now escaped
