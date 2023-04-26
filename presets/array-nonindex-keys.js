@@ -1,3 +1,6 @@
+/**
+ * @type {import('typeson').Preset}
+ */
 const arrayNonindexKeys = [
     {
         arrayNonindexKeys: {
@@ -36,13 +39,14 @@ const arrayNonindexKeys = [
                 if (Array.isArray(o)) {
                     return o;
                 }
+
+                /**
+                 * @type {{[key: string]: any}}
+                 */
                 const arr = [];
                 // No map here as may be a sparse array (including
                 //   with `length` set)
-                // Todo: Reenable when Node `engines` >= 7
-                // Object.entries(o).forEach(([key, val]) => {
-                Object.keys(o).forEach((key) => {
-                    const val = o[key];
+                Object.entries(o).forEach(([key, val]) => {
                     arr[key] = val;
                 });
                 return arr;

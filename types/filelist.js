@@ -1,6 +1,9 @@
 import {toStringTag} from 'typeson';
 import file from './file.js';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const filelist = {
     file: file.file,
     filelist: {
@@ -26,7 +29,7 @@ const filelist = {
                     this.length = this._files.length;
                 }
                 /**
-                 * @param {Integer} index
+                 * @param {import('typeson').Integer} index
                  * @returns {File}
                  */
                 item (index) {

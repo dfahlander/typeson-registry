@@ -1,7 +1,13 @@
 import generateUUID from '../utils/generateUUID.js';
 
+/**
+ * @type {{[key: (symbol|string)]: any}}
+ */
 const cloneableObjectsByUUID = {};
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const cloneable = {
     cloneable: {
         test (x) {
@@ -14,7 +20,11 @@ const cloneable = {
             cloneableObjectsByUUID[uuid] = clonable;
             return {uuid, encapsulated};
         },
-        revive ({uuid, encapsulated}) {
+        revive (obj) {
+            const {
+                uuid, encapsulated
+            } = /** @type {{uuid: string, encapsulated: any}} */ (obj);
+
             return cloneableObjectsByUUID[uuid][Symbol.for('cloneRevive')](
                 encapsulated
             );

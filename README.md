@@ -47,8 +47,8 @@ an `ImageBitmap` polyfill (including an `ImageBitmap` string tag).
 The `imagedata` type requires a global `ImageData` polyfill (including an
 `ImageData` string tag).
 
-You may wish to see our `test-node.js` and `test-environment.js` files
-for how some polyfilling may be done (largely using `jsdom`).
+You may wish to see our `test-environment.js` file for how some
+polyfilling may be done (largely using `jsdom`).
 
 The `cloneable` and `resurrectable` types (and the `createObjectURL`
 polyill) each accept an optional global `performance` polyfill (through

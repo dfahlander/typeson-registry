@@ -1,13 +1,20 @@
 /* globals crypto */
 import {TypesonPromise, toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const cryptokey = {
     cryptokey: {
         test (x) {
             return toStringTag(x) === 'CryptoKey' && x.extractable;
         },
-        replaceAsync (key) {
+        replaceAsync (
+            /** @type {CryptoKey} */
+            key
+        ) {
             return new TypesonPromise(async (resolve, reject) => {
+                /** @type {JsonWebKey} */
                 let jwk;
                 try {
                     jwk = await crypto.subtle.exportKey('jwk', key);
@@ -24,8 +31,20 @@ const cryptokey = {
                 });
             });
         },
-        revive ({jwk, algorithm, usages}) {
-            return crypto.subtle.importKey('jwk', jwk, algorithm, true, usages);
+        revive (obj) {
+            const {
+                jwk, algorithm, usages
+            } = /**
+              * @type {{
+              *   jwk: JsonWebKey,
+              *   algorithm: KeyAlgorithm,
+              *   usages: KeyUsage[]
+              * }}
+              */ (obj);
+
+            return crypto.subtle.importKey(
+                'jwk', jwk, algorithm, true, usages
+            );
         }
     }
 };

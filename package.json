@@ -1,12 +1,13 @@
 {
   "name": "typeson-registry",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
     "Brett Zamir"
   ],
   "type": "module",
+  "types": "./dist/index.d.ts",
   "main": "./dist/index.umd.min.js",
   "module": "./index.js",
   "exports": {
@@ -18,19 +19,21 @@
     "./*": "./*"
   },
   "scripts": {
+    "tsc": "tsc && node tools/append-to-declaration-files.js",
     "prepublishOnly": "pnpm i",
     "eslint": "eslint --ext js,md,html .",
     "lint": "npm run eslint --",
     "start": "static -p 8085",
     "rollup": "node ./build.js",
-    "mocha": "mocha --require chai/register-expect.js --require chai/register-assert.js test/test-node.js",
+    "build": "npm run rollup && tsc -p tsconfig-build.json",
+    "mocha": "mocha --require chai/register-expect.js --require chai/register-assert.js test/*.js",
     "open-coverage": "open-cli http://localhost:8085/coverage/ && npm start",
     "coverage": "rm -Rf node_modules/.cache && c8 npm run mocha",
-    "test-nocov": "npm run rollup && npm run eslint && npm run coverage",
-    "test": "npm run rollup && npm run eslint && npm run coverage",
+    "test-nocov": "npm run build && npm run eslint && npm run coverage",
+    "test": "npm run build && npm run eslint && npm run coverage",
     "test:worker-open": "open-cli http://localhost:8085/browser-test/worker.html && npm start",
     "test:browser-open": "open-cli http://localhost:8085/browser-test/ && npm start",
-    "test:browser": "npm run rollup && npm run eslint && npm run test:browser-open",
+    "test:browser": "npm run build && npm run eslint && npm run test:browser-open",
     "windows": "node windows-devinstall"
   },
   "c8": {
@@ -77,15 +80,19 @@
     "node": "^14.17.0 || >=16.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
+    "@babel/core": "^7.21.5",
     "@babel/eslint-parser": "^7.21.3",
-    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-env": "^7.21.5",
     "@brettz9/eslint-plugin": "^1.0.4",
     "@brettz9/node-static": "^0.1.1",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-terser": "^0.4.1",
+    "@types/chai": "^4.3.5",
+    "@types/jsdom": "^21.1.1",
+    "@types/mocha": "^10.0.1",
+    "@types/whatwg-url": "^11.0.0",
     "c8": "^7.13.0",
     "canvas": "^2.11.2",
     "chai": "^4.3.7",
@@ -99,7 +106,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsdoc": "^43.0.7",
+    "eslint-plugin-jsdoc": "^43.1.1",
     "eslint-plugin-markdown": "^3.0.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-no-unsanitized": "^4.0.2",
@@ -111,13 +118,13 @@
     "jsdom": "^21.1.1",
     "mocha": "^10.2.0",
     "open-cli": "^7.2.0",
-    "rollup": "^3.20.7",
+    "rollup": "^3.21.2",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },
   "dependencies": {
-    "base64-arraybuffer-es6": "^1.0.0",
-    "typeson": "^8.0.2",
+    "base64-arraybuffer-es6": "^2.0.1",
+    "typeson": "^9.0.1",
     "whatwg-url": "^12.0.1"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"

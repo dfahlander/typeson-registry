@@ -5,8 +5,14 @@
 
 import generateUUID from '../utils/generateUUID.js';
 
+/**
+ * @type {{[key: string]: any}}
+ */
 const resurrectableObjectsByUUID = {};
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const resurrectable = {
     resurrectable: {
         test (x) {

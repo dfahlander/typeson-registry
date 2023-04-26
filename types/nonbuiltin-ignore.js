@@ -1,5 +1,8 @@
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const nonbuiltinIgnore = {
     nonbuiltinIgnore: {
         test (x) {

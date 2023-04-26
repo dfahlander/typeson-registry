@@ -1,5 +1,8 @@
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const regexp = {
     regexp: {
         test (x) { return toStringTag(x) === 'RegExp'; },

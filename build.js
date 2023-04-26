@@ -158,7 +158,7 @@ ws.on('finish', async () => {
  * @param {string} cfg.name
  * @param {string} [cfg.format="umd"]
  * @param {boolean} [cfg.minified=true]
- * @returns {Promise<external:RollupOutput[]>}
+ * @returns {Promise<RollupOutput[]>}
  */
 async function bundle ({input, output, name, format = 'umd', minified = true}) {
     const plugins = [

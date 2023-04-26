@@ -1,3 +1,6 @@
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const negativeInfinity = {
     negativeInfinity: {
         test (x) { return x === Number.NEGATIVE_INFINITY; },

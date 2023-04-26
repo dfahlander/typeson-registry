@@ -1,3 +1,6 @@
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const infinity = {
     infinity: {
         test (x) { return x === Number.POSITIVE_INFINITY; },

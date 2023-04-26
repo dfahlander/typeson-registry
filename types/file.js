@@ -2,6 +2,9 @@
 import {TypesonPromise, toStringTag} from 'typeson';
 import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const file = {
     file: {
         test (x) { return toStringTag(x) === 'File'; },

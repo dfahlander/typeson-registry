@@ -1,5 +1,8 @@
 import {isUserObject} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const userObject = {
     userObject: {
         test (x, stateObj) { return isUserObject(x); },

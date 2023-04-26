@@ -1,5 +1,9 @@
 # typeson-registry
 
+## Version 7.0.0
+
+- feat: TypeScript typings
+
 ## Version 6.0.0
 
 - fix: add negative 0 to SpecialNumbers so it can be serialized distinctly

@@ -31,6 +31,9 @@ import intlTypes from '../types/intl-types.js';
 import bigint from '../types/bigint.js';
 import bigintObject from '../types/bigint-object.js';
 
+/**
+ * @type {import('typeson').Preset}
+ */
 const expObj = [
     undef,
     // ES5
