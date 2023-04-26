@@ -1,3 +1,6 @@
+/**
+ * @type {import('typeson').Preset}
+ */
 const sparseUndefined = [
     {
         sparseArrays: {

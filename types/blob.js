@@ -2,6 +2,9 @@
 import {TypesonPromise, toStringTag} from 'typeson';
 import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const blob = {
     blob: {
         test (x) { return toStringTag(x) === 'Blob'; },
@@ -21,7 +24,10 @@ const blob = {
                 stringContents: req.responseText
             };
         },
-        revive ({type, stringContents}) {
+        revive (obj) {
+            const {
+                type, stringContents
+            } = /** @type {{type: string, stringContents: string}} */ (obj);
             return new Blob([string2arraybuffer(stringContents)], {type});
         },
         replaceAsync (b) {

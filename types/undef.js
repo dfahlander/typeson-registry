@@ -2,6 +2,9 @@
 //  or `sparse-undefined` preset
 import {Undefined} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const undef = {
     undef: {
         test (x, stateObj) {

@@ -13,6 +13,9 @@ module.exports = {
         browser: false
     },
     settings: {
+        jsdoc: {
+            mode: 'typescript'
+        },
         polyfills: [
             'Array.from',
             'Array.isArray',
@@ -23,8 +26,10 @@ module.exports = {
             'createImageBitmap',
             'crypto',
             'DataView',
+            'DOMException',
             'Error',
             'File',
+            'FileList',
             'FileReader',
             'Float64Array',
             'ImageData',
@@ -85,7 +90,7 @@ module.exports = {
         },
         {
             files: [
-                'test/test-node.js',
+                'test/test-environment.js',
                 'polyfills/createObjectURL.js',
                 'windows-devinstall.js'
             ],

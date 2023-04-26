@@ -1,5 +1,8 @@
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const map = {
     map: {
         test (x) { return toStringTag(x) === 'Map'; },

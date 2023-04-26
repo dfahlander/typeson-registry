@@ -1,5 +1,8 @@
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const error = {
     error: {
         test (x) { return toStringTag(x) === 'Error'; },
@@ -11,13 +14,23 @@ const error = {
             };
         },
         revive (obj) {
-            const e = new Error(obj.message);
-            [
-                'name', 'cause', 'stack', 'fileName', 'lineNumber',
-                'columnNumber'
-            ].forEach((prop) => {
-                e[prop] = obj[prop];
-            });
+            const e = /**
+             * @type {{
+             *   name: string,
+             *   cause: Error,
+             *   stack: string,
+             *   fileName?: string,
+             *   lineNumber?: import('typeson').Integer,
+             *   columnNumber?: import('typeson').Integer
+             * }}
+             */ (new Error(obj.message));
+            e.name = obj.name;
+            e.cause = obj.cause;
+            e.stack = obj.stack;
+            e.fileName = obj.fileName;
+            e.lineNumber = obj.lineNumber;
+            e.columnNumber = obj.columnNumber;
+
             return e;
         }
     }

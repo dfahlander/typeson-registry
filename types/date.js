@@ -1,5 +1,8 @@
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const date = {
     date: {
         test (x) { return toStringTag(x) === 'Date'; },

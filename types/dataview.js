@@ -1,10 +1,21 @@
 import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const dataview = {
     dataview: {
         test (x) { return toStringTag(x) === 'DataView'; },
-        replace ({buffer, byteOffset, byteLength}, stateObj) {
+        replace (
+            {buffer, byteOffset, byteLength},
+            /**
+             * @type {import('typeson').StateObject & {
+             *  buffers?: ArrayBuffer[]
+             * }}
+             */
+            stateObj
+        ) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }
@@ -19,7 +30,15 @@ const dataview = {
                 byteLength
             };
         },
-        revive (b64Obj, stateObj) {
+        revive (
+            b64Obj,
+            /**
+             * @type {import('typeson').StateObject & {
+             *  buffers?: ArrayBuffer[]
+             * }}
+             */
+            stateObj
+        ) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }

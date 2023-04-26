@@ -1,6 +1,9 @@
 import builtin from './builtin.js';
 import typedArraysSocketIO from '../types/typed-arrays-socketio.js';
 
+/**
+ * @type {import('typeson').Preset}
+ */
 const socketio = [
     builtin,
     // Leave ArrayBuffer as is, and let socket.io stream it instead.

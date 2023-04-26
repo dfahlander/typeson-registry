@@ -4,6 +4,9 @@
 
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const imagedata = {
     imagedata: {
         test (x) { return toStringTag(x) === 'ImageData'; },

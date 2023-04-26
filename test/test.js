@@ -1,16 +1,28 @@
-/* eslint-env mocha */
-/* globals Typeson, TypesonNamespace, io, socketIOClient */
-/* globals expect, assert, BigInt, imageTestFileNode, InternalError */
+/* globals InternalError */
 /* globals ImageData, createImageBitmap, Blob, FileReader, File, crypto,
     DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax */
 
-import './test-environment.js';
-import util from './test-utils.js';
+/* eslint-disable no-shadow -- Needed */
+import {it, describe} from 'mocha';
+import {expect, assert} from 'chai';
+/* eslint-enable no-shadow -- Needed */
+import socketIOClient from 'socket.io-client';
+import io from './helpers/io.js';
+
+import {imageTestFileNode} from './helpers/test-environment.js';
+import * as TypesonNamespace from '../index.js';
+import * as util from './helpers/test-utils.js';
 
 import {
     string2arraybuffer, arraybuffer2string
 } from '../utils/stringArrayBuffer.js';
+
+/**
+ * @typedef {import('typeson').Integer} Integer
+ */
+
+const {Typeson} = TypesonNamespace;
 
 const debug = false;
 /**
@@ -25,40 +37,8 @@ function log (...args) {
 }
 
 /**
-* @typedef {PlainObject} TypesonSpecObject
-* @property {boolean} testPlainObjects
-* @property {TypesonTester} test
-* @property {TypesonReplacer} [replace] Likely present, but might just use
-*    `test` for reporting
-* @property {TypesonReviver} [revive]
-* @property {TypesonReplacerAsync} [replaceAsync]
-* @property {TypesonReviverAsync} [reviveAsync]
-*/
-
-/**
-* @typedef {GenericArray} TypesonSpecArray
-* @property {TypesonTester} 0
-* @property {TypesonReplacer} 1
-* @property {TypesonReviver} 2
-*/
-
-/**
-* @typedef {ConstructorFunctionOrClass} TypesonSpecFunction
-*/
-
-/* eslint-disable max-len */
-/**
-* @typedef {PlainObject<string, (TypesonSpecObject|TypesonSpecArray|TypesonSpecFunction)>} TypesonTypeObject
-*/
-/* eslint-enable max-len */
-
-/**
-* @typedef {TypesonTypeObject} TypesonType
-*/
-
-/**
-* @typedef {TypesonType[]} TypesonPreset
-*/
+ * @typedef {import('typeson').Preset} TypesonPreset
+ */
 
 const {
     // types
@@ -89,20 +69,33 @@ function ErrorAndErrors (preset) {
         it('should get back real Error instances corresponding to their ' +
             'types and with the original name and message', () => {
             const typeson = new Typeson().register(preset || [error, errors]);
-            const e1 = new Error('Error1');
+            const e1 =
+                /**
+                 * @type {{
+                 *   name: string,
+                 *   cause: Error,
+                 *   stack: string,
+                 *   fileName?: string,
+                 *   lineNumber?: import('typeson').Integer,
+                 *   columnNumber?: import('typeson').Integer
+                 * }}
+                 */
+                (new Error('Error1'));
             const e2 = new TypeError('Error2');
             const e3 = new RangeError('Error3');
             const e4 = new SyntaxError('Error4');
             const e5 = new ReferenceError('Error5');
             const e6 = new AggregateError([new Error('InnerError6')], 'Error6');
+            // @ts-ignore Non-standard
             const e7 = typeof InternalError !== 'undefined'
+                // @ts-ignore Non-standard
                 ? new InternalError('Error7')
                 : undefined;
 
             const json = typeson.stringify({
                 e1, e2, e3, e4, e5, e6, e7
             });
-            const obj = typeson.parse(json);
+            const obj = typeson.parse(/** @type {string} */ (json));
             expect(obj.e1).to.be.an.instanceOf(Error);
             expect(obj.e1.name).to.equal('Error');
             expect(obj.e1.message).to.equal('Error1');
@@ -127,11 +120,12 @@ function ErrorAndErrors (preset) {
             expect(obj.e6.name).to.equal('AggregateError');
             expect(obj.e6.message).to.equal('Error6');
             expect(obj.e6.errors[0].message).to.equal('InnerError6');
-            // Non-standard
+            // @ts-ignore Non-standard
             if (typeof InternalError !== 'undefined') {
+                // @ts-ignore Non-standard
                 expect(obj.e7).to.be.an.instanceOf(InternalError);
                 expect(obj.e7.name).to.equal('InternalError');
-                expect(obj.e7.message).to.equal('Error6');
+                expect(obj.e7.message).to.equal('Error7');
             }
         });
     });
@@ -147,19 +141,19 @@ function SpecialNumbers (preset) {
         it('NaN', () => {
             const typeson = new Typeson().register(preset || nan);
             const tson = typeson.stringify(Number.NaN, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.NaN;
         });
         it('Infinity', () => {
             const typeson = new Typeson().register(preset || infinity);
             const tson = typeson.stringify(Number.POSITIVE_INFINITY, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.equal(Number.POSITIVE_INFINITY);
         });
         it('-Infinity', () => {
             const typeson = new Typeson().register(preset || negativeInfinity);
             const tson = typeson.stringify(Number.NEGATIVE_INFINITY, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.equal(Number.NEGATIVE_INFINITY);
         });
         it('should not mistake string forms of the special numbers', () => {
@@ -167,13 +161,13 @@ function SpecialNumbers (preset) {
                 nan, infinity, negativeInfinity
             ]);
             let tson = typeson.stringify('NaN', null, 2);
-            let back = typeson.parse(tson);
+            let back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.equal('NaN');
             tson = typeson.stringify('Infinity', null, 2);
-            back = typeson.parse(tson);
+            back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.equal('Infinity');
             tson = typeson.stringify('-Infinity', null, 2);
-            back = typeson.parse(tson);
+            back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.equal('-Infinity');
         });
         it('should not disturb encoding of normal numbers', () => {
@@ -181,7 +175,7 @@ function SpecialNumbers (preset) {
                 nan, infinity, negativeInfinity
             ]);
             const tson = typeson.stringify(512, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.equal(512);
         });
     });
@@ -201,7 +195,7 @@ function Undefined (preset) {
                 b: undefined, c: [3, null, , undefined]
             }];
             const json = typeson.stringify(a);
-            const a2 = typeson.parse(json);
+            const a2 = typeson.parse(/** @type {string} */ (json));
             expect(a2.length).to.equal(2);
             expect(a2[0]).to.equal(undefined);
             expect(a2[1].b).to.equal(undefined);
@@ -229,7 +223,7 @@ function Undefined (preset) {
             const typeson = new Typeson().register(preset || undef);
             const tson = typeson.stringify(undefined);
             expect(tson).to.equal('{"$":0,"$types":{"$":{"":"undef"}}}');
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.undefined;
         });
     });
@@ -244,6 +238,9 @@ function NonindexKeys (preset) {
     describe('arrayNonindexKeys', () => {
         it('should preserve sparse arrays with non-index keys', () => {
             const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            /**
+             * @type {(number|string|undefined)[] & {ghi?: string}}
+             */
             const arr = [, , 3, 4, 5]; // eslint-disable-line no-sparse-arrays
             arr.length = 10;
             arr[7] = 6;
@@ -251,29 +248,35 @@ function NonindexKeys (preset) {
             arr.ghi = 'xyz';
             const tson = typeson.stringify(arr);
             // console.log('tson', tson);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an('array');
             expect(back).to.deep.equal(arr);
         });
         it('should preserve sparse arrays without non-index keys', () => {
             const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            /**
+             * @type {(number|string|undefined)[]}
+             */
             const arr = [, , 3, 4, 5]; // eslint-disable-line no-sparse-arrays
             arr.length = 10;
             arr[7] = 6;
             const tson = typeson.stringify(arr);
             // console.log('tson', tson);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an('array');
             expect(back).to.deep.equal(arr);
         });
         it('should preserve non-sparse arrays with non-index keys', () => {
             const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            /**
+             * @type {(number|string|undefined)[] & {ghi?: string}}
+             */
             const arr = [3, 4, 5, 6];
             arr[-2] = 'abc';
             arr.ghi = 'xyz';
             const tson = typeson.stringify(arr);
             // console.log('tson', tson);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an('array');
             expect(back).to.deep.equal(arr);
         });
@@ -282,7 +285,7 @@ function NonindexKeys (preset) {
             const arr = [3, 4, 5, 6];
             const tson = typeson.stringify(arr);
             // console.log('tson', tson);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an('array');
             expect(back).to.deep.equal(arr);
         });
@@ -303,7 +306,7 @@ function BuiltIn (preset) {
             const typeson = new Typeson().register(preset || negativeZero);
             const zer = 0;
             const tson = typeson.stringify(zer, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(typeof back).to.equal('number');
             expect(back.valueOf()).to.equal(0);
             expect(Object.is(back, 0)).to.equal(true);
@@ -313,7 +316,7 @@ function BuiltIn (preset) {
             const typeson = new Typeson().register(preset || negativeZero);
             const zer = -0;
             const tson = typeson.stringify(zer, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(typeof back).to.equal('number');
             expect(back.valueOf()).to.equal(0);
             expect(Object.is(back, -0)).to.equal(true);
@@ -327,7 +330,7 @@ function BuiltIn (preset) {
             // eslint-disable-next-line no-new-wrappers
             const strObj = new String('hello');
             const tson = typeson.stringify(strObj, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(String);
             expect(back.valueOf()).to.equal('hello');
             expect(back.length).to.equal(5);
@@ -337,7 +340,7 @@ function BuiltIn (preset) {
             // eslint-disable-next-line no-new-wrappers
             const strObj = new Boolean(true);
             const tson = typeson.stringify(strObj, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(Boolean);
             expect(back.valueOf()).to.equal(true);
         });
@@ -346,7 +349,7 @@ function BuiltIn (preset) {
             // eslint-disable-next-line no-new-wrappers
             const strObj = new Number(456);
             const tson = typeson.stringify(strObj, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(Number);
             expect(back.valueOf()).to.equal(456);
         });
@@ -360,14 +363,14 @@ function BuiltIn (preset) {
             'time milliseconds', () => {
             const typeson = new Typeson().register(preset || date);
             const json = typeson.stringify(new Date(1234567));
-            const obj = typeson.parse(json);
+            const obj = typeson.parse(/** @type {string} */ (json));
             expect(obj).to.be.an.instanceOf(Date);
             expect(obj.getTime()).to.equal(1234567);
         });
         it('should get back a real invalid Date instance', () => {
             const typeson = new Typeson().register(preset || date);
             const json = typeson.stringify(new Date(Number.NaN));
-            const obj = typeson.parse(json);
+            const obj = typeson.parse(/** @type {string} */ (json));
             expect(obj).to.be.an.instanceOf(Date);
             expect(obj.getTime()).to.be.NaN;
         });
@@ -381,7 +384,7 @@ function BuiltIn (preset) {
             // eslint-disable-next-line prefer-regex-literals
             let regex = new RegExp('ab?c', 'guy');
             let tson = typeson.stringify(regex, null, 2);
-            let back = typeson.parse(tson);
+            let back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof RegExp);
             expect(back.global).to.equal(true);
             expect(back.unicode).to.equal(true);
@@ -392,7 +395,7 @@ function BuiltIn (preset) {
 
             regex = /ab?c/im; // eslint-disable-line require-unicode-regexp
             tson = typeson.stringify(regex, null, 2);
-            back = typeson.parse(tson);
+            back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof RegExp);
             expect(back.global).to.equal(false);
             expect(back.unicode).to.equal(false);
@@ -413,7 +416,7 @@ function BuiltIn (preset) {
 
             map1.set(err, dt);
             const json = typeson.stringify({m: map1});
-            const obj = typeson.parse(json);
+            const obj = typeson.parse(/** @type {string} */ (json));
             expect(obj.m).to.be.an.instanceOf(Map);
             if (preset) {
                 expect(obj.m.keys().next().value).to.be.an.instanceOf(Error);
@@ -439,7 +442,7 @@ function BuiltIn (preset) {
             set1.add(str);
 
             const json = typeson.stringify({s: set1});
-            const obj = typeson.parse(json);
+            const obj = typeson.parse(/** @type {string} */ (json));
 
             expect(obj.s).to.be.an.instanceOf(Set);
 
@@ -457,7 +460,7 @@ function BuiltIn (preset) {
             const typeson = new Typeson().register(preset || [arraybuffer]);
             const buf = new ArrayBuffer(16);
             const tson = typeson.stringify(buf, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
         });
@@ -470,7 +473,7 @@ function BuiltIn (preset) {
                 buf2
             };
             const tson = typeson.stringify(obj, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             assert(back.buf1 instanceof ArrayBuffer);
             assert(back.buf2 instanceof ArrayBuffer);
             expect(back.buf1).to.equal(back.buf2);
@@ -490,7 +493,7 @@ function BuiltIn (preset) {
                 a[1] = -15;
                 a[2] = 99;
                 const json = typeson.stringify({a});
-                const obj = typeson.parse(json);
+                const obj = typeson.parse(/** @type {string} */ (json));
                 expect(obj.a).to.be.an.instanceOf(Float64Array);
                 expect(obj.a.length).to.equal(3);
                 expect(obj.a[0]).to.equal(23.8);
@@ -509,7 +512,7 @@ function BuiltIn (preset) {
                 const a = new Uint16Array(0x0900);
                 let i = a.length;
                 while (i--) a[i] = i + 0xD780;
-                let json = typeson.stringify({a});
+                let json = /** @type {string} */ (typeson.stringify({a}));
                 // console.log(json);
 
                 // Emulate a textencoder that eliminates invalid UTF chars
@@ -521,12 +524,12 @@ function BuiltIn (preset) {
                     const ch = json.charCodeAt(i);
                     copy[i] = ch >= 0xD800 && ch < 0xE000 ? 0xFFFD : ch;
                 }
-                json = String.fromCharCode.apply(null, copy);
+                json = String.fromCharCode.apply(null, Array.from(copy));
 
-                const obj = typeson.parse(json);
+                const obj = typeson.parse(/** @type {string} */ (json));
                 expect(obj.a).to.be.an.instanceOf(Uint16Array);
                 expect(obj.a.length).to.equal(a.length);
-                obj.a.forEach((x, j) => {
+                /** @type {Uint16Array} */ (obj.a).forEach((x, j) => {
                     expect(x).to.equal(j + 0xD780);
                 });
             });
@@ -545,7 +548,7 @@ function BuiltIn (preset) {
                 a[2] = 2;
                 const json = typeson.stringify(a);
                 // console.log(json);
-                const a2 = typeson.parse(json);
+                const a2 = typeson.parse(/** @type {string} */ (json));
                 expect(a2.length).to.equal(3);
                 expect(a2[0]).to.equal(0);
                 expect(a2[1]).to.equal(1);
@@ -574,7 +577,7 @@ function BuiltIn (preset) {
 
                 const json = typeson.stringify(obj);
                 // console.log(json);
-                const obj2 = typeson.parse(json);
+                const obj2 = typeson.parse(/** @type {string} */ (json));
                 expect(obj2.wrapper1.buffer).to.equal(obj2.wrapper2.buffer);
                 expect(obj2.wrapper1.buffer).to.equal(obj2.buffer);
                 expect(obj2.wrapper1.buffer).to.equal(obj2.dataView.buffer);
@@ -590,7 +593,7 @@ function BuiltIn (preset) {
             const dataView = new DataView(buffer, 3, 4);
             expect(dataView.byteLength).to.equal(4);
             const tson = typeson.stringify(dataView, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(DataView);
             expect(back.byteLength).to.equal(4);
         });
@@ -609,7 +612,7 @@ function BuiltIn (preset) {
             };
 
             const tson = typeson.stringify(obj, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back.dataView1).to.be.an.instanceOf(DataView);
             expect(back.dataView2).to.be.an.instanceOf(DataView);
             expect(back.dataView3).to.be.an.instanceOf(DataView);
@@ -639,7 +642,7 @@ function BuiltIn (preset) {
             const collator = new Intl.Collator(locales, opts);
             const expectedLocale = collator.resolvedOptions().locale;
             const tson = typeson.stringify(collator, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof Intl.Collator);
             // console.log(Intl.Collator.supportedLocalesOf(
             //    Object.keys(optsClone.locales), optsClone.localeMatcher
@@ -647,23 +650,36 @@ function BuiltIn (preset) {
 
             expect(back.resolvedOptions().locale).to.deep.equal(expectedLocale);
 
-            Object.keys(optsClone).filter(
-                (k) => ![
-                    // These would ideally be present but are not
-                    //   available for inspection
-                    'localeMatcher', 'locales'
-                ].includes(k)
-            ).forEach((prop) => {
-                expect(back.resolvedOptions()[prop]).to.deep.equal(
-                    optsClone[prop]
-                );
-            });
+            expect(back.resolvedOptions().usage).to.deep.equal(
+                optsClone.usage
+            );
+            expect(back.resolvedOptions().sensitivity).to.deep.equal(
+                optsClone.sensitivity
+            );
+            expect(back.resolvedOptions().ignorePunctuation).to.deep.equal(
+                optsClone.ignorePunctuation
+            );
+            expect(back.resolvedOptions().numeric).to.deep.equal(
+                optsClone.numeric
+            );
+            expect(back.resolvedOptions().caseFirst).to.deep.equal(
+                optsClone.caseFirst
+            );
         });
         it('should return a Intl.DateTimeFormat', () => {
             const typeson = new Typeson().register(preset || [intlTypes]);
             const locales = [
                 'hi', 'de-AT', 'de-DE-u-nu-latn', 'en-US-u-ca-persian'
             ];
+
+            /**
+             * @type {{
+             *   localeMatcher: 'lookup',
+             *   timeZone: string,
+             *   hour12: boolean,
+             *   formatMatcher: 'basic'
+             * }}
+             */
             const opts = {
                 localeMatcher: 'lookup',
                 timeZone: 'Asia/Shanghai',
@@ -674,20 +690,11 @@ function BuiltIn (preset) {
 
             const dtf = new Intl.DateTimeFormat(locales, opts);
             const tson = typeson.stringify(dtf, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof Intl.DateTimeFormat);
-            Object.keys(optsClone).filter(
-                (k) => ![
-                    // These would ideally be present but are not
-                    //   available for inspection
-                    'localeMatcher', 'locales', 'formatMatcher',
-                    'hour12' // Not currently working in Node or Chrome
-                ].includes(k)
-            ).forEach((prop) => {
-                expect(back.resolvedOptions()[prop]).to.deep.equal(
-                    optsClone[prop]
-                );
-            });
+            expect(back.resolvedOptions().timeZone).to.deep.equal(
+                optsClone.timeZone
+            );
         });
         it('should return a Intl.NumberFormat', () => {
             const typeson = new Typeson().register(preset || [intlTypes]);
@@ -703,19 +710,21 @@ function BuiltIn (preset) {
 
             const dtf = new Intl.NumberFormat(locales, opts);
             const tson = typeson.stringify(dtf, null, 2);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof Intl.NumberFormat);
-            Object.keys(optsClone).filter(
-                (k) => ![
-                    // These would ideally be present but are not
-                    //   available for inspection
-                    'localeMatcher', 'locales'
-                ].includes(k)
-            ).forEach((prop) => {
-                expect(back.resolvedOptions()[prop]).to.deep.equal(
-                    optsClone[prop]
-                );
-            });
+
+            expect(back.resolvedOptions().style).to.deep.equal(
+                optsClone.style
+            );
+            expect(back.resolvedOptions().currency).to.deep.equal(
+                optsClone.currency
+            );
+            expect(back.resolvedOptions().currencyDisplay).to.deep.equal(
+                optsClone.currencyDisplay
+            );
+            expect(back.resolvedOptions().useGrouping).to.deep.equal(
+                optsClone.useGrouping
+            );
         });
     });
 
@@ -726,7 +735,7 @@ function BuiltIn (preset) {
                 const tson = typeson.stringify(
                     BigInt('9007199254740993'), null, 2
                 );
-                const back = typeson.parse(tson);
+                const back = typeson.parse(/** @type {string} */ (tson));
                 expect(typeof back).to.equal('bigint');
                 expect(back).to.equal(BigInt('9007199254740993'));
             });
@@ -737,7 +746,7 @@ function BuiltIn (preset) {
                     // eslint-disable-next-line no-new-object
                     new Object(BigInt('9007199254740993')), null, 2
                 );
-                const back = typeson.parse(tson);
+                const back = typeson.parse(/** @type {string} */ (tson));
                 expect(typeof back).to.equal('object');
                 expect(back).to.deep.equal(
                     // Filed this to avoid error: https://github.com/eslint/eslint/issues/11810
@@ -770,7 +779,9 @@ function CryptoKey (preset) {
             const tson = await typeson.stringifyAsync(
                 key, null, 2
             );
-            const back = await typeson.parseAsync(tson);
+            const back = /** @type {CryptoKey} */ (
+                await typeson.parseAsync(tson)
+            );
             // console.log('back', back);
             const jwkResult = await crypto.subtle.exportKey('jwk', back);
             expect(TypesonNamespace.toStringTag(back)).to.equal('CryptoKey');
@@ -782,7 +793,7 @@ function CryptoKey (preset) {
 CryptoKey();
 
 /**
- * @param {TypesonSpec} preset
+ * @param {import('typeson').Preset} [preset]
  * @param {boolean} [typeWithBufferEncoding=false]
  * @returns {void}
  */
@@ -843,9 +854,12 @@ function socketIO (preset, typeWithBufferEncoding) {
             };
 
             /**
+             * @typedef {any} EncapsulatedObject
+             */
+            /**
              *
-             * @param {PlainObject} obj
-             * @param {boolean} postSockets
+             * @param {EncapsulatedObject} obj
+             * @param {boolean} [postSockets]
              * @returns {void}
              */
             function checkPreRevival (obj, postSockets) {
@@ -900,7 +914,11 @@ function socketIO (preset, typeWithBufferEncoding) {
                 log('client connect');
             });
             // eslint-disable-next-line promise/avoid-new
-            return new Promise((resolve, reject) => {
+            return new Promise((
+                /** @type {(value?: any) => void} */
+                resolve,
+                reject
+            ) => {
                 socket.on('myEvent', function (e) {
                     socket.close();
                     io.close();
@@ -975,7 +993,7 @@ describe('ImageData', () => {
             const typeson = new Typeson().register(imagedata);
             const imageData = new ImageData(1, 3);
             const tson = typeson.stringify(imageData);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back.width).to.equal(1);
             expect(back.height).to.equal(3);
             expect(back.data).to.deep.equal(new Uint8ClampedArray(12));
@@ -990,19 +1008,23 @@ describe('ImageBitmap', function () {
         const typeson = new Typeson().register(imagebitmap);
 
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = /** @type {CanvasRenderingContext2D} */ (
+            canvas.getContext('2d')
+        );
         const img = document.createElement('img');
         // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
         img.addEventListener('load', async () => {
             ctx.drawImage(img, 0, 0);
             const imageBitmap = await createImageBitmap(canvas);
             const tson = typeson.stringify(imageBitmap);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             expect(back.width).to.equal(300 /* img.width */);
             expect(back.height).to.equal(150 /* img.height */);
 
             const cvs = document.createElement('canvas');
-            const cntxt = cvs.getContext('2d');
+            const cntxt = /** @type {CanvasRenderingContext2D} */ (
+                cvs.getContext('2d')
+            );
             cntxt.drawImage(back, 0, 0);
             // Not getting a URL that is displaying properly or exactly
             //   consistent between Node/browser
@@ -1015,31 +1037,28 @@ describe('ImageBitmap', function () {
                 try { // Chrome
                     expect(cvs.toDataURL()).to.equal(
                         // eslint-disable-next-line max-len
-                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
+                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAAXNSR0IArs4c6QAABGJJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDncOQIECEQEFskpJgECBM5geQICBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAgQdWMQCX4yW9owAAAABJRU5ErkJggg=='
                     );
                 } catch (toDataURLError) { // Firefox
                     expect(cvs.toDataURL()).to.equal(
                         // eslint-disable-next-line max-len
-                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII='
+                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
                     );
                 }
             }
             done();
         });
         // Didn't work with a relative path nor with an SVG file in node-canvas
-        img.src = typeof imageTestFileNode !== 'undefined'
-            ? imageTestFileNode
-            // browserify-test uses testem which assumes `cwd()` resolution
-            //  (in `Config.prototype.resolvePath` of
-            //  `node_modules/testem/lib/config.js`)
-            : '../test/Flag_of_the_United_Nations.png';
+        img.src = imageTestFileNode;
     });
     it('should get back an ImageBitmap instance with the original ' +
         'data asynchronously', (done) => {
         const typeson = new Typeson().register(imagebitmap);
 
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = /** @type {CanvasRenderingContext2D} */ (
+            canvas.getContext('2d')
+        );
         const img = document.createElement('img');
         // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
         img.addEventListener('load', async () => {
@@ -1047,12 +1066,18 @@ describe('ImageBitmap', function () {
 
             const imageBitmap = await createImageBitmap(canvas);
             const tson = typeson.stringify(imageBitmap);
-            const back = await typeson.parseAsync(tson);
+            const back = /** @type {ImageBitmap} */ (
+                await typeson.parseAsync(/** @type {string} */ (
+                    tson
+                ))
+            );
             expect(back.width).to.equal(300); // img.width
             expect(back.height).to.equal(150); // img.height
 
             const cvs = document.createElement('canvas');
-            const cntxt = cvs.getContext('2d');
+            const cntxt = /** @type {CanvasRenderingContext2D} */ (
+                cvs.getContext('2d')
+            );
             cntxt.drawImage(back, 0, 0);
             // Not getting a URL that is displaying properly or exactly
             //   consistent between Node/browser
@@ -1072,12 +1097,12 @@ describe('ImageBitmap', function () {
                     try { // Chrome
                         expect(dataURL).to.equal(
                             // eslint-disable-next-line max-len
-                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
+                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAAXNSR0IArs4c6QAABGJJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDncOQIECEQEFskpJgECBM5geQICBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAgQdWMQCX4yW9owAAAABJRU5ErkJggg=='
                         );
                     } catch (toDataURLError) { // Firefox
                         expect(dataURL).to.equal(
                             // eslint-disable-next-line max-len
-                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII='
+                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
                         );
                     }
                 }
@@ -1085,12 +1110,7 @@ describe('ImageBitmap', function () {
             done();
         });
         // Didn't work with a relative path nor with an SVG file in node-canvas
-        img.src = typeof imageTestFileNode !== 'undefined'
-            ? imageTestFileNode
-            // browserify-test uses testem which assumes `cwd()` resolution
-            //   (in `Config.prototype.resolvePath` of
-            //   `node_modules/testem/lib/config.js`)
-            : '../test/Flag_of_the_United_Nations.png';
+        img.src = imageTestFileNode;
     });
 });
 
@@ -1112,7 +1132,7 @@ describe('Blob', function () {
             type: contentType // DOMString
         });
         const tson = typeson.stringify(blob1);
-        const back = typeson.parse(tson);
+        const back = typeson.parse(/** @type {string} */ (tson));
 
         expect(back.type).to.equal(contentType);
         expect('name' in back).to.be.false; // No file properties
@@ -1195,12 +1215,14 @@ describe('Blob', function () {
             largeValue(largeVal, 1)
         ], {type: 'text/x-blink-1'});
         const t5 = typeson.stringify(b5);
-        const tback = typeson.parse(t5);
+        const tback = typeson.parse(/** @type {string} */ (t5));
         expect(tback.size, 'Sync large val').to.equal(largeVal);
 
         const reader = new FileReader();
         reader.onloadend = async () => {
-            const view = new Uint8Array(reader.result);
+            const view = new Uint8Array(/** @type {ArrayBuffer} */ (
+                reader.result
+            ));
             expect(view.join(',')).to.equal(largeValue(largeVal, 1).join(','));
 
             const b6 = new Blob([
@@ -1212,7 +1234,9 @@ describe('Blob', function () {
 
             const rdr = new FileReader();
             rdr.onloadend = () => {
-                const vw = new Uint8Array(rdr.result);
+                const vw = new Uint8Array(/** @type {ArrayBuffer} */ (
+                    rdr.result
+                ));
                 expect(vw.join(',')).to.equal(
                     largeValue(largeVal, 1).join(',')
                 );
@@ -1232,19 +1256,21 @@ describe('File', function () {
         const contentType = 'application/json';
         const fileName = 'aName';
         const stringContents = JSON.stringify('abc\u1234');
-        const file1 = new File([
-            // BufferSource (ArrayBufferView (Int8Array,
-            //   etc. or DataView) or ArrayBuffer), Blob, or
-            //   USVString (strings without unpaired surrogates)
-            stringContents
-        ],
-        fileName, // USVString (strings without unpaired surrogates)
-        {
-            type: contentType, // DOMString
-            lastModified: currTime // Or number
-        });
+        const file1 = new File(
+            [
+                // BufferSource (ArrayBufferView (Int8Array,
+                //   etc. or DataView) or ArrayBuffer), Blob, or
+                //   USVString (strings without unpaired surrogates)
+                stringContents
+            ],
+            fileName, // USVString (strings without unpaired surrogates)
+            {
+                type: contentType, // DOMString
+                lastModified: Number(currTime) // Or number
+            }
+        );
         const tson = typeson.stringify(file1);
-        const back = typeson.parse(tson);
+        const back = typeson.parse(/** @type {string} */ (tson));
         expect(back.lastModified).to.equal(currTime.getTime());
         expect(back.type).to.equal(contentType);
         expect(back.name).to.equal(fileName);
@@ -1274,7 +1300,7 @@ describe('File', function () {
         fileName, // USVString (strings without unpaired surrogates)
         {
             type: contentType, // DOMString
-            lastModified: currTime // Or number
+            lastModified: Number(currTime) // Or number
         });
         const tson = await typeson.stringifyAsync(file1);
         const back = typeson.parse(tson);
@@ -1314,16 +1340,16 @@ describe('FileList', function () {
             /**
              * For `instanceof`.
              */
-            class FileList extends Array {}
+            class _FileList extends Array {}
 
-            input.files = new FileList(
+            const files = /** @type {unknown} */ (new _FileList(
                 new File([
                     'content1'
                 ],
                 'abc',
                 {
                     type: 'text/plain', // DOMString
-                    lastModified: currTime // Or number
+                    lastModified: Number(currTime) // Or number
                 }),
                 new File([
                     'content2'
@@ -1331,15 +1357,17 @@ describe('FileList', function () {
                 'def',
                 {
                     type: 'text/html', // DOMString
-                    lastModified: anotherTime // Or number
+                    lastModified: Number(anotherTime) // Or number
                 })
-            );
+            ));
+
+            input.files = /** @type {FileList} */ (files);
         })();
 
         expect(input.files).to.be.a('FileList');
         const typeson = new Typeson().register(filelist);
         const tson = typeson.stringify(input.files);
-        const back = typeson.parse(tson);
+        const back = typeson.parse(/** @type {string} */ (tson));
         expect(back.item(0)).to.be.an.instanceOf(File);
         expect(back.item(0).lastModified).to.equal(currTime.getTime());
         expect(back.item(0).type).to.equal('text/plain');
@@ -1362,16 +1390,16 @@ describe('FileList', function () {
             /**
              * For `instanceof`.
              */
-            class FileList extends Array {}
+            class _FileList extends Array {}
 
-            input.files = new FileList(
+            const files = /** @type {unknown} */ (new _FileList(
                 new File([
                     'content1'
                 ],
                 'abc',
                 {
                     type: 'text/plain', // DOMString
-                    lastModified: currTime // Or number
+                    lastModified: Number(currTime) // Or number
                 }),
                 new File([
                     'content2'
@@ -1379,9 +1407,10 @@ describe('FileList', function () {
                 'def',
                 {
                     type: 'text/html', // DOMString
-                    lastModified: anotherTime // Or number
+                    lastModified: Number(anotherTime) // Or number
                 })
-            );
+            ));
+            input.files = /** @type {FileList} */ (files);
         })();
 
         expect(input.files).to.be.a('FileList');
@@ -1405,7 +1434,7 @@ describe('Non-built-in object ignoring', () => {
         const john = new util.Person('John Doe');
         const simulatedNonBuiltInObject = new util.SimulatedNonBuiltIn();
         const tson = typeson.stringify({a: john, b: simulatedNonBuiltInObject});
-        const back = typeson.parse(tson);
+        const back = typeson.parse(/** @type {string} */ (tson));
         expect(back).to.deep.equal({
             a: {name: 'John Doe'}
         });
@@ -1427,10 +1456,16 @@ describe('User objects', () => {
             'Bob Smith', 30, new Date(2000, 5, 20), true
         );
 
+        /**
+         * @type {import('./helpers/test-utils.js').SimulatedNonBuiltIn & {
+         *   prop?: number
+         * }}
+         */
         const simulatedNonBuiltInObject = new util.SimulatedNonBuiltIn();
         simulatedNonBuiltInObject.prop = 500;
+
         const tson = typeson.stringify({a: bob, b: simulatedNonBuiltInObject});
-        const back = typeson.parse(tson);
+        const back = typeson.parse(/** @type {string} */ (tson));
         expect(back).to.deep.equal({
             a: {
                 name: 'Bob Smith',
@@ -1447,13 +1482,20 @@ describe('User objects', () => {
             userObject,
             nonbuiltinIgnore
         ]);
+
+        /**
+         * @type {import('./helpers/test-utils.js').Person &
+         *   {nonbuiltin?:
+         *     import('./helpers/test-utils.js').SimulatedNonBuiltIn}
+         * }
+         */
         const bob = new util.Person(
             'Bob Smith', 30, new Date(2000, 5, 20), true
         );
         bob.nonbuiltin = new util.SimulatedNonBuiltIn();
         const simulatedNonBuiltInObject = new util.SimulatedNonBuiltIn();
         const tson = typeson.stringify({a: bob, b: simulatedNonBuiltInObject});
-        const back = typeson.parse(tson);
+        const back = typeson.parse(/** @type {string} */ (tson));
         expect(back).to.deep.equal({
             a: {
                 name: 'Bob Smith',
@@ -1474,6 +1516,7 @@ describe('Cloneables', () => {
         const originalNonpersistentStateInfo = mc.nonpersistentStateInfo;
 
         const encapsulated = typeson.encapsulate(mc);
+        // @ts-ignore How to fix?
         expect(mc[Symbol.for('cloneEncapsulate')]()).to.deep.equal({
             obj: JSON.stringify(objArg)
         });
@@ -1530,7 +1573,7 @@ describe('Presets', () => {
                 map: new Map([[1, 1n], [0, 1n]])
             }, null, 2);
             // console.log('tson', tson);
-            const back = typeson.parse(tson);
+            const back = typeson.parse(/** @type {string} */ (tson));
             // console.log('back', back);
             expect(back).to.deep.equal({
                 map: new Map([[1, 1n], [0, 1n]])
@@ -1594,7 +1637,9 @@ describe('Presets', () => {
                 'Bob Smith', 30, new Date(2000, 5, 20), true
             );
 
-            const clonedData = typeson.parse(typeson.stringify([john, bob]));
+            const clonedData = typeson.parse(
+                /** @type {string} */ (typeson.stringify([john, bob]))
+            );
             expect(clonedData).to.have.same.deep.members([
                 {name: 'John Doe'},
                 {
@@ -1607,9 +1652,14 @@ describe('Presets', () => {
         });
         it('should work with recursive structures', () => {
             const typeson = new Typeson().register(structuredCloningThrowing);
+            /**
+             * @type {object[]}
+             */
             const obj = [];
             obj.push(obj);
-            const clonedData = typeson.parse(typeson.stringify(obj));
+            const clonedData = typeson.parse(
+                /** @type {string} */ (typeson.stringify(obj))
+            );
             expect(clonedData[0]).to.equal(clonedData);
         });
     });
@@ -1633,7 +1683,7 @@ describe('Presets', () => {
                 b: undefined, c: [3, null, , undefined]
             }];
             const json = typeson.stringify(a);
-            const a2 = typeson.parse(json);
+            const a2 = typeson.parse(/** @type {string} */ (json));
             expect(a2.length).to.equal(2);
             expect(a2[0]).to.equal(null);
             expect('b' in a2[1]).to.be.false;
@@ -1694,11 +1744,21 @@ describe('Polyfills', () => {
             XMLHttpRequest.prototype.overrideMimeType = () => {
                 //
             };
-            const xhr = {
+
+            /**
+             * @typedef {{
+             *   overrideMimeType: (mimeType: string) => void,
+             *   open: (method: string, url: string, sync: boolean) => void,
+             *   send: () => void,
+             *   status: number
+             * }} XMLHttpRequestMock
+             */
+
+            const xhr = /** @type {XMLHttpRequestMock} */ ({
                 overrideMimeType: xmlHttpRequestOverrideMimeType({
                     polyfillDataURLs: true
                 })
-            };
+            });
             const blb = new Blob(['test']);
             xhr.overrideMimeType('text/plain; charset=x-user-defined');
             xhr.open('GET', URL.createObjectURL(blb), false); // Sync

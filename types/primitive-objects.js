@@ -3,6 +3,9 @@
 /* eslint-disable no-new-wrappers, unicorn/new-for-builtins */
 import {toStringTag} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const primitiveObjects = {
     // String Object (not primitive string which need no type spec)
     StringObject: {

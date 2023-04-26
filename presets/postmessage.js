@@ -17,6 +17,9 @@ custom types after having registered these.
 import error from '../types/error.js';
 import errors from '../types/errors.js';
 
+/**
+ * @type {import('typeson').Preset}
+ */
 const postmessage = [
     error,
     errors

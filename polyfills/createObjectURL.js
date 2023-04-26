@@ -1,3 +1,4 @@
+// @ts-nocheck -- jsdom has no types
 /* globals location, XMLHttpRequest, DOMException */
 
 // Imperfectly polyfill jsdom for testing `Blob`/`File`
@@ -26,15 +27,35 @@ import {serializeURLOrigin, parseURL} from 'whatwg-url';
 import utils from 'jsdom/lib/jsdom/living/generated/utils';
 */
 
+/**
+ * @type {{[key: string]: Blob}}
+ */
 const blobURLs = {};
+
+/**
+ * @param {Blob} blob
+ * @returns {string}
+ */
 const createObjectURL = function (blob) {
+    const parsedURL = parseURL(location.href);
     // https://github.com/jsdom/jsdom/issues/1721#issuecomment-282465529
     const blobURL = 'blob:' +
-        serializeURLOrigin(parseURL(location.href)) + '/' + generateUUID();
+        (parsedURL
+            ? serializeURLOrigin(parsedURL)
+            // While `parseURL` can return `null`, `location.href`
+            //  tends not to allow
+            /* c8 ignore next */
+            : 'null'
+        ) +
+        '/' + generateUUID();
     blobURLs[blobURL] = blob;
     return blobURL;
 };
 
+/**
+ * @param {string} blobURL
+ * @returns {void}
+ */
 const revokeObjectURL = function (blobURL) {
     delete blobURLs[blobURL];
 };
@@ -43,13 +64,33 @@ const {implForWrapper} = utils.default;
 
 // We only handle the case of binary, so no need to override `open`
 //   in all cases; but this only works if override is called first
-const xmlHttpRequestOverrideMimeType = function ({polyfillDataURLs} = {}) {
+
+/**
+ * @callback XMLHttpRequestMimeOverrider
+ * @param {string} mimeType
+ * @returns {void}
+ */
+
+/**
+ * @param {object} [cfg]
+ * @param {boolean} [cfg.polyfillDataURLs]
+ * @returns {XMLHttpRequestMimeOverrider}
+ */
+const xmlHttpRequestOverrideMimeType = function (
+    {polyfillDataURLs} = {}
+) {
     // Set these references late in case global `XMLHttpRequest` has since
     //  been changed/set
     const _xhropen = XMLHttpRequest.prototype.open;
     const _xhrOverrideMimeType = XMLHttpRequest.prototype.overrideMimeType;
     return function (mimeType, ...args) {
         if (mimeType === 'text/plain; charset=x-user-defined') {
+            /**
+             * @param {string} method
+             * @param {string} url
+             * @param {boolean} async
+             * @returns {void}
+             */
             this.open = function (method, url, async) {
                 if (url.startsWith('blob:')) {
                     const blob = blobURLs[url];

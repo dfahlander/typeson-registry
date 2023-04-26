@@ -2,8 +2,11 @@
 // `ImageBitmap` is browser / DOM specific. It also can only work
 //  same-domain (or CORS)
 
-import {toStringTag} from 'typeson';
+import {toStringTag, TypesonPromise} from 'typeson';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const imagebitmap = {
     imagebitmap: {
         test (x) {
@@ -14,7 +17,9 @@ const imagebitmap = {
         },
         replace (bm) {
             const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            const ctx = /** @type {CanvasRenderingContext2D} */ (
+                canvas.getContext('2d')
+            );
             ctx.drawImage(bm, 0, 0);
             // Although `width` and `height` are part of `ImageBitMap`,
             //   these will be auto-created for us when reviving with the
@@ -35,7 +40,9 @@ const imagebitmap = {
             return req.responseText;
             */
             const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            const ctx = /** @type {CanvasRenderingContext2D} */ (
+                canvas.getContext('2d')
+            );
             const img = document.createElement('img');
             // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
             img.addEventListener('load', function () {
@@ -48,14 +55,25 @@ const imagebitmap = {
         },
         reviveAsync (o) {
             const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
+            const ctx = /** @type {CanvasRenderingContext2D} */ (
+                canvas.getContext('2d')
+            );
             const img = document.createElement('img');
             // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
             img.addEventListener('load', function () {
                 ctx.drawImage(img, 0, 0);
             });
             img.src = o; // o.dataURL;
-            return createImageBitmap(canvas); // Returns a promise
+
+            return new TypesonPromise(async (resolve, reject) => {
+                try {
+                    const resp = await createImageBitmap(canvas);
+                    resolve(resp);
+                /* c8 ignore next 3 */
+                } catch (err) {
+                    reject(err);
+                }
+            });
         }
     }
 };

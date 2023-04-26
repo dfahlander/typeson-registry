@@ -1,3 +1,6 @@
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const negativeZero = {
     negativeZero: {
         test (x) {

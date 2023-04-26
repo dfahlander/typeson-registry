@@ -1,7 +1,7 @@
 /**
  * Not currently in use internally, but provided for parity.
  * @param {ArrayBuffer} buf
- * @returns {Uint8Array}
+ * @returns {string}
  */
 function arraybuffer2string (buf) {
     return new Uint8Array(buf).reduce(

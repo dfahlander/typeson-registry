@@ -1,7 +1,10 @@
 /* globals DOMException */
 import structuredCloning from './structured-cloning.js';
 
-export default structuredCloning.concat({
+/**
+ * @type {import('typeson').Preset}
+ */
+const structuredCloningThrowing = structuredCloning.concat({
     checkDataCloneException: {
         test (val) {
             // Should also throw with:
@@ -75,3 +78,5 @@ export default structuredCloning.concat({
         }
     }
 });
+
+export default structuredCloningThrowing;

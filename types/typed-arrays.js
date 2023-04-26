@@ -2,20 +2,42 @@
 import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const typedArrays = {};
 
 /**
- * @param {
- *   Int8Array|Uint8Array|Uint8ClampedArray|Int16Array|Uint16Array|Int32Array|
- *   Uint32Array|Float32Array|Float64Array
- * } TypedArray
+ * @typedef {Int8ArrayConstructor|Uint8ArrayConstructor|
+ *   Uint8ClampedArrayConstructor|
+ *   Int16ArrayConstructor|Uint16ArrayConstructor|
+ *   Int32ArrayConstructor|Uint32ArrayConstructor|
+ *   Float32ArrayConstructor|
+ *   Float64ArrayConstructor} TypedArrayConstructor
+ */
+
+/**
+ * @param {TypedArrayConstructor} TypedArray
  * @returns {void}
  */
 function create (TypedArray) {
-    const typeName = TypedArray.name;
+    const typeName =
+        /**
+         * @type {TypedArrayConstructor & {name: string}}
+         */
+        (TypedArray).name;
+
     typedArrays[typeName.toLowerCase()] = {
         test (x) { return toStringTag(x) === typeName; },
-        replace ({buffer, byteOffset, length: l}, stateObj) {
+        replace (
+            {buffer, byteOffset, length: l},
+            /**
+             * @type {import('typeson').StateObject & {
+             *   buffers?: ArrayBuffer[]
+             * }}
+             */
+            stateObj
+        ) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }
@@ -30,7 +52,15 @@ function create (TypedArray) {
                 length: l
             };
         },
-        revive (b64Obj, stateObj) {
+        revive (
+            b64Obj,
+            /**
+             * @type {import('typeson').StateObject & {
+             *   buffers?: ArrayBuffer[]
+             * }}
+             */
+            stateObj
+        ) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }

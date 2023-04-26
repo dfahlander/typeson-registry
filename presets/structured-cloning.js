@@ -26,6 +26,9 @@ import bigintObject from '../types/bigint-object.js';
 
 import cryptokey from '../types/cryptokey.js';
 
+/**
+ * @type {import('typeson').Preset}
+ */
 const expObj = [
     // Todo: Might also register synchronous `ImageBitmap` and
     //    `Blob`/`File`/`FileList`?

@@ -1,3 +1,6 @@
+/**
+ * @type {import('typeson').TypeSpecSet}
+ */
 const nan = {
     nan: {
         test (x) { return Number.isNaN(x); },
