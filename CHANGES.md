@@ -3,6 +3,7 @@
 ## Version 7.0.0
 
 - feat: TypeScript typings
+- chore: update `typeson`, `base64-arraybuffer-es6` devDeps.
 
 ## Version 6.0.0
 

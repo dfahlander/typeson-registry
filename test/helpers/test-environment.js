@@ -56,7 +56,10 @@ globalThis.File = window.File;
 globalThis.DOMException = window.DOMException;
 globalThis.performance = window.performance;
 
-globalThis.crypto = /** @type {NodeMockAPI} */ (webcrypto);
+try {
+    // Before Node < 20
+    globalThis.crypto = /** @type {NodeMockAPI} */ (webcrypto);
+} catch (err) {}
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 
