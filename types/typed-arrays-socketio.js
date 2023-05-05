@@ -13,7 +13,8 @@ const typedArraysSocketIO = {};
  *   Uint8ClampedArrayConstructor|Int16ArrayConstructor|
  *   Uint16ArrayConstructor|Int32ArrayConstructor|
  *   Uint32ArrayConstructor|Float32ArrayConstructor|
- *   Float64ArrayConstructor
+ *   Float64ArrayConstructor|
+ *   BigInt64ArrayConstructor|BigUint64ArrayConstructor
  * } TypedArray
  * @returns {void}
  */
@@ -58,7 +59,11 @@ if (typeof Int8Array === 'function') {
         Int32Array,
         Uint32Array,
         Float32Array,
-        Float64Array
+        Float64Array,
+        ...(typeof BigInt64Array === 'function'
+            ? [BigInt64Array, BigUint64Array]
+            /* c8 ignore next */
+            : [])
     ].forEach((TypedArray) => create(TypedArray));
 }
 

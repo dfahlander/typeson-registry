@@ -502,6 +502,27 @@ function BuiltIn (preset) {
             });
         });
 
+        describe('BigInt64Array', () => {
+            it('should get back real BigInt64Array instance with ' +
+                'original array content', () => {
+                const typeson = new Typeson().register(preset || [
+                    arraybuffer,
+                    typedArrays
+                ]);
+                const a = new BigInt64Array(3);
+                a[0] = 238n;
+                a[1] = -15n;
+                a[2] = 99n;
+                const json = typeson.stringify({a});
+                const obj = typeson.parse(/** @type {string} */ (json));
+                expect(obj.a).to.be.an.instanceOf(BigInt64Array);
+                expect(obj.a.length).to.equal(3);
+                expect(obj.a[0]).to.equal(238n);
+                expect(obj.a[1]).to.equal(-15n);
+                expect(obj.a[2]).to.equal(99n);
+            });
+        });
+
         describe('Uint16 arrays over invalid unicode range', () => {
             it('should work to use any 16-bit number no matter whether ' +
                 'it is invalid unicode or not', () => {

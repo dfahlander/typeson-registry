@@ -1,5 +1,9 @@
 # typeson-registry
 
+## Version 7.1.0
+
+- feat(`typed-arrays`): `BigInt64Array` and `BigUint64Array` support
+
 ## Version 7.0.1
 
 - fix: ensure Typeson types are re-exported
