@@ -1,5 +1,10 @@
 # typeson-registry
 
+## Version 7.0.1
+
+- fix: ensure Typeson types are re-exported
+- chore: fix tool for re-exporting typeson
+
 ## Version 7.0.0
 
 - feat: TypeScript typings
