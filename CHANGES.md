@@ -1,5 +1,9 @@
 # typeson-registry
 
+## Version 7.2.1
+
+- fix: switch `module` to nodenext
+
 ## Version 7.2.0
 
 - fix: typing issue
