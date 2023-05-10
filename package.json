@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -12,7 +12,10 @@
   "module": "./index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.min.js",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.min.js"
+      },
       "require": "./dist/index.umd.min.js",
       "default": "./dist/index.umd.min.js"
     },
@@ -96,7 +99,7 @@
     "c8": "^7.13.0",
     "canvas": "^2.11.2",
     "chai": "^4.3.7",
-    "eslint": "^8.39.0",
+    "eslint": "^8.40.0",
     "eslint-config-ash-nazg": "^34.11.1",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-array-func": "^3.1.8",
@@ -106,7 +109,7 @@
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-html": "^7.1.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jsdoc": "^43.1.1",
+    "eslint-plugin-jsdoc": "^43.2.0",
     "eslint-plugin-markdown": "^3.0.0",
     "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-no-unsanitized": "^4.0.2",
@@ -115,16 +118,16 @@
     "eslint-plugin-sonarjs": "^0.19.0",
     "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-unicorn": "^46.0.0",
-    "jsdom": "^21.1.1",
+    "jsdom": "^21.1.2",
     "mocha": "^10.2.0",
     "open-cli": "^7.2.0",
-    "rollup": "^3.21.4",
+    "rollup": "^3.21.5",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },
   "dependencies": {
-    "base64-arraybuffer-es6": "^2.0.1",
-    "typeson": "^9.0.1",
+    "base64-arraybuffer-es6": "^3.0.0",
+    "typeson": "^9.0.2",
     "whatwg-url": "^12.0.1"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"

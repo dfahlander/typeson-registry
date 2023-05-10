@@ -1,5 +1,10 @@
 # typeson-registry
 
+## Version 7.2.0
+
+- fix: typing issue
+- chore: update typeson and base64-arraybuffer-es6
+
 ## Version 7.1.0
 
 - feat(`typed-arrays`): `BigInt64Array` and `BigUint64Array` support
