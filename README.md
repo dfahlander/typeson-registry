@@ -26,7 +26,7 @@ which can handle `data:` URLs). For Node, you can add it like this:
 
 ```js
 const url = require('url'); // This line only needed to support Node < 10.0.0
-const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL.umd.js');
+const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL.umd.cjs');
 
 const URL = url.Url; // This line only needed to support Node < 10.0.0
 URL.createObjectURL = createObjectURL;
@@ -150,7 +150,7 @@ require them as AMD modules with requirejs if you prefer.
 <html>
   <head>
     <script src="https://unpkg.com/typeson/dist/typeson.umd.min.js"></script>
-    <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.umd.js"></script>
+    <script src="https://unpkg.com/typeson-registry/dist/presets/builtin.umd.cjs"></script>
     <script>
 
     const TSON = new Typeson().register(builtin);

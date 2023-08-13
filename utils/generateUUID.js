@@ -19,7 +19,9 @@ export default function generateUUID () { //  Adapted from original: public doma
             ? performance.now()
             : 0);
 
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/gu, function (c) {
+    // eslint-disable-next-line max-len -- Long
+    // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Need to update plugin
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/gu, function (c) {
         /* eslint-disable no-bitwise */
         const r = Math.trunc((d + Math.random() * 16) % 16);
         d = Math.floor(d / 16);

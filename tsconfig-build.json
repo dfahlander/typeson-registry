@@ -16,5 +16,5 @@
     "outDir": "dist"
   },
   "include": ["index.js", "utils/**/*.js", "types/**/*.js", "presets/**/*.js", "polyfills/**/*.js"],
-  "exclude": ["polyfills/createObjectURL.umd.js"]
+  "exclude": ["polyfills/createObjectURL.umd.cjs"]
 }

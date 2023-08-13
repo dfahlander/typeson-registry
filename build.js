@@ -90,7 +90,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             bundle({
                 name,
                 input: join(dirPath, f),
-                output: `./dist/${dir}/${f.replace(/\.js$/u, '.umd.js')}`
+                output: `./dist/${dir}/${f.replace(/\.js$/u, '.umd.cjs')}`
             });
             return reqStr;
         }));
@@ -117,12 +117,12 @@ ws.on('finish', async () => {
         bundle({
             name: 'TypesonNamespace',
             input: 'index.js',
-            output: './dist/index.umd.min.js'
+            output: './dist/index.umd.min.cjs'
         }),
         bundle({
             name: 'TypesonNamespace',
             input: 'index.js',
-            output: './dist/index.umd.js',
+            output: './dist/index.umd.cjs',
             minified: false
         }),
         bundle({
@@ -138,7 +138,7 @@ ws.on('finish', async () => {
         }),
         bundle({
             input: 'polyfills/createObjectURL.js',
-            output: 'polyfills/createObjectURL.umd.js',
+            output: 'polyfills/createObjectURL.umd.cjs',
             name: 'createObjectURL'
         })
 
@@ -156,8 +156,8 @@ ws.on('finish', async () => {
  * @param {string} cfg.input
  * @param {string} cfg.output
  * @param {string} cfg.name
- * @param {string} [cfg.format="umd"]
- * @param {boolean} [cfg.minified=true]
+ * @param {string} [cfg.format]
+ * @param {boolean} [cfg.minified]
  * @returns {Promise<RollupOutput[]>}
  */
 async function bundle ({input, output, name, format = 'umd', minified = true}) {

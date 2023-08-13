@@ -2,6 +2,7 @@
 /* globals ImageData, createImageBitmap, Blob, FileReader, File, crypto,
     DOMException, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable unicorn/prefer-blob-reading-methods -- https://github.com/jsdom/jsdom/issues/2555 */
 
 /* eslint-disable no-shadow -- Needed */
 import {it, describe} from 'mocha';
@@ -650,14 +651,14 @@ function BuiltIn (preset) {
                 'en', 'hi', 'de-AT', 'de-DE-u-co-phonebk',
                 'en-US-u-kn-true', 'en-US-u-kf-upper'
             ];
-            const opts = {
+            const opts = /** @type {Intl.CollatorOptions} */ ({
                 localeMatcher: 'lookup',
                 usage: 'search',
                 sensitivity: 'base',
                 ignorePunctuation: true,
                 numeric: true,
                 caseFirst: 'upper'
-            };
+            });
             const optsClone = JSON.parse(JSON.stringify(opts));
 
             const collator = new Intl.Collator(locales, opts);
@@ -815,7 +816,7 @@ CryptoKey();
 
 /**
  * @param {import('typeson').Preset} [preset]
- * @param {boolean} [typeWithBufferEncoding=false]
+ * @param {boolean} [typeWithBufferEncoding]
  * @returns {void}
  */
 function socketIO (preset, typeWithBufferEncoding) {

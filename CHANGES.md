@@ -1,5 +1,12 @@
 # typeson-registry
 
+## Version 8.0.0
+
+BREAKING: Requires Node 16+, UMD extensions changed to ".cjs"
+
+- fix: UMD extensions changed to ".cjs"
+- chore: update base64-arraybuffer-es6, typeson, whatwg-url, devDeps.
+
 ## Version 7.2.1
 
 - fix: switch `module` to nodenext
