@@ -14,7 +14,6 @@ import errors from '../types/errors.js';
 import arraybuffer from '../types/arraybuffer.js';
 import typedArrays from '../types/typed-arrays.js';
 import dataview from '../types/dataview.js';
-import intlTypes from '../types/intl-types.js';
 
 import imagedata from '../types/imagedata.js';
 import imagebitmap from '../types/imagebitmap.js'; // Async return
@@ -59,8 +58,6 @@ const expObj = [
     typeof Uint8Array === 'function' ? typedArrays : [],
     /* c8 ignore next */
     typeof DataView === 'function' ? dataview : [],
-    /* c8 ignore next */
-    typeof Intl !== 'undefined' ? intlTypes : [],
     /* c8 ignore next */
     typeof crypto !== 'undefined' ? cryptokey : [],
     /* c8 ignore next */

@@ -1,5 +1,11 @@
 # typeson-registry
 
+## Version 9.0.0 (Unreleased)
+
+BREAKING: Removes Intl from structured cloning
+
+fix: remove Intl from structured-cloning presets
+
 ## Version 8.0.0
 
 BREAKING: Requires Node 16+, UMD extensions changed to ".cjs"
