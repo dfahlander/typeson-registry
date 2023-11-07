@@ -26,7 +26,7 @@ const nonbuiltinIgnore = {
                 'Atomics', 'Module'
             ].includes(toStringTag(x));
         },
-        replace (rexp) {
+        replace (/* rexp */) {
             // Not in use
         }
     }

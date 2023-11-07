@@ -3,8 +3,10 @@
 ## Version 9.0.0 (Unreleased)
 
 BREAKING: Removes Intl from structured cloning
+BREAKING: Drop Node 16
 
-fix: remove Intl from structured-cloning presets
+- fix: remove Intl from structured-cloning presets
+- chore: update `whatwg-url` and devDeps.
 
 ## Version 8.0.0
 

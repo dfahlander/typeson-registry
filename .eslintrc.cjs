@@ -83,7 +83,10 @@ module.exports = {
             }
         },
         {
-            files: ['**/*.html'],
+            files: ['**/*.html', 'browser-test/**'],
+            env: {
+                browser: true
+            },
             rules: {
                 'import/unambiguous': 'off'
             }
@@ -107,12 +110,12 @@ module.exports = {
                 polyfills: ['Float64Array', 'Int8Array']
             },
             rules: {
+                '@stylistic/max-len': 'off',
                 'eol-last': 'off',
                 'no-alert': 'off',
                 'no-console': 'off',
                 'no-undef': 'off',
                 'padded-blocks': 'off',
-                'max-len': 'off',
                 'no-restricted-syntax': 'off',
                 'n/no-missing-import': 'off',
                 'no-multi-spaces': 'off',
@@ -141,7 +144,8 @@ module.exports = {
         // Disable for now
         'eslint-comments/require-description': 0,
 
-        indent: ['error', 4, {outerIIFEBody: 0}],
+        '@stylistic/brace-style': 0,
+        '@stylistic/indent': ['error', 4, {outerIIFEBody: 0}],
         'n/no-unsupported-features/es-builtins': ['error', {
             ignores: ['BigInt']
         }],

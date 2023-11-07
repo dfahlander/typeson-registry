@@ -1,5 +1,5 @@
 // @ts-nocheck -- jsdom has no types
-/* globals location, XMLHttpRequest, DOMException */
+/* globals location, XMLHttpRequest */
 
 // Imperfectly polyfill jsdom for testing `Blob`/`File`
 
@@ -107,7 +107,7 @@ const xmlHttpRequestOverrideMimeType = function (
                     }
                     const responseType = 'text/plain'; // blob.type;
                     // utf16le and base64 both convert lone surrogates
-                    // eslint-disable-next-line max-len -- Long
+                    // eslint-disable-next-line @stylistic/max-len -- Long
                     const encoded = implForWrapper(blob)._buffer.toString('binary');
                     // Not usable in jsdom which makes properties readonly,
                     //   but local-xmlhttprequest can use (and jsdom can

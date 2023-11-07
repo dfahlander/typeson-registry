@@ -1,4 +1,4 @@
-/* globals createImageBitmap */
+/* globals document, createImageBitmap */
 // `ImageBitmap` is browser / DOM specific. It also can only work
 //  same-domain (or CORS)
 

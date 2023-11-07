@@ -1,4 +1,3 @@
-/* globals DOMException */
 import structuredCloning from './structured-cloning.js';
 
 /**

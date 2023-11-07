@@ -1,5 +1,3 @@
-/* globals performance */
-
 // The `performance` global is optional
 
 /**
@@ -19,13 +17,13 @@ export default function generateUUID () { //  Adapted from original: public doma
             ? performance.now()
             : 0);
 
-    // eslint-disable-next-line max-len -- Long
+    // eslint-disable-next-line @stylistic/max-len -- Long
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Need to update plugin
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/gu, function (c) {
         /* eslint-disable no-bitwise */
-        const r = Math.trunc((d + Math.random() * 16) % 16);
+        const r = Math.trunc((d + (Math.random() * 16)) % 16);
         d = Math.floor(d / 16);
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16);
         /* eslint-enable no-bitwise */
     });
 }

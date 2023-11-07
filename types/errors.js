@@ -18,9 +18,12 @@ if (typeof AggregateError !== 'undefined') {
     create(AggregateError);
 }
 
-/* c8 ignore next 2 */
-// @ts-ignore Non-standard
-typeof InternalError === 'function' && create(InternalError);
+/* c8 ignore next 5 */
+// @ts-expect-error Non-standard
+if (typeof InternalError === 'function') {
+    // @ts-expect-error Non-standard
+    create(InternalError);
+}
 
 /* eslint-disable jsdoc/valid-types -- https://github.com/jsdoc-type-pratt-parser/jsdoc-type-pratt-parser/issues/131 */
 /**

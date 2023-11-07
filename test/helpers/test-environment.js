@@ -1,3 +1,4 @@
+/* globals window */
 /* eslint-env node */
 
 import path from 'node:path';
@@ -63,7 +64,6 @@ try {
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 
-/* eslint-disable no-extra-parens -- For TS */
 /**
  * @param {HTMLCanvasElement} cvs
  * @returns {Promise<HTMLCanvasElement>}
@@ -74,7 +74,7 @@ globalThis.createImageBitmap = /** @type {createImageBitmap} */ (
         cvs
     ) {
         // eslint-disable-next-line promise/avoid-new
-        return new Promise(function (resolve, reject) {
+        return new Promise(function (resolve /* , reject */) {
             // This really ought not be a canvas, but it works as a simple shim
             //   for our tests
             // cvs[Symbol.toStringTag] = 'ImageBitmap';
@@ -87,7 +87,6 @@ globalThis.createImageBitmap = /** @type {createImageBitmap} */ (
         });
     }
 );
-/* eslint-enable no-extra-parens -- For TS */
 
 const {
     createObjectURL, revokeObjectURL,

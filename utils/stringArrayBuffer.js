@@ -63,7 +63,7 @@ function string2arraybuffer (str) {
 
     const array = new Uint8Array(str.length);
     for (let i = 0; i < str.length; i++) {
-        // eslint-disable-next-line max-len -- Long
+        // eslint-disable-next-line @stylistic/max-len -- Long
         // eslint-disable-next-line unicorn/prefer-code-point -- Iterating char. codes
         array[i] = str.charCodeAt(i); // & 0xff;
     }

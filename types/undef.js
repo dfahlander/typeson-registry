@@ -11,8 +11,8 @@ const undef = {
             return typeof x === 'undefined' &&
                 (stateObj.ownKeys || !('ownKeys' in stateObj));
         },
-        replace (n) { return 0; },
-        revive (s) {
+        replace (/* n */) { return 0; },
+        revive (/* s */) {
             // Will add `undefined` (returning `undefined` would instead
             //   avoid explicitly setting)
             return new Undefined();

@@ -54,9 +54,9 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
     moduleStrings[dir] = '';
     const dirPath = join(__dirname, '/', dir);
     // Todo: Would be faster to `Promise.all` on concatenation of all
-    const promiseAll = await Promise.all((await readdir(dirPath))
-        .filter((f) => f.endsWith('.js'))
-        .map((f, i) => {
+    const promiseAll = await Promise.all((await readdir(dirPath)).
+        filter((f) => f.endsWith('.js')).
+        map((f, i) => {
             const name = nameFromFile(f);
             let fileName = name; // `${name[0].toUpperCase() + name.slice(1)}`;
             let fileString = fileName;
@@ -169,10 +169,11 @@ async function bundle ({input, output, name, format = 'umd', minified = true}) {
         ...(
             minified
                 ? [terser({
-                    // Needed for typeson's `Undefined` and other
-                    //   constructor detection
+                    // eslint-disable-next-line @stylistic/max-len -- Long
+                    // eslint-disable-next-line camelcase -- Needed for typeson's `Undefined` and other constructor detection
                     keep_fnames: true,
-                    // Keep in case implementing above as classes
+                    // eslint-disable-next-line @stylistic/max-len -- Long
+                    // eslint-disable-next-line camelcase -- Keep in case implementing above as classes
                     keep_classnames: true
                 })]
                 : []

@@ -58,8 +58,8 @@ const arrayNonindexKeys = [
             test (x, stateObj) {
                 return typeof x === 'undefined' && stateObj.ownKeys === false;
             },
-            replace (n) { return 0; },
-            revive (s) { return undefined; } // Will avoid adding anything
+            replace (/* n */) { return 0; },
+            revive (/* s */) { return undefined; } // Will avoid adding anything
         }
     }
 ];

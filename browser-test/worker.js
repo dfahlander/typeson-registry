@@ -1,7 +1,6 @@
 /* globals TypesonNamespace */
 /* eslint-env worker */
 
-/* eslint-disable import/unambiguous */
 // Todo: ES6 Modules import not yet supported in workers by Chrome
 // import {Typeson, postmessage} from '../dist/index.js';
 importScripts('../dist/index.umd.cjs');

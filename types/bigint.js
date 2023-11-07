@@ -1,5 +1,3 @@
-/* globals BigInt */
-
 /**
  * @type {import('typeson').TypeSpecSet}
  */
