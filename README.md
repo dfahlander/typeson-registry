@@ -227,6 +227,7 @@ Note that the type name corresponds to the file name in the following manner:
     you are polyfilling a standard object, we welcome you to submit back as a
     PR!). The clones cannot be revived past the current window session,
     however.
+- `cryptokey`
 - `dataview`
 - `date`
 - `error.js` (`Error`) and `errors.js` (`TypeError`, `RangeError`, `SyntaxError`, `ReferenceError`, `EvalError`, `URIError`, `InternalError`) - These
@@ -247,6 +248,7 @@ Note that the type name corresponds to the file name in the following manner:
 - `map`
 - `nan` - Preserves `NaN` (not a number)
 - `NegativeInfinity` - Preserves negative infinity
+- `negative-zero` - Preserves `-0` (produces + or - Infinity when used as divisor)
 - `nonBuiltInIgnore` - For roughly detecting non-builtin objects and to avoid
     adding them as properties
 - `primitive-objects.js` (`StringObject`, `BooleanObject`, `NumberObject`)
