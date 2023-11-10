@@ -48,7 +48,7 @@ const {
     errors, typedArrays, intlTypes, typedArraysSocketio,
     undef, primitiveObjects, nan, infinity,
     negativeInfinity, date, error,
-    regexp, map, set, arraybuffer,
+    regexp, map, set, arraybuffer, domexception,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -231,6 +231,24 @@ function Undefined (preset) {
         });
     });
 }
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function DomException (preset) {
+    describe('DOMException', function () {
+        it('should return a DOMException', function () {
+            const typeson = new Typeson().register(preset || [domexception]);
+            const exc = new DOMException('Please try again', 'IndexSizeError');
+            const tson = typeson.stringify(exc, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back.name).to.equal('IndexSizeError');
+            expect(back.message).to.equal('Please try again');
+        });
+    });
+}
+DomException();
 
 /**
  *
@@ -1619,6 +1637,7 @@ describe('Presets', () => {
     describe('Structured cloning', () => {
         NonindexKeys(structuredCloningThrowing);
         CryptoKey(structuredCloningThrowing);
+        DomException(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             expect(() => {

@@ -14,6 +14,7 @@ import errors from '../types/errors.js';
 import arraybuffer from '../types/arraybuffer.js';
 import typedArrays from '../types/typed-arrays.js';
 import dataview from '../types/dataview.js';
+import domexception from '../types/domexception.js';
 
 import imagedata from '../types/imagedata.js';
 import imagebitmap from '../types/imagebitmap.js'; // Async return
@@ -61,6 +62,8 @@ const expObj = [
     /* c8 ignore next */
     typeof crypto !== 'undefined' ? cryptokey : [],
     /* c8 ignore next */
-    typeof BigInt !== 'undefined' ? [bigint, bigintObject] : []
+    typeof BigInt !== 'undefined' ? [bigint, bigintObject] : [],
+    /* c8 ignore next */
+    typeof DOMException !== 'undefined' ? domexception : []
 );
 export default expObj;
