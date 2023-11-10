@@ -10,6 +10,7 @@ import cryptokey from './types/cryptokey.js';
 import dataview from './types/dataview.js';
 import date from './types/date.js';
 import domexception from './types/domexception.js';
+import domrect from './types/domrect.js';
 import error from './types/error.js';
 import errors from './types/errors.js';
 import file from './types/file.js';
@@ -48,8 +49,8 @@ import universal from './presets/universal.js';
 /* types */
 export {
     arraybuffer, bigintObject, bigint, blob, cloneable, cryptokey, dataview,
-    date, domexception, error, errors, file, filelist, imagebitmap, imagedata,
-    infinity, intlTypes, map, nan, negativeInfinity, negativeZero,
+    date, domexception, domrect, error, errors, file, filelist, imagebitmap,
+    imagedata, infinity, intlTypes, map, nan, negativeInfinity, negativeZero,
     nonbuiltinIgnore, primitiveObjects, regexp, resurrectable, set,
     typedArraysSocketio, typedArrays, undef, userObject
 };

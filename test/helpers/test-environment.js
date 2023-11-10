@@ -55,6 +55,39 @@ globalThis.location = window.location;
 globalThis.Blob = window.Blob;
 globalThis.File = window.File;
 globalThis.DOMException = window.DOMException;
+
+// No constructor in JSDom
+// globalThis.DOMRect = window.DOMRect;
+/**
+ * DOMRect class.
+ */
+class DOMRect {
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMRect';
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     */
+    constructor (x, y, width, height) {
+        this.x = this.left = x;
+        this.y = this.top = y;
+        this.width = width;
+        this.height = height;
+        this.bottom = y + height;
+        this.right = x + width;
+    }
+}
+// @ts-expect-error Not an issue
+globalThis.DOMRect = DOMRect;
+
 globalThis.performance = window.performance;
 
 try {

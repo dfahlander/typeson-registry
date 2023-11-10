@@ -7,8 +7,8 @@ BREAKING: Drop Node 16
 
 - fix: remove `Intl` from structured-cloning presets as not
     supported
-- feat: Add type for `DOMException` (and add to
-    `structured-cloning` presets)
+- feat: Add type for `DOMException`, `DOMRect` (and add to
+    `structured-cloning` presets))
 - chore: update `whatwg-url` and devDeps.
 
 ## Version 8.0.0
