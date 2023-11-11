@@ -1,6 +1,6 @@
 # typeson-registry
 
-## Version 9.0.0 (Unreleased)
+## Version 9.0.0
 
 BREAKING: Removes `Intl` from structured cloning
 BREAKING: Drop Node 16
