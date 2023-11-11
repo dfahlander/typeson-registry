@@ -1,6 +1,7 @@
 /* globals InternalError */
 /* globals document, ImageData, createImageBitmap, Blob, FileReader, File,
-    crypto, DOMRect, XMLHttpRequest, xmlHttpRequestOverrideMimeType */
+    crypto, DOMRect, DOMPoint,
+    XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
 /* eslint-disable new-cap -- For clarity */
@@ -49,7 +50,7 @@ const {
     undef, primitiveObjects, nan, infinity,
     negativeInfinity, date, error,
     regexp, map, set, arraybuffer, domexception,
-    domrect,
+    domrect, dompoint,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -253,6 +254,27 @@ function DomRect (preset) {
     });
 }
 DomRect();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function DomPoint (preset) {
+    describe('DOMPoint', function () {
+        it('should return a DOMPoint', function () {
+            const typeson = new Typeson().register(preset || [dompoint]);
+            const domPoint = new DOMPoint(1, 2, 3, 4);
+            const tson = typeson.stringify(domPoint, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMPoint);
+            expect(back.x).to.equal(1);
+            expect(back.y).to.equal(2);
+            expect(back.z).to.equal(3);
+            expect(back.w).to.equal(4);
+        });
+    });
+}
+DomPoint();
 
 /**
  * @param {TypesonPreset} [preset]
@@ -1661,6 +1683,7 @@ describe('Presets', () => {
         CryptoKey(structuredCloningThrowing);
         DomException(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
+        DomPoint(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             expect(() => {

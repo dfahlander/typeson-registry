@@ -16,6 +16,7 @@ import typedArrays from '../types/typed-arrays.js';
 import dataview from '../types/dataview.js';
 import domexception from '../types/domexception.js';
 import domrect from '../types/domrect.js';
+import dompoint from '../types/dompoint.js';
 
 import imagedata from '../types/imagedata.js';
 import imagebitmap from '../types/imagebitmap.js'; // Async return
@@ -67,6 +68,8 @@ const expObj = [
     /* c8 ignore next */
     typeof DOMException !== 'undefined' ? domexception : [],
     /* c8 ignore next */
-    typeof DOMRect !== 'undefined' ? domrect : []
+    typeof DOMRect !== 'undefined' ? domrect : [],
+    /* c8 ignore next */
+    typeof DOMPoint !== 'undefined' ? dompoint : []
 );
 export default expObj;
