@@ -1,6 +1,6 @@
 # typeson-registry
 
-## ?
+## Version 9.1.0
 
 - feat: Add types for `DOMMatrix` (and add to
     `structured-cloning` presets)
