@@ -27,6 +27,7 @@ module.exports = {
             'crypto',
             'DataView',
             'DOMException',
+            'DOMMatrix',
             'DOMPoint',
             'DOMRect',
             'Error',

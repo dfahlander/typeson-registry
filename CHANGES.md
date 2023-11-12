@@ -1,5 +1,10 @@
 # typeson-registry
 
+## ?
+
+- feat: Add types for `DOMMatrix` (and add to
+    `structured-cloning` presets)
+
 ## Version 9.0.0
 
 BREAKING: Removes `Intl` from structured cloning

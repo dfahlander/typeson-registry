@@ -1,6 +1,6 @@
 /* globals InternalError */
 /* globals document, ImageData, createImageBitmap, Blob, FileReader, File,
-    crypto, DOMRect, DOMPoint,
+    crypto, DOMRect, DOMPoint, DOMMatrix,
     XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
@@ -50,7 +50,7 @@ const {
     undef, primitiveObjects, nan, infinity,
     negativeInfinity, date, error,
     regexp, map, set, arraybuffer, domexception,
-    domrect, dompoint,
+    domrect, dompoint, dommatrix,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -254,6 +254,56 @@ function DomRect (preset) {
     });
 }
 DomRect();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function DomMatrix (preset) {
+    describe('DOMMatrix', function () {
+        it('should return a 2d DOMMatrix', function () {
+            const typeson = new Typeson().register(preset || [dommatrix]);
+            const domMatrix = new DOMMatrix([1, 2, 3, 4, 5, 6]);
+            const tson = typeson.stringify(domMatrix, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMMatrix);
+            expect(back.a).to.equal(1);
+            expect(back.b).to.equal(2);
+            expect(back.c).to.equal(3);
+            expect(back.d).to.equal(4);
+            expect(back.e).to.equal(5);
+            expect(back.f).to.equal(6);
+        });
+
+        it('should return a 3d DOMMatrix', function () {
+            const typeson = new Typeson().register(preset || [dommatrix]);
+            const domMatrix = new DOMMatrix([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+            ]);
+            const tson = typeson.stringify(domMatrix, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMMatrix);
+            expect(back.m11).to.equal(1);
+            expect(back.m12).to.equal(2);
+            expect(back.m13).to.equal(3);
+            expect(back.m14).to.equal(4);
+            expect(back.m21).to.equal(5);
+            expect(back.m22).to.equal(6);
+            expect(back.m23).to.equal(7);
+            expect(back.m24).to.equal(8);
+            expect(back.m31).to.equal(9);
+            expect(back.m32).to.equal(10);
+            expect(back.m33).to.equal(11);
+            expect(back.m34).to.equal(12);
+            expect(back.m41).to.equal(13);
+            expect(back.m42).to.equal(14);
+            expect(back.m43).to.equal(15);
+            expect(back.m44).to.equal(16);
+        });
+    });
+}
+
+DomMatrix();
 
 /**
  * @param {TypesonPreset} [preset]
@@ -1684,6 +1734,7 @@ describe('Presets', () => {
         DomException(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
         DomPoint(structuredCloningThrowing);
+        DomMatrix(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             expect(() => {
