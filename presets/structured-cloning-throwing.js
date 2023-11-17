@@ -40,9 +40,6 @@ const structuredCloningThrowing = structuredCloning.concat({
                     'Arguments',
                     // A non-array exotic object
                     'Module',
-                    // `Error` and other errors have the [[ErrorData]] internal
-                    //    slot and give "Error"
-                    'Error',
                     // Promise instances have an extra slot ([[PromiseState]])
                     //    but not throwing in Chrome `postMessage`
                     'Promise',

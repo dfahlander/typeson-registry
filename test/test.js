@@ -1739,7 +1739,7 @@ describe('Presets', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
             expect(() => {
                 typeson.stringify(new Error('test'));
-            }).to.throw(DOMException);
+            }).to.not.throw();
             expect(() => {
                 typeson.stringify(Symbol('test'));
             }).to.throw(DOMException);

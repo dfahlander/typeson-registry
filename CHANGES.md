@@ -1,5 +1,10 @@
 # typeson-registry
 
+## Version 9.1.1
+
+- fix: Stop `Error` type from throwing in structured cloning
+    throwing preset (as per new allowances)
+
 ## Version 9.1.0
 
 - feat: Add types for `DOMMatrix` (and add to
