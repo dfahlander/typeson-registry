@@ -86,6 +86,8 @@ function ErrorAndErrors (preset) {
                  * }}
                  */
                 (new Error('Error1'));
+            const e1Cause = new Error('the cause');
+            e1.cause = e1Cause;
             const e2 = new TypeError('Error2');
             const e3 = new RangeError('Error3');
             const e4 = new SyntaxError('Error4');
@@ -109,6 +111,7 @@ function ErrorAndErrors (preset) {
             expect(obj.e1.columnNumber).to.equal(e1.columnNumber);
             expect(obj.e1.stack).to.equal(e1.stack);
             expect(obj.e1.stack).to.not.be.undefined;
+            expect(obj.e1.cause).to.deep.equal(e1Cause);
             expect(obj.e2).to.be.an.instanceOf(TypeError);
             expect(obj.e2.name).to.equal('TypeError');
             expect(obj.e2.message).to.equal('Error2');
