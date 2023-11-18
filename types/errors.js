@@ -86,12 +86,6 @@ function create (Ctor) {
             e.lineNumber = obj.lineNumber;
             e.columnNumber = obj.columnNumber;
 
-            /* c8 ignore next 6 */
-            if (isAggregateError) {
-                /** @type {AggregateError} */ (
-                    e
-                ).errors = obj.errors;
-            }
             return e;
         }
     };
