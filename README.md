@@ -251,8 +251,8 @@ Note that the type name corresponds to the file name in the following manner:
     Not all properties can be preserved
 - `map`
 - `nan` - Preserves `NaN` (not a number)
-- `NegativeInfinity` - Preserves negative infinity
-- `negative-zero` - Preserves `-0` (produces + or - Infinity when used as divisor)
+- `negativeInfinity` - Preserves negative infinity
+- `negativeZero` - Preserves `-0` (produces + or - Infinity when used as divisor)
 - `nonBuiltInIgnore` - For roughly detecting non-builtin objects and to avoid
     adding them as properties
 - `primitive-objects.js` (`StringObject`, `BooleanObject`, `NumberObject`)
