@@ -29,6 +29,7 @@ module.exports = {
             'DOMException',
             'DOMMatrix',
             'DOMPoint',
+            'DOMQuad',
             'DOMRect',
             'Error',
             'File',

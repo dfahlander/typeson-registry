@@ -1,5 +1,9 @@
 # typeson-registry
 
+## ?
+
+- feat: Add `DOMQuad` type
+
 ## Version 9.1.1
 
 - fix: Stop `Error` type from throwing in structured cloning

@@ -17,6 +17,7 @@ import dataview from '../types/dataview.js';
 import domexception from '../types/domexception.js';
 import domrect from '../types/domrect.js';
 import dompoint from '../types/dompoint.js';
+import domquad from '../types/domquad.js';
 import dommatrix from '../types/dommatrix.js';
 
 import imagedata from '../types/imagedata.js';
@@ -72,6 +73,8 @@ const expObj = [
     typeof DOMRect !== 'undefined' ? domrect : [],
     /* c8 ignore next */
     typeof DOMPoint !== 'undefined' ? dompoint : [],
+    /* c8 ignore next */
+    typeof DOMQuad !== 'undefined' ? domquad : [],
     /* c8 ignore next */
     typeof DOMMatrix !== 'undefined' ? dommatrix : []
 );

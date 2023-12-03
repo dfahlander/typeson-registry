@@ -12,6 +12,7 @@ import date from './types/date.js';
 import domexception from './types/domexception.js';
 import dommatrix from './types/dommatrix.js';
 import dompoint from './types/dompoint.js';
+import domquad from './types/domquad.js';
 import domrect from './types/domrect.js';
 import error from './types/error.js';
 import errors from './types/errors.js';
@@ -51,8 +52,8 @@ import universal from './presets/universal.js';
 /* types */
 export {
     arraybuffer, bigintObject, bigint, blob, cloneable, cryptokey, dataview,
-    date, domexception, dommatrix, dompoint, domrect, error, errors, file,
-    filelist, imagebitmap, imagedata, infinity, intlTypes, map, nan,
+    date, domexception, dommatrix, dompoint, domquad, domrect, error, errors,
+    file, filelist, imagebitmap, imagedata, infinity, intlTypes, map, nan,
     negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects, regexp,
     resurrectable, set, typedArraysSocketio, typedArrays, undef, userObject
 };

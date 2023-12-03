@@ -1,6 +1,6 @@
 /* globals InternalError */
 /* globals document, ImageData, createImageBitmap, Blob, FileReader, File,
-    crypto, DOMRect, DOMPoint, DOMMatrix,
+    crypto, DOMRect, DOMPoint, DOMQuad, DOMMatrix,
     XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
@@ -50,7 +50,7 @@ const {
     undef, primitiveObjects, nan, infinity,
     negativeInfinity, date, error,
     regexp, map, set, arraybuffer, domexception,
-    domrect, dompoint, dommatrix,
+    domrect, dompoint, domquad, dommatrix,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -328,6 +328,34 @@ function DomPoint (preset) {
     });
 }
 DomPoint();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function DomQuad (preset) {
+    describe('DOMQuad', function () {
+        it('should return a DOMQuad', function () {
+            const p1 = new DOMPoint(0, 0, 0, 1);
+            const p2 = new DOMPoint(1, 1, 1, 2);
+            const p3 = new DOMPoint(2, 2, 2, 3);
+            const p4 = new DOMPoint(3, 3, 3, 4);
+
+            const typeson = new Typeson().register(preset || [
+                dompoint, domquad
+            ]);
+            const domQuad = new DOMQuad(p1, p2, p3, p4);
+            const tson = typeson.stringify(domQuad, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMQuad);
+            expect(back.p1).to.deep.equal(p1);
+            expect(back.p2).to.deep.equal(p2);
+            expect(back.p3).to.deep.equal(p3);
+            expect(back.p4).to.deep.equal(p4);
+        });
+    });
+}
+DomQuad();
 
 /**
  * @param {TypesonPreset} [preset]
@@ -1737,6 +1765,7 @@ describe('Presets', () => {
         DomException(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
         DomPoint(structuredCloningThrowing);
+        DomQuad(structuredCloningThrowing);
         DomMatrix(structuredCloningThrowing);
         it('should work with Structured cloning with throwing', () => {
             const typeson = new Typeson().register([structuredCloningThrowing]);
