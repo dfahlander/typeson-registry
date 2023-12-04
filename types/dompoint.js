@@ -1,12 +1,21 @@
-/* globals DOMPoint */
+/* globals DOMPoint, DOMPointReadOnly */
 import {toStringTag} from 'typeson';
 
 /**
  * @type {import('typeson').TypeSpecSet}
  */
-const dompoint = {
-    dompoint: {
-        test (x) { return toStringTag(x) === 'DOMPoint'; },
+const dompoint = {};
+
+create(DOMPoint);
+create(DOMPointReadOnly);
+
+/**
+ * @param {typeof DOMPoint|typeof DOMPointReadOnly} Ctor
+ * @returns {void}
+ */
+function create (Ctor) {
+    dompoint[Ctor.name.toLowerCase()] = {
+        test (x) { return toStringTag(x) === Ctor.name; },
         replace (dp) {
             return {
                 x: dp.x,
@@ -16,9 +25,9 @@ const dompoint = {
             };
         },
         revive ({x, y, z, w}) {
-            return new DOMPoint(x, y, z, w);
+            return new Ctor(x, y, z, w);
         }
-    }
-};
+    };
+}
 
 export default dompoint;

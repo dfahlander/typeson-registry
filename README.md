@@ -232,9 +232,12 @@ Note that the type name corresponds to the file name in the following manner:
 - `date`
 - `domexception`
 - `dommatrix`
+- `dommatrixreadonly`
 - `dompoint`
+- `dompointreadonly`
 - `domquad`
 - `domrect`
+- `domrectreadonly`
 - `error.js` (`Error`) and `errors.js` (`TypeError`, `RangeError`, `SyntaxError`, `ReferenceError`, `EvalError`, `URIError`, `InternalError`) - These
     provide a means of resurrecting error object across cloning boundaries
     (since they are not otherwise treated as cloneable by the Structured

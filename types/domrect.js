@@ -1,12 +1,21 @@
-/* globals DOMRect */
+/* globals DOMRect, DOMRectReadOnly */
 import {toStringTag} from 'typeson';
 
 /**
  * @type {import('typeson').TypeSpecSet}
  */
-const domrect = {
-    domrect: {
-        test (x) { return toStringTag(x) === 'DOMRect'; },
+const domrect = {};
+
+create(DOMRect);
+create(DOMRectReadOnly);
+
+/**
+ * @param {typeof DOMRect|typeof DOMRectReadOnly} Ctor
+ * @returns {void}
+ */
+function create (Ctor) {
+    domrect[Ctor.name.toLowerCase()] = {
+        test (x) { return toStringTag(x) === Ctor.name; },
         replace (dr) {
             return {
                 x: dr.x,
@@ -16,9 +25,9 @@ const domrect = {
             };
         },
         revive ({x, y, width, height}) {
-            return new DOMRect(x, y, width, height);
+            return new Ctor(x, y, width, height);
         }
-    }
-};
+    };
+}
 
 export default domrect;

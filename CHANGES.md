@@ -1,8 +1,9 @@
 # typeson-registry
 
-## ?
+## 9.2.0
 
 - feat: Add `DOMQuad` type
+- feat: Add `DOMPointReadOnly`, `DOMMatrixReadOnly`, `DOMRectReadOnly` types
 
 ## Version 9.1.1
 

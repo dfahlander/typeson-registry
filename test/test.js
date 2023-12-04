@@ -1,6 +1,8 @@
 /* globals InternalError */
 /* globals document, ImageData, createImageBitmap, Blob, FileReader, File,
-    crypto, DOMRect, DOMPoint, DOMQuad, DOMMatrix,
+    crypto, DOMRect, DOMPoint, DOMMatrix,
+    DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
+    DOMQuad,
     XMLHttpRequest, xmlHttpRequestOverrideMimeType */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
@@ -254,6 +256,18 @@ function DomRect (preset) {
             expect(back.width).to.equal(3);
             expect(back.height).to.equal(4);
         });
+
+        it('should return a DOMRectReadOnly', function () {
+            const typeson = new Typeson().register(preset || [domrect]);
+            const domRect = new DOMRectReadOnly(1, 2, 3, 4);
+            const tson = typeson.stringify(domRect, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMRectReadOnly);
+            expect(back.x).to.equal(1);
+            expect(back.y).to.equal(2);
+            expect(back.width).to.equal(3);
+            expect(back.height).to.equal(4);
+        });
     });
 }
 DomRect();
@@ -270,6 +284,20 @@ function DomMatrix (preset) {
             const tson = typeson.stringify(domMatrix, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(DOMMatrix);
+            expect(back.a).to.equal(1);
+            expect(back.b).to.equal(2);
+            expect(back.c).to.equal(3);
+            expect(back.d).to.equal(4);
+            expect(back.e).to.equal(5);
+            expect(back.f).to.equal(6);
+        });
+
+        it('should return a 2d DOMMatrixReadOnly', function () {
+            const typeson = new Typeson().register(preset || [dommatrix]);
+            const domMatrix = new DOMMatrixReadOnly([1, 2, 3, 4, 5, 6]);
+            const tson = typeson.stringify(domMatrix, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMMatrixReadOnly);
             expect(back.a).to.equal(1);
             expect(back.b).to.equal(2);
             expect(back.c).to.equal(3);
@@ -320,6 +348,18 @@ function DomPoint (preset) {
             const tson = typeson.stringify(domPoint, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(DOMPoint);
+            expect(back.x).to.equal(1);
+            expect(back.y).to.equal(2);
+            expect(back.z).to.equal(3);
+            expect(back.w).to.equal(4);
+        });
+
+        it('should return a DOMPointReadOnly', function () {
+            const typeson = new Typeson().register(preset || [dompoint]);
+            const domPoint = new DOMPointReadOnly(1, 2, 3, 4);
+            const tson = typeson.stringify(domPoint, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DOMPointReadOnly);
             expect(back.x).to.equal(1);
             expect(back.y).to.equal(2);
             expect(back.z).to.equal(3);

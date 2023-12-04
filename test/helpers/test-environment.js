@@ -61,7 +61,7 @@ globalThis.DOMException = window.DOMException;
 /**
  * DOMRect class.
  */
-class DOMRect {
+const DOMRect = class {
     /* eslint-disable class-methods-use-this -- Not needed */
     /**
      * @returns {string}
@@ -84,16 +84,18 @@ class DOMRect {
         this.bottom = y + height;
         this.right = x + width;
     }
-}
+};
 // @ts-expect-error Not an issue
 globalThis.DOMRect = DOMRect;
+// @ts-expect-error Not an issue
+globalThis.DOMRectReadOnly = DOMRect;
 
 // No constructor in JSDom
 // globalThis.DOMPoint = window.DOMPoint;
 /**
  * DOMPoint class.
  */
-class DOMPoint {
+const DOMPoint = class {
     /* eslint-disable class-methods-use-this -- Not needed */
     /**
      * @returns {string}
@@ -114,9 +116,11 @@ class DOMPoint {
         this.z = z ?? 0;
         this.w = w ?? 1;
     }
-}
+};
 // @ts-expect-error Not an issue
 globalThis.DOMPoint = DOMPoint;
+// @ts-expect-error Not an issue
+globalThis.DOMPointReadOnly = DOMPoint;
 
 // No constructor in JSDom
 // globalThis.DOMQuad = window.DOMQuad;
@@ -153,7 +157,7 @@ globalThis.DOMQuad = DOMQuad;
 /**
  * DOMMatrix class.
  */
-class DOMMatrix {
+const DOMMatrix = class {
     /* eslint-disable class-methods-use-this -- Not needed */
     /**
      * @returns {string}
@@ -200,9 +204,11 @@ class DOMMatrix {
         this.m43 = init[14];
         this.m44 = init[15];
     }
-}
+};
 // @ts-expect-error Not an issue
 globalThis.DOMMatrix = DOMMatrix;
+// @ts-expect-error Not an issue
+globalThis.DOMMatrixReadOnly = DOMMatrix;
 
 globalThis.performance = window.performance;
 

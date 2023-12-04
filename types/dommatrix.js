@@ -1,12 +1,21 @@
-/* globals DOMMatrix */
+/* globals DOMMatrix, DOMMatrixReadOnly */
 import {toStringTag} from 'typeson';
 
 /**
  * @type {import('typeson').TypeSpecSet}
  */
-const dommatrix = {
-    dommatrix: {
-        test (x) { return toStringTag(x) === 'DOMMatrix'; },
+const dommatrix = {};
+
+create(DOMMatrix);
+create(DOMMatrixReadOnly);
+
+/**
+ * @param {typeof DOMMatrix|typeof DOMMatrixReadOnly} Ctor
+ * @returns {void}
+ */
+function create (Ctor) {
+    dommatrix[Ctor.name.toLowerCase()] = {
+        test (x) { return toStringTag(x) === Ctor.name; },
         replace (dm) {
             if (dm.is2D) {
                 return {
@@ -39,16 +48,16 @@ const dommatrix = {
         },
         revive (o) {
             if (Object.hasOwn(o, 'a')) {
-                return new DOMMatrix([o.a, o.b, o.c, o.d, o.e, o.f]);
+                return new Ctor([o.a, o.b, o.c, o.d, o.e, o.f]);
             }
-            return new DOMMatrix([
+            return new Ctor([
                 o.m11, o.m12, o.m13, o.m14,
                 o.m21, o.m22, o.m23, o.m24,
                 o.m31, o.m32, o.m33, o.m34,
                 o.m41, o.m42, o.m43, o.m44
             ]);
         }
-    }
-};
+    };
+}
 
 export default dommatrix;
