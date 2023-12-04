@@ -58,10 +58,11 @@ globalThis.DOMException = window.DOMException;
 
 // No constructor in JSDom
 // globalThis.DOMRect = window.DOMRect;
+// globalThis.DOMRectReadOnly = window.DOMRectReadOnly;
 /**
  * DOMRect class.
  */
-const DOMRect = class {
+class DOMRect {
     /* eslint-disable class-methods-use-this -- Not needed */
     /**
      * @returns {string}
@@ -84,18 +85,48 @@ const DOMRect = class {
         this.bottom = y + height;
         this.right = x + width;
     }
-};
+}
 // @ts-expect-error Not an issue
 globalThis.DOMRect = DOMRect;
+
+/**
+ * DOMRectReadOnly class.
+ */
+class DOMRectReadOnly {
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMRectReadOnly';
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} width
+     * @param {number} height
+     */
+    constructor (x, y, width, height) {
+        this.x = this.left = x;
+        this.y = this.top = y;
+        this.width = width;
+        this.height = height;
+        this.bottom = y + height;
+        this.right = x + width;
+    }
+}
+
 // @ts-expect-error Not an issue
-globalThis.DOMRectReadOnly = DOMRect;
+globalThis.DOMRectReadOnly = DOMRectReadOnly;
 
 // No constructor in JSDom
 // globalThis.DOMPoint = window.DOMPoint;
+// globalThis.DOMPointReadOnly = window.DOMPointReadOnly;
 /**
  * DOMPoint class.
  */
-const DOMPoint = class {
+class DOMPoint {
     /* eslint-disable class-methods-use-this -- Not needed */
     /**
      * @returns {string}
@@ -116,11 +147,37 @@ const DOMPoint = class {
         this.z = z ?? 0;
         this.w = w ?? 1;
     }
-};
+}
 // @ts-expect-error Not an issue
 globalThis.DOMPoint = DOMPoint;
+
+/**
+ * DOMPointReadOnly class.
+ */
+class DOMPointReadOnly {
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMPointReadOnly';
+    }
+    /**
+     * @param {number} x
+     * @param {number} y
+     * @param {number} z
+     * @param {number} w
+     */
+    constructor (x, y, z, w) {
+        this.x = x ?? 0;
+        this.y = y ?? 0;
+        this.z = z ?? 0;
+        this.w = w ?? 1;
+    }
+}
 // @ts-expect-error Not an issue
-globalThis.DOMPointReadOnly = DOMPoint;
+globalThis.DOMPointReadOnly = DOMPointReadOnly;
 
 // No constructor in JSDom
 // globalThis.DOMQuad = window.DOMQuad;
@@ -154,10 +211,11 @@ globalThis.DOMQuad = DOMQuad;
 
 // No constructor in JSDom
 // globalThis.DOMMatrix = window.DOMMatrix;
+// globalThis.DOMMatrixReadOnly = window.DOMMatrixReadOnly;
 /**
  * DOMMatrix class.
  */
-const DOMMatrix = class {
+class DOMMatrix {
     /* eslint-disable class-methods-use-this -- Not needed */
     /**
      * @returns {string}
@@ -204,11 +262,63 @@ const DOMMatrix = class {
         this.m43 = init[14];
         this.m44 = init[15];
     }
-};
+}
 // @ts-expect-error Not an issue
 globalThis.DOMMatrix = DOMMatrix;
+
+/**
+ * DOMMatrixReadOnly class.
+ */
+class DOMMatrixReadOnly {
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMMatrixReadOnly';
+    }
+    /**
+     * @param {[number, number, number, number, number, number]|
+     *   [
+     *     number, number, number, number,
+     *     number, number, number, number,
+     *     number, number, number, number,
+     *     number, number, number, number
+     * ]} init
+     */
+    constructor (init) {
+        if (typeof init[6] !== 'number') {
+            this.is2D = true;
+            this.a = init[0];
+            this.b = init[1];
+            this.c = init[2];
+            this.d = init[3];
+            this.e = init[4];
+            this.f = init[5];
+            return;
+        }
+        this.is2D = false;
+        this.m11 = init[0];
+        this.m12 = init[1];
+        this.m13 = init[2];
+        this.m14 = init[3];
+        this.m21 = init[4];
+        this.m22 = init[5];
+        this.m23 = init[6];
+        this.m24 = init[7];
+        this.m31 = init[8];
+        this.m32 = init[9];
+        this.m33 = init[10];
+        this.m34 = init[11];
+        this.m41 = init[12];
+        this.m42 = init[13];
+        this.m43 = init[14];
+        this.m44 = init[15];
+    }
+}
 // @ts-expect-error Not an issue
-globalThis.DOMMatrixReadOnly = DOMMatrix;
+globalThis.DOMMatrixReadOnly = DOMMatrixReadOnly;
 
 globalThis.performance = window.performance;
 
