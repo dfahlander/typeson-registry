@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 9.2.1
+
+- fix: allow `DOMRect`, `DOMPoint` and `DOMMatrix` to be undefined
+
 ## 9.2.0
 
 - feat: Add `DOMQuad` type

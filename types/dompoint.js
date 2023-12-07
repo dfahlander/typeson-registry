@@ -6,8 +6,14 @@ import {toStringTag} from 'typeson';
  */
 const dompoint = {};
 
-create(DOMPoint);
-create(DOMPointReadOnly);
+/* c8 ignore next */
+if (typeof DOMPoint !== 'undefined') {
+    create(DOMPoint);
+}
+/* c8 ignore next */
+if (typeof DOMPointReadOnly !== 'undefined') {
+    create(DOMPointReadOnly);
+}
 
 /**
  * @param {typeof DOMPoint|typeof DOMPointReadOnly} Ctor

@@ -6,8 +6,14 @@ import {toStringTag} from 'typeson';
  */
 const domrect = {};
 
-create(DOMRect);
-create(DOMRectReadOnly);
+/* c8 ignore next */
+if (typeof DOMRect !== 'undefined') {
+    create(DOMRect);
+}
+/* c8 ignore next */
+if (typeof DOMRectReadOnly !== 'undefined') {
+    create(DOMRectReadOnly);
+}
 
 /**
  * @param {typeof DOMRect|typeof DOMRectReadOnly} Ctor

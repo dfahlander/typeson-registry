@@ -6,8 +6,14 @@ import {toStringTag} from 'typeson';
  */
 const dommatrix = {};
 
-create(DOMMatrix);
-create(DOMMatrixReadOnly);
+/* c8 ignore next */
+if (typeof DOMMatrix !== 'undefined') {
+    create(DOMMatrix);
+}
+/* c8 ignore next */
+if (typeof DOMMatrixReadOnly !== 'undefined') {
+    create(DOMMatrixReadOnly);
+}
 
 /**
  * @param {typeof DOMMatrix|typeof DOMMatrixReadOnly} Ctor
