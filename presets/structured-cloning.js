@@ -34,8 +34,6 @@ import cryptokey from '../types/cryptokey.js';
  * @type {import('typeson').Preset}
  */
 const expObj = [
-    // Todo: Might also register synchronous `ImageBitmap` and
-    //    `Blob`/`File`/`FileList`?
     // ES5
     userObject, // Processed last (non-builtin)
 
