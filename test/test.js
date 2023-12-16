@@ -14,6 +14,7 @@ import {it, describe} from 'mocha';
 import {expect, assert} from 'chai';
 /* eslint-enable no-shadow -- Needed */
 import socketIOClient from 'socket.io-client';
+import semver from 'semver';
 import io from './helpers/io.js';
 
 import {imageTestFileNode} from './helpers/test-environment.js';
@@ -791,6 +792,43 @@ function BuiltIn (preset) {
                 expect(obj2.wrapper1.buffer).to.equal(obj2.buffer);
                 expect(obj2.wrapper1.buffer).to.equal(obj2.dataView.buffer);
             });
+
+            it('should return the same buffer object from different ' +
+                'wrappers (or data views or buffer itself) ' +
+                '(maxByteLength)', () => {
+                const typeson = new Typeson().register(preset || [
+                    arraybuffer,
+                    typedArrays,
+                    dataview
+                ]);
+                // @ts-expect-error Not yet standard
+                const shared = new ArrayBuffer(7, {maxByteLength: 16});
+                const dataView = new DataView(shared, 3, 4);
+                const obj = {
+                    wrapper1: new Uint8Array(shared),
+                    wrapper2: new Uint16Array(shared, 2, 2),
+                    buffer: shared,
+                    dataView
+                };
+                obj.wrapper1[0] = 1;
+                obj.wrapper2[1] = 0xFFFF;
+
+                const json = typeson.stringify(obj);
+                // console.log(json);
+                const obj2 = typeson.parse(/** @type {string} */ (json));
+                expect(obj2.wrapper1.buffer).to.equal(obj2.wrapper2.buffer);
+                expect(obj2.wrapper1.buffer).to.equal(obj2.buffer);
+                expect(obj2.wrapper1.buffer).to.equal(obj2.dataView.buffer);
+
+                if (typeof process === 'undefined' ||
+                    semver.satisfies(process.version, '>=20.0.0')
+                ) {
+                    expect(obj2.buffer.maxByteLength).to.equal(16);
+                    expect(obj2.wrapper1.buffer.maxByteLength).to.equal(16);
+                    expect(obj2.wrapper2.buffer.maxByteLength).to.equal(16);
+                    expect(obj2.dataView.buffer.maxByteLength).to.equal(16);
+                }
+            });
         });
     });
 
@@ -1094,8 +1132,8 @@ function socketIO (preset, typeWithBufferEncoding) {
                     assert(!Object.keys(obj.error).length, 'Error empty');
                 }
                 if (typeWithBufferEncoding) {
-                    assert(typeof obj.array === 'string');
-                    assert(typeof obj.array2 === 'string');
+                    assert(typeof obj.array.s === 'string');
+                    assert(typeof obj.array2.s === 'string');
                 } else if (!postSockets) {
                     assert(obj.array instanceof ArrayBuffer);
                     assert(obj.array2 instanceof ArrayBuffer);

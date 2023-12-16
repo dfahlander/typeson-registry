@@ -26,6 +26,7 @@ const dataview = {
             stateObj.buffers.push(buffer);
             return {
                 encoded: encode(buffer),
+                maxByteLength: buffer.maxByteLength,
                 byteOffset,
                 byteLength
             };
@@ -42,12 +43,20 @@ const dataview = {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }
-            const {byteOffset, byteLength, encoded, index} = b64Obj;
+            const {
+                byteOffset, byteLength, encoded, index, maxByteLength
+            } = b64Obj;
             let buffer;
             if ('index' in b64Obj) {
                 buffer = stateObj.buffers[index];
             } else {
-                buffer = decode(encoded);
+                buffer = decode(
+                    encoded,
+                    /* c8 ignore next 3 -- Depends on Node version */
+                    maxByteLength === undefined
+                        ? maxByteLength
+                        : {maxByteLength}
+                );
                 stateObj.buffers.push(buffer);
             }
             return new DataView(buffer, byteOffset, byteLength);

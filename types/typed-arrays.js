@@ -44,6 +44,7 @@ function create (TypedArray) {
             }
             stateObj.buffers.push(buffer);
             return {
+                maxByteLength: buffer.maxByteLength,
                 encoded: encode(buffer),
                 byteOffset,
                 length: l
@@ -61,12 +62,20 @@ function create (TypedArray) {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }
-            const {byteOffset, length: len, encoded, index} = b64Obj;
+            const {
+                byteOffset, length: len, encoded, index, maxByteLength
+            } = b64Obj;
             let buffer;
             if ('index' in b64Obj) {
                 buffer = stateObj.buffers[index];
             } else {
-                buffer = decode(encoded);
+                buffer = decode(
+                    encoded,
+                    /* c8 ignore next 3 -- Depends on Node version */
+                    maxByteLength === undefined
+                        ? undefined
+                        : {maxByteLength}
+                );
                 stateObj.buffers.push(buffer);
             }
             return new TypedArray(buffer, byteOffset, len);

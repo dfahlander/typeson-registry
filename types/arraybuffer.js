@@ -23,7 +23,10 @@ const arraybuffer = {
                 return {index};
             }
             stateObj.buffers.push(b);
-            return encode(b);
+            return {
+                s: encode(b),
+                maxByteLength: b.maxByteLength
+            };
         },
         revive (
             b64,
@@ -36,7 +39,7 @@ const arraybuffer = {
             if (!stateObj.buffers) {
                 stateObj.buffers = [];
             }
-            if (typeof b64 === 'object') {
+            if (Object.hasOwn(b64, 'index')) {
                 return stateObj.buffers[
                     /**
                      * @type {{index: import('typeson').Integer}}
@@ -44,7 +47,10 @@ const arraybuffer = {
                     (b64).index
                 ];
             }
-            const buffer = decode(/** @type {string} */ (b64));
+            const buffer = decode(
+                /** @type {string} */ (b64.s),
+                {maxByteLength: b64.maxByteLength}
+            );
             stateObj.buffers.push(buffer);
             return buffer;
         }
