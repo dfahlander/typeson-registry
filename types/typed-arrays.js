@@ -22,11 +22,7 @@ const typedArrays = {};
  * @returns {void}
  */
 function create (TypedArray) {
-    const typeName =
-        /**
-         * @type {TypedArrayConstructor & {name: string}}
-         */
-        (TypedArray).name;
+    const typeName = TypedArray.name;
 
     typedArrays[typeName.toLowerCase()] = {
         test (x) { return toStringTag(x) === typeName; },
