@@ -1,4 +1,4 @@
-/* globals document, createImageBitmap */
+/* globals document, OffscreenCanvas, createImageBitmap */
 // `ImageBitmap` is browser / DOM specific. It also can only work
 //  same-domain (or CORS)
 
@@ -21,15 +21,15 @@ const imagebitmap = {
                 canvas.getContext('2d')
             );
             ctx.drawImage(bm, 0, 0);
-            // Although `width` and `height` are part of `ImageBitMap`,
-            //   these will be auto-created for us when reviving with the
-            //   data URL (and they are not settable even if they weren't)
-            // return {
-            //   width: bm.width, height: bm.height, dataURL: canvas.toDataURL()
-            // };
-            return canvas.toDataURL();
+            return {
+                width: bm.width, height: bm.height, dataURL: canvas.toDataURL()
+            };
         },
         revive (o) {
+            const canvas = typeof OffscreenCanvas === 'undefined'
+                ? document.createElement('canvas')
+                /* c8 ignore next -- Browser only */
+                : new OffscreenCanvas(o.width, o.height);
             /*
             var req = new XMLHttpRequest();
             req.open('GET', o, false); // Sync
@@ -39,7 +39,6 @@ const imagebitmap = {
             req.send();
             return req.responseText;
             */
-            const canvas = document.createElement('canvas');
             const ctx = /** @type {CanvasRenderingContext2D} */ (
                 canvas.getContext('2d')
             );
@@ -48,10 +47,15 @@ const imagebitmap = {
             img.addEventListener('load', function () {
                 ctx.drawImage(img, 0, 0);
             });
-            img.src = o;
+            img.src = o.dataURL;
             // Works in contexts allowing an `ImageBitmap` (We might use
             //   `OffscreenCanvas.transferToBitmap` when supported)
-            return canvas;
+            return typeof OffscreenCanvas === 'undefined'
+                ? canvas
+                /* c8 ignore next 3 -- Browser only */
+                : /** @type {OffscreenCanvas} */ (
+                    canvas
+                ).transferToImageBitmap();
         },
         reviveAsync (o) {
             const canvas = document.createElement('canvas');
@@ -63,7 +67,7 @@ const imagebitmap = {
             img.addEventListener('load', function () {
                 ctx.drawImage(img, 0, 0);
             });
-            img.src = o; // o.dataURL;
+            img.src = o.dataURL;
 
             return new TypesonPromise(async (resolve, reject) => {
                 try {

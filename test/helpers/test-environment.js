@@ -329,6 +329,8 @@ try {
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 
+globalThis.OffscreenCanvas = window.OffscreenCanvas;
+
 /**
  * @param {HTMLCanvasElement} cvs
  * @returns {Promise<HTMLCanvasElement>}

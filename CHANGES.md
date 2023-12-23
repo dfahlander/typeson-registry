@@ -1,5 +1,14 @@
 # typeson-registry
 
+## 10.0.0
+
+BREAKING CHANGES:
+- Encodes array buffers as objects rather than strings in order to add any metadata
+- For ImageBitmap, storage as object now necessary to retrieve width, height
+
+- feat: add support for `maxByteLength`
+- feat: revive synchronously with genuine ImageBitmap
+
 ## 9.2.1
 
 - fix: allow `DOMRect`, `DOMPoint` and `DOMMatrix` to be undefined

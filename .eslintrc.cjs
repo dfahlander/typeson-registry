@@ -52,6 +52,7 @@ module.exports = {
             'Object.defineProperty',
             'Object.entries',
             'Object.keys',
+            'OffscreenCanvas',
             'performance',
             'Promise',
             'Set',
