@@ -1,5 +1,12 @@
 # typeson-registry
 
+## 11.0.0 (unreleased)
+
+BREAKING CHANGES:
+- Requires Node 18.14.0+
+
+- chore: require Node 18.14.0+
+
 ## 10.0.0
 
 BREAKING CHANGES:

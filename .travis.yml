@@ -1,8 +1,0 @@
-language: node_js
-os: linux
-dist: focal
-
-node_js:
-  - "18.15.0"
-  - "16"
-  - "14.17.0"

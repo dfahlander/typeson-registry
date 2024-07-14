@@ -80,7 +80,7 @@
   },
   "homepage": "https://github.com/dfahlander/typeson-registry#readme",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
