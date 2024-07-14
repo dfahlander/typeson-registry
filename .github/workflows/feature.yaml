@@ -65,7 +65,7 @@ name: Lint, test and build
 on:
   pull_request:
     branches:
-      - main
+      - master
     types:
       - opened
       - synchronize
