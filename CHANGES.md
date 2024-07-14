@@ -1,6 +1,6 @@
 # typeson-registry
 
-## 11.0.0 (unreleased)
+## 11.0.0 (Unreleased)
 
 BREAKING CHANGES:
 - Requires Node 18.14.0+
