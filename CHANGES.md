@@ -5,6 +5,7 @@
 BREAKING CHANGES:
 - Requires Node 18.14.0+
 
+- fix: change from deprecated `readAsBinaryString` method to `readAsArrayBuffer`
 - chore: require Node 18.14.0+
 
 ## 10.0.0

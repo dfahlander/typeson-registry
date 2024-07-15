@@ -1,6 +1,8 @@
 /* globals XMLHttpRequest, FileReader */
 import {TypesonPromise, toStringTag} from 'typeson';
-import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
+import {
+    string2arraybuffer, arraybuffer2string
+} from '../utils/stringArrayBuffer.js';
 
 /**
  * @type {import('typeson').TypeSpecSet}
@@ -44,7 +46,9 @@ const file = {
                 reader.addEventListener('load', function () {
                     resolve({
                         type: f.type,
-                        stringContents: reader.result,
+                        stringContents: arraybuffer2string(
+                            /** @type {ArrayBuffer} */ (reader.result)
+                        ),
                         name: f.name,
                         lastModified: f.lastModified
                     });
@@ -54,7 +58,9 @@ const file = {
                 reader.addEventListener('error', function () {
                     reject(reader.error);
                 });
-                reader.readAsBinaryString(f);
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                // eslint-disable-next-line unicorn/prefer-blob-reading-methods -- Too new?
+                reader.readAsArrayBuffer(f);
             });
         }
     }

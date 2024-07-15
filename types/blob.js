@@ -1,6 +1,8 @@
 /* globals XMLHttpRequest, FileReader */
 import {TypesonPromise, toStringTag} from 'typeson';
-import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
+import {
+    string2arraybuffer, arraybuffer2string
+} from '../utils/stringArrayBuffer.js';
 
 /**
  * @type {import('typeson').TypeSpecSet}
@@ -42,7 +44,9 @@ const blob = {
                 reader.addEventListener('load', () => {
                     resolve({
                         type: b.type,
-                        stringContents: reader.result
+                        stringContents: arraybuffer2string(
+                            /** @type {ArrayBuffer} */ (reader.result)
+                        )
                     });
                 });
                 // Seems not feasible to accurately simulate
@@ -50,7 +54,9 @@ const blob = {
                 reader.addEventListener('error', () => {
                     reject(reader.error);
                 });
-                reader.readAsBinaryString(b);
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                // eslint-disable-next-line unicorn/prefer-blob-reading-methods -- Too new?
+                reader.readAsArrayBuffer(b);
             });
         }
     }
