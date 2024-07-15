@@ -320,8 +320,6 @@ class DOMMatrixReadOnly {
 // @ts-expect-error Not an issue
 globalThis.DOMMatrixReadOnly = DOMMatrixReadOnly;
 
-globalThis.performance = window.performance;
-
 try {
     // Before Node < 20
     globalThis.crypto = /** @type {NodeMockAPI} */ (webcrypto);

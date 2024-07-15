@@ -50,10 +50,6 @@ The `imagedata` type requires a global `ImageData` polyfill (including an
 You may wish to see our `test-environment.js` file for how some
 polyfilling may be done (largely using `jsdom`).
 
-The `cloneable` and `resurrectable` types (and the `createObjectURL`
-polyill) each accept an optional global `performance` polyfill (through
-the common file `utils/generateUUID.js`).
-
 ### Building files from Git clone (as opposed to npm installs)
 
 If you have cloned the repo (and not the npm package), you must run

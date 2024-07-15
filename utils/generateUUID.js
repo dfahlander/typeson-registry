@@ -1,5 +1,3 @@
-// The `performance` global is optional
-
 /**
  * @todo We could use `import generateUUID from 'uuid/v4';` (but it needs
  *   crypto library, etc.; `rollup-plugin-node-builtins` doesn't recommend
@@ -9,13 +7,7 @@
  */
 export default function generateUUID () { //  Adapted from original: public domain/MIT: http://stackoverflow.com/a/8809472/271577
     /* c8 ignore next */
-    let d = Date.now() +
-        // use high-precision timer if available
-        /* c8 ignore next 4 */
-        (typeof performance !== 'undefined' &&
-            typeof performance.now === 'function'
-            ? performance.now()
-            : 0);
+    let d = Date.now();
 
     // eslint-disable-next-line @stylistic/max-len -- Long
     // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Need to update plugin

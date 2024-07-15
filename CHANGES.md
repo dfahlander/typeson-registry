@@ -1,11 +1,15 @@
 # typeson-registry
 
-## 11.0.0 (Unreleased)
+## 11.0.0
 
 BREAKING CHANGES:
 - Requires Node 18.14.0+
 
-- fix: change from deprecated `readAsBinaryString` method to `readAsArrayBuffer`
+- fix: for `overrideMimeType` polyfill for jsdom >= 22.0.0
+- fix: get rid of `performance` usage as causing maximum recursion with
+   latter jsdom versions
+- fix: change from deprecated `readAsBinaryString` method to
+    `readAsArrayBuffer`
 - chore: require Node 18.14.0+
 
 ## 10.0.0

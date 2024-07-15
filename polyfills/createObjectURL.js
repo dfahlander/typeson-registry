@@ -100,6 +100,7 @@ const xmlHttpRequestOverrideMimeType = function (
                     // utf16le and base64 both convert lone surrogates
                     // eslint-disable-next-line @stylistic/max-len -- Long
                     const encoded = implForWrapper(blob)._buffer.toString('binary');
+
                     // Not usable in jsdom which makes properties readonly,
                     //   but local-xmlhttprequest can use (and jsdom can
                     //   handle data URLs anyways)
@@ -117,6 +118,10 @@ const xmlHttpRequestOverrideMimeType = function (
                 }
                 return _xhropen.call(this, method, url, async);
             };
+
+            // As of jsdom 22.0.0, this is needed as the code below will
+            //    have its own effects in overriding `responseText`
+            return undefined;
         }
         // The presence of `XMLHttpRequest.prototype.overrideMimeType`
         //   is not really needed here, so making optional

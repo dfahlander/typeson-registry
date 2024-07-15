@@ -53,7 +53,6 @@ module.exports = {
             'Object.entries',
             'Object.keys',
             'OffscreenCanvas',
-            'performance',
             'Promise',
             'Set',
             'Symbol',
@@ -61,7 +60,6 @@ module.exports = {
             'Uint8Array',
             'Uint8ClampedArray',
             'URL',
-            'window.performance',
             'Worker',
             'XMLHttpRequest'
         ]
