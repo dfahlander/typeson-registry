@@ -1,3 +1,4 @@
+/* globals process, Buffer */
 /* globals InternalError */
 /* globals document, ImageData, createImageBitmap, Blob, FileReader, File,
     crypto, DOMRect, DOMPoint, DOMMatrix,
@@ -946,13 +947,13 @@ function BuiltIn (preset) {
         it('should return a Intl.NumberFormat', () => {
             const typeson = new Typeson().register(preset || [intlTypes]);
             const locales = ['hi', 'de-AT', 'de-DE-u-nu-bali'];
-            const opts = {
+            const opts = /** @type {const} */ ({
                 localeMatcher: 'lookup',
                 style: 'currency',
                 currency: 'EUR',
                 currencyDisplay: 'symbol',
                 useGrouping: false
-            };
+            });
             const optsClone = JSON.parse(JSON.stringify(opts));
 
             const dtf = new Intl.NumberFormat(locales, opts);

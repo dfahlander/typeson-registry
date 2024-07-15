@@ -12,7 +12,6 @@
 
         <!-- Test Environment -->
         <script src="../node_modules/mocha/mocha.js"></script>
-        <script src="../node_modules/chai/chai.js"></script>
         <!-- <script src="../node_modules/sinon/pkg/sinon-no-sourcemaps.js"></script> -->
         <script>
         /* globals mocha */
@@ -23,7 +22,7 @@
             {
                 "imports": {
                     "mocha": "./mochaESMLoader.js",
-                    "chai": "./chaiESMLoader.js",
+                    "chai": "../node_modules/chai/chai.js",
                     "typeson": "../node_modules/typeson/dist/typeson.esm.js",
                     "base64-arraybuffer-es6": "../node_modules/base64-arraybuffer-es6/dist/base64-arraybuffer-es.js",
                     "/test/helpers/test-environment.js": "./test-environment.js",
