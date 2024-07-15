@@ -1,7 +1,7 @@
 /* globals process, Buffer */
 /* globals InternalError */
-/* globals document, ImageData, createImageBitmap, Blob, FileReader, File,
-    crypto, DOMRect, DOMPoint, DOMMatrix,
+/* globals document, ImageData, createImageBitmap, FileReader,
+    DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
     DOMQuad,
     XMLHttpRequest, xmlHttpRequestOverrideMimeType */
@@ -1011,7 +1011,7 @@ describe('Built-in', BuiltIn);
 * @param {TypesonPreset} [preset]
 * @returns {void}
  */
-function CryptoKey (preset) {
+function cryptoKey (preset) {
     describe('CryptoKey', () => {
         it('CryptoKey', async () => {
             const typeson = new Typeson().register(preset || cryptokey);
@@ -1038,7 +1038,7 @@ function CryptoKey (preset) {
     });
 }
 
-CryptoKey();
+cryptoKey();
 
 /**
  * @param {import('typeson').Preset} [preset]
@@ -1840,7 +1840,7 @@ describe('Presets', () => {
     });
     describe('Structured cloning', () => {
         NonindexKeys(structuredCloningThrowing);
-        CryptoKey(structuredCloningThrowing);
+        cryptoKey(structuredCloningThrowing);
         DomException(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
         DomPoint(structuredCloningThrowing);

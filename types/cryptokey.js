@@ -1,4 +1,3 @@
-/* globals crypto */
 import {TypesonPromise, toStringTag} from 'typeson';
 
 /**

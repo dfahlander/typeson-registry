@@ -1,4 +1,4 @@
-/* globals XMLHttpRequest, File, FileReader */
+/* globals XMLHttpRequest, FileReader */
 import {TypesonPromise, toStringTag} from 'typeson';
 import {string2arraybuffer} from '../utils/stringArrayBuffer.js';
 
