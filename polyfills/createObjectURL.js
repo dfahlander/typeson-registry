@@ -9,7 +9,6 @@
 //    though local-xmlhttprequest may need to be adapted
 // import whatwgURL from 'whatwg-url';
 
-// These are not working well with Rollup as imports
 // We also need to tweak `XMLHttpRequest` which our types
 //    rely on to obtain the Blob/File content
 import whatwgURL from 'whatwg-url';
@@ -18,14 +17,6 @@ import * as utils from 'jsdom/lib/jsdom/living/generated/utils.js';
 import generateUUID from '../utils/generateUUID.js';
 
 const {serializeURLOrigin, parseURL} = whatwgURL;
-
-/*
-both are problematic:
-eslint-disable-next-line n/no-unpublished-import
-eslint-disable n/file-extension-in-import, import/extensions
-import {serializeURLOrigin, parseURL} from 'whatwg-url';
-import utils from 'jsdom/lib/jsdom/living/generated/utils';
-*/
 
 /**
  * @type {{[key: string]: Blob}}
