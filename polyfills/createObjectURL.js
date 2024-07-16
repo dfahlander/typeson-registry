@@ -1,4 +1,4 @@
-// @ts-nocheck -- jsdom has no types
+// @ts-nocheck -- jsdom has no types for the file we need
 /* globals location, XMLHttpRequest */
 
 // Imperfectly polyfill jsdom for testing `Blob`/`File`
@@ -7,12 +7,11 @@
 //    `URL.createObjectURL` may be implemented in jsdom:
 //    https://github.com/jsdom/jsdom/issues/1721
 //    though local-xmlhttprequest may need to be adapted
-// import whatwgURL from 'whatwg-url';
 
 // We also need to tweak `XMLHttpRequest` which our types
 //    rely on to obtain the Blob/File content
 import whatwgURL from 'whatwg-url';
-// eslint-disable-next-line n/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import -- User to supply
 import * as utils from 'jsdom/lib/jsdom/living/generated/utils.js';
 import generateUUID from '../utils/generateUUID.js';
 
