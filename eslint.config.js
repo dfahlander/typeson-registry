@@ -156,8 +156,6 @@ export default [
         },
         rules: {
             // Disable for now
-            '@eslint-community/eslint-comments/require-description': 0,
-
             '@brettz9/no-use-ignored-vars': 0,
             '@stylistic/brace-style': 0,
             '@stylistic/indent': ['error', 4, {outerIIFEBody: 0}],

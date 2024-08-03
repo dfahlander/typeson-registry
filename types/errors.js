@@ -1,5 +1,4 @@
-/* globals InternalError */
-/* eslint-env browser, node */
+/* globals InternalError -- Optional */
 import {hasConstructorOf} from 'typeson';
 
 /**

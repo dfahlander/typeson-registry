@@ -1,4 +1,3 @@
-/* eslint-env browser, node */
 import {toStringTag} from 'typeson';
 
 // Support all kinds of typed arrays (views of ArrayBuffers)

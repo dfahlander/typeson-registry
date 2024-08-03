@@ -1,4 +1,4 @@
-/* globals XMLHttpRequest, FileReader */
+/* globals XMLHttpRequest, FileReader -- Polyfills */
 import {TypesonPromise, toStringTag} from 'typeson';
 import {
     string2arraybuffer, arraybuffer2string

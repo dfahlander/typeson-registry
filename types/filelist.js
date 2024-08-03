@@ -24,7 +24,7 @@ const filelist = {
                  * Set private properties and length.
                  */
                 constructor () {
-                    // eslint-disable-next-line prefer-rest-params
+                    // eslint-disable-next-line prefer-rest-params -- API
                     this._files = arguments[0];
                     this.length = this._files.length;
                 }
@@ -35,12 +35,12 @@ const filelist = {
                 item (index) {
                     return this._files[index];
                 }
-                /* eslint-disable class-methods-use-this */
+                /* eslint-disable class-methods-use-this -- Not needed */
                 /**
                  * @returns {"FileList"}
                  */
                 get [Symbol.toStringTag] () {
-                    /* eslint-enable class-methods-use-this */
+                    /* eslint-enable class-methods-use-this -- Not needed */
                     return 'FileList';
                 }
             }

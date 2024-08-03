@@ -313,7 +313,7 @@ another context).
 const functionType = {functionType: [
     function (x) { return typeof x === 'function'; },
     function (funcType) { return '(' + funcType.toString() + ')'; },
-    // eslint-disable-next-line no-eval
+    // eslint-disable-next-line no-eval -- Demonstrating
     function (o) { return eval(o); }
 ]};
 

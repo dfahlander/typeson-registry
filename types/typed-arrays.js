@@ -1,4 +1,3 @@
-/* eslint-env browser, node */
 import {toStringTag} from 'typeson';
 import {encode, decode} from 'base64-arraybuffer-es6';
 

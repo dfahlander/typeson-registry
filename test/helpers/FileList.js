@@ -6,7 +6,7 @@
  * @class
  */
 function _FileList () {
-    // eslint-disable-next-line prefer-rest-params
+    // eslint-disable-next-line prefer-rest-params -- API
     this._files = arguments[0];
     this.length = this._files.length;
 }

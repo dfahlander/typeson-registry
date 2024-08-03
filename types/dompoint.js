@@ -1,4 +1,4 @@
-/* globals DOMPoint, DOMPointReadOnly */
+/* globals DOMPoint, DOMPointReadOnly -- Polyfills */
 import {toStringTag} from 'typeson';
 
 /**

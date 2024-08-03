@@ -1,5 +1,4 @@
-/* globals window */
-/* eslint-env node */
+/* globals window -- Polyfills */
 
 import path from 'node:path';
 import {webcrypto} from 'node:crypto';
@@ -338,7 +337,7 @@ globalThis.createImageBitmap = /** @type {createImageBitmap} */ (
         /** @type {ImageBitmapSource & {dataset: {toStringTag?: string}}} */
         cvs
     ) {
-        // eslint-disable-next-line promise/avoid-new
+        // eslint-disable-next-line promise/avoid-new -- Polyfill
         return new Promise(function (resolve /* , reject */) {
             // This really ought not be a canvas, but it works as a simple shim
             //   for our tests

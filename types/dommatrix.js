@@ -1,4 +1,4 @@
-/* globals DOMMatrix, DOMMatrixReadOnly */
+/* globals DOMMatrix, DOMMatrixReadOnly -- Polyfills */
 import {toStringTag} from 'typeson';
 
 /**

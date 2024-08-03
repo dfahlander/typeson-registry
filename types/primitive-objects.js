@@ -1,6 +1,6 @@
 // This module is for objectified primitives (such as `new Number(3)` or
 //      `new String("foo")`)
-/* eslint-disable no-new-wrappers, unicorn/new-for-builtins */
+/* eslint-disable no-new-wrappers, unicorn/new-for-builtins -- Deliberate */
 import {toStringTag} from 'typeson';
 
 /**
@@ -36,6 +36,6 @@ const primitiveObjects = {
         revive (n) { return new Number(n); } // Revive to an objectified number
     }
 };
-/* eslint-enable no-new-wrappers, unicorn/new-for-builtins */
+/* eslint-enable no-new-wrappers, unicorn/new-for-builtins -- Deliberate */
 
 export default primitiveObjects;

@@ -1,4 +1,4 @@
-/* globals document, OffscreenCanvas, createImageBitmap */
+/* globals document, OffscreenCanvas, createImageBitmap -- Polyfills */
 // `ImageBitmap` is browser / DOM specific. It also can only work
 //  same-domain (or CORS)
 

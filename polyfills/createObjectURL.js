@@ -1,5 +1,5 @@
 // @ts-nocheck -- jsdom has no types for the file we need
-/* globals location, XMLHttpRequest */
+/* globals location, XMLHttpRequest -- Polyfills */
 
 // Imperfectly polyfill jsdom for testing `Blob`/`File`
 

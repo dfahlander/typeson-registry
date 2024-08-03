@@ -1,4 +1,4 @@
-/* globals DOMQuad */
+/* globals DOMQuad -- Polyfills */
 import {toStringTag} from 'typeson';
 
 /**

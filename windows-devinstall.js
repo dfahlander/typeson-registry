@@ -1,4 +1,3 @@
-/* eslint-env node */
 import fs from 'fs';
 import path from 'path';
 import util from 'util';
@@ -45,8 +44,7 @@ if (isWin) {
     const pathToIEShims =
         String.raw`C:\Program Files (x86)\Internet Explorer\IEShims.dll`;
     const targetDir = path.join(
-        // eslint-disable-next-line no-undef
-        require.resolve('canvas'), '../../build/Release'
+        import.meta.resolve('canvas'), '../../build/Release'
     );
 
     await copy(pathToIEShims, targetDir + String.raw`\IEShims.dll`);

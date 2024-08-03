@@ -1,4 +1,4 @@
-/* globals ImageData */
+/* globals ImageData -- Polyfills */
 // `ImageData` is browser / DOM specific (though `node-canvas` has it
 //   available on `Canvas`).
 

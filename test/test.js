@@ -1,10 +1,10 @@
-/* globals process, Buffer */
-/* globals InternalError */
+/* globals process, Buffer -- Needed for check */
+/* globals InternalError -- If available */
 /* globals document, ImageData, createImageBitmap, FileReader,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
     DOMQuad,
-    XMLHttpRequest, xmlHttpRequestOverrideMimeType */
+    XMLHttpRequest, xmlHttpRequestOverrideMimeType -- Polyfills */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
 /* eslint-disable new-cap -- For clarity */
@@ -203,7 +203,7 @@ function Undefined (preset) {
         it('should be possible to restore `undefined` properties', () => {
             const typeson = new Typeson().register(preset || undef);
             const a = [undefined, {
-                // eslint-disable-next-line no-sparse-arrays
+                // eslint-disable-next-line no-sparse-arrays -- Deliberate
                 b: undefined, c: [3, null, , undefined]
             }];
             const json = typeson.stringify(a);
@@ -426,10 +426,12 @@ function NonindexKeys (preset) {
     describe('arrayNonindexKeys', () => {
         it('should preserve sparse arrays with non-index keys', () => {
             const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            /* eslint-disable no-sparse-arrays -- Deliberate */
             /**
              * @type {(number|string|undefined)[] & {ghi?: string}}
              */
-            const arr = [, , 3, 4, 5]; // eslint-disable-line no-sparse-arrays
+            const arr = [, , 3, 4, 5];
+            /* eslint-enable no-sparse-arrays -- Deliberate */
             arr.length = 10;
             arr[7] = 6;
             arr[-2] = 'abc';
@@ -442,10 +444,12 @@ function NonindexKeys (preset) {
         });
         it('should preserve sparse arrays without non-index keys', () => {
             const typeson = new Typeson().register(preset || arrayNonindexKeys);
+            /* eslint-disable no-sparse-arrays -- Deliberate testing */
             /**
              * @type {(number|string|undefined)[]}
              */
-            const arr = [, , 3, 4, 5]; // eslint-disable-line no-sparse-arrays
+            const arr = [, , 3, 4, 5];
+            /* eslint-enable no-sparse-arrays -- Deliberate testing */
             arr.length = 10;
             arr[7] = 6;
             const tson = typeson.stringify(arr);
@@ -512,10 +516,10 @@ function BuiltIn (preset) {
     });
 
     describe('Primitive objects', () => {
-        /* eslint-disable unicorn/new-for-builtins */
+        /* eslint-disable unicorn/new-for-builtins -- Deliberate testing */
         it('String object', () => {
             const typeson = new Typeson().register(preset || primitiveObjects);
-            // eslint-disable-next-line no-new-wrappers
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
             const strObj = new String('hello');
             const tson = typeson.stringify(strObj, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
@@ -525,7 +529,7 @@ function BuiltIn (preset) {
         });
         it('Boolean object', () => {
             const typeson = new Typeson().register(preset || primitiveObjects);
-            // eslint-disable-next-line no-new-wrappers
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
             const strObj = new Boolean(true);
             const tson = typeson.stringify(strObj, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
@@ -534,14 +538,14 @@ function BuiltIn (preset) {
         });
         it('Number object', () => {
             const typeson = new Typeson().register(preset || primitiveObjects);
-            // eslint-disable-next-line no-new-wrappers
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
             const strObj = new Number(456);
             const tson = typeson.stringify(strObj, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(Number);
             expect(back.valueOf()).to.equal(456);
         });
-        /* eslint-enable unicorn/new-for-builtins */
+        /* eslint-enable unicorn/new-for-builtins -- Deliberate testing */
     });
 
     SpecialNumbers();
@@ -569,7 +573,8 @@ function BuiltIn (preset) {
     describe('RegExp', () => {
         it('should return a RegExp', () => {
             const typeson = new Typeson().register(preset || [regexp]);
-            // eslint-disable-next-line prefer-regex-literals
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line prefer-regex-literals -- Deliberate testing
             let regex = new RegExp('ab?c', 'guy');
             let tson = typeson.stringify(regex, null, 2);
             let back = typeson.parse(/** @type {string} */ (tson));
@@ -581,7 +586,9 @@ function BuiltIn (preset) {
             expect(back.multiline).to.equal(false);
             expect(back.source).to.equal('ab?c');
 
-            regex = /ab?c/im; // eslint-disable-line require-unicode-regexp
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line require-unicode-regexp -- Deliberate testing
+            regex = /ab?c/im;
             tson = typeson.stringify(regex, null, 2);
             back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof RegExp);
@@ -1159,7 +1166,7 @@ function socketIO (preset, typeWithBufferEncoding) {
             socket.on('connect', function () {
                 log('client connect');
             });
-            // eslint-disable-next-line promise/avoid-new
+            // eslint-disable-next-line promise/avoid-new -- Own testing
             return new Promise((
                 /** @type {(value?: any) => void} */
                 resolve /* ,
@@ -1276,18 +1283,18 @@ describe('ImageBitmap', function () {
             //   consistent between Node/browser
             try { // Node
                 expect(cvs.toDataURL()).to.equal(
-                    // eslint-disable-next-line @stylistic/max-len
+                    // eslint-disable-next-line @stylistic/max-len -- Long
                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII='
                 );
             } catch /* (err) */ {
                 try { // Chrome
                     expect(cvs.toDataURL()).to.equal(
-                        // eslint-disable-next-line @stylistic/max-len
+                        // eslint-disable-next-line @stylistic/max-len -- Long
                         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAAXNSR0IArs4c6QAABGJJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDncOQIECEQEFskpJgECBM5geQICBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAgQdWMQCX4yW9owAAAABJRU5ErkJggg=='
                     );
                 } catch /* (toDataURLError) */ { // Firefox
                     expect(cvs.toDataURL()).to.equal(
-                        // eslint-disable-next-line @stylistic/max-len
+                        // eslint-disable-next-line @stylistic/max-len -- Long
                         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
                     );
                 }
@@ -1330,27 +1337,27 @@ describe('ImageBitmap', function () {
             const dataURL = cvs.toDataURL();
             try { // Node < 12
                 expect(dataURL).to.equal(
-                    // eslint-disable-next-line @stylistic/max-len
+                    // eslint-disable-next-line @stylistic/max-len -- Long
                     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAACC0lEQVR4nO3UQQ3AIADAwDF7uMMeYpiF/UiTOwV9dcy1zwMQ8N4OAPjLsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwgw7CADMMCMgwLyDAsIMOwgAzDAjIMC8gwLCDDsIAMwwIyDAvIMCwg4wMLwgPj2swUCwAAAABJRU5ErkJggg=='
                 );
             } catch /* (nodeLessThan12Error) */ {
                 try { // Node 12
                     expect(dataURL).to.equal(
-                        // eslint-disable-next-line @stylistic/max-len
+                        // eslint-disable-next-line @stylistic/max-len -- Long
                         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAABmJLR0QA/wD/AP+gvaeTAAAAxUlEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOA1v9QAATX68/0AAAAASUVORK5CYII='
                     );
                 } catch /* (node12PlusError) */ {
+                    /* eslint-disable @stylistic/max-len -- Long */
                     try { // Chrome
                         expect(dataURL).to.equal(
-                            // eslint-disable-next-line @stylistic/max-len
                             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAAXNSR0IArs4c6QAABGJJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDncOQIECEQEFskpJgECBM5geQICBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAgQdWMQCX4yW9owAAAABJRU5ErkJggg=='
                         );
                     } catch /* (toDataURLError) */ { // Firefox
                         expect(dataURL).to.equal(
-                            // eslint-disable-next-line @stylistic/max-len
                             'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
                         );
                     }
+                    /* eslint-enable @stylistic/max-len -- Long */
                 }
             }
             done();
@@ -1418,7 +1425,7 @@ describe('Blob', function () {
 
         // We return a Promise here as Mocha doesn't accept `done`
         //   and `async` together
-        // eslint-disable-next-line promise/avoid-new
+        // eslint-disable-next-line promise/avoid-new -- Own API
         return new Promise((resolve, reject) => {
             reader.addEventListener('load', () => {
                 expect(reader.result).to.equal(stringContents);
@@ -1445,12 +1452,12 @@ describe('Blob', function () {
             // 32-bit xorshift - must be non-zero seed
             let state = 1000 + seed;
             for (let i = 0; i < size; ++i) {
-                /* eslint-disable no-bitwise */
+                /* eslint-disable no-bitwise -- Convenient */
                 state ^= state << 13;
                 state ^= state >> 17;
                 state ^= state << 5;
                 buffer[i] = state & 0xFF;
-                /* eslint-enable no-bitwise */
+                /* eslint-enable no-bitwise -- Convenient */
             }
             return buffer;
         }
@@ -1557,7 +1564,7 @@ describe('File', function () {
 
         // We return a Promise here as Mocha doesn't accept `done`
         //   and `async` together
-        // eslint-disable-next-line promise/avoid-new
+        // eslint-disable-next-line promise/avoid-new -- Own API
         return new Promise((resolve, reject) => {
             reader.addEventListener('load', () => {
                 expect(reader.result).to.equal(stringContents);
@@ -1790,7 +1797,7 @@ describe('Resurrectables', () => {
     it('Should work with custom resurrectable objects', () => {
         const typeson = new Typeson().register(resurrectable);
         const mr = new util.MyResurrectable();
-        // eslint-disable-next-line func-name-matching
+        // eslint-disable-next-line func-name-matching -- Clear
         const mr2 = function resurrectableFunction () {
             // Empty function
         };
@@ -1930,7 +1937,8 @@ describe('Presets', () => {
         it('should be possible to restore `undefined` properties', () => {
             const typeson = new Typeson().register([sparseUndefined]);
             const a = [undefined, {
-                // eslint-disable-next-line no-sparse-arrays
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                // eslint-disable-next-line no-sparse-arrays -- Deliberate testing
                 b: undefined, c: [3, null, , undefined]
             }];
             const json = typeson.stringify(a);
