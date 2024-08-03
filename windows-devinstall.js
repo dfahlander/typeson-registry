@@ -43,13 +43,13 @@ async function copy (fromPath, toPath) {
 if (isWin) {
     const pathToGTKBin = 'C:\\GTK\\bin\\';
     const pathToIEShims =
-        'C:\\Program Files (x86)\\Internet Explorer\\IEShims.dll';
+        String.raw`C:\Program Files (x86)\Internet Explorer\IEShims.dll`;
     const targetDir = path.join(
         // eslint-disable-next-line no-undef
         require.resolve('canvas'), '../../build/Release'
     );
 
-    await copy(pathToIEShims, targetDir + '\\IEShims.dll');
+    await copy(pathToIEShims, targetDir + String.raw`\IEShims.dll`);
 
     let files;
     try {

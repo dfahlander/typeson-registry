@@ -9,8 +9,6 @@ export default function generateUUID () { //  Adapted from original: public doma
     /* c8 ignore next */
     let d = Date.now();
 
-    // eslint-disable-next-line @stylistic/max-len -- Long
-    // eslint-disable-next-line no-use-extend-native/no-use-extend-native -- Need to update plugin
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/gu, function (c) {
         /* eslint-disable no-bitwise */
         const r = Math.trunc((d + (Math.random() * 16)) % 16);

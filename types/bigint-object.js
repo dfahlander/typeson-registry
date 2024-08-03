@@ -10,8 +10,6 @@ const bigintObject = {
         },
         replace: String,
         revive (s) {
-            // Filed this to avoid error: https://github.com/eslint/eslint/issues/11810
-            // eslint-disable-next-line no-new-object
             return new Object(BigInt(/** @type {string} */ (s)));
         }
     }

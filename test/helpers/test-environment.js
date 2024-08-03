@@ -323,7 +323,7 @@ globalThis.DOMMatrixReadOnly = DOMMatrixReadOnly;
 try {
     // Before Node < 20
     globalThis.crypto = /** @type {NodeMockAPI} */ (webcrypto);
-} catch (err) {}
+} catch {}
 
 // Should be available in jsdom: https://github.com/Automattic/node-canvas/issues/876
 

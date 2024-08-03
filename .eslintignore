@@ -1,5 +1,0 @@
-dist/
-polyfills/createObjectURL.umd.cjs
-coverage
-node_modules
-!.*.js

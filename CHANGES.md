@@ -1,5 +1,9 @@
 # typeson-registry
 
+## ?
+
+- chore: ESLint 9/flat config; update devDeps.
+
 ## 11.0.0
 
 BREAKING CHANGES:

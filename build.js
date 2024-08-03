@@ -1,5 +1,3 @@
-/* eslint-env node */
-/* eslint-disable no-console */
 import fs from 'fs';
 import {fileURLToPath} from 'url';
 import {join, dirname} from 'path';
