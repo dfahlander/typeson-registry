@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "11.0.1",
+  "version": "11.0.2",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -18,6 +18,14 @@
       },
       "require": "./dist/index.umd.min.cjs",
       "default": "./dist/index.umd.min.cjs"
+    },
+    "./polyfills/createObjectURL.js": {
+      "import": {
+        "types": "./dist/polyfills/createObjectURL.d.ts",
+        "default": "./polyfills/createObjectURL.js"
+      },
+      "require": "./polyfills/createObjectURL.umd.cjs",
+      "default": "./polyfills/createObjectURL.umd.cjs"
     },
     "./*": "./*"
   },

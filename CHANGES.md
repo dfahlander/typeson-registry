@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 11.0.2
+
+- fix: properly export types for `createObjectURL` polyfill
+
 ## 11.0.1
 
 - chore: ESLint 9/flat config; update devDeps.
