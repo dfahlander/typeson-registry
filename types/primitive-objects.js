@@ -21,7 +21,10 @@ const primitiveObjects = {
             return toStringTag(x) === 'Boolean' &&
                 typeof x === 'object';
         },
-        replace: Boolean, // convert to primitive boolean
+        replace (o) {
+            // convert to primitive boolean
+            return o.valueOf();
+        },
         revive (b) {
             // Revive to an objectified Boolean
             return new Boolean(b);

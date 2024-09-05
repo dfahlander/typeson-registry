@@ -536,6 +536,15 @@ function BuiltIn (preset) {
             expect(back).to.be.an.instanceOf(Boolean);
             expect(back.valueOf()).to.equal(true);
         });
+        it('Boolean object (falsy)', () => {
+            const typeson = new Typeson().register(preset || primitiveObjects);
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
+            const strObj = new Boolean(false);
+            const tson = typeson.stringify(strObj, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(Boolean);
+            expect(back.valueOf()).to.equal(false);
+        });
         it('Number object', () => {
             const typeson = new Typeson().register(preset || primitiveObjects);
             // eslint-disable-next-line no-new-wrappers -- Deliberate testing
