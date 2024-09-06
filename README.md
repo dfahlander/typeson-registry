@@ -257,6 +257,7 @@ Note that the type name corresponds to the file name in the following manner:
 - `nonBuiltInIgnore` - For roughly detecting non-builtin objects and to avoid
     adding them as properties
 - `primitive-objects.js` (`StringObject`, `BooleanObject`, `NumberObject`)
+- `promise`
 - `regexp`
 - `resurrectable` - Resurrects any non-array object, function, or symbol; can
     only be revived for the current window session.

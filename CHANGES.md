@@ -3,6 +3,7 @@
 ## 11.1.0
 
 - feat: support `symbol` type
+- feat: support `promise` type
 
 ## 11.0.2
 

@@ -59,7 +59,7 @@ const {
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
     bigint, bigintObject,
-    cryptokey, negativeZero, symbol,
+    cryptokey, negativeZero, symbol, promise,
 
     // presets
     arrayNonindexKeys,
@@ -1073,6 +1073,39 @@ describe('symbol', function () {
         expect(typeof back).to.equal('symbol');
         expect(String(back)).to.equal('Symbol(abc)');
         expect(Symbol.keyFor(back)).to.equal('abc');
+    });
+});
+
+describe('promise', function () {
+    it('serializes a fulfilled promise', async function () {
+        const typeson = new Typeson().register(promise);
+        const zer = Promise.resolve('abc');
+        const tson = await typeson.stringifyAsync(zer, null, 2);
+        const back = typeson.parse(tson);
+        expect(back).to.be.a('Promise');
+        expect(await back).to.equal('abc');
+    });
+
+    it('serializes a fulfilled promise (date)', async function () {
+        const typeson = new Typeson().register([promise, date]);
+        const zer = Promise.resolve(new Date());
+        const tson = await typeson.stringifyAsync(zer, null, 2);
+        const back = typeson.parse(tson);
+        expect(back).to.be.a('Promise');
+        expect(await back).to.be.a('Date');
+    });
+
+    it('serializes a rejected promise', async function () {
+        const typeson = new Typeson().register([promise, error]);
+        const zer = Promise.reject(new Error('abc'));
+        const tson = await typeson.stringifyAsync(zer, null, 2);
+        const back = typeson.parse(tson);
+        try {
+            await back;
+            throw new Error('unreached');
+        } catch (err) {
+            expect(/** @type {Error} */ (err).message).to.equal('abc');
+        }
     });
 });
 
