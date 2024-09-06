@@ -31,6 +31,7 @@ import primitiveObjects from './types/primitive-objects.js';
 import regexp from './types/regexp.js';
 import resurrectable from './types/resurrectable.js';
 import set from './types/set.js';
+import symbol from './types/symbol.js';
 import typedArraysSocketio from './types/typed-arrays-socketio.js';
 import typedArrays from './types/typed-arrays.js';
 import undef from './types/undef.js';
@@ -55,7 +56,8 @@ export {
     date, domexception, dommatrix, dompoint, domquad, domrect, error, errors,
     file, filelist, imagebitmap, imagedata, infinity, intlTypes, map, nan,
     negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects, regexp,
-    resurrectable, set, typedArraysSocketio, typedArrays, undef, userObject
+    resurrectable, set, symbol, typedArraysSocketio, typedArrays, undef,
+    userObject
 };
 
 /* presets */

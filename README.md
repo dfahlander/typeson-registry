@@ -261,6 +261,7 @@ Note that the type name corresponds to the file name in the following manner:
 - `resurrectable` - Resurrects any non-array object, function, or symbol; can
     only be revived for the current window session.
 - `set`
+- `symbol`
 - `typed-arrays-socketio.js` (`Int8Array`, `Uint8Array`, `Uint8ClampedArray`,
     `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`,
     `Float64Array`) - See

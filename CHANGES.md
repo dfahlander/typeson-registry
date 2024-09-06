@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 11.1.0
+
+- feat: support `symbol` type
+
 ## 11.0.2
 
 - fix: properly export types for `createObjectURL` polyfill

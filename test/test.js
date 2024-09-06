@@ -59,7 +59,7 @@ const {
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
     bigint, bigintObject,
-    cryptokey, negativeZero,
+    cryptokey, negativeZero, symbol,
 
     // presets
     arrayNonindexKeys,
@@ -1053,6 +1053,28 @@ function cryptoKey (preset) {
 }
 
 cryptoKey();
+
+describe('symbol', function () {
+    it('serializes a private symbol', function () {
+        const typeson = new Typeson().register(symbol);
+        const zer = Symbol('abc');
+        const tson = typeson.stringify(zer, null, 2);
+        const back = typeson.parse(/** @type {string} */ (tson));
+        expect(typeof back).to.equal('symbol');
+        expect(String(back)).to.equal('Symbol(abc)');
+        expect(Symbol.keyFor(back)).to.equal(undefined);
+    });
+
+    it('serializes a public symbol', function () {
+        const typeson = new Typeson().register(symbol);
+        const zer = Symbol.for('abc');
+        const tson = typeson.stringify(zer, null, 2);
+        const back = typeson.parse(/** @type {string} */ (tson));
+        expect(typeof back).to.equal('symbol');
+        expect(String(back)).to.equal('Symbol(abc)');
+        expect(Symbol.keyFor(back)).to.equal('abc');
+    });
+});
 
 /**
  * @param {import('typeson').Preset} [preset]
