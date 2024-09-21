@@ -699,6 +699,7 @@ function BuiltIn (preset) {
                 const json = typeson.stringify({a});
                 const obj = typeson.parse(/** @type {string} */ (json));
                 expect(obj.a).to.be.an.instanceOf(Float64Array);
+                expect(obj.a.buffer.resizable).not.equal(true);
                 expect(obj.a.length).to.equal(3);
                 expect(obj.a[0]).to.equal(23.8);
                 expect(obj.a[1]).to.equal(-15);

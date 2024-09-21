@@ -25,7 +25,7 @@ const arraybuffer = {
             stateObj.buffers.push(b);
             return {
                 s: encode(b),
-                maxByteLength: b.maxByteLength
+                maxByteLength: b.resizable ? b.maxByteLength : undefined
             };
         },
         revive (
@@ -49,7 +49,7 @@ const arraybuffer = {
             }
             const buffer = decode(
                 /** @type {string} */ (b64.s),
-                {maxByteLength: b64.maxByteLength}
+                b64.resizable ? {maxByteLength: b64.maxByteLength} : undefined
             );
             stateObj.buffers.push(buffer);
             return buffer;

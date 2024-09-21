@@ -26,7 +26,9 @@ const dataview = {
             stateObj.buffers.push(buffer);
             return {
                 encoded: encode(buffer),
-                maxByteLength: buffer.maxByteLength,
+                maxByteLength: buffer.resizable
+                    ? buffer.maxByteLength
+                    : undefined,
                 byteOffset,
                 byteLength
             };

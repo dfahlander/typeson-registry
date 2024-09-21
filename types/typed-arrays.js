@@ -43,7 +43,9 @@ function create (TypedArray) {
             }
             stateObj.buffers.push(buffer);
             return {
-                maxByteLength: buffer.maxByteLength,
+                maxByteLength: buffer.resizable
+                    ? buffer.maxByteLength
+                    : undefined,
                 encoded: encode(buffer),
                 byteOffset,
                 length: l
