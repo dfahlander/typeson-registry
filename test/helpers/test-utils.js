@@ -55,6 +55,7 @@ class MyCloneable {
      */
     constructor (obj) {
         this.obj = obj;
+        // eslint-disable-next-line sonarjs/pseudo-random -- Ok
         this.nonpersistentStateInfo = Math.random();
     }
 

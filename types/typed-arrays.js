@@ -44,6 +44,7 @@ function create (TypedArray) {
             stateObj.buffers.push(buffer);
             return {
                 maxByteLength: buffer.maxByteLength,
+                resizable: buffer.resizable,
                 encoded: encode(buffer),
                 byteOffset,
                 length: l
@@ -62,7 +63,8 @@ function create (TypedArray) {
                 stateObj.buffers = [];
             }
             const {
-                byteOffset, length: len, encoded, index, maxByteLength
+                byteOffset, length: len, encoded, index, maxByteLength,
+                resizable
             } = b64Obj;
             let buffer;
             if ('index' in b64Obj) {
@@ -70,10 +72,11 @@ function create (TypedArray) {
             } else {
                 buffer = decode(
                     encoded,
+                    // todo[engine:node@>20]: Remove comment
                     /* c8 ignore next 3 -- Depends on Node version */
-                    maxByteLength === undefined
-                        ? undefined
-                        : {maxByteLength}
+                    resizable
+                        ? {maxByteLength}
+                        : undefined
                 );
                 stateObj.buffers.push(buffer);
             }

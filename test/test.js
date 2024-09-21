@@ -583,7 +583,7 @@ function BuiltIn (preset) {
         it('should return a RegExp', () => {
             const typeson = new Typeson().register(preset || [regexp]);
             // eslint-disable-next-line @stylistic/max-len -- Long
-            // eslint-disable-next-line prefer-regex-literals -- Deliberate testing
+            // eslint-disable-next-line prefer-regex-literals, sonarjs/stateful-regex -- Deliberate testing
             let regex = new RegExp('ab?c', 'guy');
             let tson = typeson.stringify(regex, null, 2);
             let back = typeson.parse(/** @type {string} */ (tson));
@@ -667,7 +667,28 @@ function BuiltIn (preset) {
             const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
+            if (semver.satisfies(process.version, '>=20.0.0')) {
+                // @ts-expect-error Not yet standardized
+                expect(back.resizable).to.equal(false);
+            }
         });
+
+        it('should return an ArrayBuffer (resizable)', () => {
+            const typeson = new Typeson().register(preset || [arraybuffer]);
+            // @ts-expect-error Not yet standard
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line n/no-unsupported-features/es-syntax -- Testing
+            const buf = new ArrayBuffer(16, {maxByteLength: 16});
+            const tson = typeson.stringify(buf, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            assert(back instanceof ArrayBuffer);
+            expect(back.byteLength).to.equal(16);
+            if (semver.satisfies(process.version, '>=20.0.0')) {
+                // @ts-expect-error Not yet standardized
+                expect(back.resizable).to.equal(true);
+            }
+        });
+
         it('should return the same ArrayBuffer instance', () => {
             const typeson = new Typeson().register(preset || [arraybuffer]);
             const buf1 = new ArrayBuffer(16);
@@ -843,6 +864,7 @@ function BuiltIn (preset) {
                     semver.satisfies(process.version, '>=20.0.0')
                 ) {
                     expect(obj2.buffer.maxByteLength).to.equal(16);
+                    expect(obj2.buffer.resizable).to.equal(true);
                     expect(obj2.wrapper1.buffer.maxByteLength).to.equal(16);
                     expect(obj2.wrapper2.buffer.maxByteLength).to.equal(16);
                     expect(obj2.dataView.buffer.maxByteLength).to.equal(16);
@@ -1654,10 +1676,12 @@ describe('FileList', function () {
         // See the test-environment for our adapter to make this settable
 
         (() => {
+            /* eslint-disable sonarjs/class-name -- Clearer here */
             /**
              * For `instanceof`.
              */
             class _FileList extends Array {}
+            /* eslint-enable sonarjs/class-name -- Clearer here */
 
             const files = /** @type {unknown} */ (new _FileList(
                 new File([
@@ -1704,10 +1728,12 @@ describe('FileList', function () {
         input.type = 'file';
         // See the test-environment for our adapter to make this settable
         (() => {
+            /* eslint-disable sonarjs/class-name -- Clearer here */
             /**
              * For `instanceof`.
              */
             class _FileList extends Array {}
+            /* eslint-enable sonarjs/class-name -- Clearer here */
 
             const files = /** @type {unknown} */ (new _FileList(
                 new File([

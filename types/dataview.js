@@ -27,6 +27,7 @@ const dataview = {
             return {
                 encoded: encode(buffer),
                 maxByteLength: buffer.maxByteLength,
+                resizable: buffer.resizable,
                 byteOffset,
                 byteLength
             };
@@ -44,7 +45,8 @@ const dataview = {
                 stateObj.buffers = [];
             }
             const {
-                byteOffset, byteLength, encoded, index, maxByteLength
+                byteOffset, byteLength, encoded, index, maxByteLength,
+                resizable
             } = b64Obj;
             let buffer;
             if ('index' in b64Obj) {
@@ -52,10 +54,11 @@ const dataview = {
             } else {
                 buffer = decode(
                     encoded,
+                    // todo[engine:node@>20]: Remove comment
                     /* c8 ignore next 3 -- Depends on Node version */
-                    maxByteLength === undefined
-                        ? maxByteLength
-                        : {maxByteLength}
+                    resizable
+                        ? {maxByteLength}
+                        : maxByteLength
                 );
                 stateObj.buffers.push(buffer);
             }

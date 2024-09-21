@@ -10,10 +10,10 @@ export default function generateUUID () { //  Adapted from original: public doma
     let d = Date.now();
 
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/gu, function (c) {
-        /* eslint-disable no-bitwise -- Convenient */
+        /* eslint-disable no-bitwise, sonarjs/pseudo-random -- Convenient */
         const r = Math.trunc((d + (Math.random() * 16)) % 16);
         d = Math.floor(d / 16);
         return (c === 'x' ? r : ((r & 0x3) | 0x8)).toString(16);
-        /* eslint-enable no-bitwise -- Convenient */
+        /* eslint-enable no-bitwise, sonarjs/pseudo-random -- Convenient */
     });
 }
