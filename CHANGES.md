@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 11.1.1
+
+- fix: ensure array buffers are only resizable if originally so
+
 ## 11.1.0
 
 - feat: support `symbol` type
