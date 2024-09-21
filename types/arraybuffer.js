@@ -25,7 +25,8 @@ const arraybuffer = {
             stateObj.buffers.push(b);
             return {
                 s: encode(b),
-                maxByteLength: b.maxByteLength
+                maxByteLength: b.maxByteLength,
+                resizable: b.resizable
             };
         },
         revive (
@@ -49,7 +50,11 @@ const arraybuffer = {
             }
             const buffer = decode(
                 /** @type {string} */ (b64.s),
-                {maxByteLength: b64.maxByteLength}
+                b64.resizable
+                    // todo[engine:node@>20]: Remove comment
+                    /* c8 ignore next -- Node >= 20 */
+                    ? {maxByteLength: b64.maxByteLength}
+                    : undefined
             );
             stateObj.buffers.push(buffer);
             return buffer;
