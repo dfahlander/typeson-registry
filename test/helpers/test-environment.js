@@ -29,13 +29,6 @@ globalThis.HTMLElement = globalThis.window.HTMLElement; // https://github.com/ch
 // This should be made available automatically by jsdom: https://github.com/jsdom/jsdom/issues/1749
 globalThis.ImageData = /** @type {NodeMockAPI} */ (canvas.ImageData);
 
-// https://github.com/Automattic/node-canvas/issues/1646
-Object.defineProperty(globalThis.ImageData.prototype, Symbol.toStringTag, {
-    get () {
-        return 'ImageData';
-    }
-});
-
 globalThis.FileReader = window.FileReader;
 // Used by our test-environment `FileList` polyfill
 globalThis.HTMLInputElement = window.HTMLInputElement;
