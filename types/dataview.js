@@ -20,7 +20,7 @@ const dataview = {
                 stateObj.buffers = [];
             }
             const index = stateObj.buffers.indexOf(buffer);
-            if (index > -1) {
+            if (index !== -1) {
                 return {index, byteOffset, byteLength};
             }
             stateObj.buffers.push(buffer);

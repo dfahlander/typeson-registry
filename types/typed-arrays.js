@@ -38,7 +38,7 @@ function create (TypedArray) {
                 stateObj.buffers = [];
             }
             const index = stateObj.buffers.indexOf(buffer);
-            if (index > -1) {
+            if (index !== -1) {
                 return {index, byteOffset, length: l};
             }
             stateObj.buffers.push(buffer);
@@ -80,6 +80,8 @@ function create (TypedArray) {
                 );
                 stateObj.buffers.push(buffer);
             }
+
+            // @ts-expect-error Ok
             return new TypedArray(buffer, byteOffset, len);
         }
     };

@@ -19,7 +19,7 @@ const arraybuffer = {
                 stateObj.buffers = [];
             }
             const index = stateObj.buffers.indexOf(b);
-            if (index > -1) {
+            if (index !== -1) {
                 return {index};
             }
             stateObj.buffers.push(b);
