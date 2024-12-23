@@ -61,8 +61,8 @@ importers:
         specifier: ^10.1.2
         version: 10.1.2
       canvas:
-        specifier: ^3.0.0-rc3
-        version: 3.0.0-rc3
+        specifier: ^3.0.0
+        version: 3.0.0
       chai:
         specifier: ^5.1.1
         version: 5.1.1
@@ -74,7 +74,7 @@ importers:
         version: 36.17.1(@babel/core@7.25.2)(@typescript-eslint/parser@7.18.0(eslint@9.11.0)(typescript@5.6.2))(eslint@9.11.0)(typescript@5.6.2)
       jsdom:
         specifier: ^25.0.1
-        version: 25.0.1(canvas@3.0.0-rc3)
+        version: 25.0.1(canvas@3.0.0)
       mocha:
         specifier: ^10.7.3
         version: 10.7.3
@@ -1489,8 +1489,8 @@ packages:
   caniuse-lite@1.0.30001662:
     resolution: {integrity: sha512-sgMUVwLmGseH8ZIrm1d51UbrhqMCH3jvS7gF/M6byuHOnKyLOBL7W8yz5V02OHwgLGA36o/AFhWzzh4uc5aqTA==}
 
-  canvas@3.0.0-rc3:
-    resolution: {integrity: sha512-LJVkMp4AH7/IRoLvhLS6R09uBt9O3O0mhCYL34AQV/+OC39jmTv22pJTF5Mgfa3V2JnzGl21MVrhEKmtmPtfQA==}
+  canvas@3.0.0:
+    resolution: {integrity: sha512-NtcIBY88FjymQy+g2g5qnuP5IslrbWCQ3A6rSr1PeuYxVRapRZ3BZCrDyAakvI6CuDYidgZaf55ygulFVwROdg==}
     engines: {node: ^18.12.0 || >= 20.9.0}
 
   ccount@2.0.1:
@@ -6168,7 +6168,7 @@ snapshots:
 
   caniuse-lite@1.0.30001662: {}
 
-  canvas@3.0.0-rc3:
+  canvas@3.0.0:
     dependencies:
       node-addon-api: 7.1.1
       prebuild-install: 7.1.2
@@ -7594,7 +7594,7 @@ snapshots:
 
   jsdoc-type-pratt-parser@4.1.0: {}
 
-  jsdom@25.0.1(canvas@3.0.0-rc3):
+  jsdom@25.0.1(canvas@3.0.0):
     dependencies:
       cssstyle: 4.1.0
       data-urls: 5.0.0
@@ -7618,7 +7618,7 @@ snapshots:
       ws: 8.18.0
       xml-name-validator: 5.0.0
     optionalDependencies:
-      canvas: 3.0.0-rc3
+      canvas: 3.0.0
     transitivePeerDependencies:
       - bufferutil
       - supports-color

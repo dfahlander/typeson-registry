@@ -105,7 +105,7 @@
     "@types/semver": "^7.5.8",
     "@types/whatwg-url": "^11.0.5",
     "c8": "^10.1.2",
-    "canvas": "^3.0.0-rc3",
+    "canvas": "^3.0.0",
     "chai": "^5.1.1",
     "eslint": "^9.11.0",
     "eslint-config-ash-nazg": "^36.17.1",
