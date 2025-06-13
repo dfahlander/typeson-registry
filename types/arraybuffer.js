@@ -51,8 +51,6 @@ const arraybuffer = {
             const buffer = decode(
                 /** @type {string} */ (b64.s),
                 b64.resizable
-                    // todo[engine:node@>20]: Remove comment
-                    /* c8 ignore next -- Node >= 20 */
                     ? {maxByteLength: b64.maxByteLength}
                     : undefined
             );

@@ -72,8 +72,6 @@ function create (TypedArray) {
             } else {
                 buffer = decode(
                     encoded,
-                    // todo[engine:node@>20]: Remove comment
-                    /* c8 ignore next 3 -- Depends on Node version */
                     resizable
                         ? {maxByteLength}
                         : undefined
@@ -81,7 +79,6 @@ function create (TypedArray) {
                 stateObj.buffers.push(buffer);
             }
 
-            // @ts-expect-error Ok
             return new TypedArray(buffer, byteOffset, len);
         }
     };

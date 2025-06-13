@@ -88,7 +88,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             bundle({
                 name,
                 input: join(dirPath, f),
-                output: `./dist/${dir}/${f.replace(/\.js$/u, '.umd.cjs')}`
+                output: `./dist/${dir}/${f.replace(/\.js$/v, '.umd.cjs')}`
             });
             return reqStr;
         }));

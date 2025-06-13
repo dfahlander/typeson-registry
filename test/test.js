@@ -15,7 +15,6 @@ import {it, describe} from 'mocha';
 import {expect, assert} from 'chai';
 /* eslint-enable no-shadow -- Needed */
 import socketIOClient from 'socket.io-client';
-import semver from 'semver';
 import io from './helpers/io.js';
 
 import {imageTestFileNode} from './helpers/test-environment.js';
@@ -667,26 +666,20 @@ function BuiltIn (preset) {
             const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
-            if (semver.satisfies(process.version, '>=20.0.0')) {
-                // @ts-expect-error Not yet standardized
-                expect(back.resizable).to.equal(false);
-            }
+            // @ts-expect-error Not yet standardized
+            expect(back.resizable).to.equal(false);
         });
 
         it('should return an ArrayBuffer (resizable)', () => {
             const typeson = new Typeson().register(preset || [arraybuffer]);
             // @ts-expect-error Not yet standard
-            // eslint-disable-next-line @stylistic/max-len -- Long
-            // eslint-disable-next-line n/no-unsupported-features/es-syntax -- Testing
             const buf = new ArrayBuffer(16, {maxByteLength: 16});
             const tson = typeson.stringify(buf, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
-            if (semver.satisfies(process.version, '>=20.0.0')) {
-                // @ts-expect-error Not yet standardized
-                expect(back.resizable).to.equal(true);
-            }
+            // @ts-expect-error Not yet standardized
+            expect(back.resizable).to.equal(true);
         });
 
         it('should return the same ArrayBuffer instance', () => {
@@ -840,8 +833,6 @@ function BuiltIn (preset) {
                     dataview
                 ]);
                 // @ts-expect-error Not yet standard
-                // eslint-disable-next-line @stylistic/max-len -- Long
-                // eslint-disable-next-line n/no-unsupported-features/es-syntax -- Testing
                 const shared = new ArrayBuffer(7, {maxByteLength: 16});
                 const dataView = new DataView(shared, 3, 4);
                 const obj = {
@@ -860,15 +851,11 @@ function BuiltIn (preset) {
                 expect(obj2.wrapper1.buffer).to.equal(obj2.buffer);
                 expect(obj2.wrapper1.buffer).to.equal(obj2.dataView.buffer);
 
-                if (typeof process === 'undefined' ||
-                    semver.satisfies(process.version, '>=20.0.0')
-                ) {
-                    expect(obj2.buffer.maxByteLength).to.equal(16);
-                    expect(obj2.buffer.resizable).to.equal(true);
-                    expect(obj2.wrapper1.buffer.maxByteLength).to.equal(16);
-                    expect(obj2.wrapper2.buffer.maxByteLength).to.equal(16);
-                    expect(obj2.dataView.buffer.maxByteLength).to.equal(16);
-                }
+                expect(obj2.buffer.maxByteLength).to.equal(16);
+                expect(obj2.buffer.resizable).to.equal(true);
+                expect(obj2.wrapper1.buffer.maxByteLength).to.equal(16);
+                expect(obj2.wrapper2.buffer.maxByteLength).to.equal(16);
+                expect(obj2.dataView.buffer.maxByteLength).to.equal(16);
             });
         });
     });
@@ -884,6 +871,18 @@ function BuiltIn (preset) {
             const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(DataView);
             expect(back.byteLength).to.equal(4);
+        });
+        it('should return a DataView (resizable buffer)', () => {
+            const typeson = new Typeson().register(preset || [dataview]);
+            // @ts-expect-error Not yet standardized
+            const buffer = new ArrayBuffer(16, {maxByteLength: 16});
+            const dataView = new DataView(buffer, 3, 4);
+            expect(dataView.byteLength).to.equal(4);
+            const tson = typeson.stringify(dataView, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(DataView);
+            expect(back.byteLength).to.equal(4);
+            expect(back.buffer.resizable).to.equal(true);
         });
         it('should reproduce DataView with the same buffer', () => {
             const typeson = new Typeson().register(preset || [dataview]);

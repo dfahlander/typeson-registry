@@ -1,5 +1,12 @@
 # typeson-registry
 
+## 12.0.0 (unreleased)
+
+BREAKING CHANGES:
+- Requires Node >= 20.6.0
+
+- chore: update whatwg-url and devDeps.
+
 ## 11.1.1
 
 - fix: ensure array buffers are only resizable if originally so

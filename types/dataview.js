@@ -54,8 +54,6 @@ const dataview = {
             } else {
                 buffer = decode(
                     encoded,
-                    // todo[engine:node@>20]: Remove comment
-                    /* c8 ignore next 3 -- Depends on Node version */
                     resizable
                         ? {maxByteLength}
                         : maxByteLength
