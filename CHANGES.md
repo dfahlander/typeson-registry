@@ -5,7 +5,7 @@
 BREAKING CHANGES:
 - Requires Node >= 20.6.0
 
-- chore: update whatwg-url and devDeps.
+- chore: update typeson, whatwg-url and devDeps.
 
 ## 11.1.1
 
