@@ -1530,7 +1530,7 @@ describe('Blob', function () {
          * From {@link https://github.com/web-platform-tests/wpt/blob/master/IndexedDB/support-promises.js#L291}.
          * @param {Integer} size
          * @param {Integer} seed
-         * @returns {Uint8Array}
+         * @returns {Uint8Array<ArrayBuffer>}
          */
         function largeValue (size, seed) {
             const buffer = new Uint8Array(size);
