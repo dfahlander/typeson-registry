@@ -7,9 +7,7 @@ import {webcrypto} from 'node:crypto';
 import jsdom from 'jsdom';
 import canvas from 'canvas';
 
-const __dirname = path.resolve(path.dirname(decodeURI(
-    new URL(import.meta.url).pathname
-)));
+const __dirname = import.meta.dirname;
 
 const {JSDOM} = jsdom;
 

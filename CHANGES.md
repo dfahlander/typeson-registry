@@ -1,6 +1,6 @@
 # typeson-registry
 
-## 12.0.0 (unreleased)
+## 12.0.0
 
 BREAKING CHANGES:
 - Requires Node >= 20.6.0

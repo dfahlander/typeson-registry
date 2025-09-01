@@ -34,10 +34,8 @@ Person.prototype.isMarried = /** @type {true} */ (false);
  *
  */
 class SimulatedNonBuiltIn {
-    /**
-     *
-     */
-    constructor () { this.aaa = 5; }
+    aaa = 5;
+
     [Symbol.toStringTag] = 'SimulatedNonBuiltIn';
 }
 SimulatedNonBuiltIn.prototype.bbb = 8;

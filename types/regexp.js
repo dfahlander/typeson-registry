@@ -13,7 +13,10 @@ const regexp = {
                     (rexp.ignoreCase ? 'i' : '') +
                     (rexp.multiline ? 'm' : '') +
                     (rexp.sticky ? 'y' : '') +
-                    (rexp.unicode ? 'u' : '')
+                    (rexp.unicode ? 'u' : '') +
+                    (rexp.unicodeSets ? 'v' : '') +
+                    (rexp.hasIndices ? 'd' : '') +
+                    (rexp.dotAll ? 's' : '')
             };
         },
         revive ({source, flags}) { return new RegExp(source, flags); }

@@ -1,6 +1,5 @@
 import fs from 'fs';
-import {fileURLToPath} from 'url';
-import {join, dirname} from 'path';
+import {join} from 'path';
 import util from 'util';
 
 import {rollup} from 'rollup';
@@ -11,7 +10,7 @@ import terser from '@rollup/plugin-terser';
 
 // fs.promises is not available until Node 11 (and need for URL until 10.0.0)
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = import.meta.dirname;
 
 const mkdir = util.promisify(fs.mkdir);
 const readdir = util.promisify(fs.readdir);

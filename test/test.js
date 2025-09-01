@@ -583,7 +583,7 @@ function BuiltIn (preset) {
             const typeson = new Typeson().register(preset || [regexp]);
             // eslint-disable-next-line @stylistic/max-len -- Long
             // eslint-disable-next-line prefer-regex-literals, sonarjs/stateful-regex -- Deliberate testing
-            let regex = new RegExp('ab?c', 'guy');
+            let regex = new RegExp('ab?c', 'guyds');
             let tson = typeson.stringify(regex, null, 2);
             let back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof RegExp);
@@ -592,11 +592,13 @@ function BuiltIn (preset) {
             expect(back.sticky).to.equal(true);
             expect(back.ignoreCase).to.equal(false);
             expect(back.multiline).to.equal(false);
+            expect(back.unicodeSets).to.equal(false);
+            expect(back.hasIndices).to.equal(true);
+            expect(back.dotAll).to.equal(true);
             expect(back.source).to.equal('ab?c');
 
-            // eslint-disable-next-line @stylistic/max-len -- Long
-            // eslint-disable-next-line require-unicode-regexp -- Deliberate testing
-            regex = /ab?c/im;
+            // @ts-expect-error Testing
+            regex = /ab?c/imv;
             tson = typeson.stringify(regex, null, 2);
             back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof RegExp);
@@ -605,6 +607,9 @@ function BuiltIn (preset) {
             expect(back.sticky).to.equal(false);
             expect(back.ignoreCase).to.equal(true);
             expect(back.multiline).to.equal(true);
+            expect(back.unicodeSets).to.equal(true);
+            expect(back.hasIndices).to.equal(false);
+            expect(back.dotAll).to.equal(false);
             expect(back.source).to.equal('ab?c');
         });
     });
@@ -666,19 +671,16 @@ function BuiltIn (preset) {
             const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
-            // @ts-expect-error Not yet standardized
             expect(back.resizable).to.equal(false);
         });
 
         it('should return an ArrayBuffer (resizable)', () => {
             const typeson = new Typeson().register(preset || [arraybuffer]);
-            // @ts-expect-error Not yet standard
             const buf = new ArrayBuffer(16, {maxByteLength: 16});
             const tson = typeson.stringify(buf, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
             assert(back instanceof ArrayBuffer);
             expect(back.byteLength).to.equal(16);
-            // @ts-expect-error Not yet standardized
             expect(back.resizable).to.equal(true);
         });
 
@@ -832,7 +834,7 @@ function BuiltIn (preset) {
                     typedArrays,
                     dataview
                 ]);
-                // @ts-expect-error Not yet standard
+
                 const shared = new ArrayBuffer(7, {maxByteLength: 16});
                 const dataView = new DataView(shared, 3, 4);
                 const obj = {
@@ -874,7 +876,6 @@ function BuiltIn (preset) {
         });
         it('should return a DataView (resizable buffer)', () => {
             const typeson = new Typeson().register(preset || [dataview]);
-            // @ts-expect-error Not yet standardized
             const buffer = new ArrayBuffer(16, {maxByteLength: 16});
             const dataView = new DataView(buffer, 3, 4);
             expect(dataView.byteLength).to.equal(4);
