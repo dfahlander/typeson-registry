@@ -160,6 +160,13 @@ export default [
         }
     },
     {
+        files: ['**/*.js'],
+        languageOptions: {
+            ecmaVersion: 2024,
+            sourceType: 'module'
+        }
+    },
+    {
         plugins: {
             n: nodePlugin,
             '@stylistic': stylistic,
