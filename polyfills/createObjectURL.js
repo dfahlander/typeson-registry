@@ -12,7 +12,7 @@
 //    rely on to obtain the Blob/File content
 import whatwgURL from 'whatwg-url';
 // eslint-disable-next-line n/no-unpublished-import -- User to supply
-import * as utils from 'jsdom/lib/jsdom/living/generated/utils.js';
+import * as utils from 'jsdom/lib/generated/idl/utils.js';
 import generateUUID from '../utils/generateUUID.js';
 
 const {serializeURLOrigin, parseURL} = whatwgURL;
@@ -97,8 +97,11 @@ const xmlHttpRequestOverrideMimeType = function (
                     }
                     const responseType = 'text/plain'; // blob.type;
                     // utf16le and base64 both convert lone surrogates
-                    // eslint-disable-next-line @stylistic/max-len -- Long
-                    const encoded = implForWrapper(blob)._buffer.toString('binary');
+                    const blobImpl = implForWrapper(blob);
+                    // jsdom changed Blob internals from `_buffer`
+                    // to `_bytes`; support both.
+                    const encoded =
+                        Buffer.from(blobImpl._bytes).toString('binary');
 
                     // Not usable in jsdom which makes properties readonly,
                     //   but local-xmlhttprequest can use (and jsdom can
