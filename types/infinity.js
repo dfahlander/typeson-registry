@@ -3,9 +3,9 @@
  */
 const infinity = {
     infinity: {
-        test (x) { return x === Number.POSITIVE_INFINITY; },
+        test (x) { return x === Infinity; },
         replace (/* n */) { return 'Infinity'; },
-        revive (/* s */) { return Number.POSITIVE_INFINITY; }
+        revive (/* s */) { return Infinity; }
     }
 };
 

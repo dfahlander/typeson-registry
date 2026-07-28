@@ -49,15 +49,6 @@ SimulatedNonBuiltIn.prototype.bbb = 8;
  */
 class MyCloneable {
     /**
-     * @param {ArbitraryObject} obj
-     */
-    constructor (obj) {
-        this.obj = obj;
-        // eslint-disable-next-line sonarjs/pseudo-random -- Ok
-        this.nonpersistentStateInfo = Math.random();
-    }
-
-    /**
      * @returns {{obj: string}}
      */
     // @ts-ignore How to fix?
@@ -79,7 +70,16 @@ class MyCloneable {
     ) {
         return new MyCloneable(JSON.parse(encapsulatedMyCloneable.obj));
     };
+
     /* eslint-enable class-methods-use-this -- Testing */
+    /**
+     * @param {ArbitraryObject} obj
+     */
+    constructor (obj) {
+        this.obj = obj;
+        // eslint-disable-next-line sonarjs/pseudo-random -- Ok
+        this.nonpersistentStateInfo = Math.random();
+    }
 }
 MyCloneable.prototype.prototypeProperty = 10;
 

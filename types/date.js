@@ -15,7 +15,7 @@ const date = {
         },
         revive (time) {
             if (time === 'NaN') {
-                return new Date(Number.NaN);
+                return new Date(NaN);
             }
             return new Date(time);
         }

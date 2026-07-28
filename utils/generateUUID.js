@@ -5,7 +5,7 @@
  *   it may be troublesome to bundle and not strongly needed)
  * @returns {string}
  */
-export default function generateUUID () { //  Adapted from original: public domain/MIT: http://stackoverflow.com/a/8809472/271577
+export default function generateUUID () { //  Adapted from original: public domain/MIT: https://stackoverflow.com/a/8809472/271577
     /* c8 ignore next */
     let d = Date.now();
 

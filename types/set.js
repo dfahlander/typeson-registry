@@ -7,7 +7,7 @@ const set = {
     set: {
         test (x) { return toStringTag(x) === 'Set'; },
         replace (st) {
-            return [...st.values()];
+            return st.values().toArray();
         },
         revive (values) {
             return new Set(values);

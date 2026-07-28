@@ -3,8 +3,7 @@
 ## 13.0.0 (unreleased)
 
 BREAKING CHANGES:
-- Bump minimum Node 22 to 22.16.0
-- Bump minimum Node 20 to 20.19.0
+- Bump minimum Node to ^22.16.0, >=24
 
 - chore: update whatwg-url, devDeps.
 

@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-this-outside-of-class -- Monkey-patching */
 // @ts-nocheck -- jsdom has no types for the file we need
 /* globals location, XMLHttpRequest -- Polyfills */
 

@@ -77,6 +77,7 @@ function ErrorAndErrors (preset) {
         it('should get back real Error instances corresponding to their ' +
             'types and with the original name and message', () => {
             const typeson = new Typeson().register(preset || [error, errors]);
+            const e1Cause = new Error('the cause');
             const e1 =
                 /**
                  * @type {{
@@ -88,9 +89,10 @@ function ErrorAndErrors (preset) {
                  *   columnNumber?: import('typeson').Integer
                  * }}
                  */
-                (new Error('Error1'));
-            const e1Cause = new Error('the cause');
-            e1.cause = e1Cause;
+                (new Error('Error1', {
+                    cause: e1Cause
+                }));
+
             const e2 = new TypeError('Error2');
             const e3 = new RangeError('Error3');
             const e4 = new SyntaxError('Error4');
@@ -151,21 +153,21 @@ function SpecialNumbers (preset) {
     describe('Special numbers', () => {
         it('NaN', () => {
             const typeson = new Typeson().register(preset || nan);
-            const tson = typeson.stringify(Number.NaN, null, 2);
+            const tson = typeson.stringify(NaN, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.NaN;
         });
         it('Infinity', () => {
             const typeson = new Typeson().register(preset || infinity);
-            const tson = typeson.stringify(Number.POSITIVE_INFINITY, null, 2);
+            const tson = typeson.stringify(Infinity, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.equal(Number.POSITIVE_INFINITY);
+            expect(back).to.equal(Infinity);
         });
         it('-Infinity', () => {
             const typeson = new Typeson().register(preset || negativeInfinity);
-            const tson = typeson.stringify(Number.NEGATIVE_INFINITY, null, 2);
+            const tson = typeson.stringify(-Infinity, null, 2);
             const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.equal(Number.NEGATIVE_INFINITY);
+            expect(back).to.equal(-Infinity);
         });
         it('should not mistake string forms of the special numbers', () => {
             const typeson = new Typeson().register(preset || [
@@ -207,13 +209,13 @@ function Undefined (preset) {
             }];
             const json = typeson.stringify(a);
             const a2 = typeson.parse(/** @type {string} */ (json));
-            expect(a2.length).to.equal(2);
-            expect(a2[0]).to.equal(undefined);
-            expect(a2[1].b).to.equal(undefined);
+            expect(a2).to.have.lengthOf(2);
+            expect(a2[0]).to.be.undefined;
+            expect(a2[1].b).to.be.undefined;
             expect('b' in a2[1]).to.be.true;
             expect(a2[1].c[0]).to.equal(3);
-            expect(a2[1].c[1]).to.equal(null);
-            expect(a2[1].c[3]).to.equal(undefined);
+            expect(a2[1].c[1]).to.be.null;
+            expect(a2[1].c[3]).to.be.undefined;
 
             expect('0' in a2).to.be.true;
             expect('b' in a2[1]).to.be.true;
@@ -221,11 +223,11 @@ function Undefined (preset) {
             expect('3' in a2[1].c).to.be.true;
 
             if (preset) {
-                expect(a2[1].c[2]).to.equal(undefined);
+                expect(a2[1].c[2]).to.be.undefined;
                 expect('2' in a2[1].c).to.be.false;
             } else {
-                expect(a2[1].c[2]).to.not.equal(undefined);
-                expect(a2[1].c[2]).to.equal(null);
+                expect(a2[1].c[2]).to.not.be.undefined;
+                expect(a2[1].c[2]).to.be.null;
                 expect('2' in a2[1].c).to.be.true;
             }
         });
@@ -524,7 +526,7 @@ function BuiltIn (preset) {
             const back = typeson.parse(/** @type {string} */ (tson));
             expect(back).to.be.an.instanceOf(String);
             expect(back.valueOf()).to.equal('hello');
-            expect(back.length).to.equal(5);
+            expect(back).to.have.lengthOf(5);
         });
         it('Boolean object', () => {
             const typeson = new Typeson().register(preset || primitiveObjects);
@@ -569,7 +571,7 @@ function BuiltIn (preset) {
         });
         it('should get back a real invalid Date instance', () => {
             const typeson = new Typeson().register(preset || date);
-            const json = typeson.stringify(new Date(Number.NaN));
+            const json = typeson.stringify(new Date(NaN));
             const obj = typeson.parse(/** @type {string} */ (json));
             expect(obj).to.be.an.instanceOf(Date);
             expect(obj.getTime()).to.be.NaN;
@@ -654,7 +656,7 @@ function BuiltIn (preset) {
 
             expect(obj.s).to.be.an.instanceOf(Set);
 
-            const a = [...obj.s.values()];
+            const a = obj.s.values().toArray();
             if (preset) {
                 expect(a[0].a).to.be.an.instanceOf(Error);
                 expect(a[1]).to.be.an.instanceOf(Date);
@@ -715,7 +717,10 @@ function BuiltIn (preset) {
                 const json = typeson.stringify({a});
                 const obj = typeson.parse(/** @type {string} */ (json));
                 expect(obj.a).to.be.an.instanceOf(Float64Array);
-                expect(obj.a.length).to.equal(3);
+                expect(obj.a).to.have.lengthOf(3);
+
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                // eslint-disable-next-line sonarjs/no-floating-point-equality -- Ok?
                 expect(obj.a[0]).to.equal(23.8);
                 expect(obj.a[1]).to.equal(-15);
                 expect(obj.a[2]).to.equal(99);
@@ -736,7 +741,7 @@ function BuiltIn (preset) {
                 const json = typeson.stringify({a});
                 const obj = typeson.parse(/** @type {string} */ (json));
                 expect(obj.a).to.be.an.instanceOf(BigInt64Array);
-                expect(obj.a.length).to.equal(3);
+                expect(obj.a).to.have.lengthOf(3);
                 expect(obj.a[0]).to.equal(238n);
                 expect(obj.a[1]).to.equal(-15n);
                 expect(obj.a[2]).to.equal(99n);
@@ -773,7 +778,7 @@ function BuiltIn (preset) {
 
                 const obj = typeson.parse(/** @type {string} */ (json));
                 expect(obj.a).to.be.an.instanceOf(Uint16Array);
-                expect(obj.a.length).to.equal(a.length);
+                expect(obj.a).to.have.lengthOf(a.length);
                 /** @type {Uint16Array} */ (obj.a).forEach((x, j) => {
                     expect(x).to.equal(j + 0xD780);
                 });
@@ -794,7 +799,7 @@ function BuiltIn (preset) {
                 const json = typeson.stringify(a);
                 // console.log(json);
                 const a2 = typeson.parse(/** @type {string} */ (json));
-                expect(a2.length).to.equal(3);
+                expect(a2).to.have.lengthOf(3);
                 expect(a2[0]).to.equal(0);
                 expect(a2[1]).to.equal(1);
                 expect(a2[2]).to.equal(2);
@@ -1088,7 +1093,7 @@ describe('symbol', function () {
         const back = typeson.parse(/** @type {string} */ (tson));
         expect(typeof back).to.equal('symbol');
         expect(String(back)).to.equal('Symbol(abc)');
-        expect(Symbol.keyFor(back)).to.equal(undefined);
+        expect(Symbol.keyFor(back)).to.be.undefined;
     });
 
     it('serializes a public symbol', function () {
@@ -1177,6 +1182,8 @@ function socketIO (preset, typeWithBufferEncoding) {
             const array = new Float64Array(65536);
             array.fill(42, 0, 65536);
 
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line unicorn/no-unsafe-buffer-conversion -- Testing
             const array2 = new Float64Array(array.buffer, 64);
             array2.fill(42, 0, 65536);
 
@@ -1355,7 +1362,7 @@ describe('ImageBitmap', function () {
             canvas.getContext('2d')
         );
         const img = document.createElement('img');
-        // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+        // The onload is needed by some browsers per https://stackoverflow.com/a/4776378/271577
         img.addEventListener('load', async () => {
             ctx.drawImage(img, 0, 0);
             const imageBitmap = await createImageBitmap(canvas);
@@ -1403,7 +1410,7 @@ describe('ImageBitmap', function () {
             canvas.getContext('2d')
         );
         const img = document.createElement('img');
-        // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+        // The onload is needed by some browsers per https://stackoverflow.com/a/4776378/271577
         img.addEventListener('load', async () => {
             ctx.drawImage(img, 0, 0);
 
@@ -1463,7 +1470,7 @@ describe('Blob', function () {
         this.timeout(10000);
         const typeson = new Typeson().register(blob);
         const contentType = 'application/json';
-        const stringContents = JSON.stringify('abc\u1234');
+        const stringContents = JSON.stringify('abc\u{1234}');
 
         const blob1 = new Blob([
             // BufferSource (ArrayBufferView (Int8Array, etc. or
@@ -1494,7 +1501,7 @@ describe('Blob', function () {
         'asynchronously', async () => {
         const typeson = new Typeson().register(blob);
         const contentType = 'application/json';
-        const stringContents = JSON.stringify('abc\u1234');
+        const stringContents = JSON.stringify('abc\u{1234}');
 
         const blob1 = new Blob([
             // BufferSource (ArrayBufferView (Int8Array, etc. or DataView)
@@ -1598,7 +1605,7 @@ describe('File', function () {
         const currTime = new Date();
         const contentType = 'application/json';
         const fileName = 'aName';
-        const stringContents = JSON.stringify('abc\u1234');
+        const stringContents = JSON.stringify('abc\u{1234}');
         const file1 = new File(
             [
                 // BufferSource (ArrayBufferView (Int8Array,
@@ -1633,7 +1640,7 @@ describe('File', function () {
         const currTime = new Date();
         const contentType = 'application/json';
         const fileName = 'aName';
-        const stringContents = JSON.stringify('abc\u1234');
+        const stringContents = JSON.stringify('abc\u{1234}');
         const file1 = new File([
             // BufferSource (ArrayBufferView (Int8Array, etc. or DataView)
             //  or ArrayBuffer), Blob, or USVString (strings without
@@ -1679,7 +1686,7 @@ describe('FileList', function () {
         input.type = 'file';
         // See the test-environment for our adapter to make this settable
 
-        (() => {
+        {
             /* eslint-disable sonarjs/class-name -- Clearer here */
             /**
              * For `instanceof`.
@@ -1707,7 +1714,7 @@ describe('FileList', function () {
             ));
 
             input.files = /** @type {FileList} */ (files);
-        })();
+        }
 
         expect(input.files).to.be.a('FileList');
         const typeson = new Typeson().register(filelist);
@@ -1731,7 +1738,7 @@ describe('FileList', function () {
         const input = document.createElement('input');
         input.type = 'file';
         // See the test-environment for our adapter to make this settable
-        (() => {
+        {
             /* eslint-disable sonarjs/class-name -- Clearer here */
             /**
              * For `instanceof`.
@@ -1758,7 +1765,7 @@ describe('FileList', function () {
                 })
             ));
             input.files = /** @type {FileList} */ (files);
-        })();
+        }
 
         expect(input.files).to.be.a('FileList');
         const typeson = new Typeson().register(filelist);
@@ -2037,14 +2044,14 @@ describe('Presets', () => {
             }];
             const json = typeson.stringify(a);
             const a2 = typeson.parse(/** @type {string} */ (json));
-            expect(a2.length).to.equal(2);
-            expect(a2[0]).to.equal(null);
+            expect(a2).to.have.lengthOf(2);
+            expect(a2[0]).to.be.null;
             expect('b' in a2[1]).to.be.false;
             expect(a2[1].c[0]).to.equal(3);
-            expect(a2[1].c[1]).to.equal(null);
-            expect(a2[1].c[2]).to.equal(undefined);
+            expect(a2[1].c[1]).to.be.null;
+            expect(a2[1].c[2]).to.be.undefined;
             expect('2' in a2[1].c).to.be.false;
-            expect(a2[1].c[3]).to.equal(null);
+            expect(a2[1].c[3]).to.be.null;
         });
     });
 });

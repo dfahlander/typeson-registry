@@ -7,6 +7,7 @@ import {hasConstructorOf} from 'typeson';
 const errors = {};
 
 // JS standard
+// eslint-disable-next-line unicorn/no-top-level-side-effects -- Too cumbersome
 [
     TypeError, RangeError, SyntaxError, ReferenceError,
     EvalError, URIError

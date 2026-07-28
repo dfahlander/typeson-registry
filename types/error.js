@@ -24,9 +24,11 @@ const error = {
              *   columnNumber?: import('typeson').Integer
              * }}
              */ (new Error(obj.message));
+            /* eslint-disable unicorn/no-error-property-assignment -- Ok */
             e.name = obj.name;
             e.cause = obj.cause;
             e.stack = obj.stack;
+            /* eslint-enable unicorn/no-error-property-assignment -- Ok */
             e.fileName = obj.fileName;
             e.lineNumber = obj.lineNumber;
             e.columnNumber = obj.columnNumber;

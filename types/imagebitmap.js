@@ -43,7 +43,7 @@ const imagebitmap = {
                 canvas.getContext('2d')
             );
             const img = document.createElement('img');
-            // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+            // The onload is needed by some browsers per https://stackoverflow.com/a/4776378/271577
             img.addEventListener('load', function () {
                 ctx.drawImage(img, 0, 0);
             });
@@ -63,7 +63,7 @@ const imagebitmap = {
                 canvas.getContext('2d')
             );
             const img = document.createElement('img');
-            // The onload is needed by some browsers per http://stackoverflow.com/a/4776378/271577
+            // The onload is needed by some browsers per https://stackoverflow.com/a/4776378/271577
             img.addEventListener('load', function () {
                 ctx.drawImage(img, 0, 0);
             });

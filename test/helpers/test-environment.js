@@ -1,12 +1,15 @@
 /* globals window -- Polyfills */
 /* eslint-disable unicorn/prefer-global-this,
   n/no-unsupported-features/node-builtins -- Polyfill */
+/* eslint-disable
+    unicorn/no-global-object-property-assignment --
+    HTML polyglot */
 
 import path from 'node:path';
 import {webcrypto} from 'node:crypto';
 
 import jsdom from 'jsdom';
-import canvas from 'canvas';
+import * as canvas from 'canvas';
 
 const __dirname = import.meta.dirname;
 
@@ -24,6 +27,8 @@ const dom = new JSDOM('', {
 
 globalThis.document = dom.window.document;
 globalThis.window = /** @type {NodeMockAPI} */ (dom.window);
+
+// eslint-disable-next-line unicorn/no-unnecessary-global-this -- HTML polyglot
 globalThis.HTMLElement = globalThis.window.HTMLElement; // https://github.com/chaijs/type-detect/issues/98
 
 // This should be made available automatically by jsdom: https://github.com/jsdom/jsdom/issues/1749
@@ -55,14 +60,6 @@ globalThis.DOMException = window.DOMException;
  * DOMRect class.
  */
 class DOMRect {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMRect';
-    }
     /**
      * @param {number} x
      * @param {number} y
@@ -76,6 +73,14 @@ class DOMRect {
         this.height = height;
         this.bottom = y + height;
         this.right = x + width;
+    }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMRect';
     }
 }
 // @ts-expect-error Not an issue
@@ -85,14 +90,6 @@ globalThis.DOMRect = DOMRect;
  * DOMRectReadOnly class.
  */
 class DOMRectReadOnly {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMRectReadOnly';
-    }
     /**
      * @param {number} x
      * @param {number} y
@@ -106,6 +103,14 @@ class DOMRectReadOnly {
         this.height = height;
         this.bottom = y + height;
         this.right = x + width;
+    }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMRectReadOnly';
     }
 }
 
@@ -119,14 +124,6 @@ globalThis.DOMRectReadOnly = DOMRectReadOnly;
  * DOMPoint class.
  */
 class DOMPoint {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMPoint';
-    }
     /**
      * @param {number} x
      * @param {number} y
@@ -138,6 +135,14 @@ class DOMPoint {
         this.y = y ?? 0;
         this.z = z ?? 0;
         this.w = w ?? 1;
+    }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMPoint';
     }
 }
 // @ts-expect-error Not an issue
@@ -147,14 +152,6 @@ globalThis.DOMPoint = DOMPoint;
  * DOMPointReadOnly class.
  */
 class DOMPointReadOnly {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMPointReadOnly';
-    }
     /**
      * @param {number} x
      * @param {number} y
@@ -166,6 +163,15 @@ class DOMPointReadOnly {
         this.y = y ?? 0;
         this.z = z ?? 0;
         this.w = w ?? 1;
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMPointReadOnly';
     }
 }
 // @ts-expect-error Not an issue
@@ -177,14 +183,6 @@ globalThis.DOMPointReadOnly = DOMPointReadOnly;
  * DOMQuad class.
  */
 class DOMQuad {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMQuad';
-    }
     /**
      * @param {DOMPoint} p1
      * @param {DOMPoint} p2
@@ -197,6 +195,14 @@ class DOMQuad {
         this.p3 = p3 ?? new DOMPoint(0, 0, 0, 1);
         this.p4 = p4 ?? new DOMPoint(0, 0, 0, 1);
     }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMQuad';
+    }
 }
 // @ts-expect-error Not an issue
 globalThis.DOMQuad = DOMQuad;
@@ -208,14 +214,6 @@ globalThis.DOMQuad = DOMQuad;
  * DOMMatrix class.
  */
 class DOMMatrix {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMMatrix';
-    }
     /**
      * @param {[number, number, number, number, number, number]|
      *   [
@@ -253,6 +251,14 @@ class DOMMatrix {
         this.m42 = init[13];
         this.m43 = init[14];
         this.m44 = init[15];
+    }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMMatrix';
     }
 }
 // @ts-expect-error Not an issue
@@ -262,14 +268,6 @@ globalThis.DOMMatrix = DOMMatrix;
  * DOMMatrixReadOnly class.
  */
 class DOMMatrixReadOnly {
-    /* eslint-disable class-methods-use-this -- Not needed */
-    /**
-     * @returns {string}
-     */
-    get [Symbol.toStringTag] () {
-        /* eslint-enable class-methods-use-this -- Not needed */
-        return 'DOMMatrixReadOnly';
-    }
     /**
      * @param {[number, number, number, number, number, number]|
      *   [
@@ -307,6 +305,14 @@ class DOMMatrixReadOnly {
         this.m42 = init[13];
         this.m43 = init[14];
         this.m44 = init[15];
+    }
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'DOMMatrixReadOnly';
     }
 }
 // @ts-expect-error Not an issue
@@ -365,6 +371,7 @@ if (!URL.revokeObjectURL) {
 
 globalThis.xmlHttpRequestOverrideMimeType = xmlHttpRequestOverrideMimeType;
 
+// eslint-disable-next-line unicorn/no-top-level-side-effects -- Ok
 await import('./FileList.js');
 
 export const imageTestFileNode = 'file://' + path.resolve(__dirname, 'Flag_of_the_United_Nations.png');

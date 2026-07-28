@@ -3,9 +3,9 @@
  */
 const negativeInfinity = {
     negativeInfinity: {
-        test (x) { return x === Number.NEGATIVE_INFINITY; },
+        test (x) { return x === -Infinity; },
         replace (/* n */) { return '-Infinity'; },
-        revive (/* s */) { return Number.NEGATIVE_INFINITY; }
+        revive (/* s */) { return -Infinity; }
     }
 };
 

@@ -23,7 +23,9 @@ async function copy (fromPath, toPath) {
         fileContents = await readFile(fromPath);
     } catch (err) {
         if (err.code === 'ENOENT') {
-            throw new Error('Could not find ' + fromPath);
+            throw new Error('Could not find ' + fromPath, {
+                cause: err
+            });
         }
         throw err;
     }
@@ -32,7 +34,9 @@ async function copy (fromPath, toPath) {
     } catch (err) {
         if (err.code === 'EEXIST') {
             throw new Error(
-                'File already exists at target path: ' + toPath
+                'File already exists at target path: ' + toPath, {
+                    cause: err
+                }
             );
         }
         throw err;
@@ -54,9 +58,13 @@ if (isWin) {
         files = await readdir(pathToGTKBin);
     } catch (err) {
         if (err.code === 'ENOENT') {
-            throw new Error('Could not find ' + pathToGTKBin);
+            throw new Error('Could not find ' + pathToGTKBin, {
+                cause: err
+            });
         }
-        throw new Error('Could not list the directory contents.');
+        throw new Error('Could not list the directory contents.', {
+            cause: err
+        });
     }
     files.filter((f) => f.endsWith('.dll')).forEach(async (file) => {
         const targetPath = targetDir + '\\' + file;

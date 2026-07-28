@@ -47,7 +47,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             throw err;
         }
     }
-    let currentLine = '    ';
+    let currentLine = ' '.repeat(4);
     moduleStrings[dir] = '';
     const dirPath = join(__dirname, '/', dir);
     // Todo: Would be faster to `Promise.all` on concatenation of all
@@ -59,7 +59,7 @@ const dirsOutput = await Promise.all(dirs.map(async (dir) => {
             let fileString = fileName;
 
             // Todo: We really should auto-detect duplicates instead
-            if (['undef'].includes(fileName) && dir === 'presets') {
+            if (dir === 'presets' && ['undef'].includes(fileName)) {
                 fileName += 'Preset';
                 fileString = fileName;
             }
@@ -225,5 +225,5 @@ function nameFromFile (f) {
                 name.slice(dash + 2);
         }
     } while (dash >= 0);
-    return name.split('.')[0];
+    return name.split('.', 1)[0];
 }

@@ -18,9 +18,13 @@ function _FileList () {
 _FileList.prototype.item = function (index) {
     return this._files[index];
 };
+
+// eslint-disable-next-line unicorn/no-top-level-side-effects -- Ok
 Object.defineProperty(_FileList.prototype, Symbol.toStringTag, {
     value: 'FileList'
 });
+
+// eslint-disable-next-line unicorn/no-top-level-side-effects -- Ok
 Object.defineProperty(globalThis.HTMLInputElement.prototype, 'files', {
     get () {
         return new _FileList(this._files);

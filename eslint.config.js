@@ -70,7 +70,7 @@ export default [
             files: ['**/*.html', 'browser-test/**'],
             rules: {
                 ...cfg.rules,
-                'import/unambiguous': 'off'
+                'import-x/unambiguous': 'off'
             }
         };
     }),
@@ -149,11 +149,11 @@ export default [
             }],
             // Disable until may fix https://github.com/gajus/eslint-plugin-jsdoc/issues/211
             indent: 'off',
-            'import/extensions': 'off',
-            'import/unambiguous': 'off',
-            'import/no-unresolved': 'off',
-            'import/no-commonjs': 'off',
-            'import/no-extraneous-dependencies': 'off',
+            'import-x/extensions': 'off',
+            'import-x/unambiguous': 'off',
+            'import-x/no-unresolved': 'off',
+            'import-x/no-commonjs': 'off',
+            'import-x/no-extraneous-dependencies': 'off',
             'n/no-extraneous-import': 'off',
             'n/file-extension-in-import': 'off',
             'n/global-require': 'off'
@@ -162,7 +162,7 @@ export default [
     {
         files: ['**/*.js'],
         languageOptions: {
-            ecmaVersion: 2024,
+            ecmaVersion: 2025,
             sourceType: 'module'
         }
     },

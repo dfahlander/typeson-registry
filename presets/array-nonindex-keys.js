@@ -20,7 +20,7 @@ const arrayNonindexKeys = [
                             //   `Number.parseInt(Number())` since scientific
                             //   notation will be pre-resolved if a number
                             //   was given, and it will otherwise be a string
-                            return String(Number.parseInt(k)) !== k;
+                            return String(Number(k)) !== k;
                         })
                     ) {
                         stateObj.iterateIn = 'object';
