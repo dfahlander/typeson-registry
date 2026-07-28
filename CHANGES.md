@@ -1,11 +1,12 @@
 # typeson-registry
 
-## 13.0.0 (unreleased)
+## 13.0.0
 
 BREAKING CHANGES:
 - Bump minimum Node to ^22.16.0, >=24
 
-- chore: update whatwg-url, devDeps.
+- fix: preserve shared references when reviving paths nested in replaced containers (e.g., `Set` values); fixes #27
+- chore: update typeson, whatwg-url, devDeps.
 
 ## 12.0.0
 

@@ -3,5 +3,6 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - eslint-config-ash-nazg@41.0.0
+  - typeson@10.0.0
 onlyBuiltDependencies:
   - canvas

@@ -12,8 +12,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       typeson:
-        specifier: ^9.0.4
-        version: 9.0.4
+        specifier: ^10.0.0
+        version: 10.0.0
       whatwg-url:
         specifier: ^17.1.0
         version: 17.1.0
@@ -3716,9 +3716,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  typeson@9.0.4:
-    resolution: {integrity: sha512-umRYLe37m4fTu0AlgFaqu1C+N+i3LqAehCzbvNx9w7alyN1wpPyS6FbBEsvWD2FppS2yJ9gk0FkFBkZ/wJE13Q==}
-    engines: {node: '>=16.0.0'}
+  typeson@10.0.0:
+    resolution: {integrity: sha512-NOdN4coH04a74dGtoNtv8UMI3b4lAUMqtJQF8OyvZXURPKC4aJLm9FJhGfg8CrW4ubthkRZi0krCN1UDTK3Dzw==}
+    engines: {node: '>=22.0.0'}
 
   typical@7.2.0:
     resolution: {integrity: sha512-W1+HdVRUl8fS3MZ9ogD51GOb46xMmhAZzR0WPw5jcgIZQJVvkddYzAl4YTU6g5w33Y1iRQLdIi2/1jhi2RNL0g==}
@@ -8081,7 +8081,7 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  typeson@9.0.4: {}
+  typeson@10.0.0: {}
 
   typical@7.2.0: {}
 

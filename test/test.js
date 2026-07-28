@@ -663,6 +663,28 @@ function BuiltIn (preset) {
             }
             expect(a[2]).to.be.a('string');
         });
+
+        it(
+            'should revive shared references inside multiple sets; ' +
+            'issue #27',
+            function () {
+                const typeson = new Typeson().register([preset || builtin]);
+
+                const shared = {hi: 1};
+                const original = [
+                    new Set([shared]),
+                    new Set([shared])
+                ];
+
+                const revived = typeson.revive(typeson.encapsulate(original));
+                const first = [...revived[0]][0];
+                const second = [...revived[1]][0];
+
+                assert(first !== undefined, 'First set entry revived');
+                assert(second !== undefined, 'Second set entry revived');
+                assert(first === second, 'Sets should share same reference');
+            }
+        );
     });
 
     describe('ArrayBuffer', () => {
