@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 13.0.1
+
+- chore: update typeson, devDeps.
+
 ## 13.0.0
 
 BREAKING CHANGES:

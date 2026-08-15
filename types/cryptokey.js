@@ -34,12 +34,12 @@ const cryptokey = {
             const {
                 jwk, algorithm, usages
             } = /**
-              * @type {{
-              *   jwk: JsonWebKey,
-              *   algorithm: KeyAlgorithm,
-              *   usages: KeyUsage[]
-              * }}
-              */ (obj);
+                 * @type {{
+                 *   jwk: JsonWebKey,
+                 *   algorithm: KeyAlgorithm,
+                 *   usages: KeyUsage[]
+                 * }}
+                 */ (obj);
 
             return crypto.subtle.importKey(
                 'jwk', jwk, algorithm, true, usages

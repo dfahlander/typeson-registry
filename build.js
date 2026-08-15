@@ -144,9 +144,9 @@ ws.on('finish', async () => {
 });
 
 /**
-* @external RollupOutput
-* @see https://github.com/rollup/rollup/blob/master/src/rollup/types.d.ts#L478
-*/
+ * @external RollupOutput
+ * @see https://github.com/rollup/rollup/blob/master/src/rollup/types.d.ts#L478
+ */
 
 /**
  * @param {PlainObject} cfg

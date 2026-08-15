@@ -174,6 +174,7 @@ export default [
         },
         rules: {
             // Disable for now
+            'unicorn/no-barrel-files': 0,
             'jsdoc/reject-any-type': 0,
             '@brettz9/no-use-ignored-vars': 0,
             '@stylistic/brace-style': 0,

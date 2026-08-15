@@ -58,24 +58,24 @@ function create (Ctor) {
             const isAggregateError = typeof AggregateError !== 'undefined' &&
                 Ctor === AggregateError;
             const e = /**
-                * @type {{
-                *   name: string,
-                *   cause: Error,
-                *   stack: string,
-                *   fileName?: string,
-                *   lineNumber?: import('typeson').Integer,
-                *   columnNumber?: import('typeson').Integer
-                * }}
-                */ (isAggregateError
+                       * @type {{
+                       *   name: string,
+                       *   cause: Error,
+                       *   stack: string,
+                       *   fileName?: string,
+                       *   lineNumber?: import('typeson').Integer,
+                       *   columnNumber?: import('typeson').Integer
+                       * }}
+                       */ (isAggregateError
                     ? new /** @type {AggregateErrorConstructor} */ (
                         Ctor
                     )(obj.errors, obj.message)
                     : new /**
-                    * @type {TypeErrorConstructor|RangeErrorConstructor|
-                    *   SyntaxErrorConstructor|ReferenceErrorConstructor|
-                    *   EvalErrorConstructor|URIErrorConstructor|
-                    *   InternalErrorConstructor}
-                    */ (Ctor)(obj.message));
+                           * @type {TypeErrorConstructor|RangeErrorConstructor|
+                           *   SyntaxErrorConstructor|ReferenceErrorConstructor|
+                           *   EvalErrorConstructor|URIErrorConstructor|
+                           *   InternalErrorConstructor}
+                           */ (Ctor)(obj.message));
 
             e.name = obj.name;
             e.cause = obj.cause;

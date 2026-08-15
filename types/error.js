@@ -15,15 +15,15 @@ const error = {
         },
         revive (obj) {
             const e = /**
-             * @type {{
-             *   name: string,
-             *   cause: Error,
-             *   stack: string,
-             *   fileName?: string,
-             *   lineNumber?: import('typeson').Integer,
-             *   columnNumber?: import('typeson').Integer
-             * }}
-             */ (new Error(obj.message));
+                       * @type {{
+                       *   name: string,
+                       *   cause: Error,
+                       *   stack: string,
+                       *   fileName?: string,
+                       *   lineNumber?: import('typeson').Integer,
+                       *   columnNumber?: import('typeson').Integer
+                       * }}
+                       */ (new Error(obj.message));
             /* eslint-disable unicorn/no-error-property-assignment -- Ok */
             e.name = obj.name;
             e.cause = obj.cause;

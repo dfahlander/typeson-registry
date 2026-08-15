@@ -1075,8 +1075,8 @@ function BuiltIn (preset) {
 describe('Built-in', BuiltIn);
 
 /**
-* @param {TypesonPreset} [preset]
-* @returns {void}
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
  */
 function cryptoKey (preset) {
     describe('CryptoKey', () => {
@@ -1169,8 +1169,8 @@ describe('promise', function () {
  */
 function socketIO (preset, typeWithBufferEncoding) {
     /**
-    * @typedef {any} AnyArgument
-    */
+     * @typedef {any} AnyArgument
+     */
     it(
         typeWithBufferEncoding
             ? 'can pass on typed arrays with Base64/JSON encoding'
