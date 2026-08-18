@@ -16,5 +16,5 @@
     "outDir": "dist"
   },
   "include": ["index.js", "utils/**/*.js", "types/**/*.js", "presets/**/*.js", "polyfills/**/*.js", "test/**/*.js", "browser-test/mochaESMLoader.js"],
-  "exclude": ["polyfills/createObjectURL.umd.cjs"]
+  "exclude": ["polyfills/createObjectURL.cjs"]
 }

@@ -1,5 +1,17 @@
 # typeson-registry
 
+## 13.1.0
+
+- chore: modernize CI and deps; make createObjectURL polyfill Node/CJS-only
+- chore: Upgrade GitHub Actions usage to v4, enable pnpm cache, and use frozen lockfile installs.
+- chore: Align CI Node versions with current support (22.16.0 and 24).
+- chore: Add packageManager pin (pnpm 11.22.0) and refresh workspace/lockfile metadata.
+- chore: Bump core deps/devDeps (including typeson and lint tooling).
+- chore: Add test:unit script and route coverage through it.
+- chore: Remove legacy Windows helper script and delete windows-devinstall.js.
+- refactor: Switch createObjectURL polyfill to Node-specific resolution via createRequire + jsdom CJS internals.
+- refactor: Emit createObjectURL bundle as CJS (non-minified) and regenerate built outputs/map.
+
 ## 13.0.1
 
 - chore: update typeson, devDeps.

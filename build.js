@@ -135,8 +135,10 @@ ws.on('finish', async () => {
         }),
         bundle({
             input: 'polyfills/createObjectURL.js',
-            output: 'polyfills/createObjectURL.umd.cjs',
-            name: 'createObjectURL'
+            output: 'polyfills/createObjectURL.cjs',
+            name: 'createObjectURL',
+            format: 'cjs',
+            minified: false
         })
 
     ]);

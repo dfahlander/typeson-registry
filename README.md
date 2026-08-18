@@ -25,10 +25,8 @@ Note that our `URL.createObjectURL` polyfill expects a global
 which can handle `data:` URLs). For Node, you can add it like this:
 
 ```js
-const url = require('url'); // This line only needed to support Node < 10.0.0
-const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL.umd.cjs');
+const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL.cjs');
 
-const URL = url.Url; // This line only needed to support Node < 10.0.0
 URL.createObjectURL = createObjectURL;
 ```
 
@@ -138,7 +136,7 @@ const TSON = new Typeson().register([
 
 ## Usage (with plain script tags without own Rollup)
 
-All types and presets under `dist/` are UMD modules so you could also
+All presets under `dist/` are UMD modules so you could also
 require them as AMD modules with requirejs if you prefer.
 
 ```html
@@ -338,10 +336,9 @@ On Windows, besides following the
 helped complete the installation. If you need to have it rebuilt, you can
 run `npm i` inside of the `node_modules/canvas` directory.
 
-[These steps](https://github.com/Automattic/node-canvas/issues/191#issuecomment-7681555)
-were also necessary but you can run `npm run windows` after install to get
-these steps applied. These are the only steps which should need to be re-run
-if you have deleted your local `node-canvas` copy.
+The older repo-specific Windows DLL copy workaround is no longer needed with
+modern `canvas` versions. Follow the official node-canvas Windows installation
+instructions for your toolchain, and then run the project normally.
 
 ## See also
 

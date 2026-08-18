@@ -7,14 +7,15 @@ jobs:
         with:
           version: latest
       - name: setup repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: setup node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: pnpm install
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm lint
     timeout-minutes: 10
@@ -26,23 +27,23 @@ jobs:
         with:
           version: latest
       - name: setup repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: setup node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '${{ matrix.node_js_version }}'
-      - run: pnpm install
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: pnpm test
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         node_js_version:
-          - '18.20.4'
-          - '20'
-          - '22'
+          - '22.16.0'
+          - '24'
   build:
     runs-on: ubuntu-latest
     name: Build
@@ -51,14 +52,15 @@ jobs:
         with:
           version: latest
       - name: setup repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: setup node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - run: pnpm install
+          node-version: '22'
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - run: pnpm build
     timeout-minutes: 10
 name: Lint, test and build

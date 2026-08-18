@@ -11,10 +11,12 @@
 
 // We also need to tweak `XMLHttpRequest` which our types
 //    rely on to obtain the Blob/File content
+import {createRequire} from 'node:module';
 import whatwgURL from 'whatwg-url';
-// eslint-disable-next-line n/no-unpublished-import -- User to supply
-import * as utils from 'jsdom/lib/generated/idl/utils.js';
 import generateUUID from '../utils/generateUUID.js';
+
+const require = createRequire(import.meta.url);
+const {implForWrapper} = require('jsdom/lib/generated/idl/utils.js');
 
 const {serializeURLOrigin, parseURL} = whatwgURL;
 
@@ -50,8 +52,6 @@ const createObjectURL = function (blob) {
 const revokeObjectURL = function (blobURL) {
     delete blobURLs[blobURL];
 };
-
-const {implForWrapper} = utils.default;
 
 // We only handle the case of binary, so no need to override `open`
 //   in all cases; but this only works if override is called first

@@ -8,7 +8,7 @@ export default [
         ignores: [
             'dist/',
             '.idea',
-            'polyfills/createObjectURL.umd.cjs',
+            'polyfills/createObjectURL.cjs',
             'coverage'
         ]
     },
@@ -78,8 +78,7 @@ export default [
         return {
             files: [
                 'test/test-environment.js',
-                'polyfills/createObjectURL.js',
-                'windows-devinstall.js'
+                'polyfills/createObjectURL.js'
             ],
             ...cfg
         };
@@ -114,7 +113,6 @@ export default [
     ...ashNazg(['sauron', 'node']).map((cfg) => {
         return {
             files: [
-                'windows-devinstall.js',
                 'build.js'
             ],
             ...cfg,
