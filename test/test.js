@@ -1,5 +1,6 @@
 /* globals InternalError -- If available */
 /* globals document, ImageData, createImageBitmap, FileReader,
+    AudioData,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
     DOMQuad,
@@ -54,6 +55,7 @@ const {
     negativeInfinity, date, error,
     regexp, map, set, arraybuffer, domexception,
     domrect, dompoint, domquad, dommatrix,
+    audiodata,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -241,6 +243,79 @@ function Undefined (preset) {
         });
     });
 }
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testAudioData (preset) {
+    describe('AudioData', function () {
+        it('should return an AudioData', function () {
+            const typeson = new Typeson().register(preset || [
+                audiodata, arraybuffer
+            ]);
+
+            // 5 Frames, 16-bit integers
+            const int16array = new Int16Array([
+                100, 101, 102, 103, 104,
+                100, 101, 102, 103, 104
+            ]);
+
+            const audioData = new AudioData({
+                format: 's16',
+                sampleRate: 48000,
+                numberOfChannels: 2,
+                numberOfFrames: 5,
+                timestamp: 1_000_000,
+                data: int16array
+            });
+
+            const tson = typeson.stringify(audioData, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(AudioData);
+            expect(back.format).to.equal('s16');
+            expect(back.sampleRate).to.equal(48000);
+            expect(back.numberOfChannels).to.equal(2);
+            expect(back.numberOfFrames).to.equal(5);
+            expect(back.timestamp).to.equal(1_000_000);
+            // eslint-disable-next-line sonarjs/no-floating-point-equality -- Ok
+            expect(back.duration).to.equal(5 / 48000);
+        });
+
+        it('should return an AudioData (planar)', function () {
+            const typeson = new Typeson().register(preset || [
+                audiodata, arraybuffer
+            ]);
+
+            // 5 Frames, 16-bit integers
+            const int16array = new Int16Array([
+                100, 101, 102, 103, 104,
+                100, 101, 102, 103, 104
+            ]);
+
+            const audioData = new AudioData({
+                format: 's16-planar',
+                sampleRate: 48000,
+                numberOfChannels: 2,
+                numberOfFrames: 5,
+                timestamp: 1_000_000,
+                data: int16array
+            });
+
+            const tson = typeson.stringify(audioData, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(AudioData);
+            expect(back.format).to.equal('s16-planar');
+            expect(back.sampleRate).to.equal(48000);
+            expect(back.numberOfChannels).to.equal(2);
+            expect(back.numberOfFrames).to.equal(5);
+            expect(back.timestamp).to.equal(1_000_000);
+            // eslint-disable-next-line sonarjs/no-floating-point-equality -- Ok
+            expect(back.duration).to.equal(5 / 48000);
+        });
+    });
+}
+testAudioData();
 
 /**
  * @param {TypesonPreset} [preset]
@@ -1969,6 +2044,7 @@ describe('Presets', () => {
     describe('Structured cloning', () => {
         NonindexKeys(structuredCloningThrowing);
         cryptoKey(structuredCloningThrowing);
+        testAudioData(structuredCloningThrowing);
         DomException(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
         DomPoint(structuredCloningThrowing);

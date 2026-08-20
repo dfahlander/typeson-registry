@@ -1,6 +1,6 @@
-import fs from 'fs';
-import {join} from 'path';
-import util from 'util';
+import fs from 'node:fs';
+import {join} from 'node:path';
+import util from 'node:util';
 
 import {rollup} from 'rollup';
 import {babel} from '@rollup/plugin-babel';

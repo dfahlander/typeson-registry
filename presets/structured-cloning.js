@@ -19,6 +19,7 @@ import domrect from '../types/domrect.js';
 import dompoint from '../types/dompoint.js';
 import domquad from '../types/domquad.js';
 import dommatrix from '../types/dommatrix.js';
+import audiodata from '../types/audiodata.js';
 
 import imagedata from '../types/imagedata.js';
 import imagebitmap from '../types/imagebitmap.js'; // Async return
@@ -74,6 +75,8 @@ const expObj = [
     /* c8 ignore next */
     typeof DOMQuad !== 'undefined' ? domquad : [],
     /* c8 ignore next */
-    typeof DOMMatrix !== 'undefined' ? dommatrix : []
+    typeof DOMMatrix !== 'undefined' ? dommatrix : [],
+    /* c8 ignore next */
+    typeof AudioData !== 'undefined' ? audiodata : []
 );
 export default expObj;

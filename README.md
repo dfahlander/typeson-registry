@@ -210,6 +210,7 @@ Note that the type name corresponds to the file name in the following manner:
 
 ### Types
 
+- `audiodata`
 - `arraybuffer`
 - `bigintObject`
 - `bigint`

@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 13.2.0
+
+- feat: add `AudioData` as type and within structured cloning preset
+
 ## 13.1.0
 
 - chore: modernize CI and deps; make createObjectURL polyfill Node/CJS-only

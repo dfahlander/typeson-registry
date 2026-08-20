@@ -2,6 +2,7 @@
 
 // TYPES
 import arraybuffer from './types/arraybuffer.js';
+import audiodata from './types/audiodata.js';
 import bigintObject from './types/bigint-object.js';
 import bigint from './types/bigint.js';
 import blob from './types/blob.js';
@@ -53,12 +54,12 @@ import universal from './presets/universal.js';
 
 /* types */
 export {
-    arraybuffer, bigintObject, bigint, blob, cloneable, cryptokey, dataview,
-    date, domexception, dommatrix, dompoint, domquad, domrect, error, errors,
-    file, filelist, imagebitmap, imagedata, infinity, intlTypes, map, nan,
-    negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects, promise,
-    regexp, resurrectable, set, symbol, typedArraysSocketio, typedArrays, undef,
-    userObject
+    arraybuffer, audiodata, bigintObject, bigint, blob, cloneable, cryptokey,
+    dataview, date, domexception, dommatrix, dompoint, domquad, domrect, error,
+    errors, file, filelist, imagebitmap, imagedata, infinity, intlTypes, map,
+    nan, negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects,
+    promise, regexp, resurrectable, set, symbol, typedArraysSocketio,
+    typedArrays, undef, userObject
 };
 
 /* presets */
