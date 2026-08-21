@@ -3,6 +3,8 @@
 ## 13.2.1
 
 - fix(structured cloning): throw with a detached buffer
+- test: do not throw with Object.prototype, but do throw with functions
+- chore: update for TS 7 readiness
 
 ## 13.2.0
 

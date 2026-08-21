@@ -44,6 +44,8 @@ const filelist = {
                     return 'FileList';
                 }
             }
+
+            // @ts-ignore Override API
             return new FileList(o);
         }
     }

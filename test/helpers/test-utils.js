@@ -38,7 +38,7 @@ class SimulatedNonBuiltIn {
 
     [Symbol.toStringTag] = 'SimulatedNonBuiltIn';
 }
-SimulatedNonBuiltIn.prototype.bbb = 8;
+(/** @type {{bbb?: number}} */ (SimulatedNonBuiltIn.prototype)).bbb = 8;
 
 /**
  * @typedef {any} ArbitraryObject
@@ -81,7 +81,9 @@ class MyCloneable {
         this.nonpersistentStateInfo = Math.random();
     }
 }
-MyCloneable.prototype.prototypeProperty = 10;
+(/** @type {{prototypeProperty?: number}} */ (
+    MyCloneable.prototype
+)).prototypeProperty = 10;
 
 /**
  *
