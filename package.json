@@ -33,7 +33,7 @@
   "scripts": {
     "tsc": "tsc && node tools/append-to-declaration-files.js",
     "tsc:ts7": "npx --yes --package=typescript@7 -- tsc -p tsconfig.json && npx --yes --package=typescript@7 -- tsc -p tsconfig-build.json --noEmit",
-    "prepublishOnly": "pnpm i",
+    "prepublishOnly": "pnpm i && pnpm build",
     "eslint": "eslint .",
     "lint": "npm run eslint --",
     "start": "static -p 8085",
