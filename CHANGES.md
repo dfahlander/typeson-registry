@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 13.2.1
+
+- fix(structured cloning): throw with a detached buffer
+
 ## 13.2.0
 
 - feat: add `AudioData` as type and within structured cloning preset

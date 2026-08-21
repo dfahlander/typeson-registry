@@ -506,7 +506,7 @@ globalThis.OffscreenCanvas = window.OffscreenCanvas;
  * @param {HTMLCanvasElement} cvs
  * @returns {Promise<HTMLCanvasElement>}
  */
-globalThis.createImageBitmap = /** @type {createImageBitmap} */ (
+globalThis.createImageBitmap = /** @type {typeof createImageBitmap} */ (
     function (
         /** @type {ImageBitmapSource & {dataset: {toStringTag?: string}}} */
         cvs

@@ -1,19 +1,45 @@
 import structuredCloning from './structured-cloning.js';
 
 /**
+ * @param {BufferSource} buffer
+ * @returns {boolean}
+ */
+function isBufferDetached (buffer) {
+    // Use the standard property if available
+    // @ts-expect-error - More recent API
+    if (typeof buffer.detached === 'boolean') {
+        // @ts-expect-error - More recent API
+        return buffer.detached;
+    }
+    /* c8 ignore next 14 -- Older browsers */
+
+    // Fallback check via byteLength and constructor test
+    if (buffer.byteLength !== 0) {
+        return false;
+    }
+
+    try {
+        // @ts-expect-error Ok
+        // eslint-disable-next-line no-new -- Throwaway
+        new Uint8Array(buffer);
+        return false;
+    } catch {
+        return true;
+    }
+}
+
+/**
  * @type {import('typeson').Preset}
  */
 const structuredCloningThrowing = structuredCloning.concat({
     checkDataCloneException: {
         test (val) {
             // Should also throw with:
-            // 1. `IsDetachedBuffer` (a process not called within the
-            //      ECMAScript spec)
-            // 2. `IsCallable` (covered by `typeof === 'function'` or a
+            // 1. `IsCallable` (covered by `typeof === 'function'` or a
             //       function's `toStringTag`)
-            // 3. internal slots besides [[Prototype]] or [[Extensible]] (e.g.,
+            // 2. internal slots besides [[Prototype]] or [[Extensible]] (e.g.,
             //        [[PromiseState]] or [[WeakMapData]])
-            // 4. exotic object (e.g., `Proxy`) (unless an `%ObjectPrototype%`
+            // 3. exotic object (e.g., `Proxy`) (unless an `%ObjectPrototype%`
             //      intrinsic object) (which does not have default
             //      behavior for one or more of the essential internal methods
             //      that are limited to the following for non-function objects
@@ -55,6 +81,23 @@ const structuredCloningThrowing = structuredCloning.concat({
                     // Also in Node `worker_threads` (currently experimental)
                     'MessageChannel'
                 ].includes(stringTag) ||
+                // 1. `IsDetachedBuffer` (a process not called within the
+                //      ECMAScript spec)
+                ([
+                    'ArrayBuffer',
+                    'DataView',
+                    'Int8Array',
+                    'Uint8Array',
+                    'Uint8ClampedArray',
+                    'Int16Array',
+                    'Uint16Array',
+                    'Int32Array',
+                    'Uint32Array',
+                    'Float32Array',
+                    'Float64Array',
+                    'BigInt64Array',
+                    'BigUint64Array'
+                ].includes(stringTag) && isBufferDetached(val)) ||
                 /*
                 // isClosed is no longer documented
                 ((stringTag === 'Blob' || stringTag === 'File') &&
