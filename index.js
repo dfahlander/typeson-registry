@@ -30,6 +30,7 @@ import negativeZero from './types/negative-zero.js';
 import nonbuiltinIgnore from './types/nonbuiltin-ignore.js';
 import primitiveObjects from './types/primitive-objects.js';
 import promise from './types/promise.js';
+import quotaexceedederror from './types/quotaexceedederror.js';
 import regexp from './types/regexp.js';
 import resurrectable from './types/resurrectable.js';
 import set from './types/set.js';
@@ -38,6 +39,7 @@ import typedArraysSocketio from './types/typed-arrays-socketio.js';
 import typedArrays from './types/typed-arrays.js';
 import undef from './types/undef.js';
 import userObject from './types/user-object.js';
+import webtransporterror from './types/webtransporterror.js';
 
 // PRESETS
 import arrayNonindexKeys from './presets/array-nonindex-keys.js';
@@ -58,8 +60,8 @@ export {
     dataview, date, domexception, dommatrix, dompoint, domquad, domrect, error,
     errors, file, filelist, imagebitmap, imagedata, infinity, intlTypes, map,
     nan, negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects,
-    promise, regexp, resurrectable, set, symbol, typedArraysSocketio,
-    typedArrays, undef, userObject
+    promise, quotaexceedederror, regexp, resurrectable, set, symbol,
+    typedArraysSocketio, typedArrays, undef, userObject, webtransporterror
 };
 
 /* presets */

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["es2024", "DOM"],
+    "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "moduleResolution": "nodenext",
     "module": "NodeNext",
@@ -16,6 +16,6 @@
     "target": "es6",
     "outDir": "dist"
   },
-  "include": ["index.js", "utils/**/*.js", "types/**/*.js", "presets/**/*.js", "polyfills/**/*.js"],
+  "include": ["index.js", "utils/**/*.js", "types/**/*.js", "types/**/*.d.ts", "presets/**/*.js", "polyfills/**/*.js"],
   "exclude": ["polyfills/createObjectURL.cjs"]
 }

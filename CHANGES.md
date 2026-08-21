@@ -1,5 +1,10 @@
 # typeson-registry
 
+## 13.3.0
+
+- feat: add `QuotaExceededError` and `WebTransportError` as types and within
+    structured cloning preset
+
 ## 13.2.1
 
 - fix(structured cloning): throw with a detached buffer

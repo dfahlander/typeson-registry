@@ -257,6 +257,7 @@ Note that the type name corresponds to the file name in the following manner:
     adding them as properties
 - `primitive-objects.js` (`StringObject`, `BooleanObject`, `NumberObject`)
 - `promise`
+- `quotaexceedederror`
 - `regexp`
 - `resurrectable` - Resurrects any non-array object, function, or symbol; can
     only be revived for the current window session.
@@ -275,6 +276,7 @@ Note that the type name corresponds to the file name in the following manner:
 - `userObjects` - Allows for inherited objects but ensures the prototype chain
     inherits from `Object` (or `null`). Should be low priority if one is
     matching other objects as it will readily match many objects.
+- `webtransporterror`
 
 ### Presets
 

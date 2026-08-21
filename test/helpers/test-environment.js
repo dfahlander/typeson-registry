@@ -53,6 +53,104 @@ globalThis.Blob = window.Blob;
 globalThis.File = window.File;
 globalThis.DOMException = window.DOMException;
 
+/* eslint-disable no-shadow -- Polyfill */
+/**
+ * QuotaExceededError polyfill (not yet available in Node/jsdom).
+ */
+class QuotaExceededError extends DOMException {
+    /* eslint-enable no-shadow -- Polyfill */
+    /**
+     * @param {string} [message]
+     * @param {{quota?: number, requested?: number}} [options]
+     */
+    constructor (message = '', {quota, requested} = {}) {
+        super(message, 'QuotaExceededError');
+        this._quota = quota === undefined ? null : quota;
+        this._requested = requested === undefined ? null : requested;
+        if (this._quota !== null && this._quota < 0) {
+            throw new RangeError('quota must not be negative');
+        }
+        if (this._requested !== null && this._requested < 0) {
+            throw new RangeError('requested must not be negative');
+        }
+        if (
+            this._quota !== null && this._requested !== null &&
+            this._requested < this._quota
+        ) {
+            throw new RangeError('requested must not be less than quota');
+        }
+    }
+
+    /**
+     * @returns {number|null}
+     */
+    get quota () {
+        return this._quota;
+    }
+
+    /**
+     * @returns {number|null}
+     */
+    get requested () {
+        return this._requested;
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'QuotaExceededError';
+    }
+}
+globalThis.QuotaExceededError = QuotaExceededError;
+
+/**
+ * WebTransportError polyfill (not yet available in Node/jsdom).
+ */
+class WebTransportError extends DOMException {
+    /**
+     * @param {{
+     *   message?: string,
+     *   source?: "stream"|"session",
+     *   streamErrorCode?: number|null
+     * }} [init]
+     */
+    constructor ({
+        message = '', source = 'stream', streamErrorCode = null
+    } = {}) {
+        super(message, 'WebTransportError');
+        this._source = source;
+        this._streamErrorCode = streamErrorCode;
+    }
+
+    /**
+     * @returns {"stream"|"session"}
+     */
+    get source () {
+        return this._source;
+    }
+
+    /**
+     * @returns {number|null}
+     */
+    get streamErrorCode () {
+        return this._streamErrorCode;
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+    get [Symbol.toStringTag] () {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'WebTransportError';
+    }
+}
+// @ts-expect-error - More recent API (single `init` argument)
+globalThis.WebTransportError = WebTransportError;
+
 // Map format names to byte sizes and TypedArray constructors
 const FORMAT_MAP = {
     u8: {bytesPerSample: 1, TypedArray: Uint8Array, isPlanar: false},

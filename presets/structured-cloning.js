@@ -20,6 +20,8 @@ import dompoint from '../types/dompoint.js';
 import domquad from '../types/domquad.js';
 import dommatrix from '../types/dommatrix.js';
 import audiodata from '../types/audiodata.js';
+import quotaexceedederror from '../types/quotaexceedederror.js';
+import webtransporterror from '../types/webtransporterror.js';
 
 import imagedata from '../types/imagedata.js';
 import imagebitmap from '../types/imagebitmap.js'; // Async return
@@ -68,6 +70,10 @@ const expObj = [
     typeof BigInt !== 'undefined' ? [bigint, bigintObject] : [],
     /* c8 ignore next */
     typeof DOMException !== 'undefined' ? domexception : [],
+    /* c8 ignore next */
+    typeof QuotaExceededError !== 'undefined' ? quotaexceedederror : [],
+    /* c8 ignore next */
+    typeof WebTransportError !== 'undefined' ? webtransporterror : [],
     /* c8 ignore next */
     typeof DOMRect !== 'undefined' ? domrect : [],
     /* c8 ignore next */

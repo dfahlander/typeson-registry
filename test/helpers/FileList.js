@@ -37,6 +37,7 @@ class _FileList {
 // eslint-disable-next-line unicorn/no-top-level-side-effects -- Ok
 Object.defineProperty(globalThis.HTMLInputElement.prototype, 'files', {
     get () {
+        // @ts-ignore -- Private API
         return new _FileList(this._files);
     },
     set (val) {

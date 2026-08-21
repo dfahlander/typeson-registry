@@ -3,7 +3,7 @@
     AudioData,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
-    DOMQuad,
+    DOMQuad, WebTransportError,
     XMLHttpRequest, xmlHttpRequestOverrideMimeType -- Polyfills */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
@@ -55,7 +55,7 @@ const {
     negativeInfinity, date, error,
     regexp, map, set, arraybuffer, domexception,
     domrect, dompoint, domquad, dommatrix,
-    audiodata,
+    audiodata, quotaexceedederror, webtransporterror,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -492,6 +492,73 @@ function DomException (preset) {
     });
 }
 DomException();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function QuotaExceededErrorTest (preset) {
+    describe('QuotaExceededError', function () {
+        it('should return a QuotaExceededError', function () {
+            const typeson = new Typeson().register(
+                preset || [quotaexceedederror]
+            );
+            const exc = new QuotaExceededError('Not enough room', {
+                quota: 100,
+                requested: 200
+            });
+            const tson = typeson.stringify(exc, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(QuotaExceededError);
+            expect(back.name).to.equal('QuotaExceededError');
+            expect(back.message).to.equal('Not enough room');
+            expect(back.quota).to.equal(100);
+            expect(back.requested).to.equal(200);
+        });
+
+        it(
+            'should return a QuotaExceededError with null quota/requested',
+            function () {
+                const typeson = new Typeson().register(
+                    preset || [quotaexceedederror]
+                );
+                const exc = new QuotaExceededError('Not enough room');
+                const tson = typeson.stringify(exc, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back).to.be.an.instanceOf(QuotaExceededError);
+                expect(back.quota).to.be.null;
+                expect(back.requested).to.be.null;
+            }
+        );
+    });
+}
+QuotaExceededErrorTest();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function WebTransportErrorTest (preset) {
+    describe('WebTransportError', function () {
+        it('should return a WebTransportError', function () {
+            const typeson = new Typeson().register(
+                preset || [webtransporterror]
+            );
+            // @ts-expect-error - More recent API (single `init` argument)
+            const exc = new WebTransportError({
+                message: 'Stream reset',
+                streamErrorCode: 42
+            });
+            const tson = typeson.stringify(exc, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(WebTransportError);
+            expect(back.name).to.equal('WebTransportError');
+            expect(back.message).to.equal('Stream reset');
+            expect(back.streamErrorCode).to.equal(42);
+        });
+    });
+}
+WebTransportErrorTest();
 
 /**
  *
@@ -2046,6 +2113,8 @@ describe('Presets', () => {
         cryptoKey(structuredCloningThrowing);
         testAudioData(structuredCloningThrowing);
         DomException(structuredCloningThrowing);
+        QuotaExceededErrorTest(structuredCloningThrowing);
+        WebTransportErrorTest(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
         DomPoint(structuredCloningThrowing);
         DomQuad(structuredCloningThrowing);
