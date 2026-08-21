@@ -17,7 +17,10 @@
         "types": "./dist/index.d.ts",
         "default": "./dist/index.min.js"
       },
-      "require": "./dist/index.umd.min.cjs",
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.umd.min.cjs"
+      },
       "default": "./dist/index.umd.min.cjs"
     },
     "./polyfills": {
@@ -25,15 +28,19 @@
         "types": "./dist/polyfills/index.d.ts",
         "default": "./polyfills/index.js"
       },
-      "require": "./polyfills/index.cjs",
+      "require": {
+        "types": "./dist/polyfills/index.d.cts",
+        "default": "./polyfills/index.cjs"
+      },
       "default": "./polyfills/index.cjs"
     },
     "./*": "./*"
   },
   "scripts": {
+    "prepublishOnly": "pnpm i && pnpm build && pnpm attw",
+    "attw": "attw --pack . --profile node16",
     "tsc": "tsc && node tools/append-to-declaration-files.js",
     "tsc:ts7": "npx --yes --package=typescript@7 -- tsc -p tsconfig.json && npx --yes --package=typescript@7 -- tsc -p tsconfig-build.json --noEmit",
-    "prepublishOnly": "pnpm i && pnpm build",
     "eslint": "eslint .",
     "lint": "npm run eslint --",
     "start": "static -p 8085",
@@ -92,11 +99,12 @@
     "node": "^22.16.0 || >=24.0.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@babel/core": "^8.0.1",
     "@babel/eslint-parser": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
-    "@node-static/node-static": "^0.9.0",
     "@eslint/markdown": "^8.0.3",
+    "@node-static/node-static": "^0.9.0",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
