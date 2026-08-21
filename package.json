@@ -20,13 +20,13 @@
       "require": "./dist/index.umd.min.cjs",
       "default": "./dist/index.umd.min.cjs"
     },
-    "./polyfills/createObjectURL.js": {
+    "./polyfills": {
       "import": {
-        "types": "./dist/polyfills/createObjectURL.d.ts",
-        "default": "./polyfills/createObjectURL.js"
+        "types": "./dist/polyfills/index.d.ts",
+        "default": "./polyfills/index.js"
       },
-      "require": "./polyfills/createObjectURL.cjs",
-      "default": "./polyfills/createObjectURL.cjs"
+      "require": "./polyfills/index.cjs",
+      "default": "./polyfills/index.cjs"
     },
     "./*": "./*"
   },

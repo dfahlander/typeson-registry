@@ -6,8 +6,9 @@ clone algorithm). This algorithm supports all built-in types as well as many
 DOM types. Therefore, only types that are not included in the structured clone
 algorithm need to be registered, which is:
 
-* Error
-* Specific Errors like SyntaxError, TypeError, etc.
+* Error (now included in structured cloning)
+* Specific Errors like SyntaxError, TypeError, etc. (now included in structured
+*   cloning)
 * Any custom type you want to send across window- or worker boundraries
 
 This preset will only include the Error types and you can register your

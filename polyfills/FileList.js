@@ -5,8 +5,7 @@
 /**
  * `FileList` polyfill.
  */
-// eslint-disable-next-line sonarjs/class-name -- Avoid shadowing global
-class _FileList {
+class FileList {
     /**
      *
      */
@@ -38,13 +37,15 @@ class _FileList {
 Object.defineProperty(globalThis.HTMLInputElement.prototype, 'files', {
     get () {
         // @ts-ignore -- Private API
-        return new _FileList(this._files);
+        // eslint-disable-next-line @stylistic/max-len -- Long
+        // eslint-disable-next-line unicorn/no-this-outside-of-class -- Monkeypatching
+        return new FileList(this._files);
     },
     set (val) {
+        // eslint-disable-next-line @stylistic/max-len -- Long
+        // eslint-disable-next-line unicorn/no-this-outside-of-class -- Monkeypatching
         this._files = val;
     }
 });
 
-const placeholder = 'placeholder';
-
-export default placeholder;
+export {FileList};

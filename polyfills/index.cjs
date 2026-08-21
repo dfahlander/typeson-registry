@@ -51,8 +51,47 @@ function _arrayWithHoles(r) {
 function _arrayWithoutHoles(r) {
   if (Array.isArray(r)) return _arrayLikeToArray(r);
 }
+function _assertThisInitialized(e) {
+  if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  return e;
+}
+function asyncGeneratorStep(n, t, e, r, o, a, c) {
+  try {
+    var i = n[a](c),
+      u = i.value;
+  } catch (n) {
+    return void e(n);
+  }
+  i.done ? t(u) : Promise.resolve(u).then(r, o);
+}
+function _asyncToGenerator(n) {
+  return function () {
+    var t = this,
+      e = arguments;
+    return new Promise(function (r, o) {
+      var a = n.apply(t, e);
+      function _next(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, "next", n);
+      }
+      function _throw(n) {
+        asyncGeneratorStep(a, r, o, _next, _throw, "throw", n);
+      }
+      _next(void 0);
+    });
+  };
+}
+function _callSuper(t, o, e) {
+  return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e));
+}
 function _classCallCheck(a, n) {
   if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+}
+function _construct(t, e, r) {
+  if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments);
+  var o = [null];
+  o.push.apply(o, e);
+  var p = new (t.bind.apply(t, o))();
+  return r && _setPrototypeOf(p, r.prototype), p;
 }
 function _defineProperties(e, r) {
   for (var t = 0; t < r.length; t++) {
@@ -121,6 +160,38 @@ function _defineProperty(e, r, t) {
     writable: true
   }) : e[r] = t, e;
 }
+function _getPrototypeOf(t) {
+  return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) {
+    return t.__proto__ || Object.getPrototypeOf(t);
+  }, _getPrototypeOf(t);
+}
+function _inherits(t, e) {
+  if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function");
+  t.prototype = Object.create(e && e.prototype, {
+    constructor: {
+      value: t,
+      writable: true,
+      configurable: true
+    }
+  }), Object.defineProperty(t, "prototype", {
+    writable: false
+  }), e && _setPrototypeOf(t, e);
+}
+function _isNativeFunction(t) {
+  try {
+    return -1 !== Function.toString.call(t).indexOf("[native code]");
+  } catch (n) {
+    return "function" == typeof t;
+  }
+}
+function _isNativeReflectConstruct() {
+  try {
+    var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
+  } catch (t) {}
+  return (_isNativeReflectConstruct = function () {
+    return !!t;
+  })();
+}
 function _iterableToArray(r) {
   if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
 }
@@ -154,6 +225,124 @@ function _nonIterableRest() {
 function _nonIterableSpread() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
+function _possibleConstructorReturn(t, e) {
+  if (e && ("object" == typeof e || "function" == typeof e)) return e;
+  if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
+  return _assertThisInitialized(t);
+}
+function _regenerator() {
+  /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */
+  var e,
+    t,
+    r = "function" == typeof Symbol ? Symbol : {},
+    n = r.iterator || "@@iterator",
+    o = r.toStringTag || "@@toStringTag";
+  function i(r, n, o, i) {
+    var c = n && n.prototype instanceof Generator ? n : Generator,
+      u = Object.create(c.prototype);
+    return _regeneratorDefine(u, "_invoke", function (r, n, o) {
+      var i,
+        c,
+        u,
+        f = 0,
+        p = o || [],
+        y = false,
+        G = {
+          p: 0,
+          n: 0,
+          v: e,
+          a: d,
+          f: d.bind(e, 4),
+          d: function (t, r) {
+            return i = t, c = 0, u = e, G.n = r, a;
+          }
+        };
+      function d(r, n) {
+        for (c = r, u = n, t = 0; !y && f && !o && t < p.length; t++) {
+          var o,
+            i = p[t],
+            d = G.p,
+            l = i[2];
+          r > 3 ? (o = l === n) && (u = i[(c = i[4]) ? 5 : (c = 3, 3)], i[4] = i[5] = e) : i[0] <= d && ((o = r < 2 && d < i[1]) ? (c = 0, G.v = n, G.n = i[1]) : d < l && (o = r < 3 || i[0] > n || n > l) && (i[4] = r, i[5] = n, G.n = l, c = 0));
+        }
+        if (o || r > 1) return a;
+        throw y = true, n;
+      }
+      return function (o, p, l) {
+        if (f > 1) throw TypeError("Generator is already running");
+        for (y && 1 === p && d(p, l), c = p, u = l; (t = c < 2 ? e : u) || !y;) {
+          i || (c ? c < 3 ? (c > 1 && (G.n = -1), d(c, u)) : G.n = u : G.v = u);
+          try {
+            if (f = 2, i) {
+              if (c || (o = "next"), t = i[o]) {
+                if (!(t = t.call(i, u))) throw TypeError("iterator result is not an object");
+                if (!t.done) return t;
+                u = t.value, c < 2 && (c = 0);
+              } else 1 === c && (t = i.return) && t.call(i), c < 2 && (u = TypeError("The iterator does not provide a '" + o + "' method"), c = 1);
+              i = e;
+            } else if ((t = (y = G.n < 0) ? u : r.call(n, G)) !== a) break;
+          } catch (t) {
+            i = e, c = 1, u = t;
+          } finally {
+            f = 1;
+          }
+        }
+        return {
+          value: t,
+          done: y
+        };
+      };
+    }(r, o, i), true), u;
+  }
+  var a = {};
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+  t = Object.getPrototypeOf;
+  var c = [][n] ? t(t([][n]())) : (_regeneratorDefine(t = {}, n, function () {
+      return this;
+    }), t),
+    u = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(c);
+  function f(e) {
+    return Object.setPrototypeOf ? Object.setPrototypeOf(e, GeneratorFunctionPrototype) : (e.__proto__ = GeneratorFunctionPrototype, _regeneratorDefine(e, o, "GeneratorFunction")), e.prototype = Object.create(u), e;
+  }
+  return GeneratorFunction.prototype = GeneratorFunctionPrototype, _regeneratorDefine(u, "constructor", GeneratorFunctionPrototype), _regeneratorDefine(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = "GeneratorFunction", _regeneratorDefine(GeneratorFunctionPrototype, o, "GeneratorFunction"), _regeneratorDefine(u), _regeneratorDefine(u, o, "Generator"), _regeneratorDefine(u, n, function () {
+    return this;
+  }), _regeneratorDefine(u, "toString", function () {
+    return "[object Generator]";
+  }), (_regenerator = function () {
+    return {
+      w: i,
+      m: f
+    };
+  })();
+}
+function _regeneratorDefine(e, r, n, t) {
+  var i = Object.defineProperty;
+  try {
+    i({}, "", {});
+  } catch (e) {
+    i = 0;
+  }
+  _regeneratorDefine = function (e, r, n, t) {
+    function o(r, n) {
+      _regeneratorDefine(e, r, function (e) {
+        return this._invoke(r, n, e);
+      });
+    }
+    r ? i ? i(e, r, {
+      value: n,
+      enumerable: !t,
+      configurable: !t,
+      writable: !t
+    }) : e[r] = n : (o("next", 0), o("throw", 1), o("return", 2));
+  }, _regeneratorDefine(e, r, n, t);
+}
+function _setPrototypeOf(t, e) {
+  return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) {
+    return t.__proto__ = e, t;
+  }, _setPrototypeOf(t, e);
+}
 function _slicedToArray(r, e) {
   return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
 }
@@ -180,6 +369,28 @@ function _unsupportedIterableToArray(r, a) {
     var t = {}.toString.call(r).slice(8, -1);
     return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0;
   }
+}
+function _wrapNativeSuper(t) {
+  var r = "function" == typeof Map ? new Map() : void 0;
+  return _wrapNativeSuper = function (t) {
+    if (null === t || !_isNativeFunction(t)) return t;
+    if ("function" != typeof t) throw new TypeError("Super expression must either be null or a function");
+    if (void 0 !== r) {
+      if (r.has(t)) return r.get(t);
+      r.set(t, Wrapper);
+    }
+    function Wrapper() {
+      return _construct(t, arguments, _getPrototypeOf(this).constructor);
+    }
+    return Wrapper.prototype = Object.create(t.prototype, {
+      constructor: {
+        value: Wrapper,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    }), _setPrototypeOf(Wrapper, t);
+  }, _wrapNativeSuper(t);
 }
 
 var conversions$1 = require("webidl-conversions");
@@ -659,7 +870,7 @@ var require$$0 = /*@__PURE__*/getAugmentedNamespace(URL$1);
 
 var conversions = require("webidl-conversions");
 var utils = require("./utils.js");
-var Function = require("./Function.js");
+var Function$1 = require("./Function.js");
 var newObjectInRealm = utils.newObjectInRealm;
 var implSymbol = utils.implSymbol;
 var ctorRegistrySymbol = utils.ctorRegistrySymbol;
@@ -1064,7 +1275,7 @@ exports.install = function (globalObject, globalNames) {
         if (arguments.length < 1) {
           throw new globalObject.TypeError("Failed to execute 'forEach' on 'iterable': 1 argument required, but only 0 present.");
         }
-        callback = Function.convert(globalObject, callback, {
+        callback = Function$1.convert(globalObject, callback, {
           context: "Failed to execute 'forEach' on 'iterable': The callback provided as parameter 1"
         });
         var thisArg = arguments[1];
@@ -3116,7 +3327,7 @@ function generateUUID() {
 // @ts-nocheck -- jsdom has no types for the file we need
 /* globals location, XMLHttpRequest -- Polyfills */
 
-var require$1 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('createObjectURL.cjs', document.baseURI).href)));
+var require$1 = node_module.createRequire((typeof document === 'undefined' ? require('u' + 'rl').pathToFileURL(__filename).href : (_documentCurrentScript && _documentCurrentScript.tagName.toUpperCase() === 'SCRIPT' && _documentCurrentScript.src || new URL('index.cjs', document.baseURI).href)));
 var _require = require$1('jsdom/lib/generated/idl/utils.js'),
   implForWrapper = _require.implForWrapper;
 var serializeURLOrigin = whatwgURL.serializeURLOrigin,
@@ -3225,7 +3436,643 @@ var xmlHttpRequestOverrideMimeType = function xmlHttpRequestOverrideMimeType() {
   };
 };
 
+/* eslint-disable no-shadow -- Polyfill */
+/**
+ * QuotaExceededError polyfill (not yet available in Node/jsdom).
+ */
+var QuotaExceededError = /*#__PURE__*/function (_DOMException) {
+  /* eslint-enable no-shadow -- Polyfill */
+  /**
+   * @param {string} [message]
+   * @param {{quota?: number, requested?: number}} [options]
+   */
+  function QuotaExceededError() {
+    var _this;
+    var message = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+    var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+      quota = _ref.quota,
+      requested = _ref.requested;
+    _classCallCheck(this, QuotaExceededError);
+    _this = _callSuper(this, QuotaExceededError, [message, 'QuotaExceededError']);
+    _this._quota = quota === undefined ? null : quota;
+    _this._requested = requested === undefined ? null : requested;
+    if (_this._quota !== null && _this._quota < 0) {
+      throw new RangeError('quota must not be negative');
+    }
+    if (_this._requested !== null && _this._requested < 0) {
+      throw new RangeError('requested must not be negative');
+    }
+    if (_this._quota !== null && _this._requested !== null && _this._requested < _this._quota) {
+      throw new RangeError('requested must not be less than quota');
+    }
+    return _this;
+  }
+
+  /**
+   * @returns {number|null}
+   */
+  _inherits(QuotaExceededError, _DOMException);
+  return _createClass(QuotaExceededError, [{
+    key: "quota",
+    get: function get() {
+      return this._quota;
+    }
+
+    /**
+     * @returns {number|null}
+     */
+  }, {
+    key: "requested",
+    get: function get() {
+      return this._requested;
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+  }, {
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'QuotaExceededError';
+    }
+  }]);
+}(/*#__PURE__*/_wrapNativeSuper(DOMException));
+
+/**
+ * WebTransportError polyfill (not yet available in Node/jsdom).
+ */
+var WebTransportError = /*#__PURE__*/function (_DOMException) {
+  /**
+   * @param {{
+   *   message?: string,
+   *   source?: "stream"|"session",
+   *   streamErrorCode?: number|null
+   * }} [init]
+   */
+  function WebTransportError() {
+    var _this;
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$message = _ref.message,
+      message = _ref$message === void 0 ? '' : _ref$message,
+      _ref$source = _ref.source,
+      source = _ref$source === void 0 ? 'stream' : _ref$source,
+      _ref$streamErrorCode = _ref.streamErrorCode,
+      streamErrorCode = _ref$streamErrorCode === void 0 ? null : _ref$streamErrorCode;
+    _classCallCheck(this, WebTransportError);
+    _this = _callSuper(this, WebTransportError, [message, 'WebTransportError']);
+    _this._source = source;
+    _this._streamErrorCode = streamErrorCode;
+    return _this;
+  }
+
+  /**
+   * @returns {"stream"|"session"}
+   */
+  _inherits(WebTransportError, _DOMException);
+  return _createClass(WebTransportError, [{
+    key: "source",
+    get: function get() {
+      return this._source;
+    }
+
+    /**
+     * @returns {number|null}
+     */
+  }, {
+    key: "streamErrorCode",
+    get: function get() {
+      return this._streamErrorCode;
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+  }, {
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'WebTransportError';
+    }
+  }]);
+}(/*#__PURE__*/_wrapNativeSuper(DOMException));
+
+// Map format names to byte sizes and TypedArray constructors
+var FORMAT_MAP = {
+  u8: {
+    bytesPerSample: 1,
+    TypedArray: Uint8Array,
+    isPlanar: false
+  },
+  s16: {
+    bytesPerSample: 2,
+    TypedArray: Int16Array,
+    isPlanar: false
+  },
+  s32: {
+    bytesPerSample: 4,
+    TypedArray: Int32Array,
+    isPlanar: false
+  },
+  f32: {
+    bytesPerSample: 4,
+    TypedArray: Float32Array,
+    isPlanar: false
+  },
+  'u8-planar': {
+    bytesPerSample: 1,
+    TypedArray: Uint8Array,
+    isPlanar: true
+  },
+  's16-planar': {
+    bytesPerSample: 2,
+    TypedArray: Int16Array,
+    isPlanar: true
+  },
+  's32-planar': {
+    bytesPerSample: 4,
+    TypedArray: Int32Array,
+    isPlanar: true
+  },
+  'f32-planar': {
+    bytesPerSample: 4,
+    TypedArray: Float32Array,
+    isPlanar: true
+  }
+};
+
+/**
+ * AudioData class.
+ */
+var AudioData = /*#__PURE__*/function () {
+  /**
+   * @typedef {"u8"|"s16"|"s32"|"f32"|"u8-planar"|"s16-planar"
+   *   |"s32-planar"|"f32-planar"} AudioDataFormat
+   */
+
+  /**
+   *
+   * @param {{
+   *   format: AudioDataFormat,
+   *   sampleRate: number,
+   *   numberOfChannels: number,
+   *   numberOfFrames: number,
+   *   timestamp: number,
+   *   data: ArrayBufferView|ArrayBuffer
+   * }} cfg
+   */
+  function AudioData(_ref) {
+    var format = _ref.format,
+      sampleRate = _ref.sampleRate,
+      numberOfChannels = _ref.numberOfChannels,
+      numberOfFrames = _ref.numberOfFrames,
+      _ref$timestamp = _ref.timestamp,
+      timestamp = _ref$timestamp === void 0 ? 0 : _ref$timestamp,
+      data = _ref.data;
+    _classCallCheck(this, AudioData);
+    if (!Object.hasOwn(FORMAT_MAP, format)) {
+      throw new TypeError("Unsupported audio format: ".concat(format));
+    }
+    this.format = format;
+    this.sampleRate = sampleRate;
+    this.numberOfChannels = numberOfChannels;
+    this.numberOfFrames = numberOfFrames;
+    this.timestamp = timestamp;
+    this.duration = numberOfFrames / sampleRate;
+    var meta = FORMAT_MAP[format];
+    this._bytesPerSample = meta.bytesPerSample;
+    this._TypedArray = meta.TypedArray;
+    this._isPlanar = Boolean(meta.isPlanar);
+
+    // Per the AudioData API, `data` is a single buffer; for planar
+    //   formats, each channel's plane is stored back-to-back within it.
+    this._data = ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data);
+  }
+
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(AudioData, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'AudioData';
+    }
+
+    /**
+     *
+     * @param {{
+     *   planeIndex?: number,
+     *   frameCount?: number
+     * }} [options]
+     * @returns {number}
+     */
+  }, {
+    key: "allocationSize",
+    value: function allocationSize() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var planeIndex = options.planeIndex || 0;
+      var frameCount = options.frameCount !== undefined ? options.frameCount : this.numberOfFrames;
+      if (this._isPlanar) {
+        if (planeIndex >= this.numberOfChannels) {
+          throw new RangeError("planeIndex ".concat(planeIndex, " out of bounds for channel count ").concat(this.numberOfChannels));
+        }
+        // Planar: One independent buffer per channel
+        return frameCount * this._bytesPerSample;
+      }
+      if (planeIndex !== 0) {
+        throw new RangeError("Interleaved formats only have 1 plane (planeIndex 0)");
+      }
+      // Interleaved: Channels multiplexed in one buffer
+      return frameCount * this.numberOfChannels * this._bytesPerSample;
+    }
+
+    /**
+     *
+     * @param {ArrayBufferView|ArrayBuffer} destination
+     * @param {{
+     *   planeIndex?: number,
+     *   frameOffset?: number,
+     *   frameCount?: number
+     * }} [options]
+     * @returns {void}
+     */
+  }, {
+    key: "copyTo",
+    value: function copyTo(destination) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var planeIndex = options.planeIndex || 0;
+      var frameOffset = options.frameOffset || 0;
+      var frameCount = options.frameCount !== undefined ? options.frameCount : this.numberOfFrames - frameOffset;
+      if (frameOffset + frameCount > this.numberOfFrames) {
+        throw new RangeError('Requested frame offset or count exceeds ' + 'total available frames.');
+      }
+
+      // Explicitly target the ArrayBuffer underlying the incoming View
+      //   (e.g. Node Buffer, Float32Array)
+      var destIsView = ArrayBuffer.isView(destination);
+      var targetBuffer = /** @type {ArrayBuffer} */
+      destIsView ? destination.buffer : destination;
+      var targetByteOffset = destIsView ? destination.byteOffset : 0;
+      var targetByteLength = destination.byteLength;
+
+      // Check size requirements matching standard layout sizes
+      var requiredSize = this.allocationSize({
+        planeIndex: planeIndex,
+        frameCount: frameCount
+      });
+      if (targetByteLength < requiredSize) {
+        throw new RangeError("Destination buffer is too small. Need ".concat(requiredSize, " bytes, got ").concat(targetByteLength, "."));
+      }
+
+      // Map a TypedArray overlay precisely onto the target buffer location
+      var destElements = requiredSize / this._bytesPerSample;
+      var destView = new this._TypedArray(targetBuffer, targetByteOffset, destElements);
+
+      // Planar formats store each channel's plane back-to-back within
+      //   `_data`; interleaved formats store one plane with samples
+      //   multiplexed across channels.
+      var chCount = this._isPlanar ? 1 : this.numberOfChannels;
+      var planeByteOffset = this._isPlanar ? planeIndex * this.numberOfFrames * this._bytesPerSample : 0;
+      var startElement = frameOffset * chCount;
+      var elementCount = frameCount * chCount;
+      var sourceByteOffset = planeByteOffset + startElement * this._bytesPerSample;
+      var sourceView = new this._TypedArray(/** @type {ArrayBuffer} */this._data.buffer, this._data.byteOffset + sourceByteOffset, elementCount);
+      destView.set(sourceView);
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMRect = window.DOMRect;
+/**
+ * DOMRect class.
+ */
+var DOMRect = /*#__PURE__*/function () {
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   */
+  function DOMRect(x, y, width, height) {
+    _classCallCheck(this, DOMRect);
+    this.x = this.left = x;
+    this.y = this.top = y;
+    this.width = width;
+    this.height = height;
+    this.bottom = y + height;
+    this.right = x + width;
+  }
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMRect, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMRect';
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMRectReadOnly = window.DOMRectReadOnly;
+/**
+ * DOMRectReadOnly class.
+ */
+var DOMRectReadOnly = /*#__PURE__*/function () {
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} width
+   * @param {number} height
+   */
+  function DOMRectReadOnly(x, y, width, height) {
+    _classCallCheck(this, DOMRectReadOnly);
+    this.x = this.left = x;
+    this.y = this.top = y;
+    this.width = width;
+    this.height = height;
+    this.bottom = y + height;
+    this.right = x + width;
+  }
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMRectReadOnly, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMRectReadOnly';
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMPoint = window.DOMPoint;
+/**
+ * DOMPoint class.
+ */
+var DOMPoint = /*#__PURE__*/function () {
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @param {number} w
+   */
+  function DOMPoint(x, y, z, w) {
+    _classCallCheck(this, DOMPoint);
+    this.x = x !== null && x !== void 0 ? x : 0;
+    this.y = y !== null && y !== void 0 ? y : 0;
+    this.z = z !== null && z !== void 0 ? z : 0;
+    this.w = w !== null && w !== void 0 ? w : 1;
+  }
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMPoint, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMPoint';
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMPointReadOnly = window.DOMPointReadOnly;
+/**
+ * DOMPointReadOnly class.
+ */
+var DOMPointReadOnly = /*#__PURE__*/function () {
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} z
+   * @param {number} w
+   */
+  function DOMPointReadOnly(x, y, z, w) {
+    _classCallCheck(this, DOMPointReadOnly);
+    this.x = x !== null && x !== void 0 ? x : 0;
+    this.y = y !== null && y !== void 0 ? y : 0;
+    this.z = z !== null && z !== void 0 ? z : 0;
+    this.w = w !== null && w !== void 0 ? w : 1;
+  }
+
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMPointReadOnly, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMPointReadOnly';
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMQuad = window.DOMQuad;
+/**
+ * DOMQuad class.
+ */
+var DOMQuad = /*#__PURE__*/function () {
+  /**
+   * @param {DOMPoint} p1
+   * @param {DOMPoint} p2
+   * @param {DOMPoint} p3
+   * @param {DOMPoint} p4
+   */
+  function DOMQuad(p1, p2, p3, p4) {
+    _classCallCheck(this, DOMQuad);
+    this.p1 = p1 !== null && p1 !== void 0 ? p1 : new DOMPoint(0, 0, 0, 1);
+    this.p2 = p2 !== null && p2 !== void 0 ? p2 : new DOMPoint(0, 0, 0, 1);
+    this.p3 = p3 !== null && p3 !== void 0 ? p3 : new DOMPoint(0, 0, 0, 1);
+    this.p4 = p4 !== null && p4 !== void 0 ? p4 : new DOMPoint(0, 0, 0, 1);
+  }
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMQuad, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMQuad';
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMMatrix = window.DOMMatrix;
+/**
+ * DOMMatrix class.
+ */
+var DOMMatrix = /*#__PURE__*/function () {
+  /**
+   * @param {[number, number, number, number, number, number]|
+   *   [
+   *     number, number, number, number,
+   *     number, number, number, number,
+   *     number, number, number, number,
+   *     number, number, number, number
+   * ]} init
+   */
+  function DOMMatrix(init) {
+    _classCallCheck(this, DOMMatrix);
+    if (typeof init[6] !== 'number') {
+      this.is2D = true;
+      this.a = init[0];
+      this.b = init[1];
+      this.c = init[2];
+      this.d = init[3];
+      this.e = init[4];
+      this.f = init[5];
+      return;
+    }
+    this.is2D = false;
+    this.m11 = init[0];
+    this.m12 = init[1];
+    this.m13 = init[2];
+    this.m14 = init[3];
+    this.m21 = init[4];
+    this.m22 = init[5];
+    this.m23 = init[6];
+    this.m24 = init[7];
+    this.m31 = init[8];
+    this.m32 = init[9];
+    this.m33 = init[10];
+    this.m34 = init[11];
+    this.m41 = init[12];
+    this.m42 = init[13];
+    this.m43 = init[14];
+    this.m44 = init[15];
+  }
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMMatrix, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMMatrix';
+    }
+  }]);
+}();
+
+// No constructor in JSDom
+// globalThis.DOMMatrixReadOnly = window.DOMMatrixReadOnly;
+/**
+ * DOMMatrixReadOnly class.
+ */
+var DOMMatrixReadOnly = /*#__PURE__*/function () {
+  /**
+   * @param {[number, number, number, number, number, number]|
+   *   [
+   *     number, number, number, number,
+   *     number, number, number, number,
+   *     number, number, number, number,
+   *     number, number, number, number
+   * ]} init
+   */
+  function DOMMatrixReadOnly(init) {
+    _classCallCheck(this, DOMMatrixReadOnly);
+    if (typeof init[6] !== 'number') {
+      this.is2D = true;
+      this.a = init[0];
+      this.b = init[1];
+      this.c = init[2];
+      this.d = init[3];
+      this.e = init[4];
+      this.f = init[5];
+      return;
+    }
+    this.is2D = false;
+    this.m11 = init[0];
+    this.m12 = init[1];
+    this.m13 = init[2];
+    this.m14 = init[3];
+    this.m21 = init[4];
+    this.m22 = init[5];
+    this.m23 = init[6];
+    this.m24 = init[7];
+    this.m31 = init[8];
+    this.m32 = init[9];
+    this.m33 = init[10];
+    this.m34 = init[11];
+    this.m41 = init[12];
+    this.m42 = init[13];
+    this.m43 = init[14];
+    this.m44 = init[15];
+  }
+  /* eslint-disable class-methods-use-this -- Not needed */
+  /**
+   * @returns {string}
+   */
+  return _createClass(DOMMatrixReadOnly, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'DOMMatrixReadOnly';
+    }
+  }]);
+}();
+
+/**
+ * @param {HTMLCanvasElement} cvs
+ * @returns {Promise<HTMLCanvasElement>}
+ */
+/**
+ * @param {ImageBitmapSource & {dataset?: {toStringTag?: string}}} cvs
+ * @returns {Promise<ImageBitmap>}
+ */
+function createImageBitmap(_x) {
+  return _createImageBitmap.apply(this, arguments);
+}
+function _createImageBitmap() {
+  _createImageBitmap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(cvs) {
+    return _regenerator().w(function (_context) {
+      while (1) switch (_context.n) {
+        case 0:
+          // This really ought not be a canvas, but it works as a simple shim
+          //   for our tests
+          // cvs[Symbol.toStringTag] = 'ImageBitmap';
+          // Above line throwing in current jsdom now
+          if (!cvs.dataset) {
+            cvs.dataset = {};
+          }
+          cvs.dataset.toStringTag = 'ImageBitmap';
+          _context.n = 1;
+          return /** @type {ImageBitmap} */cvs;
+        case 1:
+          return _context.a(2, _context.v);
+      }
+    }, _callee);
+  }));
+  return _createImageBitmap.apply(this, arguments);
+}
+
+exports.AudioData = AudioData;
+exports.DOMMatrix = DOMMatrix;
+exports.DOMMatrixReadOnly = DOMMatrixReadOnly;
+exports.DOMPoint = DOMPoint;
+exports.DOMPointReadOnly = DOMPointReadOnly;
+exports.DOMQuad = DOMQuad;
+exports.DOMRect = DOMRect;
+exports.DOMRectReadOnly = DOMRectReadOnly;
+exports.QuotaExceededError = QuotaExceededError;
+exports.WebTransportError = WebTransportError;
+exports.createImageBitmap = createImageBitmap;
 exports.createObjectURL = createObjectURL;
 exports.revokeObjectURL = revokeObjectURL;
 exports.xmlHttpRequestOverrideMimeType = xmlHttpRequestOverrideMimeType;
-//# sourceMappingURL=createObjectURL.cjs.map
+//# sourceMappingURL=index.cjs.map

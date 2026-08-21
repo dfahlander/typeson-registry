@@ -8,7 +8,7 @@ export default [
         ignores: [
             'dist/',
             '.idea',
-            'polyfills/createObjectURL.cjs',
+            'polyfills/index.cjs',
             'coverage'
         ]
     },
@@ -78,7 +78,7 @@ export default [
         return {
             files: [
                 'test/test-environment.js',
-                'polyfills/createObjectURL.js'
+                'polyfills/*.js'
             ],
             ...cfg
         };

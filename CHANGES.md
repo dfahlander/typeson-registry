@@ -1,5 +1,16 @@
 # typeson-registry
 
+## 14.0.0
+
+BREAKING CHANGES:
+- To continue importing `createObjectURL`, `xmlHttpRequestOverrideMimeType`,
+   `revokeObjectURL`, these can now be accessed directly at `typeson-registry/polyfills`
+   along with any of the desired new exported polyfills.
+
+- feat: export polyfills: `QuotaExceededError`, `WebTransportError`, `AudioData`, `DOMRect`,
+    `DOMRectReadOnly`, `DOMPoint`, `DOMPointReadOnly`, `DOMQuad`, `DOMMatrix`, `DOMMatrixReadOnly`,
+    `createImageBitmap`, `createObjectURL`, `revokeObjectURL`, `xmlHttpRequestOverrideMimeType`
+
 ## 13.3.0
 
 - feat: add `QuotaExceededError` and `WebTransportError` as types and within

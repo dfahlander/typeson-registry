@@ -25,7 +25,7 @@ Note that our `URL.createObjectURL` polyfill expects a global
 which can handle `data:` URLs). For Node, you can add it like this:
 
 ```js
-const {createObjectURL} = require('typeson-registry/polyfills/createObjectURL.cjs');
+import {createObjectURL} from 'typeson-registry/polyfills';
 
 URL.createObjectURL = createObjectURL;
 ```
@@ -33,11 +33,15 @@ URL.createObjectURL = createObjectURL;
 We have not added `jsdom` as a dependency, but it is required if this
 polyfill is used.
 
+Also exported: `QuotaExceededError`, `WebTransportError`, `AudioData`, `DOMRect`,
+    `DOMRectReadOnly`, `DOMPoint`, `DOMPointReadOnly`, `DOMQuad`, `DOMMatrix`, `DOMMatrixReadOnly`,
+    `createImageBitmap`, `createObjectURL`, `revokeObjectURL`, `xmlHttpRequestOverrideMimeType`
+
 Besides the polyfills for `file` or `blob`, the `structuredCloningThrowing`
 preset also needs a global `DOMException` polyfill.
 
 The `filelist` type, in addition to the polyfills for `file`, will need
-a `FileList` polyfill (including a `FileList` string tag).
+a `FileList` polyfill (including a `FileList` string tag) like the one provided.
 
 The `imagebitmap` type requires a global `createImageBitmap` polyfill (and
 an `ImageBitmap` polyfill (including an `ImageBitmap` string tag).

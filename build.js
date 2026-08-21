@@ -134,8 +134,8 @@ ws.on('finish', async () => {
             minified: false
         }),
         bundle({
-            input: 'polyfills/createObjectURL.js',
-            output: 'polyfills/createObjectURL.cjs',
+            input: 'polyfills/index.js',
+            output: 'polyfills/index.cjs',
             name: 'createObjectURL',
             format: 'cjs',
             minified: false

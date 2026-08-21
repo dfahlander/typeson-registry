@@ -2306,4 +2306,221 @@ describe('Polyfills', () => {
             expect(xhr.status).to.equal(200);
         });
     }
+
+    describe('AudioData', () => {
+        it('should throw for an unsupported format', () => {
+            expect(() => new AudioData({
+                // @ts-expect-error - Intentionally invalid
+                format: 'bogus',
+                sampleRate: 48000,
+                numberOfChannels: 1,
+                numberOfFrames: 5,
+                timestamp: 0,
+                data: new Int16Array(5)
+            })).to.throw(TypeError);
+        });
+
+        it('should accept a raw `ArrayBuffer` as `data`', () => {
+            const audioData = new AudioData({
+                format: 's16',
+                sampleRate: 48000,
+                numberOfChannels: 1,
+                numberOfFrames: 5,
+                timestamp: 0,
+                data: new Int16Array(5).buffer
+            });
+            expect(audioData.numberOfFrames).to.equal(5);
+        });
+
+        it(
+            'should throw when `planeIndex` exceeds the channel count ' +
+            '(planar)',
+            () => {
+                const audioData = new AudioData({
+                    format: 's16-planar',
+                    sampleRate: 48000,
+                    numberOfChannels: 2,
+                    numberOfFrames: 5,
+                    timestamp: 0,
+                    data: new Int16Array(10)
+                });
+                expect(() => {
+                    audioData.allocationSize({planeIndex: 2});
+                }).to.throw(RangeError);
+            }
+        );
+
+        it(
+            'should throw when `planeIndex` is non-zero (interleaved)',
+            () => {
+                const audioData = new AudioData({
+                    format: 's16',
+                    sampleRate: 48000,
+                    numberOfChannels: 2,
+                    numberOfFrames: 5,
+                    timestamp: 0,
+                    data: new Int16Array(10)
+                });
+                expect(() => {
+                    audioData.allocationSize({planeIndex: 1});
+                }).to.throw(RangeError);
+            }
+        );
+
+        it('should accept an explicit `frameCount` option', () => {
+            const audioData = new AudioData({
+                format: 's16',
+                sampleRate: 48000,
+                numberOfChannels: 1,
+                numberOfFrames: 5,
+                timestamp: 0,
+                data: new Int16Array(5)
+            });
+            expect(audioData.allocationSize({
+                planeIndex: 0, frameCount: 3
+            })).to.equal(6);
+        });
+
+        it(
+            'should throw when `frameOffset`/`frameCount` exceed ' +
+            '`numberOfFrames`',
+            () => {
+                const audioData = new AudioData({
+                    format: 's16',
+                    sampleRate: 48000,
+                    numberOfChannels: 1,
+                    numberOfFrames: 5,
+                    timestamp: 0,
+                    data: new Int16Array(5)
+                });
+                expect(() => {
+                    audioData.copyTo(new Int16Array(5), {
+                        planeIndex: 0, frameOffset: 4, frameCount: 5
+                    });
+                }).to.throw(RangeError);
+            }
+        );
+
+        it('should throw when the destination buffer is too small', () => {
+            const audioData = new AudioData({
+                format: 's16',
+                sampleRate: 48000,
+                numberOfChannels: 1,
+                numberOfFrames: 5,
+                timestamp: 0,
+                data: new Int16Array(5)
+            });
+            expect(() => {
+                audioData.copyTo(new Int16Array(1), {planeIndex: 0});
+            }).to.throw(RangeError);
+        });
+
+        it('should copy to a raw `ArrayBuffer` destination', () => {
+            const audioData = new AudioData({
+                format: 's16',
+                sampleRate: 48000,
+                numberOfChannels: 1,
+                numberOfFrames: 5,
+                timestamp: 0,
+                data: new Int16Array([1, 2, 3, 4, 5])
+            });
+            const dest = new ArrayBuffer(10);
+            audioData.copyTo(dest, {planeIndex: 0});
+            expect(new Int16Array(dest)).to.deep.equal(
+                new Int16Array([1, 2, 3, 4, 5])
+            );
+        });
+    });
+
+    describe('DOMMatrixReadOnly', () => {
+        it('should construct a 3D `DOMMatrixReadOnly`', () => {
+            const domMatrix = new DOMMatrixReadOnly([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+            ]);
+            expect(domMatrix.is2D).to.be.false;
+            expect(domMatrix.m11).to.equal(1);
+            expect(domMatrix.m44).to.equal(16);
+        });
+    });
+
+    describe('DOMPoint', () => {
+        it('should default `DOMPoint` properties when omitted', () => {
+            const domPoint = new DOMPoint();
+            expect(domPoint.x).to.equal(0);
+            expect(domPoint.y).to.equal(0);
+            expect(domPoint.z).to.equal(0);
+            expect(domPoint.w).to.equal(1);
+        });
+
+        it(
+            'should default `DOMPointReadOnly` properties when omitted',
+            () => {
+                const domPoint = new DOMPointReadOnly();
+                expect(domPoint.x).to.equal(0);
+                expect(domPoint.y).to.equal(0);
+                expect(domPoint.z).to.equal(0);
+                expect(domPoint.w).to.equal(1);
+            }
+        );
+    });
+
+    describe('DOMQuad', () => {
+        it('should default `DOMQuad` points when omitted', () => {
+            const domQuad = new DOMQuad();
+            const defaultPoint = new DOMPoint(0, 0, 0, 1);
+            expect(domQuad.p1).to.deep.equal(defaultPoint);
+            expect(domQuad.p2).to.deep.equal(defaultPoint);
+            expect(domQuad.p3).to.deep.equal(defaultPoint);
+            expect(domQuad.p4).to.deep.equal(defaultPoint);
+        });
+    });
+
+    describe('QuotaExceededError', () => {
+        it('should throw for a negative `quota`', () => {
+            expect(() => new QuotaExceededError('Not enough room', {
+                quota: -1
+            })).to.throw(RangeError);
+        });
+
+        it('should throw for a negative `requested`', () => {
+            expect(() => new QuotaExceededError('Not enough room', {
+                requested: -1
+            })).to.throw(RangeError);
+        });
+
+        it('should throw when `requested` is less than `quota`', () => {
+            expect(() => new QuotaExceededError('Not enough room', {
+                quota: 100, requested: 50
+            })).to.throw(RangeError);
+        });
+    });
+
+    describe('WebTransportError', () => {
+        it('should expose the default `source`', () => {
+            // @ts-expect-error - More recent API (single `init` argument)
+            const exc = new WebTransportError({message: 'Stream reset'});
+            expect(exc.source).to.equal('stream');
+        });
+
+        it('should expose a custom `source`', () => {
+            // @ts-expect-error - More recent API (single `init` argument)
+            const exc = new WebTransportError({
+                message: 'Session closed', source: 'session'
+            });
+            expect(exc.source).to.equal('session');
+        });
+    });
+
+    describe('createImageBitmap', () => {
+        it('should add a `dataset` when missing', async () => {
+            const obj = /** @type {ImageBitmapSource} */ ({});
+            const result = /** @type {unknown} */ (
+                await createImageBitmap(obj)
+            );
+            const {dataset} = /** @type {{dataset: {toStringTag?: string}}} */ (
+                result
+            );
+            expect(dataset.toStringTag).to.equal('ImageBitmap');
+        });
+    });
 });
