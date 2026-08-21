@@ -10,6 +10,8 @@ BREAKING CHANGES:
 - feat: export polyfills: `QuotaExceededError`, `WebTransportError`, `AudioData`, `DOMRect`,
     `DOMRectReadOnly`, `DOMPoint`, `DOMPointReadOnly`, `DOMQuad`, `DOMMatrix`, `DOMMatrixReadOnly`,
     `createImageBitmap`, `createObjectURL`, `revokeObjectURL`, `xmlHttpRequestOverrideMimeType`
+- feat: add `EncodedAudioChunk`, `EncodedVideoChunk`, and `VideoFrame` as types (and
+    polyfills) and within the structured cloning preset
 
 ## 13.3.0
 

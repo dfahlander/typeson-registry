@@ -33,7 +33,8 @@ URL.createObjectURL = createObjectURL;
 We have not added `jsdom` as a dependency, but it is required if this
 polyfill is used.
 
-Also exported: `QuotaExceededError`, `WebTransportError`, `AudioData`, `DOMRect`,
+Also exported: `QuotaExceededError`, `WebTransportError`, `AudioData`, `EncodedAudioChunk`,
+    `EncodedVideoChunk`, `VideoFrame`, `DOMRect`,
     `DOMRectReadOnly`, `DOMPoint`, `DOMPointReadOnly`, `DOMQuad`, `DOMMatrix`, `DOMMatrixReadOnly`,
     `createImageBitmap`, `createObjectURL`, `revokeObjectURL`, `xmlHttpRequestOverrideMimeType`
 
@@ -237,6 +238,8 @@ Note that the type name corresponds to the file name in the following manner:
 - `domquad`
 - `domrect`
 - `domrectreadonly`
+- `encodedaudiochunk`
+- `encodedvideochunk`
 - `error.js` (`Error`) and `errors.js` (`TypeError`, `RangeError`, `SyntaxError`, `ReferenceError`, `EvalError`, `URIError`, `InternalError`) - These
     provide a means of resurrecting error object across cloning boundaries
     (since they are not otherwise treated as cloneable by the Structured
@@ -280,6 +283,9 @@ Note that the type name corresponds to the file name in the following manner:
 - `userObjects` - Allows for inherited objects but ensures the prototype chain
     inherits from `Object` (or `null`). Should be low priority if one is
     matching other objects as it will readily match many objects.
+- `videoframe` - Reconstructs a `VideoFrame` from its raw pixel data (via
+    `allocationSize`/`copyTo`); has an async encapsulation only, as
+    `VideoFrame#copyTo` is itself asynchronous.
 - `webtransporterror`
 
 ### Presets

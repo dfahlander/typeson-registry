@@ -20,6 +20,9 @@ import dompoint from '../types/dompoint.js';
 import domquad from '../types/domquad.js';
 import dommatrix from '../types/dommatrix.js';
 import audiodata from '../types/audiodata.js';
+import encodedaudiochunk from '../types/encodedaudiochunk.js';
+import encodedvideochunk from '../types/encodedvideochunk.js';
+import videoframe from '../types/videoframe.js';
 import quotaexceedederror from '../types/quotaexceedederror.js';
 import webtransporterror from '../types/webtransporterror.js';
 
@@ -83,6 +86,12 @@ const expObj = [
     /* c8 ignore next */
     typeof DOMMatrix !== 'undefined' ? dommatrix : [],
     /* c8 ignore next */
-    typeof AudioData !== 'undefined' ? audiodata : []
+    typeof AudioData !== 'undefined' ? audiodata : [],
+    /* c8 ignore next */
+    typeof EncodedAudioChunk !== 'undefined' ? encodedaudiochunk : [],
+    /* c8 ignore next */
+    typeof EncodedVideoChunk !== 'undefined' ? encodedvideochunk : [],
+    /* c8 ignore next */
+    typeof VideoFrame !== 'undefined' ? videoframe : []
 );
 export default expObj;

@@ -1,6 +1,6 @@
 /* globals InternalError -- If available */
 /* globals document, ImageData, createImageBitmap, FileReader,
-    AudioData,
+    AudioData, EncodedAudioChunk, EncodedVideoChunk, VideoFrame,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
     DOMQuad, WebTransportError,
@@ -55,7 +55,8 @@ const {
     negativeInfinity, date, error,
     regexp, map, set, arraybuffer, domexception,
     domrect, dompoint, domquad, dommatrix,
-    audiodata, quotaexceedederror, webtransporterror,
+    audiodata, encodedaudiochunk, encodedvideochunk, videoframe,
+    quotaexceedederror, webtransporterror,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -316,6 +317,221 @@ function testAudioData (preset) {
     });
 }
 testAudioData();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testEncodedAudioChunk (preset) {
+    describe('EncodedAudioChunk', function () {
+        it('should return an EncodedAudioChunk', function () {
+            const typeson = new Typeson().register(preset || [
+                encodedaudiochunk, arraybuffer
+            ]);
+
+            const chunk = new EncodedAudioChunk({
+                type: 'key',
+                timestamp: 1_000_000,
+                duration: 20_000,
+                data: new Uint8Array([1, 2, 3, 4, 5])
+            });
+
+            const tson = typeson.stringify(chunk, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(EncodedAudioChunk);
+            expect(back.type).to.equal('key');
+            expect(back.timestamp).to.equal(1_000_000);
+            expect(back.duration).to.equal(20_000);
+            expect(back.byteLength).to.equal(5);
+
+            const dest = new Uint8Array(5);
+            back.copyTo(dest);
+            expect(dest).to.deep.equal(new Uint8Array([1, 2, 3, 4, 5]));
+        });
+
+        it(
+            'should return an EncodedAudioChunk with no `duration`',
+            function () {
+                const typeson = new Typeson().register(preset || [
+                    encodedaudiochunk, arraybuffer
+                ]);
+
+                const chunk = new EncodedAudioChunk({
+                    type: 'delta',
+                    timestamp: 500,
+                    data: new Uint8Array([9, 8, 7])
+                });
+
+                const tson = typeson.stringify(chunk, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back.type).to.equal('delta');
+                expect(back.duration).to.be.null;
+            }
+        );
+    });
+}
+testEncodedAudioChunk();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testEncodedVideoChunk (preset) {
+    describe('EncodedVideoChunk', function () {
+        it('should return an EncodedVideoChunk', function () {
+            const typeson = new Typeson().register(preset || [
+                encodedvideochunk, arraybuffer
+            ]);
+
+            const chunk = new EncodedVideoChunk({
+                type: 'key',
+                timestamp: 2_000_000,
+                duration: 16_666,
+                data: new Uint8Array([5, 4, 3, 2, 1])
+            });
+
+            const tson = typeson.stringify(chunk, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(EncodedVideoChunk);
+            expect(back.type).to.equal('key');
+            expect(back.timestamp).to.equal(2_000_000);
+            expect(back.duration).to.equal(16_666);
+            expect(back.byteLength).to.equal(5);
+
+            const dest = new Uint8Array(5);
+            back.copyTo(dest);
+            expect(dest).to.deep.equal(new Uint8Array([5, 4, 3, 2, 1]));
+        });
+
+        it(
+            'should return an EncodedVideoChunk with no `duration`',
+            function () {
+                const typeson = new Typeson().register(preset || [
+                    encodedvideochunk, arraybuffer
+                ]);
+
+                const chunk = new EncodedVideoChunk({
+                    type: 'delta',
+                    timestamp: 750,
+                    data: new Uint8Array([6, 7, 8])
+                });
+
+                const tson = typeson.stringify(chunk, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back.type).to.equal('delta');
+                expect(back.duration).to.be.null;
+            }
+        );
+    });
+}
+testEncodedVideoChunk();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testVideoFrame (preset) {
+    describe('VideoFrame', function () {
+        it('should return a VideoFrame (I420)', async function () {
+            const typeson = new Typeson().register(preset || [
+                videoframe, arraybuffer
+            ]);
+
+            // 2x2 I420: Y (4 bytes) + U (1 byte) + V (1 byte) = 6 bytes
+            const data = new Uint8Array([10, 20, 30, 40, 100, 200]);
+            const frame = new VideoFrame(data, {
+                format: 'I420',
+                codedWidth: 2,
+                codedHeight: 2,
+                timestamp: 1_000_000,
+                duration: 33_333
+            });
+
+            const tson = await typeson.stringifyAsync(frame, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(VideoFrame);
+            expect(back.format).to.equal('I420');
+            expect(back.codedWidth).to.equal(2);
+            expect(back.codedHeight).to.equal(2);
+            expect(back.timestamp).to.equal(1_000_000);
+            expect(back.duration).to.equal(33_333);
+            expect(back.displayWidth).to.equal(2);
+            expect(back.displayHeight).to.equal(2);
+
+            const dest = new Uint8Array(back.allocationSize());
+            await back.copyTo(dest);
+            expect(dest).to.deep.equal(data);
+        });
+
+        it(
+            'should preserve `visibleRect`, display size, and `colorSpace`',
+            async function () {
+                const typeson = new Typeson().register(preset || [
+                    videoframe, arraybuffer
+                ]);
+
+                // 4x4 RGBA
+                const data = new Uint8Array(4 * 4 * 4).fill(128);
+                const frame = new VideoFrame(data, {
+                    format: 'RGBA',
+                    codedWidth: 4,
+                    codedHeight: 4,
+                    timestamp: 0,
+                    visibleRect: {x: 1, y: 1, width: 2, height: 2},
+                    displayWidth: 8,
+                    displayHeight: 8,
+                    colorSpace: {
+                        primaries: 'bt709',
+                        transfer: 'iec61966-2-1',
+                        matrix: 'rgb',
+                        fullRange: true
+                    }
+                });
+
+                const tson = await typeson.stringifyAsync(frame, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back.visibleRect).to.deep.equal({
+                    x: 1, y: 1, width: 2, height: 2
+                });
+                expect(back.displayWidth).to.equal(8);
+                expect(back.displayHeight).to.equal(8);
+                expect(back.colorSpace).to.deep.equal({
+                    primaries: 'bt709',
+                    transfer: 'iec61966-2-1',
+                    matrix: 'rgb',
+                    fullRange: true
+                });
+            }
+        );
+
+        it('should return a VideoFrame with default `colorSpace`', (
+            async function () {
+                const typeson = new Typeson().register(preset || [
+                    videoframe, arraybuffer
+                ]);
+
+                const data = new Uint8Array(2 * 2 * 4); // 2x2 RGBA
+                const frame = new VideoFrame(data, {
+                    format: 'RGBA',
+                    codedWidth: 2,
+                    codedHeight: 2,
+                    timestamp: 0
+                });
+
+                const tson = await typeson.stringifyAsync(frame, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back.colorSpace).to.deep.equal({
+                    primaries: null,
+                    transfer: null,
+                    matrix: null,
+                    fullRange: null
+                });
+                expect(back.duration).to.be.null;
+            }
+        ));
+    });
+}
+testVideoFrame();
 
 /**
  * @param {TypesonPreset} [preset]
@@ -2112,6 +2328,9 @@ describe('Presets', () => {
         NonindexKeys(structuredCloningThrowing);
         cryptoKey(structuredCloningThrowing);
         testAudioData(structuredCloningThrowing);
+        testEncodedAudioChunk(structuredCloningThrowing);
+        testEncodedVideoChunk(structuredCloningThrowing);
+        testVideoFrame(structuredCloningThrowing);
         DomException(structuredCloningThrowing);
         QuotaExceededErrorTest(structuredCloningThrowing);
         WebTransportErrorTest(structuredCloningThrowing);
@@ -2429,6 +2648,197 @@ describe('Polyfills', () => {
             expect(new Int16Array(dest)).to.deep.equal(
                 new Int16Array([1, 2, 3, 4, 5])
             );
+        });
+    });
+
+    describe('EncodedAudioChunk', () => {
+        it('should throw for an unsupported type', () => {
+            expect(() => new EncodedAudioChunk({
+                // @ts-expect-error - Intentionally invalid
+                type: 'bogus',
+                timestamp: 0,
+                data: new Uint8Array(3)
+            })).to.throw(TypeError);
+        });
+
+        it('should accept a raw `ArrayBuffer` as `data`', () => {
+            const chunk = new EncodedAudioChunk({
+                type: 'key',
+                timestamp: 0,
+                data: new Uint8Array([1, 2, 3]).buffer
+            });
+            expect(chunk.byteLength).to.equal(3);
+        });
+
+        it('should throw when the destination buffer is too small', () => {
+            const chunk = new EncodedAudioChunk({
+                type: 'key',
+                timestamp: 0,
+                data: new Uint8Array([1, 2, 3])
+            });
+            expect(() => {
+                chunk.copyTo(new Uint8Array(1));
+            }).to.throw(RangeError);
+        });
+
+        it('should copy to a raw `ArrayBuffer` destination', () => {
+            const chunk = new EncodedAudioChunk({
+                type: 'key',
+                timestamp: 0,
+                data: new Uint8Array([1, 2, 3])
+            });
+            const dest = new ArrayBuffer(3);
+            chunk.copyTo(dest);
+            expect(new Uint8Array(dest)).to.deep.equal(
+                new Uint8Array([1, 2, 3])
+            );
+        });
+    });
+
+    describe('EncodedVideoChunk', () => {
+        it('should throw for an unsupported type', () => {
+            expect(() => new EncodedVideoChunk({
+                // @ts-expect-error - Intentionally invalid
+                type: 'bogus',
+                timestamp: 0,
+                data: new Uint8Array(3)
+            })).to.throw(TypeError);
+        });
+
+        it('should accept a raw `ArrayBuffer` as `data`', () => {
+            const chunk = new EncodedVideoChunk({
+                type: 'key',
+                timestamp: 0,
+                data: new Uint8Array([1, 2, 3]).buffer
+            });
+            expect(chunk.byteLength).to.equal(3);
+        });
+
+        it('should throw when the destination buffer is too small', () => {
+            const chunk = new EncodedVideoChunk({
+                type: 'key',
+                timestamp: 0,
+                data: new Uint8Array([1, 2, 3])
+            });
+            expect(() => {
+                chunk.copyTo(new Uint8Array(1));
+            }).to.throw(RangeError);
+        });
+
+        it('should copy to a raw `ArrayBuffer` destination', () => {
+            const chunk = new EncodedVideoChunk({
+                type: 'key',
+                timestamp: 0,
+                data: new Uint8Array([1, 2, 3])
+            });
+            const dest = new ArrayBuffer(3);
+            chunk.copyTo(dest);
+            expect(new Uint8Array(dest)).to.deep.equal(
+                new Uint8Array([1, 2, 3])
+            );
+        });
+    });
+
+    describe('VideoFrame', () => {
+        it('should throw for an unsupported pixel format', () => {
+            /** @type {ConstructorParameters<typeof VideoFrame>[1]} */
+            const init = {
+                // @ts-expect-error - Intentionally invalid
+                format: 'bogus',
+                codedWidth: 1,
+                codedHeight: 1,
+                timestamp: 0
+            };
+            expect(() => new VideoFrame(new Uint8Array(4), init)).
+                to.throw(TypeError);
+        });
+
+        it('should accept a raw `ArrayBuffer` as `data`', () => {
+            const frame = new VideoFrame(new Uint8Array(16).buffer, {
+                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
+            });
+            expect(frame.codedWidth).to.equal(2);
+        });
+
+        it('should copy to a raw `ArrayBuffer` destination', async () => {
+            const data = new Uint8Array([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+            ]);
+            const frame = new VideoFrame(data, {
+                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
+            });
+            const dest = new ArrayBuffer(16);
+            await frame.copyTo(dest);
+            expect(new Uint8Array(dest)).to.deep.equal(data);
+        });
+
+        it('should throw when the destination buffer is too small', () => {
+            const frame = new VideoFrame(new Uint8Array(16), {
+                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
+            });
+            expect(() => {
+                frame.copyTo(new Uint8Array(4));
+            }).to.throw(RangeError);
+        });
+
+        it('should throw for a `format` conversion request', () => {
+            const frame = new VideoFrame(new Uint8Array(16), {
+                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
+            });
+            expect(() => {
+                frame.allocationSize({format: 'I420'});
+            }).to.throw(TypeError);
+        });
+
+        it('should copy a cropped `rect` region', async () => {
+            const codedWidth = 4;
+            const codedHeight = 4;
+            const data = new Uint8Array(codedWidth * codedHeight * 4);
+            for (let row = 0; row < codedHeight; row++) {
+                for (let col = 0; col < codedWidth; col++) {
+                    data[((row * codedWidth) + col) * 4] =
+                        (row * codedWidth) + col;
+                }
+            }
+
+            const frame = new VideoFrame(data, {
+                format: 'RGBA', codedWidth, codedHeight, timestamp: 0
+            });
+
+            const rect = {x: 1, y: 1, width: 2, height: 2};
+            const dest = new Uint8Array(frame.allocationSize({rect}));
+            await frame.copyTo(dest, {rect});
+
+            const rValues = [dest[0], dest[4], dest[8], dest[12]];
+            expect(rValues).to.deep.equal([5, 6, 9, 10]);
+        });
+
+        it('should `clone` a `VideoFrame`', async () => {
+            const data = new Uint8Array([
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+            ]);
+            const frame = new VideoFrame(data, {
+                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 5
+            });
+            const clone = frame.clone();
+            expect(clone).to.not.equal(frame);
+            expect(clone.format).to.equal('RGBA');
+            expect(clone.timestamp).to.equal(5);
+
+            const dest = new Uint8Array(clone.allocationSize());
+            await clone.copyTo(dest);
+            expect(dest).to.deep.equal(data);
+        });
+
+        it('should throw when using a `close`d `VideoFrame`', () => {
+            const frame = new VideoFrame(new Uint8Array(16), {
+                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
+            });
+            frame.close();
+            expect(frame.format).to.be.null;
+            expect(() => {
+                frame.allocationSize();
+            }).to.throw(DOMException);
         });
     });
 

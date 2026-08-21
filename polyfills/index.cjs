@@ -51,6 +51,10 @@ function _arrayWithHoles(r) {
 function _arrayWithoutHoles(r) {
   if (Array.isArray(r)) return _arrayLikeToArray(r);
 }
+function _assertClassBrand(e, t, n) {
+  if ("function" == typeof e ? e === t : e.has(t)) return arguments.length < 3 ? t : n;
+  throw new TypeError("Private element is not present on this object");
+}
 function _assertThisInitialized(e) {
   if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   return e;
@@ -83,8 +87,23 @@ function _asyncToGenerator(n) {
 function _callSuper(t, o, e) {
   return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e));
 }
+function _checkPrivateRedeclaration(e, t) {
+  if (t.has(e)) throw new TypeError("Cannot initialize the same private elements twice on an object");
+}
 function _classCallCheck(a, n) {
   if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+}
+function _classPrivateFieldGet2(s, a) {
+  return s.get(_assertClassBrand(s, a));
+}
+function _classPrivateFieldInitSpec(e, t, a) {
+  _checkPrivateRedeclaration(e, t), t.set(e, a);
+}
+function _classPrivateFieldSet2(s, a, r) {
+  return s.set(_assertClassBrand(s, a), r), r;
+}
+function _classPrivateMethodInitSpec(e, a) {
+  _checkPrivateRedeclaration(e, a), a.add(e);
 }
 function _construct(t, e, r) {
   if (_isNativeReflectConstruct()) return Reflect.construct.apply(null, arguments);
@@ -3746,6 +3765,607 @@ var AudioData = /*#__PURE__*/function () {
   }]);
 }();
 
+/**
+ * EncodedAudioChunk class.
+ */
+var EncodedAudioChunk = /*#__PURE__*/function () {
+  /**
+   * @typedef {"key"|"delta"} EncodedAudioChunkType
+   */
+
+  /**
+   * @param {{
+   *   type: EncodedAudioChunkType,
+   *   timestamp: number,
+   *   duration?: number,
+   *   data: ArrayBufferView|ArrayBuffer
+   * }} init
+   */
+  function EncodedAudioChunk(_ref) {
+    var type = _ref.type,
+      timestamp = _ref.timestamp,
+      duration = _ref.duration,
+      data = _ref.data;
+    _classCallCheck(this, EncodedAudioChunk);
+    if (type !== 'key' && type !== 'delta') {
+      throw new TypeError("Unsupported EncodedAudioChunk type: ".concat(type));
+    }
+    this.type = type;
+    this.timestamp = timestamp;
+    this.duration = duration !== null && duration !== void 0 ? duration : null;
+    this._data = ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data);
+  }
+
+  /**
+   * @returns {number}
+   */
+  return _createClass(EncodedAudioChunk, [{
+    key: "byteLength",
+    get: function get() {
+      return this._data.byteLength;
+    }
+
+    /**
+     * @param {ArrayBufferView|ArrayBuffer} destination
+     * @returns {void}
+     */
+  }, {
+    key: "copyTo",
+    value: function copyTo(destination) {
+      var destIsView = ArrayBuffer.isView(destination);
+      var targetBuffer = /** @type {ArrayBuffer} */
+      destIsView ? destination.buffer : destination;
+      var targetByteOffset = destIsView ? destination.byteOffset : 0;
+      var targetByteLength = destination.byteLength;
+      if (targetByteLength < this._data.byteLength) {
+        throw new RangeError("Destination buffer is too small. Need ".concat(this._data.byteLength, " bytes, got ").concat(targetByteLength, "."));
+      }
+      var destView = new Uint8Array(targetBuffer, targetByteOffset, this._data.byteLength);
+      destView.set(this._data);
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+  }, {
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'EncodedAudioChunk';
+    }
+  }]);
+}();
+
+/**
+ * EncodedVideoChunk class.
+ */
+var EncodedVideoChunk = /*#__PURE__*/function () {
+  /**
+   * @typedef {"key"|"delta"} EncodedVideoChunkType
+   */
+
+  /**
+   * @param {{
+   *   type: EncodedVideoChunkType,
+   *   timestamp: number,
+   *   duration?: number,
+   *   data: ArrayBufferView|ArrayBuffer
+   * }} init
+   */
+  function EncodedVideoChunk(_ref) {
+    var type = _ref.type,
+      timestamp = _ref.timestamp,
+      duration = _ref.duration,
+      data = _ref.data;
+    _classCallCheck(this, EncodedVideoChunk);
+    if (type !== 'key' && type !== 'delta') {
+      throw new TypeError("Unsupported EncodedVideoChunk type: ".concat(type));
+    }
+    this.type = type;
+    this.timestamp = timestamp;
+    this.duration = duration !== null && duration !== void 0 ? duration : null;
+    this._data = ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data);
+  }
+
+  /**
+   * @returns {number}
+   */
+  return _createClass(EncodedVideoChunk, [{
+    key: "byteLength",
+    get: function get() {
+      return this._data.byteLength;
+    }
+
+    /**
+     * @param {ArrayBufferView|ArrayBuffer} destination
+     * @returns {void}
+     */
+  }, {
+    key: "copyTo",
+    value: function copyTo(destination) {
+      var destIsView = ArrayBuffer.isView(destination);
+      var targetBuffer = /** @type {ArrayBuffer} */
+      destIsView ? destination.buffer : destination;
+      var targetByteOffset = destIsView ? destination.byteOffset : 0;
+      var targetByteLength = destination.byteLength;
+      if (targetByteLength < this._data.byteLength) {
+        throw new RangeError("Destination buffer is too small. Need ".concat(this._data.byteLength, " bytes, got ").concat(targetByteLength, "."));
+      }
+      var destView = new Uint8Array(targetBuffer, targetByteOffset, this._data.byteLength);
+      destView.set(this._data);
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+  }, {
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'EncodedVideoChunk';
+    }
+  }]);
+}();
+
+// Per-plane subsampling factors (relative to `codedWidth`/`codedHeight`)
+//   and bytes per sample, keyed by `VideoPixelFormat`. Planes are assumed
+//   to be stored tightly packed and back-to-back within a single buffer,
+//   in the order listed here.
+var PIXEL_FORMATS = {
+  I420: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // Y
+  {
+    xSub: 2,
+    ySub: 2,
+    bytesPerSample: 1
+  },
+  // U
+  {
+    xSub: 2,
+    ySub: 2,
+    bytesPerSample: 1
+  } // V
+  ],
+  I420A: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // Y
+  {
+    xSub: 2,
+    ySub: 2,
+    bytesPerSample: 1
+  },
+  // U
+  {
+    xSub: 2,
+    ySub: 2,
+    bytesPerSample: 1
+  },
+  // V
+  {
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  } // A
+  ],
+  I422: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // Y
+  {
+    xSub: 2,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // U
+  {
+    xSub: 2,
+    ySub: 1,
+    bytesPerSample: 1
+  } // V
+  ],
+  I444: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // Y
+  {
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // U
+  {
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  } // V
+  ],
+  NV12: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 1
+  },
+  // Y
+  {
+    xSub: 2,
+    ySub: 2,
+    bytesPerSample: 2
+  } // Interleaved UV
+  ],
+  RGBA: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 4
+  }],
+  RGBX: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 4
+  }],
+  BGRA: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 4
+  }],
+  BGRX: [{
+    xSub: 1,
+    ySub: 1,
+    bytesPerSample: 4
+  }]
+};
+
+/**
+ * VideoFrame class.
+ *
+ * Note: Unlike the spec, this polyfill only supports construction from
+ *   a raw pixel buffer (`VideoFrameBufferInit`); constructing from a
+ *   `CanvasImageSource` is not supported as there is no such source of
+ *   pixels available by default in Node. `copyTo`/`allocationSize` also
+ *   always treat the source data as tightly packed at `codedWidth` x
+ *   `codedHeight` (i.e. a custom `layout` is not supported).
+ */
+var _data = /*#__PURE__*/new WeakMap();
+var _closed = /*#__PURE__*/new WeakMap();
+var _VideoFrame_brand = /*#__PURE__*/new WeakSet();
+var VideoFrame = /*#__PURE__*/function () {
+  /**
+   * @param {ArrayBufferView|ArrayBuffer} data
+   * @param {{
+   *   format: VideoPixelFormat,
+   *   codedWidth: number,
+   *   codedHeight: number,
+   *   timestamp: number,
+   *   duration?: number|null,
+   *   visibleRect?: VideoFrameRect,
+   *   displayWidth?: number,
+   *   displayHeight?: number,
+   *   colorSpace?: {
+   *     primaries: string|null,
+   *     transfer: string|null,
+   *     matrix: string|null,
+   *     fullRange: boolean|null
+   *   }
+   * }} init
+   */
+  function VideoFrame(data, _ref) {
+    var _format = _ref.format,
+      codedWidth = _ref.codedWidth,
+      codedHeight = _ref.codedHeight,
+      timestamp = _ref.timestamp,
+      duration = _ref.duration,
+      visibleRect = _ref.visibleRect,
+      displayWidth = _ref.displayWidth,
+      displayHeight = _ref.displayHeight,
+      colorSpace = _ref.colorSpace;
+    _classCallCheck(this, VideoFrame);
+    /**
+     * @returns {void}
+     */
+    _classPrivateMethodInitSpec(this, _VideoFrame_brand);
+    /**
+     * @typedef {"BGRA"|"BGRX"|"I420"|"I420A"|"I422"|"I444"|"NV12"|"RGBA"
+     *   |"RGBX"} VideoPixelFormat
+     */
+
+    /**
+     * @typedef {{
+     *   x: number, y: number, width: number, height: number
+     * }} VideoFrameRect
+     */
+
+    /** @type {Uint8Array|undefined} */
+    _classPrivateFieldInitSpec(this, _data, void 0);
+    /** @type {boolean} */
+    _classPrivateFieldInitSpec(this, _closed, void 0);
+    /** @type {VideoPixelFormat|null} */
+    _defineProperty(this, "format", void 0);
+    /** @type {number} */
+    _defineProperty(this, "codedWidth", void 0);
+    /** @type {number} */
+    _defineProperty(this, "codedHeight", void 0);
+    /** @type {VideoFrameRect|null} */
+    _defineProperty(this, "codedRect", void 0);
+    /** @type {number} */
+    _defineProperty(this, "timestamp", void 0);
+    /** @type {number|null} */
+    _defineProperty(this, "duration", void 0);
+    /** @type {VideoFrameRect|null} */
+    _defineProperty(this, "visibleRect", void 0);
+    /** @type {number} */
+    _defineProperty(this, "displayWidth", void 0);
+    /** @type {number} */
+    _defineProperty(this, "displayHeight", void 0);
+    /**
+     * @type {{
+     *   primaries: string|null, transfer: string|null,
+     *   matrix: string|null, fullRange: boolean|null
+     * }}
+     */
+    _defineProperty(this, "colorSpace", void 0);
+    if (!Object.hasOwn(PIXEL_FORMATS, _format)) {
+      throw new TypeError("Unsupported video pixel format: ".concat(_format));
+    }
+    this.format = _format;
+    this.codedWidth = codedWidth;
+    this.codedHeight = codedHeight;
+    this.codedRect = {
+      x: 0,
+      y: 0,
+      width: codedWidth,
+      height: codedHeight
+    };
+    this.timestamp = timestamp;
+    this.duration = duration !== null && duration !== void 0 ? duration : null;
+    this.visibleRect = visibleRect ? {
+      x: visibleRect.x,
+      y: visibleRect.y,
+      width: visibleRect.width,
+      height: visibleRect.height
+    } : {
+      x: 0,
+      y: 0,
+      width: codedWidth,
+      height: codedHeight
+    };
+    this.displayWidth = displayWidth !== null && displayWidth !== void 0 ? displayWidth : this.visibleRect.width;
+    this.displayHeight = displayHeight !== null && displayHeight !== void 0 ? displayHeight : this.visibleRect.height;
+    this.colorSpace = colorSpace ? {
+      primaries: colorSpace.primaries,
+      transfer: colorSpace.transfer,
+      matrix: colorSpace.matrix,
+      fullRange: colorSpace.fullRange
+    } : {
+      primaries: null,
+      transfer: null,
+      matrix: null,
+      fullRange: null
+    };
+    _classPrivateFieldSet2(_data, this, ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data));
+    _classPrivateFieldSet2(_closed, this, false);
+  }
+  return _createClass(VideoFrame, [{
+    key: "allocationSize",
+    value:
+    /**
+     * @param {{
+     *   rect?: {x: number, y: number, width: number, height: number},
+     *   format?: VideoPixelFormat
+     * }} [options]
+     * @returns {number}
+     */
+    function allocationSize() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      _assertClassBrand(_VideoFrame_brand, this, _checkNotClosed).call(this);
+      return _assertClassBrand(_VideoFrame_brand, this, _layout).call(this, options).totalSize;
+    }
+
+    /**
+     * @param {ArrayBufferView|ArrayBuffer} destination
+     * @param {{
+     *   rect?: {x: number, y: number, width: number, height: number},
+     *   format?: VideoPixelFormat
+     * }} [options]
+     * @returns {Promise<{offset: number, stride: number}[]>}
+     */
+  }, {
+    key: "copyTo",
+    value: function copyTo(destination) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      _assertClassBrand(_VideoFrame_brand, this, _checkNotClosed).call(this);
+      var _assertClassBrand$cal = _assertClassBrand(_VideoFrame_brand, this, _layout).call(this, options),
+        planes = _assertClassBrand$cal.planes,
+        layout = _assertClassBrand$cal.layout,
+        totalSize = _assertClassBrand$cal.totalSize;
+      var data = /** @type {Uint8Array} */_classPrivateFieldGet2(_data, this);
+      var destIsView = ArrayBuffer.isView(destination);
+      var targetBuffer = /** @type {ArrayBuffer} */
+      destIsView ? destination.buffer : destination;
+      var targetByteOffset = destIsView ? destination.byteOffset : 0;
+      var targetByteLength = destination.byteLength;
+      if (targetByteLength < totalSize) {
+        throw new RangeError("Destination buffer is too small. Need ".concat(totalSize, " bytes, got ").concat(targetByteLength, "."));
+      }
+      var destBytes = new Uint8Array(targetBuffer, targetByteOffset, totalSize);
+      var _iterator = _createForOfIteratorHelper(planes),
+        _step;
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var plane = _step.value;
+          var srcPlaneOffset = plane.srcPlaneOffset,
+            srcStride = plane.srcStride,
+            srcRowStart = plane.srcRowStart,
+            srcRowStartY = plane.srcRowStartY,
+            planeWidth = plane.planeWidth,
+            planeHeight = plane.planeHeight,
+            bytesPerSample = plane.bytesPerSample,
+            stride = plane.stride,
+            offset = plane.offset;
+          var rowBytes = planeWidth * bytesPerSample;
+          for (var row = 0; row < planeHeight; row++) {
+            var srcStart = srcPlaneOffset + (srcRowStartY + row) * srcStride + srcRowStart;
+            destBytes.set(data.subarray(srcStart, srcStart + rowBytes), offset + row * stride);
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+      return Promise.resolve(layout);
+    }
+
+    /**
+     * @returns {VideoFrame}
+     */
+  }, {
+    key: "clone",
+    value: function clone() {
+      _assertClassBrand(_VideoFrame_brand, this, _checkNotClosed).call(this);
+      var data = /** @type {Uint8Array} */_classPrivateFieldGet2(_data, this);
+      return new VideoFrame(data.slice(), {
+        format: (/** @type {VideoPixelFormat} */this.format),
+        codedWidth: this.codedWidth,
+        codedHeight: this.codedHeight,
+        timestamp: this.timestamp,
+        duration: this.duration,
+        visibleRect: (/** @type {VideoFrameRect} */this.visibleRect),
+        displayWidth: this.displayWidth,
+        displayHeight: this.displayHeight,
+        colorSpace: this.colorSpace
+      });
+    }
+
+    /**
+     * @returns {void}
+     */
+  }, {
+    key: "close",
+    value: function close() {
+      _classPrivateFieldSet2(_closed, this, true);
+      _classPrivateFieldSet2(_data, this, undefined);
+      this.format = null;
+      this.codedWidth = 0;
+      this.codedHeight = 0;
+      this.codedRect = null;
+      this.visibleRect = null;
+      this.displayWidth = 0;
+      this.displayHeight = 0;
+      this.duration = null;
+      this.timestamp = 0;
+      this.colorSpace = {
+        primaries: null,
+        transfer: null,
+        matrix: null,
+        fullRange: null
+      };
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+  }, {
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'VideoFrame';
+    }
+  }]);
+}();
+function _checkNotClosed() {
+  if (_classPrivateFieldGet2(_closed, this)) {
+    throw new DOMException('VideoFrame is closed', 'InvalidStateError');
+  }
+}
+/**
+ * Computes, for the (cropped) region of interest, the byte layout of
+ *   each plane both within our tightly packed source data and within
+ *   a tightly packed destination buffer.
+ * @param {{
+ *   rect?: {x: number, y: number, width: number, height: number},
+ *   format?: VideoPixelFormat
+ * }} options
+ * @returns {{
+ *   planes: {
+ *     srcPlaneOffset: number, srcStride: number,
+ *     srcRowStart: number, srcRowStartY: number,
+ *     planeWidth: number, planeHeight: number, bytesPerSample: number,
+ *     stride: number, offset: number
+ *   }[],
+ *   layout: {offset: number, stride: number}[],
+ *   totalSize: number
+ * }}
+ */
+function _layout(options) {
+  var _this = this;
+  if (options.format && options.format !== this.format) {
+    throw new TypeError('VideoFrame polyfill does not support pixel format conversion');
+  }
+
+  // Only reached while open (callers always call `#checkNotClosed`
+  //   first), so `format`/`visibleRect` are known non-null here.
+  var rawFormat = this.format,
+    rawVisibleRect = this.visibleRect;
+  var format = /** @type {VideoPixelFormat} */rawFormat;
+  var rect = options.rect || (/** @type {VideoFrameRect} */rawVisibleRect);
+  var specs = PIXEL_FORMATS[format];
+  var srcOffset = 0;
+  var srcPlaneOffsets = specs.map(function (_ref2) {
+    var xSub = _ref2.xSub,
+      ySub = _ref2.ySub,
+      bytesPerSample = _ref2.bytesPerSample;
+    var planeOffset = srcOffset;
+    srcOffset += Math.ceil(_this.codedWidth / xSub) * Math.ceil(_this.codedHeight / ySub) * bytesPerSample;
+    return planeOffset;
+  });
+  var destOffset = 0;
+  var planes = specs.map(function (_ref3, i) {
+    var xSub = _ref3.xSub,
+      ySub = _ref3.ySub,
+      bytesPerSample = _ref3.bytesPerSample;
+    var planeWidth = Math.ceil(rect.width / xSub);
+    var planeHeight = Math.ceil(rect.height / ySub);
+    var stride = planeWidth * bytesPerSample;
+    var offset = destOffset;
+    destOffset += stride * planeHeight;
+    return {
+      srcPlaneOffset: srcPlaneOffsets[i],
+      srcStride: Math.ceil(_this.codedWidth / xSub) * bytesPerSample,
+      srcRowStart: Math.floor(rect.x / xSub) * bytesPerSample,
+      srcRowStartY: Math.floor(rect.y / ySub),
+      planeWidth: planeWidth,
+      planeHeight: planeHeight,
+      bytesPerSample: bytesPerSample,
+      stride: stride,
+      offset: offset
+    };
+  });
+  return {
+    planes: planes,
+    layout: planes.map(function (_ref4) {
+      var offset = _ref4.offset,
+        stride = _ref4.stride;
+      return {
+        offset: offset,
+        stride: stride
+      };
+    }),
+    totalSize: destOffset
+  };
+}
+
 // No constructor in JSDom
 // globalThis.DOMRect = window.DOMRect;
 /**
@@ -4069,7 +4689,10 @@ exports.DOMPointReadOnly = DOMPointReadOnly;
 exports.DOMQuad = DOMQuad;
 exports.DOMRect = DOMRect;
 exports.DOMRectReadOnly = DOMRectReadOnly;
+exports.EncodedAudioChunk = EncodedAudioChunk;
+exports.EncodedVideoChunk = EncodedVideoChunk;
 exports.QuotaExceededError = QuotaExceededError;
+exports.VideoFrame = VideoFrame;
 exports.WebTransportError = WebTransportError;
 exports.createImageBitmap = createImageBitmap;
 exports.createObjectURL = createObjectURL;

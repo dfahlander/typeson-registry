@@ -15,6 +15,8 @@ import dommatrix from './types/dommatrix.js';
 import dompoint from './types/dompoint.js';
 import domquad from './types/domquad.js';
 import domrect from './types/domrect.js';
+import encodedaudiochunk from './types/encodedaudiochunk.js';
+import encodedvideochunk from './types/encodedvideochunk.js';
 import error from './types/error.js';
 import errors from './types/errors.js';
 import file from './types/file.js';
@@ -39,6 +41,7 @@ import typedArraysSocketio from './types/typed-arrays-socketio.js';
 import typedArrays from './types/typed-arrays.js';
 import undef from './types/undef.js';
 import userObject from './types/user-object.js';
+import videoframe from './types/videoframe.js';
 import webtransporterror from './types/webtransporterror.js';
 
 // PRESETS
@@ -57,11 +60,12 @@ import universal from './presets/universal.js';
 /* types */
 export {
     arraybuffer, audiodata, bigintObject, bigint, blob, cloneable, cryptokey,
-    dataview, date, domexception, dommatrix, dompoint, domquad, domrect, error,
-    errors, file, filelist, imagebitmap, imagedata, infinity, intlTypes, map,
-    nan, negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects,
-    promise, quotaexceedederror, regexp, resurrectable, set, symbol,
-    typedArraysSocketio, typedArrays, undef, userObject, webtransporterror
+    dataview, date, domexception, dommatrix, dompoint, domquad, domrect,
+    encodedaudiochunk, encodedvideochunk, error, errors, file, filelist,
+    imagebitmap, imagedata, infinity, intlTypes, map, nan, negativeInfinity,
+    negativeZero, nonbuiltinIgnore, primitiveObjects, promise,
+    quotaexceedederror, regexp, resurrectable, set, symbol, typedArraysSocketio,
+    typedArrays, undef, userObject, videoframe, webtransporterror
 };
 
 /* presets */

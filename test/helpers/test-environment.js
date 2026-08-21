@@ -15,6 +15,9 @@ import {
     QuotaExceededError,
     WebTransportError,
     AudioData,
+    EncodedAudioChunk,
+    EncodedVideoChunk,
+    VideoFrame,
     DOMRect,
     DOMRectReadOnly,
     DOMPoint,
@@ -81,6 +84,15 @@ globalThis.WebTransportError = WebTransportError;
 
 // @ts-expect-error -- Ok
 globalThis.AudioData = AudioData;
+
+// @ts-expect-error -- Ok
+globalThis.EncodedAudioChunk = EncodedAudioChunk;
+
+// @ts-expect-error -- Ok
+globalThis.EncodedVideoChunk = EncodedVideoChunk;
+
+// @ts-expect-error -- Ok
+globalThis.VideoFrame = VideoFrame;
 
 // @ts-expect-error Not an issue
 globalThis.DOMRect = DOMRect;
