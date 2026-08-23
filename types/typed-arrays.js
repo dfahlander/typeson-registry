@@ -7,13 +7,14 @@ import {encode, decode} from 'base64-arraybuffer-es6';
 const typedArrays = {};
 
 /**
- * @typedef {Int8ArrayConstructor|Uint8ArrayConstructor|
- *   Uint8ClampedArrayConstructor|
- *   Int16ArrayConstructor|Uint16ArrayConstructor|
- *   Int32ArrayConstructor|Uint32ArrayConstructor|
- *   Float32ArrayConstructor|
- *   Float64ArrayConstructor|
- *   BigInt64ArrayConstructor|BigUint64ArrayConstructor} TypedArrayConstructor
+ * @typedef {Int8ArrayConstructor|Uint8ArrayConstructor
+ *   |Uint8ClampedArrayConstructor
+ *   |Int16ArrayConstructor|Uint16ArrayConstructor
+ *   |Int32ArrayConstructor|Uint32ArrayConstructor
+ *   |Float32ArrayConstructor
+ *   |Float64ArrayConstructor
+ *   |BigInt64ArrayConstructor|BigUint64ArrayConstructor
+ *   |Float16ArrayConstructor} TypedArrayConstructor
  */
 
 /**
@@ -99,6 +100,10 @@ if (typeof Int8Array === 'function') {
         Float64Array,
         ...(typeof BigInt64Array === 'function'
             ? [BigInt64Array, BigUint64Array]
+            /* c8 ignore next */
+            : []),
+        ...(typeof Float16Array === 'function'
+            ? [Float16Array]
             /* c8 ignore next */
             : [])
     ].forEach((TypedArray) => create(TypedArray));

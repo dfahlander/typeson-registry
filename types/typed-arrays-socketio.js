@@ -8,12 +8,12 @@ import {toStringTag} from 'typeson';
 const typedArraysSocketIO = {};
 
 /**
- * @param {Int8ArrayConstructor|Uint8ArrayConstructor|
- *   Uint8ClampedArrayConstructor|Int16ArrayConstructor|
- *   Uint16ArrayConstructor|Int32ArrayConstructor|
- *   Uint32ArrayConstructor|Float32ArrayConstructor|
- *   Float64ArrayConstructor|
- *   BigInt64ArrayConstructor|BigUint64ArrayConstructor
+ * @param {Int8ArrayConstructor|Uint8ArrayConstructor
+ *   |Uint8ClampedArrayConstructor|Int16ArrayConstructor
+ *   |Uint16ArrayConstructor|Int32ArrayConstructor
+ *   |Uint32ArrayConstructor|Float32ArrayConstructor
+ *   |Float64ArrayConstructor|Float16ArrayConstructor
+ *   |BigInt64ArrayConstructor|BigUint64ArrayConstructor
  * } TypedArray
  * @returns {void}
  */
@@ -61,6 +61,10 @@ if (typeof Int8Array === 'function') {
         Float64Array,
         ...(typeof BigInt64Array === 'function'
             ? [BigInt64Array, BigUint64Array]
+            /* c8 ignore next */
+            : []),
+        ...(typeof Float16Array === 'function'
+            ? [Float16Array]
             /* c8 ignore next */
             : [])
     ].forEach((TypedArray) => create(TypedArray));

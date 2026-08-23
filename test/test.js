@@ -1107,6 +1107,30 @@ function BuiltIn (preset) {
             });
         });
 
+        if (typeof Float16Array !== 'undefined') {
+            describe('Float16Array', () => {
+                it('should get back real Float16Array instance with ' +
+                    'original array content', () => {
+                    const typeson = new Typeson().register(preset || [
+                        arraybuffer,
+                        typedArrays
+                    ]);
+                    const a = new Float16Array(3);
+                    a[0] = 23.8;
+                    a[1] = -15;
+                    a[2] = 99;
+                    const json = typeson.stringify({a});
+                    const obj = typeson.parse(/** @type {string} */ (json));
+                    expect(obj.a).to.be.an.instanceOf(Float16Array);
+                    expect(obj.a).to.have.lengthOf(3);
+
+                    expect(obj.a[0]).to.be.lessThan(24);
+                    expect(obj.a[1]).to.equal(-15);
+                    expect(obj.a[2]).to.equal(99);
+                });
+            });
+        }
+
         describe('BigInt64Array', () => {
             it('should get back real BigInt64Array instance with ' +
                 'original array content', () => {

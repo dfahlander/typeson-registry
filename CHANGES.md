@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 14.1.0
+
+- feat: add `Float16Array` to typed-array types when available
+
 ## 14.0.0
 
 BREAKING CHANGES:

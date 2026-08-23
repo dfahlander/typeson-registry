@@ -35,10 +35,10 @@ if (typeof InternalError === 'function') {
 
 /**
  * Comprises all built-in errors.
- * @param {TypeErrorConstructor|RangeErrorConstructor|
- *   SyntaxErrorConstructor|ReferenceErrorConstructor|
- *   EvalErrorConstructor|URIErrorConstructor|
- *   AggregateErrorConstructor|InternalErrorConstructor
+ * @param {TypeErrorConstructor|RangeErrorConstructor
+ *   |SyntaxErrorConstructor|ReferenceErrorConstructor
+ *   |EvalErrorConstructor|URIErrorConstructor
+ *   |AggregateErrorConstructor|InternalErrorConstructor
  * } Ctor
  * @returns {void}
  */
