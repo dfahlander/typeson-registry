@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 14.2.1
+
+- fix(primitive-objects): preserve `NaN`/`Infinity`/`-0` when cloning boxed `Number` objects
+
 ## 14.2.0
 
 - feat(polyfills): add `SyncBlob`/`SyncFile` for synchronous `Blob`/`File` reads outside jsdom and handle within createObjectURL; expose new related helper methods as well

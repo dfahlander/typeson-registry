@@ -917,6 +917,49 @@ function BuiltIn (preset) {
             expect(back).to.be.an.instanceOf(Number);
             expect(back.valueOf()).to.equal(456);
         });
+        // A boxed `NaN`/`Infinity`/`-Infinity`/`-0` returned bare from
+        //   `replace()` would otherwise silently lose its value (become
+        //   `null`) or its sign (`-0` becoming `0`) once round-tripped
+        //   through JSON, since `_encapsulate`'s nested-replace guard
+        //   skips giving it the sentinel treatment the bare `nan`/
+        //   `infinity`/`negativeZero` type specs normally would -- see
+        //   `types/primitive-objects.js`.
+        it('Number object (NaN)', () => {
+            const typeson = new Typeson().register(preset || primitiveObjects);
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
+            const numObj = new Number(NaN);
+            const tson = typeson.stringify(numObj, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(Number);
+            expect(Number.isNaN(back.valueOf())).to.equal(true);
+        });
+        it('Number object (Infinity)', () => {
+            const typeson = new Typeson().register(preset || primitiveObjects);
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
+            const numObj = new Number(Infinity);
+            const tson = typeson.stringify(numObj, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(Number);
+            expect(back.valueOf()).to.equal(Infinity);
+        });
+        it('Number object (-Infinity)', () => {
+            const typeson = new Typeson().register(preset || primitiveObjects);
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
+            const numObj = new Number(-Infinity);
+            const tson = typeson.stringify(numObj, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(Number);
+            expect(back.valueOf()).to.equal(-Infinity);
+        });
+        it('Number object (-0)', () => {
+            const typeson = new Typeson().register(preset || primitiveObjects);
+            // eslint-disable-next-line no-new-wrappers -- Deliberate testing
+            const numObj = new Number(-0);
+            const tson = typeson.stringify(numObj, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(Number);
+            expect(Object.is(back.valueOf(), -0)).to.equal(true);
+        });
         /* eslint-enable unicorn/new-for-builtins -- Deliberate testing */
     });
 

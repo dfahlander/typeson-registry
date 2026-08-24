@@ -35,8 +35,51 @@ const primitiveObjects = {
         test (x) {
             return toStringTag(x) === 'Number' && typeof x === 'object';
         },
-        replace: Number, // convert to primitive number
-        revive (n) { return new Number(n); } // Revive to an objectified number
+        // `_encapsulate`'s nested-replace guard (`_stateObj.replaced`)
+        //   means a bare `NaN`/`Infinity`/`-Infinity`/`-0` returned here
+        //   would skip the sentinel treatment the bare `nan`/`infinity`/
+        //   `negativeZero` type specs normally give those values (since
+        //   we're already inside this spec's own `replace()`) -- JSON
+        //   can't represent them, so they'd otherwise silently become
+        //   `null` (or lose their sign, for `-0`). Encode them the same
+        //   way those specs do, directly, rather than relying on that
+        //   nested pass.
+        replace (o) {
+            const n = o.valueOf();
+            if (Number.isNaN(n)) {
+                return 'NaN';
+            }
+            if (n === Infinity) {
+                return 'Infinity';
+            }
+            if (n === -Infinity) {
+                return '-Infinity';
+            }
+            if (Object.is(n, -0)) {
+                // A plain `0` here would be indistinguishable from a
+                //   genuine positive `0` once round-tripped through JSON
+                //   (which can't represent the sign), so this needs its
+                //   own sentinel too, same as the others above.
+                return '-0';
+            }
+            return n;
+        },
+        // Revive to an objectified number
+        revive (n) {
+            if (n === 'NaN') {
+                return new Number(NaN);
+            }
+            if (n === 'Infinity') {
+                return new Number(Infinity);
+            }
+            if (n === '-Infinity') {
+                return new Number(-Infinity);
+            }
+            if (n === '-0') {
+                return new Number(-0);
+            }
+            return new Number(n);
+        }
     }
 };
 /* eslint-enable no-new-wrappers, unicorn/new-for-builtins -- Deliberate */
