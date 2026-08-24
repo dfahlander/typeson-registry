@@ -1,4 +1,5 @@
 export * from './URL.js';
+export * from './SyncBlobFile.js';
 export * from './QuotaExceededError.js';
 export * from './WebTransportError.js';
 export * from './AudioData.js';

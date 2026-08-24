@@ -25,6 +25,10 @@ import * as util from './helpers/test-utils.js';
 import {
     string2arraybuffer, arraybuffer2string
 } from '../utils/stringArrayBuffer.js';
+import {
+    SyncBlob, SyncFile, getSyncBytes
+} from '../polyfills/SyncBlobFile.js';
+import {resolveObjectURL} from '../polyfills/URL.js';
 
 /**
  * @typedef {import('typeson').Integer} Integer
@@ -2520,21 +2524,22 @@ describe('Polyfills', () => {
     });
 
     // Node only
+    /**
+     * @typedef {{
+     *   overrideMimeType: (mimeType: string) => void,
+     *   open: (method: string, url: string, sync: boolean) => void,
+     *   send: () => void,
+     *   status: number,
+     *   responseText: string
+     * }} XMLHttpRequestMock
+     */
+
     if (typeof process !== 'undefined') {
         it('URL.createObjectURL polyfill', () => {
             const temp = XMLHttpRequest.prototype.overrideMimeType;
             XMLHttpRequest.prototype.overrideMimeType = () => {
                 //
             };
-
-            /**
-             * @typedef {{
-             *   overrideMimeType: (mimeType: string) => void,
-             *   open: (method: string, url: string, sync: boolean) => void,
-             *   send: () => void,
-             *   status: number
-             * }} XMLHttpRequestMock
-             */
 
             const xhr = /** @type {XMLHttpRequestMock} */ ({
                 overrideMimeType: xmlHttpRequestOverrideMimeType({
@@ -2547,6 +2552,107 @@ describe('Polyfills', () => {
             xhr.send();
             XMLHttpRequest.prototype.overrideMimeType = temp;
             expect(xhr.status).to.equal(200);
+        });
+
+        describe('SyncBlob/SyncFile', () => {
+            /**
+             * Test-only: the real `getSyncBytes` can return `undefined`
+             *   (for a `Blob` this module never tracked -- see its own
+             *   test below), but every call here is on an instance we
+             *   just created, so it's always defined.
+             * @param {Blob} b
+             * @returns {Buffer}
+             */
+            const bytes = (b) => /** @type {Buffer} */ (getSyncBytes(b));
+
+            it('getSyncBytes should concatenate string, ArrayBuffer, ' +
+                'ArrayBufferView, and nested Blob parts', () => {
+                const inner = new SyncBlob(['inner']);
+                const sb = new SyncBlob([
+                    'abc',
+                    new TextEncoder().encode('def').buffer,
+                    new TextEncoder().encode('ghi'),
+                    inner
+                ]);
+                expect(bytes(sb).toString('utf8')).to.equal(
+                    'abcdefghiinner'
+                );
+            });
+            it('should default to no parts', () => {
+                const sb = new SyncBlob();
+                expect(bytes(sb)).to.have.lengthOf(0);
+            });
+            it('should stringify any other part type', () => {
+                // @ts-expect-error -- Intentionally invalid `BlobPart`,
+                //   to exercise the stringifying fallback
+                const sb = new SyncBlob([5]);
+                expect(bytes(sb).toString('utf8')).to.equal('5');
+            });
+            it('SyncFile should track its own bytes and expose File ' +
+                'properties', () => {
+                const sf = new SyncFile(['content'], 'my.txt', {
+                    type: 'text/plain', lastModified: 123
+                });
+                expect(bytes(sf).toString('utf8')).to.equal('content');
+                expect(sf.name).to.equal('my.txt');
+                expect(sf.lastModified).to.equal(123);
+            });
+            it('getSyncBytes should return `undefined` for a Blob it ' +
+                'never tracked', () => {
+                expect(getSyncBytes(new Blob(['x']))).to.be.undefined;
+            });
+            it('should let the URL/XMLHttpRequest polyfills read a ' +
+                'SyncBlob synchronously (no jsdom wrapper needed)', () => {
+                const temp = XMLHttpRequest.prototype.overrideMimeType;
+                XMLHttpRequest.prototype.overrideMimeType = () => {
+                    //
+                };
+
+                const xhr = /** @type {XMLHttpRequestMock} */ ({
+                    overrideMimeType: xmlHttpRequestOverrideMimeType({
+                        polyfillDataURLs: true
+                    })
+                });
+                const sb = new SyncBlob(['sync content']);
+                xhr.overrideMimeType('text/plain; charset=x-user-defined');
+                xhr.open('GET', URL.createObjectURL(sb), false); // Sync
+                xhr.send();
+                XMLHttpRequest.prototype.overrideMimeType = temp;
+                expect(xhr.status).to.equal(200);
+                expect(xhr.responseText).to.equal('sync content');
+            });
+        });
+
+        describe('resolveObjectURL', () => {
+            it('should return `undefined` for an unregistered URL', () => {
+                expect(resolveObjectURL('blob:not-a-real-url')).
+                    to.be.undefined;
+            });
+            it('should return `undefined` when the registered value has ' +
+                'no readable bytes', () => {
+                // Registering a non-`Blob` value simulates a `Blob` neither
+                //   `SyncBlob` nor jsdom's `implForWrapper` can read.
+                const fakeBlob = /** @type {Blob} */ (
+                    /** @type {unknown} */ ({type: 'text/plain'})
+                );
+                const url = URL.createObjectURL(fakeBlob);
+                expect(resolveObjectURL(url)).to.be.undefined;
+            });
+            it('should resolve a registered SyncBlob to its type and ' +
+                'bytes', () => {
+                const sb = new SyncBlob(
+                    ['resolved content'], {type: 'text/plain'}
+                );
+                const url = URL.createObjectURL(sb);
+                // Test-only: we just registered `sb` above, so this is
+                //   always defined.
+                const resolved = /** @type {{type: string, bytes: Buffer}} */
+                    (resolveObjectURL(url));
+                expect(resolved.type).to.equal('text/plain');
+                expect(resolved.bytes.toString('utf8')).to.equal(
+                    'resolved content'
+                );
+            });
         });
     }
 

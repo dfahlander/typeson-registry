@@ -14,6 +14,7 @@
 import {createRequire} from 'node:module';
 import whatwgURL from 'whatwg-url';
 import generateUUID from '../utils/generateUUID.js';
+import {getSyncBytes} from './SyncBlobFile.js';
 
 const require = createRequire(import.meta.url);
 const {implForWrapper} = require('jsdom/lib/generated/idl/utils.js');
@@ -51,6 +52,41 @@ const createObjectURL = function (blob) {
  */
 const revokeObjectURL = function (blobURL) {
     delete blobURLs[blobURL];
+};
+
+/**
+ * Synchronously reads the content of a `Blob`/`File` previously registered
+ *   via `createObjectURL`. `SyncBlob`/`SyncFile` (see `SyncBlobFile.js`)
+ *   keep their own synchronously-readable copy of the content for
+ *   environments without jsdom (e.g. Node on its own); prefer that if
+ *   present, falling back to jsdom's internal wrapper-unwrapping otherwise.
+ * @param {Blob} blob
+ * @returns {Buffer|undefined}
+ */
+const getBlobBytesSync = function (blob) {
+    return getSyncBytes(blob) || implForWrapper(blob)?._bytes;
+};
+
+/**
+ * Resolves a `blob:` URL (previously registered via `createObjectURL`) back
+ *   to its content, synchronously -- for use by any XHR/`fetch` polyfill
+ *   that needs to serve `blob:` URLs itself (mirroring how browsers read
+ *   `blob:` URLs without going over the network).
+ * @param {string} blobURL
+ * @returns {{type: string, bytes: Buffer}|undefined} `undefined` if
+ *   `blobURL` is not (or is no longer) a registered `blob:` URL.
+ */
+const resolveObjectURL = function (blobURL) {
+    const blob = blobURLs[blobURL];
+    if (!blob) {
+        return undefined;
+    }
+    // eslint-disable-next-line n/no-sync -- Deliberate
+    const bytes = getBlobBytesSync(blob);
+    if (!bytes) {
+        return undefined;
+    }
+    return {type: blob.type, bytes};
 };
 
 // We only handle the case of binary, so no need to override `open`
@@ -98,11 +134,13 @@ const xmlHttpRequestOverrideMimeType = function (
                     }
                     const responseType = 'text/plain'; // blob.type;
                     // utf16le and base64 both convert lone surrogates
-                    const blobImpl = implForWrapper(blob);
+
+                    // eslint-disable-next-line n/no-sync -- Deliberate
+                    const syncBytes = getBlobBytesSync(blob);
                     // jsdom changed Blob internals from `_buffer`
                     // to `_bytes`; support both.
                     const encoded =
-                        Buffer.from(blobImpl._bytes).toString('binary');
+                        Buffer.from(syncBytes).toString('binary');
 
                     // Not usable in jsdom which makes properties readonly,
                     //   but local-xmlhttprequest can use (and jsdom can
@@ -133,4 +171,7 @@ const xmlHttpRequestOverrideMimeType = function (
     };
 };
 
-export {createObjectURL, xmlHttpRequestOverrideMimeType, revokeObjectURL};
+export {
+    createObjectURL, xmlHttpRequestOverrideMimeType, revokeObjectURL,
+    resolveObjectURL, getBlobBytesSync
+};

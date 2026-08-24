@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 14.2.0
+
+- feat(polyfills): add `SyncBlob`/`SyncFile` for synchronous `Blob`/`File` reads outside jsdom and handle within createObjectURL; expose new related helper methods as well
+
 ## 14.1.0
 
 - feat: add `Float16Array` to typed-array types when available
