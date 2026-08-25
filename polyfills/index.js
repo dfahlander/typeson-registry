@@ -14,3 +14,4 @@ export * from './DOMQuad.js';
 export * from './DOMMatrix.js';
 export * from './DOMMatrixReadOnly.js';
 export * from './createImageBitmap.js';
+export * from './FileList.js';
