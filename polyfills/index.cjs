@@ -4690,9 +4690,10 @@ var DOMMatrix = /*#__PURE__*/function () {
    *     number, number, number, number,
    *     number, number, number, number,
    *     number, number, number, number
-   * ]} init
+   * ]} [init] Per spec, omitting this initializes the 2D identity matrix.
    */
-  function DOMMatrix(init) {
+  function DOMMatrix() {
+    var init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [1, 0, 0, 1, 0, 0];
     _classCallCheck(this, DOMMatrix);
     if (typeof init[6] !== 'number') {
       this.is2D = true;
@@ -4748,9 +4749,10 @@ var DOMMatrixReadOnly = /*#__PURE__*/function () {
    *     number, number, number, number,
    *     number, number, number, number,
    *     number, number, number, number
-   * ]} init
+   * ]} [init] Per spec, omitting this initializes the 2D identity matrix.
    */
-  function DOMMatrixReadOnly(init) {
+  function DOMMatrixReadOnly() {
+    var init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [1, 0, 0, 1, 0, 0];
     _classCallCheck(this, DOMMatrixReadOnly);
     if (typeof init[6] !== 'number') {
       this.is2D = true;

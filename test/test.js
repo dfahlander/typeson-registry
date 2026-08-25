@@ -3036,6 +3036,38 @@ describe('Polyfills', () => {
             expect(domMatrix.m11).to.equal(1);
             expect(domMatrix.m44).to.equal(16);
         });
+
+        it(
+            'should default `DOMMatrixReadOnly` to the 2D identity matrix ' +
+                'when `init` is omitted',
+            () => {
+                const domMatrix = new DOMMatrixReadOnly();
+                expect(domMatrix.is2D).to.be.true;
+                expect(domMatrix.a).to.equal(1);
+                expect(domMatrix.b).to.equal(0);
+                expect(domMatrix.c).to.equal(0);
+                expect(domMatrix.d).to.equal(1);
+                expect(domMatrix.e).to.equal(0);
+                expect(domMatrix.f).to.equal(0);
+            }
+        );
+    });
+
+    describe('DOMMatrix', () => {
+        it(
+            'should default `DOMMatrix` to the 2D identity matrix when ' +
+                '`init` is omitted',
+            () => {
+                const domMatrix = new DOMMatrix();
+                expect(domMatrix.is2D).to.be.true;
+                expect(domMatrix.a).to.equal(1);
+                expect(domMatrix.b).to.equal(0);
+                expect(domMatrix.c).to.equal(0);
+                expect(domMatrix.d).to.equal(1);
+                expect(domMatrix.e).to.equal(0);
+                expect(domMatrix.f).to.equal(0);
+            }
+        );
     });
 
     describe('DOMPoint', () => {

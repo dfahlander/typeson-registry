@@ -1,5 +1,9 @@
 # typeson-registry
 
+## ?
+
+- fix: defaults for `DOMMatrix`/`DOMMatrixReadonly`
+
 ## 14.2.2
 
 - fix(structured cloning throwing): throw for `MessageChannel` and `MessagePort` in Node

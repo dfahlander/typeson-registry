@@ -11,9 +11,9 @@ class DOMMatrixReadOnly {
      *     number, number, number, number,
      *     number, number, number, number,
      *     number, number, number, number
-     * ]} init
+     * ]} [init] Per spec, omitting this initializes the 2D identity matrix.
      */
-    constructor (init) {
+    constructor (init = [1, 0, 0, 1, 0, 0]) {
         if (typeof init[6] !== 'number') {
             this.is2D = true;
             this.a = init[0];
