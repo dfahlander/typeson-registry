@@ -1,7 +1,8 @@
 # typeson-registry
 
-## ?
+## 14.3.0
 
+- feat: add structured-cloning-for-storage preset (differs by throwing for SharedArrayBuffer)
 - fix: defaults for `DOMMatrix`/`DOMMatrixReadonly`
 
 ## 14.2.2

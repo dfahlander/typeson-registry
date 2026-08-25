@@ -70,6 +70,7 @@ const {
     // presets
     arrayNonindexKeys,
     builtin, universal, structuredCloningThrowing,
+    structuredCloningForStorage,
     structuredCloning, specialNumbers, postmessage,
     undefPreset, sparseUndefined, socketio
 } = TypesonNamespace;
@@ -2502,6 +2503,46 @@ describe('Presets', () => {
             );
             expect(clonedData[0]).to.equal(clonedData);
         });
+    });
+    describe('Structured cloning for storage', () => {
+        it(
+            'should also throw for `SharedArrayBuffer`, unlike plain ' +
+                '`structuredCloningThrowing`',
+            () => {
+                const forStorage = new Typeson().register(
+                    [structuredCloningForStorage]
+                );
+                expect(() => {
+                    forStorage.stringify(new SharedArrayBuffer(8));
+                }).to.throw(DOMException);
+
+                const throwing = new Typeson().register(
+                    [structuredCloningThrowing]
+                );
+                expect(() => {
+                    throwing.stringify(new SharedArrayBuffer(8));
+                }).to.not.throw();
+            }
+        );
+        it(
+            'should still behave like `structuredCloningThrowing` for ' +
+                'everything else',
+            () => {
+                const typeson = new Typeson().register(
+                    [structuredCloningForStorage]
+                );
+                expect(() => {
+                    typeson.stringify(new Error('test'));
+                }).to.not.throw();
+                expect(() => {
+                    typeson.stringify(Symbol('test'));
+                }).to.throw(DOMException);
+                const expected =
+                    '{"$":1234567890000,"$types":{"$":{"":"date"}}}';
+                const result = typeson.stringify(new Date(1234567890000));
+                expect(result).to.deep.equal(expected);
+            }
+        );
     });
     describe('Special Numbers (as preset)', () => {
         SpecialNumbers([specialNumbers]);

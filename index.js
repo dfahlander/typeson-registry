@@ -51,6 +51,8 @@ import postmessage from './presets/postmessage.js';
 import socketio from './presets/socketio.js';
 import sparseUndefined from './presets/sparse-undefined.js';
 import specialNumbers from './presets/special-numbers.js';
+import structuredCloningForStorage from
+    './presets/structured-cloning-for-storage.js';
 import structuredCloningThrowing from
     './presets/structured-cloning-throwing.js';
 import structuredCloning from './presets/structured-cloning.js';
@@ -71,8 +73,8 @@ export {
 /* presets */
 export {
     arrayNonindexKeys, builtin, postmessage, socketio, sparseUndefined,
-    specialNumbers, structuredCloningThrowing, structuredCloning, undefPreset,
-    universal
+    specialNumbers, structuredCloningForStorage, structuredCloningThrowing,
+    structuredCloning, undefPreset, universal
 };
 
 export * from 'typeson';
