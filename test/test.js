@@ -2430,6 +2430,18 @@ describe('Presets', () => {
                 });
             }).to.throw(DOMException);
 
+            // Node's native global `MessageChannel`/`MessagePort` don't set
+            //   `Symbol.toStringTag` (see
+            //   https://github.com/nodejs/node/issues/65527), so these also
+            //   exercise the `constructor.name`-based fallback check, not
+            //   just the `stringTag` one a real browser's would hit.
+            expect(() => {
+                typeson.stringify(new MessageChannel());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new MessageChannel().port1);
+            }).to.throw(DOMException);
+
             // https://github.com/whatwg/html/issues/5158
             expect(() => {
                 typeson.stringify(Object.prototype);

@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 14.2.2
+
+- fix(structured cloning throwing): throw for `MessageChannel` and `MessagePort` in Node
+
 ## 14.2.1
 
 - fix(primitive-objects): preserve `NaN`/`Infinity`/`-0` when cloning boxed `Number` objects

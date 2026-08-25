@@ -79,8 +79,25 @@ const structuredCloningThrowing = structuredCloning.concat({
                     // HTML-SPECIFIC
                     'Event',
                     // Also in Node `worker_threads` (currently experimental)
-                    'MessageChannel'
+                    'MessageChannel',
+                    'MessagePort'
                 ].includes(stringTag) ||
+                // Node's native `worker_threads` `MessageChannel`/
+                //   `MessagePort` don't set `Symbol.toStringTag` per
+                //      https://github.com/nodejs/node/issues/65527
+                //   (verified directly:
+                //   `{}.toString.call(new MessageChannel())` is
+                //   `"[object Object]"`, and `.port1`'s is
+                //   `"[object EventTarget]"`, its own base class), so the
+                //   `stringTag` check above can't catch them there; a real
+                //   browser's `MessagePort`/`MessageChannel` already match
+                //   via `stringTag` (or, for `MessagePort`, would need its
+                //   own `stringTag` entry if ever seen failing to match) --
+                //   this is purely a fallback for environments (like Node)
+                //   that don't set the tag.
+                (val && val.constructor && [
+                    'MessageChannel', 'MessagePort'
+                ].includes(val.constructor.name)) ||
                 // 1. `IsDetachedBuffer` (a process not called within the
                 //      ECMAScript spec)
                 ([
