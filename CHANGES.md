@@ -1,9 +1,5 @@
 # typeson-registry
 
-## ?
-
-- feat: export `FileList` from polyfills
-
 ## 14.3.0
 
 - feat: add structured-cloning-for-storage preset (differs by throwing for SharedArrayBuffer)
