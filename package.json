@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "14.3.0",
+  "version": "14.4.0",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -104,7 +104,7 @@
     "@babel/eslint-parser": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
     "@eslint/markdown": "^8.0.3",
-    "@node-static/node-static": "^0.9.0",
+    "@node-static/node-static": "^0.9.1",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -118,13 +118,13 @@
     "c8": "^12.0.0",
     "canvas": "^3.2.3",
     "chai": "^6.2.2",
-    "eslint": "^10.8.1",
-    "eslint-config-ash-nazg": "^42.5.0",
+    "eslint": "^10.9.1",
+    "eslint-config-ash-nazg": "^43.1.6",
     "eslint-plugin-n": "^18.3.0",
     "jsdom": "^30.0.1",
-    "mocha": "^11.8.0",
+    "mocha": "^12.0.0",
     "open-cli": "^9.0.0",
-    "rollup": "^4.62.4",
+    "rollup": "^4.63.1",
     "semver": "^7.8.5",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
@@ -132,7 +132,7 @@
   },
   "dependencies": {
     "base64-arraybuffer-es6": "^3.1.0",
-    "typeson": "^10.2.0",
+    "typeson": "^10.3.0",
     "whatwg-url": "^17.1.0"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"

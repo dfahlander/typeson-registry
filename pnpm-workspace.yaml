@@ -3,10 +3,11 @@ allowBuilds:
   is-hidden-file: true
   unrs-resolver: true
 minimumReleaseAgeExclude:
-  - eslint-config-ash-nazg@41.0.0 || 42.5.0
-  - typeson@10.0.0 || 10.1.1 || 10.1.2 || 10.2.0
+  - eslint-config-ash-nazg@41.0.0 || 42.5.0 || 43.1.6
+  - typeson@10.0.0 || 10.1.1 || 10.1.2 || 10.2.0 || 10.3.0
   - '@es-joy/jsdoccomment@0.95.1'
-  - eslint-plugin-jsdoc@64.2.1
+  - eslint-plugin-jsdoc@64.2.1 || 64.3.3
   - jsdoc-type-pratt-parser@9.1.2
+  - mocha@12.0.0
 onlyBuiltDependencies:
   - canvas
