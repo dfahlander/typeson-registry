@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 14.5.0
+
+- feat: `Float16Array` + `colorSpace` in `ImageData`; spec-align WebCodecs polyfills
+
 ## 14.4.0
 
 - chore: update typeson, devDeps.

@@ -43,7 +43,12 @@ class AudioData {
         this.numberOfChannels = numberOfChannels;
         this.numberOfFrames = numberOfFrames;
         this.timestamp = timestamp;
-        this.duration = numberOfFrames / sampleRate;
+        // Per the WebCodecs spec, `duration` is an `unsigned long long`
+        //   count of microseconds: `(numberOfFrames / sampleRate)`
+        //   seconds times 1,000,000, truncated to an integer.
+        this.duration = Math.trunc(
+            (numberOfFrames / sampleRate) * 1_000_000
+        );
 
         const meta = FORMAT_MAP[format];
         this._bytesPerSample = meta.bytesPerSample;

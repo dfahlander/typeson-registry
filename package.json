@@ -1,6 +1,6 @@
 {
   "name": "typeson-registry",
-  "version": "14.4.0",
+  "version": "14.5.0",
   "description": "The type registry for typeson",
   "author": "dfahlander",
   "contributors": [
@@ -43,7 +43,7 @@
     "tsc:ts7": "npx --yes --package=typescript@7 -- tsc -p tsconfig.json && npx --yes --package=typescript@7 -- tsc -p tsconfig-build.json --noEmit",
     "eslint": "eslint .",
     "lint": "npm run eslint --",
-    "start": "static -p 8085",
+    "start": "echo 'Setting headers for SharedArrayBuffer...' && static -p 8085 --headers '{\"Cross-Origin-Opener-Policy\": \"same-origin\", \"Cross-Origin-Embedder-Policy\": \"require-corp\"}'",
     "rollup": "node ./build.js",
     "build": "npm run rollup && tsc -p tsconfig-build.json",
     "mocha": "mocha --require chai/register-expect.js --require chai/register-assert.js test/*.js",

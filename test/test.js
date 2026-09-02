@@ -254,294 +254,6 @@ function Undefined (preset) {
  * @param {TypesonPreset} [preset]
  * @returns {void}
  */
-function testAudioData (preset) {
-    describe('AudioData', function () {
-        it('should return an AudioData', function () {
-            const typeson = new Typeson().register(preset || [
-                audiodata, arraybuffer
-            ]);
-
-            // 5 Frames, 16-bit integers
-            const int16array = new Int16Array([
-                100, 101, 102, 103, 104,
-                100, 101, 102, 103, 104
-            ]);
-
-            const audioData = new AudioData({
-                format: 's16',
-                sampleRate: 48000,
-                numberOfChannels: 2,
-                numberOfFrames: 5,
-                timestamp: 1_000_000,
-                data: int16array
-            });
-
-            const tson = typeson.stringify(audioData, null, 2);
-            const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.be.an.instanceOf(AudioData);
-            expect(back.format).to.equal('s16');
-            expect(back.sampleRate).to.equal(48000);
-            expect(back.numberOfChannels).to.equal(2);
-            expect(back.numberOfFrames).to.equal(5);
-            expect(back.timestamp).to.equal(1_000_000);
-            // eslint-disable-next-line sonarjs/no-floating-point-equality -- Ok
-            expect(back.duration).to.equal(5 / 48000);
-        });
-
-        it('should return an AudioData (planar)', function () {
-            const typeson = new Typeson().register(preset || [
-                audiodata, arraybuffer
-            ]);
-
-            // 5 Frames, 16-bit integers
-            const int16array = new Int16Array([
-                100, 101, 102, 103, 104,
-                100, 101, 102, 103, 104
-            ]);
-
-            const audioData = new AudioData({
-                format: 's16-planar',
-                sampleRate: 48000,
-                numberOfChannels: 2,
-                numberOfFrames: 5,
-                timestamp: 1_000_000,
-                data: int16array
-            });
-
-            const tson = typeson.stringify(audioData, null, 2);
-            const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.be.an.instanceOf(AudioData);
-            expect(back.format).to.equal('s16-planar');
-            expect(back.sampleRate).to.equal(48000);
-            expect(back.numberOfChannels).to.equal(2);
-            expect(back.numberOfFrames).to.equal(5);
-            expect(back.timestamp).to.equal(1_000_000);
-            // eslint-disable-next-line sonarjs/no-floating-point-equality -- Ok
-            expect(back.duration).to.equal(5 / 48000);
-        });
-    });
-}
-testAudioData();
-
-/**
- * @param {TypesonPreset} [preset]
- * @returns {void}
- */
-function testEncodedAudioChunk (preset) {
-    describe('EncodedAudioChunk', function () {
-        it('should return an EncodedAudioChunk', function () {
-            const typeson = new Typeson().register(preset || [
-                encodedaudiochunk, arraybuffer
-            ]);
-
-            const chunk = new EncodedAudioChunk({
-                type: 'key',
-                timestamp: 1_000_000,
-                duration: 20_000,
-                data: new Uint8Array([1, 2, 3, 4, 5])
-            });
-
-            const tson = typeson.stringify(chunk, null, 2);
-            const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.be.an.instanceOf(EncodedAudioChunk);
-            expect(back.type).to.equal('key');
-            expect(back.timestamp).to.equal(1_000_000);
-            expect(back.duration).to.equal(20_000);
-            expect(back.byteLength).to.equal(5);
-
-            const dest = new Uint8Array(5);
-            back.copyTo(dest);
-            expect(dest).to.deep.equal(new Uint8Array([1, 2, 3, 4, 5]));
-        });
-
-        it(
-            'should return an EncodedAudioChunk with no `duration`',
-            function () {
-                const typeson = new Typeson().register(preset || [
-                    encodedaudiochunk, arraybuffer
-                ]);
-
-                const chunk = new EncodedAudioChunk({
-                    type: 'delta',
-                    timestamp: 500,
-                    data: new Uint8Array([9, 8, 7])
-                });
-
-                const tson = typeson.stringify(chunk, null, 2);
-                const back = typeson.parse(/** @type {string} */ (tson));
-                expect(back.type).to.equal('delta');
-                expect(back.duration).to.be.null;
-            }
-        );
-    });
-}
-testEncodedAudioChunk();
-
-/**
- * @param {TypesonPreset} [preset]
- * @returns {void}
- */
-function testEncodedVideoChunk (preset) {
-    describe('EncodedVideoChunk', function () {
-        it('should return an EncodedVideoChunk', function () {
-            const typeson = new Typeson().register(preset || [
-                encodedvideochunk, arraybuffer
-            ]);
-
-            const chunk = new EncodedVideoChunk({
-                type: 'key',
-                timestamp: 2_000_000,
-                duration: 16_666,
-                data: new Uint8Array([5, 4, 3, 2, 1])
-            });
-
-            const tson = typeson.stringify(chunk, null, 2);
-            const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.be.an.instanceOf(EncodedVideoChunk);
-            expect(back.type).to.equal('key');
-            expect(back.timestamp).to.equal(2_000_000);
-            expect(back.duration).to.equal(16_666);
-            expect(back.byteLength).to.equal(5);
-
-            const dest = new Uint8Array(5);
-            back.copyTo(dest);
-            expect(dest).to.deep.equal(new Uint8Array([5, 4, 3, 2, 1]));
-        });
-
-        it(
-            'should return an EncodedVideoChunk with no `duration`',
-            function () {
-                const typeson = new Typeson().register(preset || [
-                    encodedvideochunk, arraybuffer
-                ]);
-
-                const chunk = new EncodedVideoChunk({
-                    type: 'delta',
-                    timestamp: 750,
-                    data: new Uint8Array([6, 7, 8])
-                });
-
-                const tson = typeson.stringify(chunk, null, 2);
-                const back = typeson.parse(/** @type {string} */ (tson));
-                expect(back.type).to.equal('delta');
-                expect(back.duration).to.be.null;
-            }
-        );
-    });
-}
-testEncodedVideoChunk();
-
-/**
- * @param {TypesonPreset} [preset]
- * @returns {void}
- */
-function testVideoFrame (preset) {
-    describe('VideoFrame', function () {
-        it('should return a VideoFrame (I420)', async function () {
-            const typeson = new Typeson().register(preset || [
-                videoframe, arraybuffer
-            ]);
-
-            // 2x2 I420: Y (4 bytes) + U (1 byte) + V (1 byte) = 6 bytes
-            const data = new Uint8Array([10, 20, 30, 40, 100, 200]);
-            const frame = new VideoFrame(data, {
-                format: 'I420',
-                codedWidth: 2,
-                codedHeight: 2,
-                timestamp: 1_000_000,
-                duration: 33_333
-            });
-
-            const tson = await typeson.stringifyAsync(frame, null, 2);
-            const back = typeson.parse(/** @type {string} */ (tson));
-            expect(back).to.be.an.instanceOf(VideoFrame);
-            expect(back.format).to.equal('I420');
-            expect(back.codedWidth).to.equal(2);
-            expect(back.codedHeight).to.equal(2);
-            expect(back.timestamp).to.equal(1_000_000);
-            expect(back.duration).to.equal(33_333);
-            expect(back.displayWidth).to.equal(2);
-            expect(back.displayHeight).to.equal(2);
-
-            const dest = new Uint8Array(back.allocationSize());
-            await back.copyTo(dest);
-            expect(dest).to.deep.equal(data);
-        });
-
-        it(
-            'should preserve `visibleRect`, display size, and `colorSpace`',
-            async function () {
-                const typeson = new Typeson().register(preset || [
-                    videoframe, arraybuffer
-                ]);
-
-                // 4x4 RGBA
-                const data = new Uint8Array(4 * 4 * 4).fill(128);
-                const frame = new VideoFrame(data, {
-                    format: 'RGBA',
-                    codedWidth: 4,
-                    codedHeight: 4,
-                    timestamp: 0,
-                    visibleRect: {x: 1, y: 1, width: 2, height: 2},
-                    displayWidth: 8,
-                    displayHeight: 8,
-                    colorSpace: {
-                        primaries: 'bt709',
-                        transfer: 'iec61966-2-1',
-                        matrix: 'rgb',
-                        fullRange: true
-                    }
-                });
-
-                const tson = await typeson.stringifyAsync(frame, null, 2);
-                const back = typeson.parse(/** @type {string} */ (tson));
-                expect(back.visibleRect).to.deep.equal({
-                    x: 1, y: 1, width: 2, height: 2
-                });
-                expect(back.displayWidth).to.equal(8);
-                expect(back.displayHeight).to.equal(8);
-                expect(back.colorSpace).to.deep.equal({
-                    primaries: 'bt709',
-                    transfer: 'iec61966-2-1',
-                    matrix: 'rgb',
-                    fullRange: true
-                });
-            }
-        );
-
-        it('should return a VideoFrame with default `colorSpace`', (
-            async function () {
-                const typeson = new Typeson().register(preset || [
-                    videoframe, arraybuffer
-                ]);
-
-                const data = new Uint8Array(2 * 2 * 4); // 2x2 RGBA
-                const frame = new VideoFrame(data, {
-                    format: 'RGBA',
-                    codedWidth: 2,
-                    codedHeight: 2,
-                    timestamp: 0
-                });
-
-                const tson = await typeson.stringifyAsync(frame, null, 2);
-                const back = typeson.parse(/** @type {string} */ (tson));
-                expect(back.colorSpace).to.deep.equal({
-                    primaries: null,
-                    transfer: null,
-                    matrix: null,
-                    fullRange: null
-                });
-                expect(back.duration).to.be.null;
-            }
-        ));
-    });
-}
-testVideoFrame();
-
-/**
- * @param {TypesonPreset} [preset]
- * @returns {void}
- */
 function DomRect (preset) {
     describe('DOMRect', function () {
         it('should return a DOMRect', function () {
@@ -1801,6 +1513,34 @@ describe('ImageData', () => {
             expect(back.data).to.deep.equal(new Uint8ClampedArray(12));
         }
     );
+
+    // https://github.com/Automattic/node-canvas/issues/2621
+    if (typeof Float16Array !== 'undefined' && typeof process === 'undefined') {
+        it('should get back real Float16Array instance with ' +
+            'original array content', () => {
+            const typeson = new Typeson().register([
+                arraybuffer,
+                typedArrays,
+                imagedata
+            ]);
+            const imageData = new ImageData(
+                // @ts-expect-error -- Ok
+                new Float16Array([1.5, 3.2, 7, 95]),
+                1,
+                1,
+                {
+                    pixelFormat: 'rgba-float16'
+                }
+            );
+            const tson = typeson.stringify(imageData);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back.width).to.equal(1);
+            expect(back.height).to.equal(1);
+            expect(back.data).to.deep.equal(
+                new Float16Array([1.5, 3.2, 7, 95])
+            );
+        });
+    }
 });
 
 describe('ImageBitmap', function () {
@@ -1839,12 +1579,12 @@ describe('ImageBitmap', function () {
                 try { // Chrome
                     expect(cvs.toDataURL()).to.equal(
                         // eslint-disable-next-line @stylistic/max-len -- Long
-                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAAXNSR0IArs4c6QAABGJJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDncOQIECEQEFskpJgECBM5geQICBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAgQdWMQCX4yW9owAAAABJRU5ErkJggg=='
+                        'data:image/png;base64,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'
                     );
                 } catch /* (toDataURLError) */ { // Firefox
                     expect(cvs.toDataURL()).to.equal(
                         // eslint-disable-next-line @stylistic/max-len -- Long
-                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
+                        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAACAUlEQVR4Xu3WMQ0AAAzDsJU/6eGIZCPoFXUHELHITgDBAjo8LCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyHlYxAJczebf5AAAAEGRlQkc2RkU3RTk2MUQ5QTdEQURD8qjUmAAAAABJRU5ErkJggg=='
                     );
                 }
             }
@@ -1899,11 +1639,11 @@ describe('ImageBitmap', function () {
                     /* eslint-disable @stylistic/max-len -- Long */
                     try { // Chrome
                         expect(dataURL).to.equal(
-                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAAAXNSR0IArs4c6QAABGJJREFUeF7t1AEJAAAMAsHZv/RyPNwSyDncOQIECEQEFskpJgECBM5geQICBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAAYPlBwgQyAgYrExVghIgYLD8AAECGQGDlalKUAIEDJYfIEAgI2CwMlUJSoCAwfIDBAhkBAxWpipBCRAwWH6AAIGMgMHKVCUoAQIGyw8QIJARMFiZqgQlQMBg+QECBDICBitTlaAECBgsP0CAQEbAYGWqEpQAgQdWMQCX4yW9owAAAABJRU5ErkJggg=='
+                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAF2UlEQVR4AezU227bOhAFUOP8/0efvDhokNiWRJGcyyoKtLElcmbtYP/38IcAAQJJBBRWkqCMSYDA46Gw/BYQIJBGQGGliWp8UCcQyC6gsLInaH4CjQQUVqOwrUogu4DCyp6g+Qn8JVD0M4VVNFhrEagooLAqpmonAkUFFFbRYK1FoKKAwvorVZ8RIBBSQGGFjMVQBAj8JaCw/lLxGQECIQUUVshYDLVOwE2ZBBRWprTMSqC5gMJq/gtgfQKZBBRWprTMSqC5wGBhNdezPgECSwUU1lJulxEgMCKgsEb0vEuAwFIBhbWUO/VlhiewXUBhbY/AAAQIHBVQWEelPEeAwHYBhbU9AgMQiCcQdSKFFTUZcxEg8EtAYf0i8QEBAlEFFFbUZMxFgMAvAYX1i2T8AycQIDBHQGHNcXUqAQITBBTWBFRHEiAwR0BhzXF1ahcBey4VUFhLuV1GgMCIgMIa0fMuAQJLBRTWUm6XESAwIrC3sEYm9y4BAu0EFFa7yC1MIK+AwsqbnckJtBNQWO0i37WwewmMCyiscUMnECCwSEBhLYJ2DQEC4wIKa9zQCQQI/BSY9pPCmkbrYAIE7hZQWHeLOo8AgWkCCmsarYMJELhbQGHdLTp+nhMIEHghoLBewPiYAIF4AgorXiYmIkDghYDCegHjYwIrBNxxTkBhnfPyNAECGwUU1kZ8VxMgcE5AYZ3z8jQBAhsFUhfWRjdXEyCwQUBhbUB3JQEC1wQU1jU3bxEgsEFAYW1Ad+UFAa8Q+BJQWF8I/hIgkENAYeXIyZQECHwJKKwvBH8JEIgk8HoWhfXaxjcECAQTUFjBAjEOAQKvBRTWaxvfECAQTEBhBQtkfBwnEKgroLDqZmszAuUEFFa5SC1EoK6Awqqbrc3qC7TbUGG1i9zCBPIKKKy82ZmcQDsBhdUucgsTyCvQubDypmZyAk0FFFbT4K1NIKOAwsqYmpkJNBVQWE2D77a2fWsIKKwaOdqCQAsBhdUiZksSqCGgsGrkaAsCLQQOFVYLCUsSIBBeQGGFj8iABAg8BRTWU8K/BAiEF1BY4SNaPKDrCAQWUFiBwzEaAQI/BRTWTw8/ESAQWEBhBQ7HaATmCuQ7XWHly8zEBNoKKKy20VucQD4BhZUvMxMTaCugsC5H70UCBFYLKKzV4u4jQOCygMK6TOdFAgRWCyis1eLuyyhg5iACCitIEMYgQOCzgML6bOQJAgSCCCisIEEYgwCBzwIrCuvzFJ4gQIDAAQGFdQDJIwQIxBBQWDFyMAUBAgcEFNYBJI8cF/AkgZkCCmumrrMJELhVQGHdyukwAgRmCiismbrOJlBZYMNuCmsDuisJELgmoLCuuXmLAIENAgprA7orCRC4JqCwrrmNv+UEAgROCyis02ReIEBgl4DC2iXvXgIETgsorNNkXiBwVsDzdwkorLsknUOAwHQBhTWd2AUECNwloLDuknQOAQLTBRIU1nQDFxAgkERAYSUJypgECDweCstvAQECaQQUVpqoWgxqSQJvBRTWWx5fEiAQSUBhRUrDLAQIvBVQWG95fEmAwCyBK+cqrCtq3iFAYIuAwtrC7lICBK4IKKwrat4hQGCLgMLawj5+qRMIdBRQWB1TtzOBpAIKK2lwxibQUUBhdUzdzrkETPstoLC+KfyHAIHoAgorekLmI0DgW0BhfVP4DwEC0QXqF1b0BMxHgMBhAYV1mMqDBAjsFlBYuxNwPwEChwUU1mEqD8YXMGF1AYVVPWH7ESgkoLAKhWkVAtUFFFb1hO1HoJDAP4VVaCurECBQUkBhlYzVUgRqCiismrnaikBJAYVVMtaPS3mAQEoBhZUyNkMT6CmgsHrmbmsCKQUUVsrYDE3guEClJxVWpTTtQqC4gMIqHrD1CFQSUFiV0rQLgeICCutDwL4mQCCOgMKKk4VJCBD4IKCwPgD5mgCBOAIKK04WJtkt4P7wAgorfEQGJEDgKaCwnhL+JUAgvIDCCh+RAQkQeAr8DwAA//+Cw3OPAAAABklEQVQDAOx/AS0pote3AAAAAElFTkSuQmCC'
                         );
                     } catch /* (toDataURLError) */ { // Firefox
                         expect(dataURL).to.equal(
-                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAAEYklEQVR4Xu3UAQkAAAwCwdm/9HI83BLIOdw5AgQIRAQWySkmAQIEzmB5AgIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlAABg+UHCBDICBisTFWCEiBgsPwAAQIZAYOVqUpQAgQMlh8gQCAjYLAyVQlKgIDB8gMECGQEDFamKkEJEDBYfoAAgYyAwcpUJSgBAgbLDxAgkBEwWJmqBCVAwGD5AQIEMgIGK1OVoAQIGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC'
+                            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWCAYAAABkW7XSAAACAUlEQVR4Xu3WMQ0AAAzDsJU/6eGIZCPoFXUHELHITgDBAjo8LCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyBAvIECwgQ7CADMECMgQLyBAsIEOwgAzBAjIEC8gQLCBDsIAMwQIyHlYxAJczebf5AAAAEGRlQkc2RkU3RTk2MUQ5QTdEQURD8qjUmAAAAABJRU5ErkJggg=='
                         );
                     }
                     /* eslint-enable @stylistic/max-len -- Long */
@@ -2233,6 +1973,314 @@ describe('FileList', function () {
         expect(back.item(1).name).to.equal('def');
     });
 });
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testAudioData (preset) {
+    describe('AudioData', function () {
+        it('should return an AudioData', function () {
+            const typeson = new Typeson().register(preset || [
+                audiodata, arraybuffer
+            ]);
+
+            // 5 Frames, 16-bit integers
+            const int16array = new Int16Array([
+                100, 101, 102, 103, 104,
+                100, 101, 102, 103, 104
+            ]);
+
+            const audioData = new AudioData({
+                format: 's16',
+                sampleRate: 48000,
+                numberOfChannels: 2,
+                numberOfFrames: 5,
+                timestamp: 1_000_000,
+                data: int16array
+            });
+
+            const tson = typeson.stringify(audioData, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(AudioData);
+            expect(back.format).to.equal('s16');
+            expect(back.sampleRate).to.equal(48000);
+            expect(back.numberOfChannels).to.equal(2);
+            expect(back.numberOfFrames).to.equal(5);
+            expect(back.timestamp).to.equal(1_000_000);
+            // Per the WebCodecs spec, `duration` is an integer count of
+            //   microseconds: `(numberOfFrames / sampleRate) * 1e6`.
+            expect(back.duration).to.equal(
+                Math.trunc((5 / 48000) * 1_000_000)
+            );
+        });
+
+        it('should return an AudioData (planar)', function () {
+            const typeson = new Typeson().register(preset || [
+                audiodata, arraybuffer
+            ]);
+
+            // 5 Frames, 16-bit integers
+            const int16array = new Int16Array([
+                100, 101, 102, 103, 104,
+                100, 101, 102, 103, 104
+            ]);
+
+            const audioData = new AudioData({
+                format: 's16-planar',
+                sampleRate: 48000,
+                numberOfChannels: 2,
+                numberOfFrames: 5,
+                timestamp: 1_000_000,
+                data: int16array
+            });
+
+            const tson = typeson.stringify(audioData, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(AudioData);
+            expect(back.format).to.equal('s16-planar');
+            expect(back.sampleRate).to.equal(48000);
+            expect(back.numberOfChannels).to.equal(2);
+            expect(back.numberOfFrames).to.equal(5);
+            expect(back.timestamp).to.equal(1_000_000);
+            // See the note above about `duration` units.
+            expect(back.duration).to.equal(
+                Math.trunc((5 / 48000) * 1_000_000)
+            );
+        });
+    });
+}
+testAudioData();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testEncodedAudioChunk (preset) {
+    describe('EncodedAudioChunk', function () {
+        it('should return an EncodedAudioChunk', function () {
+            const typeson = new Typeson().register(preset || [
+                encodedaudiochunk, arraybuffer
+            ]);
+
+            const chunk = new EncodedAudioChunk({
+                type: 'key',
+                timestamp: 1_000_000,
+                duration: 20_000,
+                data: new Uint8Array([1, 2, 3, 4, 5])
+            });
+
+            const tson = typeson.stringify(chunk, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(EncodedAudioChunk);
+            expect(back.type).to.equal('key');
+            expect(back.timestamp).to.equal(1_000_000);
+            expect(back.duration).to.equal(20_000);
+            expect(back.byteLength).to.equal(5);
+
+            const dest = new Uint8Array(5);
+            back.copyTo(dest);
+            expect(dest).to.deep.equal(new Uint8Array([1, 2, 3, 4, 5]));
+        });
+
+        it(
+            'should return an EncodedAudioChunk with no `duration`',
+            function () {
+                const typeson = new Typeson().register(preset || [
+                    encodedaudiochunk, arraybuffer
+                ]);
+
+                const chunk = new EncodedAudioChunk({
+                    type: 'delta',
+                    timestamp: 500,
+                    data: new Uint8Array([9, 8, 7])
+                });
+
+                const tson = typeson.stringify(chunk, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back.type).to.equal('delta');
+                expect(back.duration).to.be.null;
+            }
+        );
+    });
+}
+testEncodedAudioChunk();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testEncodedVideoChunk (preset) {
+    describe('EncodedVideoChunk', function () {
+        it('should return an EncodedVideoChunk', function () {
+            const typeson = new Typeson().register(preset || [
+                encodedvideochunk, arraybuffer
+            ]);
+
+            const chunk = new EncodedVideoChunk({
+                type: 'key',
+                timestamp: 2_000_000,
+                duration: 16_666,
+                data: new Uint8Array([5, 4, 3, 2, 1])
+            });
+
+            const tson = typeson.stringify(chunk, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(EncodedVideoChunk);
+            expect(back.type).to.equal('key');
+            expect(back.timestamp).to.equal(2_000_000);
+            expect(back.duration).to.equal(16_666);
+            expect(back.byteLength).to.equal(5);
+
+            const dest = new Uint8Array(5);
+            back.copyTo(dest);
+            expect(dest).to.deep.equal(new Uint8Array([5, 4, 3, 2, 1]));
+        });
+
+        it(
+            'should return an EncodedVideoChunk with no `duration`',
+            function () {
+                const typeson = new Typeson().register(preset || [
+                    encodedvideochunk, arraybuffer
+                ]);
+
+                const chunk = new EncodedVideoChunk({
+                    type: 'delta',
+                    timestamp: 750,
+                    data: new Uint8Array([6, 7, 8])
+                });
+
+                const tson = typeson.stringify(chunk, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back.type).to.equal('delta');
+                expect(back.duration).to.be.null;
+            }
+        );
+    });
+}
+testEncodedVideoChunk();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testVideoFrame (preset) {
+    describe('VideoFrame', function () {
+        it('should return a VideoFrame (I420)', async function () {
+            const typeson = new Typeson().register(preset || [
+                videoframe, arraybuffer
+            ]);
+
+            // 2x2 I420: Y (4 bytes) + U (1 byte) + V (1 byte) = 6 bytes
+            const data = new Uint8Array([10, 20, 30, 40, 100, 200]);
+            const frame = new VideoFrame(data, {
+                format: 'I420',
+                codedWidth: 2,
+                codedHeight: 2,
+                timestamp: 1_000_000,
+                duration: 33_333
+            });
+
+            const tson = await typeson.stringifyAsync(frame, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(VideoFrame);
+            expect(back.format).to.equal('I420');
+            expect(back.codedWidth).to.equal(2);
+            expect(back.codedHeight).to.equal(2);
+            expect(back.timestamp).to.equal(1_000_000);
+            expect(back.duration).to.equal(33_333);
+            expect(back.displayWidth).to.equal(2);
+            expect(back.displayHeight).to.equal(2);
+
+            const dest = new Uint8Array(back.allocationSize());
+            await back.copyTo(dest);
+            expect(dest).to.deep.equal(data);
+        });
+
+        it(
+            'should preserve `visibleRect`, display size, and `colorSpace`',
+            async function () {
+                const typeson = new Typeson().register(preset || [
+                    videoframe, arraybuffer
+                ]);
+
+                // 4x4 RGBA
+                const data = new Uint8Array(4 * 4 * 4).fill(128);
+                const frame = new VideoFrame(data, {
+                    format: 'RGBA',
+                    codedWidth: 4,
+                    codedHeight: 4,
+                    timestamp: 0,
+                    visibleRect: {x: 1, y: 1, width: 2, height: 2},
+                    displayWidth: 8,
+                    displayHeight: 8,
+                    colorSpace: {
+                        primaries: 'bt709',
+                        transfer: 'iec61966-2-1',
+                        matrix: 'rgb',
+                        fullRange: true
+                    }
+                });
+
+                const tson = await typeson.stringifyAsync(frame, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+
+                // Browsers expose `visibleRect` as a live `DOMRectReadOnly`
+                //   (not a plain object). Its `width`/`height` come
+                //   straight from the init (spec step 21.2), but the `x`/`y`
+                //   offset MAY be repositioned by the UA (spec step 15) --
+                //   Chrome zeroes it for buffer-backed frames -- so
+                //   round-trip the offset against the source frame rather
+                //   than asserting a fixed value.
+                const {visibleRect} = frame;
+                if (!visibleRect) {
+                    throw new Error('Expected the source frame `visibleRect`');
+                }
+                expect(back.visibleRect.width).to.equal(2);
+                expect(back.visibleRect.height).to.equal(2);
+                expect(back.visibleRect.x).to.equal(visibleRect.x);
+                expect(back.visibleRect.y).to.equal(visibleRect.y);
+                expect(back.displayWidth).to.equal(8);
+                expect(back.displayHeight).to.equal(8);
+                // An explicit, fully-populated `colorSpace` round-trips
+                //   verbatim.
+                expect(back.colorSpace.primaries).to.equal('bt709');
+                expect(back.colorSpace.transfer).to.equal('iec61966-2-1');
+                expect(back.colorSpace.matrix).to.equal('rgb');
+                expect(back.colorSpace.fullRange).to.be.true;
+            }
+        );
+
+        it('should return a VideoFrame with default `colorSpace`', (
+            async function () {
+                const typeson = new Typeson().register(preset || [
+                    videoframe, arraybuffer
+                ]);
+
+                const data = new Uint8Array(2 * 2 * 4); // 2x2 RGBA
+                const frame = new VideoFrame(data, {
+                    format: 'RGBA',
+                    codedWidth: 2,
+                    codedHeight: 2,
+                    timestamp: 0
+                });
+
+                const tson = await typeson.stringifyAsync(frame, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+
+                // Per the spec's "Pick Color Space" algorithm, an RGB
+                //   frame constructed with no explicit `colorSpace`
+                //   defaults to the sRGB color space.
+                expect(back.colorSpace.primaries).to.equal('bt709');
+                expect(back.colorSpace.transfer).to.equal('iec61966-2-1');
+                expect(back.colorSpace.matrix).to.equal('rgb');
+                expect(back.colorSpace.fullRange).to.be.true;
+                expect(back.duration).to.be.null;
+            }
+        ));
+    });
+}
+testVideoFrame();
 
 describe('Non-built-in object ignoring', () => {
     it('should ignore non-built-in objects (simulated)', () => {
@@ -2719,37 +2767,42 @@ describe('Polyfills', () => {
             });
         });
 
-        describe('resolveObjectURL', () => {
-            it('should return `undefined` for an unregistered URL', () => {
-                expect(resolveObjectURL('blob:not-a-real-url')).
-                    to.be.undefined;
+        if (resolveObjectURL) {
+            describe('resolveObjectURL', () => {
+                it('should return `undefined` for an unregistered URL', () => {
+                    expect(resolveObjectURL('blob:not-a-real-url')).
+                        to.be.undefined;
+                });
+                it('should return `undefined` when the registered value has ' +
+                    'no readable bytes', () => {
+                    // Registering a non-`Blob` value simulates a `Blob` neither
+                    //   `SyncBlob` nor jsdom's `implForWrapper` can read.
+                    const fakeBlob = /** @type {Blob} */ (
+                        /** @type {unknown} */ ({type: 'text/plain'})
+                    );
+                    const url = URL.createObjectURL(fakeBlob);
+                    expect(resolveObjectURL(url)).to.be.undefined;
+                });
+                it('should resolve a registered SyncBlob to its type and ' +
+                    'bytes', () => {
+                    const sb = new SyncBlob(
+                        ['resolved content'], {type: 'text/plain'}
+                    );
+                    const url = URL.createObjectURL(sb);
+                    // Test-only: we just registered `sb` above, so this is
+                    //   always defined.
+                    const resolved =
+                        /**
+                         * @type {{type: string, bytes: Buffer}}
+                         */
+                        (resolveObjectURL(url));
+                    expect(resolved.type).to.equal('text/plain');
+                    expect(resolved.bytes.toString('utf8')).to.equal(
+                        'resolved content'
+                    );
+                });
             });
-            it('should return `undefined` when the registered value has ' +
-                'no readable bytes', () => {
-                // Registering a non-`Blob` value simulates a `Blob` neither
-                //   `SyncBlob` nor jsdom's `implForWrapper` can read.
-                const fakeBlob = /** @type {Blob} */ (
-                    /** @type {unknown} */ ({type: 'text/plain'})
-                );
-                const url = URL.createObjectURL(fakeBlob);
-                expect(resolveObjectURL(url)).to.be.undefined;
-            });
-            it('should resolve a registered SyncBlob to its type and ' +
-                'bytes', () => {
-                const sb = new SyncBlob(
-                    ['resolved content'], {type: 'text/plain'}
-                );
-                const url = URL.createObjectURL(sb);
-                // Test-only: we just registered `sb` above, so this is
-                //   always defined.
-                const resolved = /** @type {{type: string, bytes: Buffer}} */
-                    (resolveObjectURL(url));
-                expect(resolved.type).to.equal('text/plain');
-                expect(resolved.bytes.toString('utf8')).to.equal(
-                    'resolved content'
-                );
-            });
-        });
+        }
     }
 
     describe('AudioData', () => {
@@ -2904,7 +2957,7 @@ describe('Polyfills', () => {
             });
             expect(() => {
                 chunk.copyTo(new Uint8Array(1));
-            }).to.throw(RangeError);
+            }).to.throw(TypeError);
         });
 
         it('should copy to a raw `ArrayBuffer` destination', () => {
@@ -2948,7 +3001,7 @@ describe('Polyfills', () => {
             });
             expect(() => {
                 chunk.copyTo(new Uint8Array(1));
-            }).to.throw(RangeError);
+            }).to.throw(TypeError);
         });
 
         it('should copy to a raw `ArrayBuffer` destination', () => {
@@ -2998,22 +3051,31 @@ describe('Polyfills', () => {
             expect(new Uint8Array(dest)).to.deep.equal(data);
         });
 
-        it('should throw when the destination buffer is too small', () => {
-            const frame = new VideoFrame(new Uint8Array(16), {
-                format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
-            });
-            expect(() => {
-                frame.copyTo(new Uint8Array(4));
-            }).to.throw(RangeError);
-        });
+        it(
+            'should throw when the destination buffer is too small',
+            async () => {
+                const frame = new VideoFrame(new Uint8Array(16), {
+                    format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
+                });
+                let err;
+                try {
+                    await frame.copyTo(new Uint8Array(4));
+                } catch (caughtError) {
+                    err = caughtError;
+                }
+                expect(err).to.be.an.instanceOf(TypeError);
+            }
+        );
 
         it('should throw for a `format` conversion request', () => {
             const frame = new VideoFrame(new Uint8Array(16), {
                 format: 'RGBA', codedWidth: 2, codedHeight: 2, timestamp: 0
             });
+            // Browsers reject an unsupported pixel-format conversion with
+            //   a `NotSupportedError` `DOMException`.
             expect(() => {
                 frame.allocationSize({format: 'I420'});
-            }).to.throw(TypeError);
+            }).to.throw(DOMException);
         });
 
         it('should copy a cropped `rect` region', async () => {
@@ -3144,6 +3206,9 @@ describe('Polyfills', () => {
     });
 
     describe('QuotaExceededError', () => {
+        // The WebIDL spec mandates these `RangeError`s. Not every browser
+        //   validates yet (Chrome, as of writing, does not), but that is a
+        //   browser bug rather than a reason to relax the assertion.
         it('should throw for a negative `quota`', () => {
             expect(() => new QuotaExceededError('Not enough room', {
                 quota: -1
@@ -3170,25 +3235,35 @@ describe('Polyfills', () => {
             expect(exc.source).to.equal('stream');
         });
 
-        it('should expose a custom `source`', () => {
-            // @ts-expect-error - More recent API (single `init` argument)
-            const exc = new WebTransportError({
-                message: 'Session closed', source: 'session'
+        // The standardised `WebTransportErrorInit` has no `source` member
+        //   (browsers always report `'stream'` for a manually constructed
+        //   error); passing `source` is a polyfill-only extension.
+        if (typeof process !== 'undefined') {
+            it('should expose a custom `source`', () => {
+                // @ts-expect-error - More recent API (single `init` argument)
+                const exc = new WebTransportError({
+                    message: 'Session closed', source: 'session'
+                });
+                expect(exc.source).to.equal('session');
             });
-            expect(exc.source).to.equal('session');
-        });
+        }
     });
 
-    describe('createImageBitmap', () => {
-        it('should add a `dataset` when missing', async () => {
-            const obj = /** @type {ImageBitmapSource} */ ({});
-            const result = /** @type {unknown} */ (
-                await createImageBitmap(obj)
-            );
-            const {dataset} = /** @type {{dataset: {toStringTag?: string}}} */ (
-                result
-            );
-            expect(dataset.toStringTag).to.equal('ImageBitmap');
+    if (typeof process !== 'undefined') {
+        describe('createImageBitmap', () => {
+            it('should add a `dataset` when missing', async () => {
+                const obj = /** @type {ImageBitmapSource} */ ({});
+                const result = /** @type {unknown} */ (
+                    await createImageBitmap(obj)
+                );
+                const {dataset} =
+                    /**
+                     * @type {{dataset: {toStringTag?: string}}}
+                     */ (
+                        result
+                    );
+                expect(dataset.toStringTag).to.equal('ImageBitmap');
+            });
         });
-    });
+    }
 });

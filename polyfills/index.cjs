@@ -3805,7 +3805,10 @@ var AudioData = /*#__PURE__*/function () {
     this.numberOfChannels = numberOfChannels;
     this.numberOfFrames = numberOfFrames;
     this.timestamp = timestamp;
-    this.duration = numberOfFrames / sampleRate;
+    // Per the WebCodecs spec, `duration` is an `unsigned long long`
+    //   count of microseconds: `(numberOfFrames / sampleRate)`
+    //   seconds times 1,000,000, truncated to an integer.
+    this.duration = Math.trunc(numberOfFrames / sampleRate * 1000000);
     var meta = FORMAT_MAP[format];
     this._bytesPerSample = meta.bytesPerSample;
     this._TypedArray = meta.TypedArray;
@@ -3964,7 +3967,8 @@ var EncodedAudioChunk = /*#__PURE__*/function () {
       var targetByteOffset = destIsView ? destination.byteOffset : 0;
       var targetByteLength = destination.byteLength;
       if (targetByteLength < this._data.byteLength) {
-        throw new RangeError("Destination buffer is too small. Need ".concat(this._data.byteLength, " bytes, got ").concat(targetByteLength, "."));
+        // Browsers throw a `TypeError` (not a `RangeError`) here.
+        throw new TypeError("Destination buffer is too small. Need ".concat(this._data.byteLength, " bytes, got ").concat(targetByteLength, "."));
       }
       var destView = new Uint8Array(targetBuffer, targetByteOffset, this._data.byteLength);
       destView.set(this._data);
@@ -4036,7 +4040,8 @@ var EncodedVideoChunk = /*#__PURE__*/function () {
       var targetByteOffset = destIsView ? destination.byteOffset : 0;
       var targetByteLength = destination.byteLength;
       if (targetByteLength < this._data.byteLength) {
-        throw new RangeError("Destination buffer is too small. Need ".concat(this._data.byteLength, " bytes, got ").concat(targetByteLength, "."));
+        // Browsers throw a `TypeError` (not a `RangeError`) here.
+        throw new TypeError("Destination buffer is too small. Need ".concat(this._data.byteLength, " bytes, got ").concat(targetByteLength, "."));
       }
       var destView = new Uint8Array(targetBuffer, targetByteOffset, this._data.byteLength);
       destView.set(this._data);
@@ -4172,6 +4177,11 @@ var PIXEL_FORMATS = {
   }]
 };
 
+// `VideoPixelFormat`s that carry red/green/blue channels (an "RGB
+//   format" per the WebCodecs spec). Used to pick the default
+//   `colorSpace` when the caller does not supply one.
+var RGB_FORMATS = new Set(['RGBA', 'RGBX', 'BGRA', 'BGRX']);
+
 /**
  * VideoFrame class.
  *
@@ -4287,17 +4297,33 @@ var VideoFrame = /*#__PURE__*/function () {
     };
     this.displayWidth = displayWidth !== null && displayWidth !== void 0 ? displayWidth : this.visibleRect.width;
     this.displayHeight = displayHeight !== null && displayHeight !== void 0 ? displayHeight : this.visibleRect.height;
-    this.colorSpace = colorSpace ? {
-      primaries: colorSpace.primaries,
-      transfer: colorSpace.transfer,
-      matrix: colorSpace.matrix,
-      fullRange: colorSpace.fullRange
-    } : {
-      primaries: null,
-      transfer: null,
-      matrix: null,
-      fullRange: null
-    };
+
+    // Per the spec's "Pick Color Space" algorithm: an explicit
+    //   `colorSpace` is used as given; otherwise the frame defaults
+    //   to the sRGB color space for RGB pixel formats and to REC709
+    //   for all others.
+    if (colorSpace) {
+      this.colorSpace = {
+        primaries: colorSpace.primaries,
+        transfer: colorSpace.transfer,
+        matrix: colorSpace.matrix,
+        fullRange: colorSpace.fullRange
+      };
+    } else if (RGB_FORMATS.has(_format)) {
+      this.colorSpace = {
+        primaries: 'bt709',
+        transfer: 'iec61966-2-1',
+        matrix: 'rgb',
+        fullRange: true
+      };
+    } else {
+      this.colorSpace = {
+        primaries: 'bt709',
+        transfer: 'bt709',
+        matrix: 'bt709',
+        fullRange: false
+      };
+    }
     _classPrivateFieldSet2(_data, this, ArrayBuffer.isView(data) ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data));
     _classPrivateFieldSet2(_closed, this, false);
   }
@@ -4341,7 +4367,8 @@ var VideoFrame = /*#__PURE__*/function () {
       var targetByteOffset = destIsView ? destination.byteOffset : 0;
       var targetByteLength = destination.byteLength;
       if (targetByteLength < totalSize) {
-        throw new RangeError("Destination buffer is too small. Need ".concat(totalSize, " bytes, got ").concat(targetByteLength, "."));
+        // Browsers reject with a `TypeError` (not a `RangeError`) here.
+        throw new TypeError("Destination buffer is too small. Need ".concat(totalSize, " bytes, got ").concat(targetByteLength, "."));
       }
       var destBytes = new Uint8Array(targetBuffer, targetByteOffset, totalSize);
       var _iterator = _createForOfIteratorHelper(planes),
@@ -4457,7 +4484,9 @@ function _checkNotClosed() {
 function _layout(options) {
   var _this = this;
   if (options.format && options.format !== this.format) {
-    throw new TypeError('VideoFrame polyfill does not support pixel format conversion');
+    // Browsers reject an unsupported pixel-format conversion with
+    //   a `NotSupportedError` `DOMException`.
+    throw new DOMException('VideoFrame polyfill does not support pixel format conversion', 'NotSupportedError');
   }
 
   // Only reached while open (callers always call `#checkNotClosed`

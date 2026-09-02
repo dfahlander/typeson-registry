@@ -1,4 +1,4 @@
-import '../test/helpers/FileList.js';
+import '../polyfills/FileList.js';
 
 export const imageTestFileNode =
     // browserify-test uses testem which assumes `cwd()` resolution

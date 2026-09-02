@@ -34,6 +34,11 @@ const PIXEL_FORMATS = {
     BGRX: [{xSub: 1, ySub: 1, bytesPerSample: 4}]
 };
 
+// `VideoPixelFormat`s that carry red/green/blue channels (an "RGB
+//   format" per the WebCodecs spec). Used to pick the default
+//   `colorSpace` when the caller does not supply one.
+const RGB_FORMATS = new Set(['RGBA', 'RGBX', 'BGRA', 'BGRX']);
+
 /**
  * VideoFrame class.
  *
@@ -143,14 +148,28 @@ class VideoFrame {
         this.displayWidth = displayWidth ?? this.visibleRect.width;
         this.displayHeight = displayHeight ?? this.visibleRect.height;
 
-        this.colorSpace = colorSpace
-            ? {
+        // Per the spec's "Pick Color Space" algorithm: an explicit
+        //   `colorSpace` is used as given; otherwise the frame defaults
+        //   to the sRGB color space for RGB pixel formats and to REC709
+        //   for all others.
+        if (colorSpace) {
+            this.colorSpace = {
                 primaries: colorSpace.primaries,
                 transfer: colorSpace.transfer,
                 matrix: colorSpace.matrix,
                 fullRange: colorSpace.fullRange
-            }
-            : {primaries: null, transfer: null, matrix: null, fullRange: null};
+            };
+        } else if (RGB_FORMATS.has(format)) {
+            this.colorSpace = {
+                primaries: 'bt709', transfer: 'iec61966-2-1',
+                matrix: 'rgb', fullRange: true
+            };
+        } else {
+            this.colorSpace = {
+                primaries: 'bt709', transfer: 'bt709',
+                matrix: 'bt709', fullRange: false
+            };
+        }
 
         this.#data = ArrayBuffer.isView(data)
             ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength)
@@ -191,8 +210,11 @@ class VideoFrame {
      */
     #layout (options) {
         if (options.format && options.format !== this.format) {
-            throw new TypeError(
-                'VideoFrame polyfill does not support pixel format conversion'
+            // Browsers reject an unsupported pixel-format conversion with
+            //   a `NotSupportedError` `DOMException`.
+            throw new DOMException(
+                'VideoFrame polyfill does not support pixel format conversion',
+                'NotSupportedError'
             );
         }
 
@@ -268,7 +290,8 @@ class VideoFrame {
         const targetByteLength = destination.byteLength;
 
         if (targetByteLength < totalSize) {
-            throw new RangeError(
+            // Browsers reject with a `TypeError` (not a `RangeError`) here.
+            throw new TypeError(
                 `Destination buffer is too small. Need ${
                     totalSize
                 } bytes, got ${targetByteLength}.`

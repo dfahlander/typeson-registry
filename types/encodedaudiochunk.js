@@ -16,9 +16,16 @@ const encodedaudiochunk = {
             return {type, timestamp, duration, data};
         },
         revive ({type, timestamp, duration, data}) {
-            return new EncodedAudioChunk({
-                type, timestamp, duration, data: new Uint8Array(data)
-            });
+            // A browser's `EncodedAudioChunkInit` has no `duration`
+            //   default and coerces an explicit `null`/`undefined` to `0`,
+            //   so only pass it through when the source chunk actually
+            //   had one (otherwise `duration` must round-trip as `null`).
+            /** @type {EncodedAudioChunkInit} */
+            const init = {type, timestamp, data: new Uint8Array(data)};
+            if (duration !== null && duration !== undefined) {
+                init.duration = duration;
+            }
+            return new EncodedAudioChunk(init);
         }
     }
 };

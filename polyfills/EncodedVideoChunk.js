@@ -48,7 +48,8 @@ class EncodedVideoChunk {
         const targetByteLength = destination.byteLength;
 
         if (targetByteLength < this._data.byteLength) {
-            throw new RangeError(
+            // Browsers throw a `TypeError` (not a `RangeError`) here.
+            throw new TypeError(
                 `Destination buffer is too small. Need ${
                     this._data.byteLength
                 } bytes, got ${targetByteLength}.`

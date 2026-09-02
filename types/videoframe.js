@@ -47,10 +47,19 @@ const videoframe = {
             format, codedWidth, codedHeight, timestamp, duration,
             visibleRect, displayWidth, displayHeight, colorSpace, data
         }) {
-            return new VideoFrame(new Uint8Array(data), {
-                format, codedWidth, codedHeight, timestamp, duration,
+            // A browser's `VideoFrameBufferInit` has no `duration` default
+            //   and coerces an explicit `null`/`undefined` to `0`, so only
+            //   pass it through when the source frame actually had one
+            //   (otherwise `duration` must round-trip as `null`).
+            /** @type {VideoFrameBufferInit} */
+            const init = {
+                format, codedWidth, codedHeight, timestamp,
                 visibleRect, displayWidth, displayHeight, colorSpace
-            });
+            };
+            if (duration !== null && duration !== undefined) {
+                init.duration = duration;
+            }
+            return new VideoFrame(new Uint8Array(data), init);
         }
     }
 };
