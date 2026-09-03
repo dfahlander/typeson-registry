@@ -3,8 +3,8 @@
     AudioData, EncodedAudioChunk, EncodedVideoChunk, VideoFrame,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
-    DOMQuad, WebTransportError,
-    XMLHttpRequest, xmlHttpRequestOverrideMimeType -- Polyfills */
+    DOMQuad, WebTransportError, IDBKeyRange,
+    XMLHttpRequest, xmlHttpRequestOverrideMimeType -- Polyfills or globals */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
 /* eslint-disable new-cap -- For clarity */
@@ -65,7 +65,7 @@ const {
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
     bigint, bigintObject,
-    cryptokey, negativeZero, symbol, promise,
+    cryptokey, negativeZero, symbol, promise, idbkeyrange,
 
     // presets
     arrayNonindexKeys,
@@ -2281,6 +2281,20 @@ function testVideoFrame (preset) {
     });
 }
 testVideoFrame();
+
+describe('IDBKeyRange', () => {
+    it('Should work with IDBKeyRange objects', () => {
+        const typeson = new Typeson().register(idbkeyrange);
+        const tson = typeson.stringify(
+            IDBKeyRange.bound(3, 9, true, false)
+        );
+        const back = typeson.parse(/** @type {string} */ (tson));
+        expect(back.lower).to.equal(3);
+        expect(back.upper).to.equal(9);
+        expect(back.lowerOpen).to.equal(true);
+        expect(back.upperOpen).to.equal(false);
+    });
+});
 
 describe('Non-built-in object ignoring', () => {
     it('should ignore non-built-in objects (simulated)', () => {

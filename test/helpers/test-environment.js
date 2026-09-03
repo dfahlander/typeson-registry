@@ -26,6 +26,7 @@ import {
     DOMMatrix,
     DOMMatrixReadOnly,
     createImageBitmap,
+    IDBKeyRange,
 
     // URL
     createObjectURL,
@@ -62,6 +63,9 @@ globalThis.FileReader = window.FileReader;
 globalThis.HTMLInputElement = window.HTMLInputElement;
 
 globalThis.FileList = window.FileList;
+
+// @ts-expect-error -- Incomplete
+globalThis.IDBKeyRange = IDBKeyRange;
 
 /** @type {NodeMockAPI} */ (
     globalThis

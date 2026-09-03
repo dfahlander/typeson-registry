@@ -21,6 +21,7 @@ import error from './types/error.js';
 import errors from './types/errors.js';
 import file from './types/file.js';
 import filelist from './types/filelist.js';
+import idbkeyrange from './types/idbkeyrange.js';
 import imagebitmap from './types/imagebitmap.js';
 import imagedata from './types/imagedata.js';
 import infinity from './types/infinity.js';
@@ -64,8 +65,8 @@ export {
     arraybuffer, audiodata, bigintObject, bigint, blob, cloneable, cryptokey,
     dataview, date, domexception, dommatrix, dompoint, domquad, domrect,
     encodedaudiochunk, encodedvideochunk, error, errors, file, filelist,
-    imagebitmap, imagedata, infinity, intlTypes, map, nan, negativeInfinity,
-    negativeZero, nonbuiltinIgnore, primitiveObjects, promise,
+    idbkeyrange, imagebitmap, imagedata, infinity, intlTypes, map, nan,
+    negativeInfinity, negativeZero, nonbuiltinIgnore, primitiveObjects, promise,
     quotaexceedederror, regexp, resurrectable, set, symbol, typedArraysSocketio,
     typedArrays, undef, userObject, videoframe, webtransporterror
 };

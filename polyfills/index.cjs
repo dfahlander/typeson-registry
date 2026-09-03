@@ -4858,6 +4858,50 @@ function _createImageBitmap() {
   return _createImageBitmap.apply(this, arguments);
 }
 
+/**
+ * For a full polyfill, use the likes of `indexeddbshim`
+ */
+var IDBKeyRange = /*#__PURE__*/function () {
+  /**
+   * Not the actual signature.
+   * @param {IDBValidKey} lower
+   * @param {IDBValidKey} upper
+   * @param {boolean} lowerOpen
+   * @param {boolean} upperOpen
+   */
+  function IDBKeyRange(lower, upper, lowerOpen, upperOpen) {
+    _classCallCheck(this, IDBKeyRange);
+    this.lower = lower;
+    this.upper = upper;
+    this.lowerOpen = lowerOpen;
+    this.upperOpen = upperOpen;
+  }
+
+  /**
+   * @returns {"IDBKeyRange"}
+   */
+  return _createClass(IDBKeyRange, [{
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'IDBKeyRange';
+    }
+  }], [{
+    key: "bound",
+    value: /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @param {IDBValidKey} lower
+     * @param {IDBValidKey} upper
+     * @param {boolean} lowerOpen
+     * @param {boolean} upperOpen
+     * @returns {IDBKeyRange}
+     */
+    function bound(lower, upper, lowerOpen, upperOpen) {
+      return new IDBKeyRange(lower, upper, lowerOpen, upperOpen);
+    }
+  }]);
+}();
+
 exports.AudioData = AudioData;
 exports.DOMMatrix = DOMMatrix;
 exports.DOMMatrixReadOnly = DOMMatrixReadOnly;
@@ -4868,6 +4912,7 @@ exports.DOMRect = DOMRect;
 exports.DOMRectReadOnly = DOMRectReadOnly;
 exports.EncodedAudioChunk = EncodedAudioChunk;
 exports.EncodedVideoChunk = EncodedVideoChunk;
+exports.IDBKeyRange = IDBKeyRange;
 exports.QuotaExceededError = QuotaExceededError;
 exports.SyncBlob = SyncBlob;
 exports.SyncFile = SyncFile;

@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 14.6.0
+
+- feat: `IDBKeyRange` type
+
 ## 14.5.0
 
 - feat: `Float16Array` + `colorSpace` in `ImageData`; spec-align WebCodecs polyfills
