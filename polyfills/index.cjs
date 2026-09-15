@@ -4825,11 +4825,8 @@ var DOMMatrixReadOnly = /*#__PURE__*/function () {
 }();
 
 /**
- * @param {HTMLCanvasElement} cvs
- * @returns {Promise<HTMLCanvasElement>}
- */
-/**
- * @param {ImageBitmapSource & {dataset?: {toStringTag?: string}}} cvs
+ * @param {ImageBitmapSource} cvs
+ * @deprecated Use a polyfill like that used in test/helpers/test-environment.js
  * @returns {Promise<ImageBitmap>}
  */
 function createImageBitmap(_x) {
@@ -4842,12 +4839,13 @@ function _createImageBitmap() {
         case 0:
           // This really ought not be a canvas, but it works as a simple shim
           //   for our tests
+
           // cvs[Symbol.toStringTag] = 'ImageBitmap';
           // Above line throwing in current jsdom now
-          if (!cvs.dataset) {
-            cvs.dataset = {};
-          }
-          cvs.dataset.toStringTag = 'ImageBitmap';
+
+          Object.defineProperty(cvs, Symbol.toStringTag, {
+            value: 'ImageBitmap'
+          });
           _context.n = 1;
           return /** @type {ImageBitmap} */cvs;
         case 1:

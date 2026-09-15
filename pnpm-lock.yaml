@@ -33,6 +33,9 @@ importers:
       '@eslint/markdown':
         specifier: ^8.0.3
         version: 8.0.3(supports-color@8.1.1)
+      '@formatjs/intl-durationformat':
+        specifier: ^0.11.1
+        version: 0.11.1
       '@node-static/node-static':
         specifier: ^0.9.1
         version: 0.9.1
@@ -809,6 +812,18 @@ packages:
   '@fintechstudios/eslint-plugin-chai-as-promised@3.1.0':
     resolution: {integrity: sha512-Y3TmITTwc5u8hoW0GWxle1hKiVadDqDHyLQaTv+e+xVDHazn361QIEY9NbWqNsXP0jzrSskpnhkBr++h+PciEw==}
     engines: {node: '>=8.10.0'}
+
+  '@formatjs/bigdecimal@0.2.7':
+    resolution: {integrity: sha512-B4+XY/e4u5v261r3a37Kq2ax91gPZSKGyVpx8X5dygAggLlUz+6MeBpmAhaBFGB8WQ4JB1qD+QtKHk9aJkEb9Q==}
+
+  '@formatjs/fast-memoize@3.1.7':
+    resolution: {integrity: sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==}
+
+  '@formatjs/intl-durationformat@0.11.1':
+    resolution: {integrity: sha512-Mkuc+Q8/96Hb0w4Pwa9sqkKVQVl75TCaqaXIXHgsVsLDko+FKQhw9n/7BnbonueqPxkQkGYvn8/G2IKzT970og==}
+
+  '@formatjs/intl-localematcher@0.9.0':
+    resolution: {integrity: sha512-Z7TD3ssNry1Av1dVDoq/mzpxGyxqWwU0ClWEo+BB3k0JQTeQvUGmeK9WZGYvlqStS0UqkaKXk3dfjsb6NaHAxw==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -4291,6 +4306,19 @@ snapshots:
   '@exodus/bytes@1.15.1': {}
 
   '@fintechstudios/eslint-plugin-chai-as-promised@3.1.0': {}
+
+  '@formatjs/bigdecimal@0.2.7': {}
+
+  '@formatjs/fast-memoize@3.1.7': {}
+
+  '@formatjs/intl-durationformat@0.11.1':
+    dependencies:
+      '@formatjs/bigdecimal': 0.2.7
+      '@formatjs/intl-localematcher': 0.9.0
+
+  '@formatjs/intl-localematcher@0.9.0':
+    dependencies:
+      '@formatjs/fast-memoize': 3.1.7
 
   '@humanfs/core@0.19.2':
     dependencies:

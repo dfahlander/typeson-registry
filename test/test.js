@@ -1,10 +1,12 @@
 /* globals InternalError -- If available */
-/* globals document, ImageData, createImageBitmap, FileReader,
+/* globals document, ImageData, createImageBitmap, createImageBitmapPolyfill,
+    FileReader,
     AudioData, EncodedAudioChunk, EncodedVideoChunk, VideoFrame,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
     DOMQuad, WebTransportError, IDBKeyRange,
-    XMLHttpRequest, xmlHttpRequestOverrideMimeType -- Polyfills or globals */
+    XMLHttpRequest, xmlHttpRequestOverrideMimeType,
+    OffscreenCanvas -- Polyfills or globals */
 /* eslint-disable no-restricted-syntax -- instanceof is
     convenient for checking here */
 /* eslint-disable new-cap -- For clarity */
@@ -2477,20 +2479,149 @@ describe('Presets', () => {
             expect(() => {
                 typeson.stringify(new Error('test'));
             }).to.not.throw();
+
+            // https://github.com/whatwg/html/issues/5158
             expect(() => {
-                typeson.stringify(Symbol('test'));
-            }).to.throw(DOMException);
+                typeson.stringify(Object.prototype);
+            }).to.not.throw();
 
             expect(() => {
-                const buffer = new ArrayBuffer(8);
-                buffer.transfer();
-                typeson.stringify(buffer);
+                typeson.stringify(Symbol('test'));
             }).to.throw(DOMException);
 
             expect(() => {
                 typeson.stringify(function () {
                     //
                 });
+            }).to.throw(DOMException);
+
+            // Arguments
+            expect(() => {
+                typeson.stringify(function () {
+                    // eslint-disable-next-line prefer-rest-params -- Testing
+                    return arguments;
+                }());
+            }).to.throw(DOMException);
+
+            // Module
+            expect(() => {
+                typeson.stringify(util);
+            }).to.throw(DOMException);
+
+            // Promise
+            expect(() => {
+                typeson.stringify(Promise.resolve());
+            }).to.throw(DOMException);
+
+            // WeakMap
+            expect(() => {
+                typeson.stringify(new WeakMap());
+            }).to.throw(DOMException);
+
+            // WeakSet
+            expect(() => {
+                typeson.stringify(new WeakSet());
+            }).to.throw(DOMException);
+
+            // WeakRef
+            expect(() => {
+                typeson.stringify(new WeakRef({}));
+            }).to.throw(DOMException);
+
+            // FinalizationRegistry
+            expect(() => {
+                typeson.stringify(new FinalizationRegistry(() => {
+                    // Noop
+                }));
+            }).to.throw(DOMException);
+
+            // Generator
+            expect(() => {
+                /**
+                 * @yields {number}
+                 * @returns {Generator<number>}
+                 */
+                function *generator () {
+                    yield 1;
+                }
+                typeson.stringify(generator());
+            }).to.throw(DOMException);
+
+            // AsyncGenerator
+            expect(() => {
+                /**
+                 * @yields {number}
+                 * @returns {AsyncGenerator<number>}
+                 */
+                async function *asyncGenerator () {
+                    yield 1;
+                }
+                typeson.stringify(asyncGenerator());
+            }).to.throw(DOMException);
+
+            // String Iterator
+            expect(() => {
+                typeson.stringify(''[Symbol.iterator]());
+            }).to.throw(DOMException);
+
+            // Array Iterator
+            expect(() => {
+                typeson.stringify([][Symbol.iterator]());
+            }).to.throw(DOMException);
+
+            // Map Iterator
+            expect(() => {
+                typeson.stringify(new Map()[Symbol.iterator]());
+            }).to.throw(DOMException);
+
+            // Set Iterator
+            expect(() => {
+                typeson.stringify(new Set()[Symbol.iterator]());
+            }).to.throw(DOMException);
+
+            // RegExp String Iterator
+            expect(() => {
+                typeson.stringify((/a/g)[Symbol.matchAll]('a'));
+            }).to.throw(DOMException);
+
+
+            expect(() => {
+                typeson.stringify(new Intl.Collator());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.DateTimeFormat());
+            }).to.throw(DOMException);
+
+            expect(() => {
+                typeson.stringify(
+                    new Intl.DisplayNames(['en'], {type: 'language'})
+                );
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.DurationFormat());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.ListFormat());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.Locale('en'));
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.NumberFormat());
+            }).to.throw(DOMException);
+
+            expect(() => {
+                typeson.stringify(new Intl.PluralRules());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.RelativeTimeFormat());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new Intl.Segmenter());
+            }).to.throw(DOMException);
+
+            expect(() => {
+                typeson.stringify(new Event('click'));
             }).to.throw(DOMException);
 
             // Node's native global `MessageChannel`/`MessagePort` don't set
@@ -2505,10 +2636,25 @@ describe('Presets', () => {
                 typeson.stringify(new MessageChannel().port1);
             }).to.throw(DOMException);
 
-            // https://github.com/whatwg/html/issues/5158
             expect(() => {
-                typeson.stringify(Object.prototype);
-            }).to.not.throw();
+                typeson.stringify(new ReadableStream());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new WritableStream());
+            }).to.throw(DOMException);
+            expect(() => {
+                typeson.stringify(new TransformStream());
+            }).to.throw(DOMException);
+
+            expect(() => {
+                typeson.stringify(new OffscreenCanvas(10, 10));
+            }).to.throw(DOMException);
+
+            expect(() => {
+                const buffer = new ArrayBuffer(8);
+                buffer.transfer();
+                typeson.stringify(buffer);
+            }).to.throw(DOMException);
 
             expect(() => {
                 typeson.stringify(document.createElement('br'));
@@ -3264,19 +3410,15 @@ describe('Polyfills', () => {
     });
 
     if (typeof process !== 'undefined') {
-        describe('createImageBitmap', () => {
-            it('should add a `dataset` when missing', async () => {
+        describe('createImageBitmapPolyfill', () => {
+            it('should add a `Symbol.toStringTag` when missing', async () => {
                 const obj = /** @type {ImageBitmapSource} */ ({});
-                const result = /** @type {unknown} */ (
-                    await createImageBitmap(obj)
+                // eslint-disable-next-line jsdoc/valid-types -- Ok
+                const result = /** @type {{[Symbol.toStringTag]: string}} */ (
+                    // @ts-expect-error -- Testing
+                    await createImageBitmapPolyfill(obj)
                 );
-                const {dataset} =
-                    /**
-                     * @type {{dataset: {toStringTag?: string}}}
-                     */ (
-                        result
-                    );
-                expect(dataset.toStringTag).to.equal('ImageBitmap');
+                expect(result[Symbol.toStringTag]).to.equal('ImageBitmap');
             });
         });
     }

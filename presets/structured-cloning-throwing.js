@@ -75,12 +75,40 @@ const structuredCloningThrowing = structuredCloning.concat({
                     // WeakSet instances have an extra slot ([[WeakSetData]])
                     //    but not throwing in Chrome `postMessage`
                     'WeakSet',
+                    // WeakRef instances have an extra slot
+                    //    ([[WeakRefTarget]])
+                    'WeakRef',
+                    // FinalizationRegistry instances have extra internal
+                    //    slots (e.g., [[Cells]])
+                    'FinalizationRegistry',
+                    // Generator objects have an extra slot
+                    //    ([[GeneratorState]])
+                    'Generator',
+                    // Async generator objects have an extra slot
+                    //    ([[AsyncGeneratorState]])
+                    'AsyncGenerator',
+                    // Built-in iterator result objects have internal slots
+                    //    tied to the collection/string being iterated
+                    'String Iterator', 'Array Iterator',
+                    'Map Iterator', 'Set Iterator', 'RegExp String Iterator',
+                    // `Intl` objects (e.g., `Intl.Collator`) all have
+                    //    internal slots and are not structured-cloneable
+                    'Intl.Collator', 'Intl.DateTimeFormat',
+                    'Intl.DisplayNames', 'Intl.DurationFormat',
+                    'Intl.ListFormat', 'Intl.Locale', 'Intl.NumberFormat',
+                    'Intl.PluralRules', 'Intl.RelativeTimeFormat',
+                    'Intl.Segmenter',
 
                     // HTML-SPECIFIC
                     'Event',
                     // Also in Node `worker_threads` (currently experimental)
                     'MessageChannel',
-                    'MessagePort'
+                    'MessagePort',
+                    // Streams are Transferable but not Serializable, so
+                    //    cloning them (as opposed to transferring) throws
+                    'ReadableStream', 'WritableStream', 'TransformStream',
+                    // Also Transferable but not Serializable
+                    'OffscreenCanvas'
                 ].includes(stringTag) ||
                 // Node's native `worker_threads` `MessageChannel`/
                 //   `MessagePort` don't set `Symbol.toStringTag` per

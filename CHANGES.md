@@ -1,5 +1,11 @@
 # typeson-registry
 
+## 14.7.0
+
+- fix: throw on more non-acceptable objects for structured cloning
+- fix: avoid supporting dataset hack for image bitmap and bitmap polyfill
+- test: check OffscreenCanvas; provide better createImageBitmap than our polyfill
+
 ## 14.6.1
 
 - fix: ensure instance properties of base Error class are preserved with webtransporterror and quotaexceedederror
