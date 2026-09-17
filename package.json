@@ -69,7 +69,7 @@
     "exclude": [
       "build.js",
       "dist",
-      ".ncurc.cjs",
+      ".ncurc.js",
       "eslint.config.js",
       "browser-test",
       "coverage",
