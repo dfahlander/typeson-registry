@@ -1,5 +1,5 @@
 /* globals InternalError -- If available */
-/* globals document, ImageData, createImageBitmap, createImageBitmapPolyfill,
+/* globals document, ImageData, createImageBitmap,
     FileReader,
     AudioData, EncodedAudioChunk, EncodedVideoChunk, VideoFrame,
     DOMRect, DOMPoint, DOMMatrix,
@@ -3408,18 +3408,4 @@ describe('Polyfills', () => {
             });
         }
     });
-
-    if (typeof process !== 'undefined') {
-        describe('createImageBitmapPolyfill', () => {
-            it('should add a `Symbol.toStringTag` when missing', async () => {
-                const obj = /** @type {ImageBitmapSource} */ ({});
-                // eslint-disable-next-line jsdoc/valid-types -- Ok
-                const result = /** @type {{[Symbol.toStringTag]: string}} */ (
-                    // @ts-expect-error -- Testing
-                    await createImageBitmapPolyfill(obj)
-                );
-                expect(result[Symbol.toStringTag]).to.equal('ImageBitmap');
-            });
-        });
-    }
 });

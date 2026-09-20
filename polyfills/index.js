@@ -13,5 +13,6 @@ export * from './DOMPointReadOnly.js';
 export * from './DOMQuad.js';
 export * from './DOMMatrix.js';
 export * from './DOMMatrixReadOnly.js';
-export * from './createImageBitmap.js';
+export * from './buildCanvasPolyfills.js';
+export * from './buildFileList.js';
 export * from './IDBKeyRange.js';

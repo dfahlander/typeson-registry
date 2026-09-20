@@ -1,5 +1,13 @@
 # typeson-registry
 
+## 15.0.0
+
+BREAKING CHANGES:
+- Renames file paths and exports for FileList and createImageBitmap polyfills
+
+- feat: rename createImageBitmap file to `buildCanvasPolyfills` (with more exports) and make it require canvas
+- feat: rename FileList polyfill to `buildFileList` and make it require HTMLInputElement
+
 ## 14.7.0
 
 - fix: throw on more non-acceptable objects for structured cloning
