@@ -3366,7 +3366,6 @@ var whatwgURL = /*@__PURE__*/getDefaultExportFromCjs(whatwgUrlExports);
  */
 function generateUUID() {
   //  Adapted from original: public domain/MIT: https://stackoverflow.com/a/8809472/271577
-  /* c8 ignore next */
   var d = Date.now();
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, function (c) {
     /* eslint-disable no-bitwise, sonarjs/pseudo-random -- Convenient */
@@ -3429,10 +3428,7 @@ function partsToBuffer(parts) {
       return Buffer.from(part.buffer, part.byteOffset, part.byteLength);
     }
     var partBytes = part && syncBytesMap.get(/** @type {Blob} */part);
-    if (partBytes) {
-      return partBytes;
-    }
-    return Buffer.from(String(part), 'utf8');
+    return partBytes || Buffer.from(String(part), 'utf8');
   }));
 }
 
@@ -3507,7 +3503,7 @@ var createObjectURL = function createObjectURL(blob) {
   var blobURL = 'blob:' + (parsedURL ? serializeURLOrigin(parsedURL)
   // While `parseURL` can return `null`, `location.href`
   //  tends not to allow
-  /* c8 ignore next */ : 'null') + '/' + generateUUID();
+  /* c8 ignore next -- See comment above */ : 'null') + '/' + generateUUID();
   blobURLs[blobURL] = blob;
   return blobURL;
 };
@@ -3550,10 +3546,7 @@ var resolveObjectURL = function resolveObjectURL(blobURL) {
   }
   // eslint-disable-next-line n/no-sync -- Deliberate
   var bytes = getBlobBytesSync(blob);
-  if (!bytes) {
-    return undefined;
-  }
-  return {
+  return !bytes ? undefined : {
     type: blob.type,
     bytes: bytes
   };
@@ -4859,6 +4852,7 @@ var DOMMatrixReadOnly = /*#__PURE__*/function () {
   }]);
 }();
 
+// @ts-nocheck -- Uses `Buffer`, which has no types without `@types/node`
 /**
  * Builds Node `canvas`-backed `ImageBitmap`, `OffscreenCanvas`, and
  *   `createImageBitmap` polyfills.
@@ -5149,6 +5143,8 @@ function buildOffscreenCanvas(canvasModule, ImageBitmap) {
               return;
             }
             resolve(
+            // eslint-disable-next-line @stylistic/max-len -- Long
+            // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
             // @ts-ignore Ok
             new Blob([buffer], {
               type: (options === null || options === void 0 ? void 0 : options.type) || 'image/png'
@@ -5223,6 +5219,7 @@ function buildFileList(HTMLInputElementCtor) {
   }();
   Object.defineProperty(HTMLInputElementCtor.prototype, 'files', {
     get: function get() {
+      // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
       // @ts-ignore -- Private API
       // eslint-disable-next-line @stylistic/max-len -- Long
       // eslint-disable-next-line unicorn/no-this-outside-of-class -- Monkeypatching
