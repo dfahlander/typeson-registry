@@ -61,11 +61,11 @@ if (typeof Int8Array === 'function') {
         Float64Array,
         ...(typeof BigInt64Array === 'function'
             ? [BigInt64Array, BigUint64Array]
-            /* c8 ignore next */
+            /* c8 ignore next -- Later support */
             : []),
         ...(typeof Float16Array === 'function'
             ? [Float16Array]
-            /* c8 ignore next */
+            /* c8 ignore next -- Later support */
             : [])
     ].forEach((TypedArray) => create(TypedArray));
 }

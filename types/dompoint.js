@@ -6,11 +6,11 @@ import {toStringTag} from 'typeson';
  */
 const dompoint = {};
 
-/* c8 ignore next */
+/* c8 ignore next -- Later support */
 if (typeof DOMPoint !== 'undefined') {
     create(DOMPoint);
 }
-/* c8 ignore next */
+/* c8 ignore next -- Later support */
 if (typeof DOMPointReadOnly !== 'undefined') {
     create(DOMPointReadOnly);
 }

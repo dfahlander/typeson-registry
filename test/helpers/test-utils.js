@@ -51,9 +51,11 @@ class MyCloneable {
     /**
      * @returns {{obj: string}}
      */
+    // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
     // @ts-ignore How to fix?
     [Symbol.for('cloneEncapsulate')] = function () {
         return {obj: JSON.stringify(
+            // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
             // @ts-ignore How to fix?
             this.obj
         )};
@@ -64,6 +66,7 @@ class MyCloneable {
      * @param {ArbitraryObject} encapsulatedMyCloneable
      * @returns {MyCloneable}
      */
+    // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
     // @ts-ignore How to fix?
     [Symbol.for('cloneRevive')] = function (
         encapsulatedMyCloneable

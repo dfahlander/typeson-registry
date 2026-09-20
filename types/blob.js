@@ -16,8 +16,7 @@ const blob = {
             req.open('GET', URL.createObjectURL(b), false); // Sync
             req.send();
 
-            // Seems not feasible to accurately simulate
-            /* c8 ignore next 3 */
+            /* c8 ignore next 3 -- Seems not feasible to accurately simulate */
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad Blob access: ' + req.status);
             }
@@ -49,8 +48,8 @@ const blob = {
                         )
                     });
                 });
-                // Seems not feasible to accurately simulate
-                /* c8 ignore next 3 */
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                /* c8 ignore next 3 -- Seems not feasible to accurately simulate */
                 reader.addEventListener('error', () => {
                     reject(reader.error);
                 });

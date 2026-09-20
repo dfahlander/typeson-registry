@@ -6,11 +6,11 @@ import {toStringTag} from 'typeson';
  */
 const dommatrix = {};
 
-/* c8 ignore next */
+/* c8 ignore next -- Later support */
 if (typeof DOMMatrix !== 'undefined') {
     create(DOMMatrix);
 }
-/* c8 ignore next */
+/* c8 ignore next -- Later support */
 if (typeof DOMMatrixReadOnly !== 'undefined') {
     create(DOMMatrixReadOnly);
 }

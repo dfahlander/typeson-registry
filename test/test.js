@@ -108,8 +108,10 @@ function ErrorAndErrors (preset) {
             const e4 = new SyntaxError('Error4');
             const e5 = new ReferenceError('Error5');
             const e6 = new AggregateError([new Error('InnerError6')], 'Error6');
+            // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
             // @ts-ignore Non-standard
             const e7 = typeof InternalError !== 'undefined'
+                // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
                 // @ts-ignore Non-standard
                 ? new InternalError('Error7')
                 : undefined;
@@ -143,13 +145,17 @@ function ErrorAndErrors (preset) {
             expect(obj.e6.name).to.equal('AggregateError');
             expect(obj.e6.message).to.equal('Error6');
             expect(obj.e6.errors[0].message).to.equal('InnerError6');
+            // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
             // @ts-ignore Non-standard
-            if (typeof InternalError !== 'undefined') {
-                // @ts-ignore Non-standard
-                expect(obj.e7).to.be.an.instanceOf(InternalError);
-                expect(obj.e7.name).to.equal('InternalError');
-                expect(obj.e7.message).to.equal('Error7');
+            if (typeof InternalError === 'undefined') {
+                return;
             }
+
+            // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
+            // @ts-ignore Non-standard
+            expect(obj.e7).to.be.an.instanceOf(InternalError);
+            expect(obj.e7.name).to.equal('InternalError');
+            expect(obj.e7.message).to.equal('Error7');
         });
     });
 }
@@ -748,10 +754,12 @@ function BuiltIn (preset) {
             const json = typeson.stringify({m: map1});
             const obj = typeson.parse(/** @type {string} */ (json));
             expect(obj.m).to.be.an.instanceOf(Map);
-            if (preset) {
-                expect(obj.m.keys().next().value).to.be.an.instanceOf(Error);
-                expect(obj.m.values().next().value).to.be.an.instanceOf(Date);
+            if (!preset) {
+                return;
             }
+
+            expect(obj.m.keys().next().value).to.be.an.instanceOf(Error);
+            expect(obj.m.values().next().value).to.be.an.instanceOf(Date);
         });
     });
 
@@ -2386,6 +2394,7 @@ describe('Cloneables', () => {
         const originalNonpersistentStateInfo = mc.nonpersistentStateInfo;
 
         const encapsulated = typeson.encapsulate(mc);
+        // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
         // @ts-ignore How to fix?
         expect(mc[Symbol.for('cloneEncapsulate')]()).to.deep.equal({
             obj: JSON.stringify(objArg)

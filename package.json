@@ -7,7 +7,7 @@
     "Brett Zamir"
   ],
   "type": "module",
-  "packageManager": "pnpm@11.24.0",
+  "packageManager": "pnpm@12.5.1",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.umd.min.cjs",
   "module": "./index.js",
@@ -101,11 +101,11 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
     "@babel/core": "^8.0.1",
-    "@babel/eslint-parser": "^8.0.1",
-    "@babel/preset-env": "^8.0.2",
+    "@babel/eslint-parser": "^8.0.6",
+    "@babel/preset-env": "^8.0.6",
     "@eslint/markdown": "^8.0.3",
     "@formatjs/intl-durationformat": "^0.11.1",
-    "@node-static/node-static": "^0.9.1",
+    "@node-static/node-static": "^0.10.0",
     "@rollup/plugin-babel": "^7.1.0",
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
@@ -119,13 +119,13 @@
     "c8": "^12.0.0",
     "canvas": "^3.2.3",
     "chai": "^6.2.2",
-    "eslint": "^10.9.1",
-    "eslint-config-ash-nazg": "^43.1.6",
+    "eslint": "^10.11.0",
+    "eslint-config-ash-nazg": "^43.2.2",
     "eslint-plugin-n": "^18.3.0",
-    "jsdom": "^30.0.1",
-    "mocha": "^12.0.0",
+    "jsdom": "^30.1.0",
+    "mocha": "^12.0.2",
     "open-cli": "^9.0.0",
-    "rollup": "^4.63.1",
+    "rollup": "^4.63.4",
     "semver": "^7.8.5",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
@@ -134,7 +134,7 @@
   "dependencies": {
     "base64-arraybuffer-es6": "^3.1.0",
     "typeson": "^10.3.0",
-    "whatwg-url": "^17.1.0"
+    "whatwg-url": "^17.1.1"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
 }

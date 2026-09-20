@@ -8,16 +8,10 @@ const date = {
         test (x) { return toStringTag(x) === 'Date'; },
         replace (dt) {
             const time = dt.getTime();
-            if (Number.isNaN(time)) {
-                return 'NaN';
-            }
-            return time;
+            return Number.isNaN(time) ? 'NaN' : time;
         },
         revive (time) {
-            if (time === 'NaN') {
-                return new Date(NaN);
-            }
-            return new Date(time);
+            return new Date(time === 'NaN' ? NaN : time);
         }
     }
 };

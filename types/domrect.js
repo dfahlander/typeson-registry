@@ -6,11 +6,11 @@ import {toStringTag} from 'typeson';
  */
 const domrect = {};
 
-/* c8 ignore next */
+/* c8 ignore next -- Later support */
 if (typeof DOMRect !== 'undefined') {
     create(DOMRect);
 }
-/* c8 ignore next */
+/* c8 ignore next -- Later support */
 if (typeof DOMRectReadOnly !== 'undefined') {
     create(DOMRectReadOnly);
 }

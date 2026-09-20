@@ -7,6 +7,7 @@ BREAKING CHANGES:
 
 - feat: rename createImageBitmap file to `buildCanvasPolyfills` (with more exports) and make it require canvas
 - feat: rename FileList polyfill to `buildFileList` and make it require HTMLInputElement
+- chore: update whatwg-url, devDeps
 
 ## 14.7.0
 

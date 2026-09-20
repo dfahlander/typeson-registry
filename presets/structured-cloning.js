@@ -57,41 +57,41 @@ const expObj = [
     errors
 ].concat(
     // ES2015 (ES6)
-    /* c8 ignore next */
+    /* c8 ignore next -- ES6+ */
     typeof Map === 'function' ? map : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- ES6+ */
     typeof Set === 'function' ? set : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof ArrayBuffer === 'function' ? arraybuffer : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof Uint8Array === 'function' ? typedArrays : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof DataView === 'function' ? dataview : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof crypto !== 'undefined' ? cryptokey : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof BigInt !== 'undefined' ? [bigint, bigintObject] : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof DOMException !== 'undefined' ? domexception : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof QuotaExceededError !== 'undefined' ? quotaexceedederror : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof WebTransportError !== 'undefined' ? webtransporterror : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof DOMRect !== 'undefined' ? domrect : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof DOMPoint !== 'undefined' ? dompoint : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof DOMQuad !== 'undefined' ? domquad : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof DOMMatrix !== 'undefined' ? dommatrix : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof AudioData !== 'undefined' ? audiodata : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof EncodedAudioChunk !== 'undefined' ? encodedaudiochunk : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof EncodedVideoChunk !== 'undefined' ? encodedvideochunk : [],
-    /* c8 ignore next */
+    /* c8 ignore next -- Later support */
     typeof VideoFrame !== 'undefined' ? videoframe : []
 );
 export default expObj;

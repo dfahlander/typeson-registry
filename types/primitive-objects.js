@@ -75,10 +75,7 @@ const primitiveObjects = {
             if (n === '-Infinity') {
                 return new Number(-Infinity);
             }
-            if (n === '-0') {
-                return new Number(-0);
-            }
-            return new Number(n);
+            return new Number(n === '-0' ? -0 : n);
         }
     }
 };

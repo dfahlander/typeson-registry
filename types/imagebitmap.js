@@ -74,7 +74,7 @@ const imagebitmap = {
                 try {
                     const resp = await createImageBitmap(canvas);
                     resolve(resp);
-                /* c8 ignore next 3 */
+                /* c8 ignore next 3 -- How to simulate? */
                 } catch (err) {
                     reject(err);
                 }

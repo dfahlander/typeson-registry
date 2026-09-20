@@ -38,7 +38,7 @@ const createObjectURL = function (blob) {
             ? serializeURLOrigin(parsedURL)
             // While `parseURL` can return `null`, `location.href`
             //  tends not to allow
-            /* c8 ignore next */
+            /* c8 ignore next -- See comment above */
             : 'null'
         ) +
         '/' + generateUUID();
@@ -83,10 +83,7 @@ const resolveObjectURL = function (blobURL) {
     }
     // eslint-disable-next-line n/no-sync -- Deliberate
     const bytes = getBlobBytesSync(blob);
-    if (!bytes) {
-        return undefined;
-    }
-    return {type: blob.type, bytes};
+    return !bytes ? undefined : {type: blob.type, bytes};
 };
 
 // We only handle the case of binary, so no need to override `open`

@@ -16,8 +16,7 @@ const file = {
             req.open('GET', URL.createObjectURL(f), false); // Sync
             req.send();
 
-            // Seems not feasible to accurately simulate
-            /* c8 ignore next 3 */
+            /* c8 ignore next 3 -- Seems not feasible to accurately simulate */
             if (req.status !== 200 && req.status !== 0) {
                 throw new Error('Bad File access: ' + req.status);
             }
@@ -53,8 +52,8 @@ const file = {
                         lastModified: f.lastModified
                     });
                 });
-                // Seems not feasible to accurately simulate
-                /* c8 ignore next 3 */
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                /* c8 ignore next 3 -- Seems not feasible to accurately simulate */
                 reader.addEventListener('error', function () {
                     reject(reader.error);
                 });

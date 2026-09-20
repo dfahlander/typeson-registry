@@ -229,7 +229,9 @@ function buildOffscreenCanvas (canvasModule, ImageBitmap) {
                         return;
                     }
                     resolve(
-                        // @ts-expect-error Ok
+                        // eslint-disable-next-line @stylistic/max-len -- Long
+                        // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS6/7
+                        // @ts-ignore Ok
                         new Blob([buffer], {type: options?.type || 'image/png'})
                     );
                 });

@@ -45,6 +45,7 @@ const filelist = {
                 }
             }
 
+            // eslint-disable-next-line jsdoc/ts-ban-ts-comment -- TS 6/7
             // @ts-ignore Override API
             return new FileList(o);
         }

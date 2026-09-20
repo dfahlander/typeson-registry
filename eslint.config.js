@@ -9,6 +9,8 @@ export default [
             'dist/',
             '.idea',
             'polyfills/index.cjs',
+            'polyfills/SyncBlobFile.js',
+            'polyfills/URL.js',
             'coverage'
         ]
     },

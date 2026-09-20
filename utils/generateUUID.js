@@ -6,7 +6,6 @@
  * @returns {string}
  */
 export default function generateUUID () { //  Adapted from original: public domain/MIT: https://stackoverflow.com/a/8809472/271577
-    /* c8 ignore next */
     let d = Date.now();
 
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/gu, function (c) {

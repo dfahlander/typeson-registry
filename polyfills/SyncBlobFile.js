@@ -52,10 +52,7 @@ function partsToBuffer (parts) {
             );
         }
         const partBytes = part && syncBytesMap.get(/** @type {Blob} */ (part));
-        if (partBytes) {
-            return partBytes;
-        }
-        return Buffer.from(String(part), 'utf8');
+        return partBytes || Buffer.from(String(part), 'utf8');
     }));
 }
 

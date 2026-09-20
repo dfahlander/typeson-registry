@@ -13,12 +13,12 @@ const errors = {};
     EvalError, URIError
 ].forEach((error) => create(error));
 
-/* c8 ignore next 3 */
+/* c8 ignore next 3 -- Later support */
 if (typeof AggregateError !== 'undefined') {
     create(AggregateError);
 }
 
-/* c8 ignore next 5 */
+/* c8 ignore next 5 -- Non-standard */
 // @ts-expect-error Non-standard
 if (typeof InternalError === 'function') {
     // @ts-expect-error Non-standard

@@ -17,8 +17,8 @@ const cryptokey = {
                 let jwk;
                 try {
                     jwk = await crypto.subtle.exportKey('jwk', key);
-                // Our format should be valid and our key extractable
-                /* c8 ignore next 4 */
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                /* c8 ignore next 4 -- Our format should be valid and our key extractable */
                 } catch (err) {
                     reject(err);
                     return;

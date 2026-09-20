@@ -382,6 +382,15 @@ function _toPropertyKey(t) {
   var i = _toPrimitive(t, "string");
   return "symbol" == typeof i ? i : i + "";
 }
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
 function _unsupportedIterableToArray(r, a) {
   if (r) {
     if ("string" == typeof r) return _arrayLikeToArray(r, a);
@@ -414,11 +423,12 @@ function _wrapNativeSuper(t) {
 
 var conversions$1 = require("webidl-conversions");
 var utils$1 = require("./utils.js");
-var implSymbol$1 = utils$1.implSymbol;
 var ctorRegistrySymbol$1 = utils$1.ctorRegistrySymbol;
 var interfaceName$1 = "URL";
+var $interfaceDescriptor$1 = utils$1.createInterfaceDescriptor();
+exports.interfaceDescriptor = $interfaceDescriptor$1;
 exports.is = function (value) {
-  return utils$1.isObject(value) && Object.hasOwn(value, implSymbol$1) && value[implSymbol$1] instanceof Impl$1.implementation;
+  return utils$1.implForWrapperWithInterface(value, $interfaceDescriptor$1) !== null;
 };
 exports.isImpl = function (value) {
   return utils$1.isObject(value) && value instanceof Impl$1.implementation;
@@ -427,8 +437,9 @@ exports.convert = function (globalObject, value) {
   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
     _ref$context = _ref.context,
     context = _ref$context === void 0 ? "The provided value" : _ref$context;
-  if (exports.is(value)) {
-    return utils$1.implForWrapper(value);
+  var impl = utils$1.implForWrapperWithInterface(value, $interfaceDescriptor$1);
+  if (impl !== null) {
+    return impl;
   }
   throw new globalObject.TypeError("".concat(context, " is not of type 'URL'."));
 };
@@ -456,28 +467,24 @@ exports.setup = function (wrapper, globalObject) {
   var privateData = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   privateData.wrapper = wrapper;
   exports._internalSetup(wrapper, globalObject);
-  Object.defineProperty(wrapper, implSymbol$1, {
-    value: new Impl$1.implementation(globalObject, constructorArgs, privateData),
-    configurable: true
-  });
-  wrapper[implSymbol$1][utils$1.wrapperSymbol] = wrapper;
+  var impl = new Impl$1.implementation(globalObject, constructorArgs, privateData);
+  utils$1.registerWrapper(wrapper, impl, $interfaceDescriptor$1);
+  impl[utils$1.wrapperSymbol] = wrapper;
   if (Impl$1.init) {
-    Impl$1.init(wrapper[implSymbol$1]);
+    Impl$1.init(impl);
   }
   return wrapper;
 };
 exports["new"] = function (globalObject, newTarget) {
   var wrapper = makeWrapper$1(globalObject, newTarget);
   exports._internalSetup(wrapper, globalObject);
-  Object.defineProperty(wrapper, implSymbol$1, {
-    value: Object.create(Impl$1.implementation.prototype),
-    configurable: true
-  });
-  wrapper[implSymbol$1][utils$1.wrapperSymbol] = wrapper;
+  var impl = Object.create(Impl$1.implementation.prototype);
+  utils$1.registerWrapper(wrapper, impl, $interfaceDescriptor$1);
+  impl[utils$1.wrapperSymbol] = wrapper;
   if (Impl$1.init) {
-    Impl$1.init(wrapper[implSymbol$1]);
+    Impl$1.init(impl);
   }
-  return wrapper[implSymbol$1];
+  return impl;
 };
 var exposed$1 = new Set(["Window", "Worker"]);
 exports.install = function (globalObject, globalNames) {
@@ -517,240 +524,263 @@ exports.install = function (globalObject, globalNames) {
     return _createClass(URL, [{
       key: "toJSON",
       value: function toJSON() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this;
+        var $impl = utils$1.implForWrapperWithInterface((_this = this) !== null && _this !== void 0 ? _this : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'toJSON' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1].toJSON();
+        return $impl.toJSON();
       }
     }, {
       key: "href",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this2;
+        var $impl = utils$1.implForWrapperWithInterface((_this2 = this) !== null && _this2 !== void 0 ? _this2 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get href' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["href"];
+        return $impl["href"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this3;
+        var $impl = utils$1.implForWrapperWithInterface((_this3 = this) !== null && _this3 !== void 0 ? _this3 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set href' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'href' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["href"] = V;
+        $impl["href"] = V;
       }
     }, {
       key: "toString",
       value: function toString() {
-        var esValue = this;
-        if (!exports.is(esValue)) {
+        var $impl = utils$1.implForWrapperWithInterface(this, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'toString' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["href"];
+        return $impl["href"];
       }
     }, {
       key: "origin",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this4;
+        var $impl = utils$1.implForWrapperWithInterface((_this4 = this) !== null && _this4 !== void 0 ? _this4 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get origin' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["origin"];
+        return $impl["origin"];
       }
     }, {
       key: "protocol",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this5;
+        var $impl = utils$1.implForWrapperWithInterface((_this5 = this) !== null && _this5 !== void 0 ? _this5 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get protocol' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["protocol"];
+        return $impl["protocol"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this6;
+        var $impl = utils$1.implForWrapperWithInterface((_this6 = this) !== null && _this6 !== void 0 ? _this6 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set protocol' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'protocol' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["protocol"] = V;
+        $impl["protocol"] = V;
       }
     }, {
       key: "username",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this7;
+        var $impl = utils$1.implForWrapperWithInterface((_this7 = this) !== null && _this7 !== void 0 ? _this7 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get username' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["username"];
+        return $impl["username"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this8;
+        var $impl = utils$1.implForWrapperWithInterface((_this8 = this) !== null && _this8 !== void 0 ? _this8 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set username' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'username' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["username"] = V;
+        $impl["username"] = V;
       }
     }, {
       key: "password",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this9;
+        var $impl = utils$1.implForWrapperWithInterface((_this9 = this) !== null && _this9 !== void 0 ? _this9 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get password' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["password"];
+        return $impl["password"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this0;
+        var $impl = utils$1.implForWrapperWithInterface((_this0 = this) !== null && _this0 !== void 0 ? _this0 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set password' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'password' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["password"] = V;
+        $impl["password"] = V;
       }
     }, {
       key: "host",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this1;
+        var $impl = utils$1.implForWrapperWithInterface((_this1 = this) !== null && _this1 !== void 0 ? _this1 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get host' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["host"];
+        return $impl["host"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this10;
+        var $impl = utils$1.implForWrapperWithInterface((_this10 = this) !== null && _this10 !== void 0 ? _this10 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set host' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'host' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["host"] = V;
+        $impl["host"] = V;
       }
     }, {
       key: "hostname",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this11;
+        var $impl = utils$1.implForWrapperWithInterface((_this11 = this) !== null && _this11 !== void 0 ? _this11 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get hostname' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["hostname"];
+        return $impl["hostname"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this12;
+        var $impl = utils$1.implForWrapperWithInterface((_this12 = this) !== null && _this12 !== void 0 ? _this12 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set hostname' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'hostname' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["hostname"] = V;
+        $impl["hostname"] = V;
       }
     }, {
       key: "port",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this13;
+        var $impl = utils$1.implForWrapperWithInterface((_this13 = this) !== null && _this13 !== void 0 ? _this13 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get port' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["port"];
+        return $impl["port"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this14;
+        var $impl = utils$1.implForWrapperWithInterface((_this14 = this) !== null && _this14 !== void 0 ? _this14 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set port' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'port' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["port"] = V;
+        $impl["port"] = V;
       }
     }, {
       key: "pathname",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this15;
+        var $impl = utils$1.implForWrapperWithInterface((_this15 = this) !== null && _this15 !== void 0 ? _this15 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get pathname' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["pathname"];
+        return $impl["pathname"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this16;
+        var $impl = utils$1.implForWrapperWithInterface((_this16 = this) !== null && _this16 !== void 0 ? _this16 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set pathname' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'pathname' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["pathname"] = V;
+        $impl["pathname"] = V;
       }
     }, {
       key: "search",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this17;
+        var $impl = utils$1.implForWrapperWithInterface((_this17 = this) !== null && _this17 !== void 0 ? _this17 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get search' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["search"];
+        return $impl["search"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this18;
+        var $impl = utils$1.implForWrapperWithInterface((_this18 = this) !== null && _this18 !== void 0 ? _this18 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set search' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'search' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["search"] = V;
+        $impl["search"] = V;
       }
     }, {
       key: "searchParams",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this19;
+        var $impl = utils$1.implForWrapperWithInterface((_this19 = this) !== null && _this19 !== void 0 ? _this19 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get searchParams' called on an object that is not a valid instance of URL.");
         }
         return utils$1.getSameObject(this, "searchParams", function () {
-          return utils$1.tryWrapperForImpl(esValue[implSymbol$1]["searchParams"]);
+          return utils$1.tryWrapperForImpl($impl["searchParams"]);
         });
       }
     }, {
       key: "hash",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this20;
+        var $impl = utils$1.implForWrapperWithInterface((_this20 = this) !== null && _this20 !== void 0 ? _this20 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get hash' called on an object that is not a valid instance of URL.");
         }
-        return esValue[implSymbol$1]["hash"];
+        return $impl["hash"];
       },
       set: function set(V) {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this21;
+        var $impl = utils$1.implForWrapperWithInterface((_this21 = this) !== null && _this21 !== void 0 ? _this21 : globalObject, $interfaceDescriptor$1);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set hash' called on an object that is not a valid instance of URL.");
         }
         V = conversions$1["USVString"](V, {
           context: "Failed to set the 'hash' property on 'URL': The provided value",
           globals: globalObject
         });
-        esValue[implSymbol$1]["hash"] = V;
+        $impl["hash"] = V;
       }
     }], [{
       key: "parse",
@@ -891,11 +921,12 @@ var conversions = require("webidl-conversions");
 var utils = require("./utils.js");
 var Function$1 = require("./Function.js");
 var newObjectInRealm = utils.newObjectInRealm;
-var implSymbol = utils.implSymbol;
 var ctorRegistrySymbol = utils.ctorRegistrySymbol;
 var interfaceName = "URLSearchParams";
+var $interfaceDescriptor = utils.createInterfaceDescriptor();
+exports.interfaceDescriptor = $interfaceDescriptor;
 exports.is = function (value) {
-  return utils.isObject(value) && Object.hasOwn(value, implSymbol) && value[implSymbol] instanceof Impl.implementation;
+  return utils.implForWrapperWithInterface(value, $interfaceDescriptor) !== null;
 };
 exports.isImpl = function (value) {
   return utils.isObject(value) && value instanceof Impl.implementation;
@@ -904,8 +935,9 @@ exports.convert = function (globalObject, value) {
   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
     _ref$context = _ref.context,
     context = _ref$context === void 0 ? "The provided value" : _ref$context;
-  if (exports.is(value)) {
-    return utils.implForWrapper(value);
+  var impl = utils.implForWrapperWithInterface(value, $interfaceDescriptor);
+  if (impl !== null) {
+    return impl;
   }
   throw new globalObject.TypeError("".concat(context, " is not of type 'URLSearchParams'."));
 };
@@ -947,28 +979,24 @@ exports.setup = function (wrapper, globalObject) {
   var privateData = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   privateData.wrapper = wrapper;
   exports._internalSetup(wrapper, globalObject);
-  Object.defineProperty(wrapper, implSymbol, {
-    value: new Impl.implementation(globalObject, constructorArgs, privateData),
-    configurable: true
-  });
-  wrapper[implSymbol][utils.wrapperSymbol] = wrapper;
+  var impl = new Impl.implementation(globalObject, constructorArgs, privateData);
+  utils.registerWrapper(wrapper, impl, $interfaceDescriptor);
+  impl[utils.wrapperSymbol] = wrapper;
   if (Impl.init) {
-    Impl.init(wrapper[implSymbol]);
+    Impl.init(impl);
   }
   return wrapper;
 };
 exports["new"] = function (globalObject, newTarget) {
   var wrapper = makeWrapper(globalObject, newTarget);
   exports._internalSetup(wrapper, globalObject);
-  Object.defineProperty(wrapper, implSymbol, {
-    value: Object.create(Impl.implementation.prototype),
-    configurable: true
-  });
-  wrapper[implSymbol][utils.wrapperSymbol] = wrapper;
+  var impl = Object.create(Impl.implementation.prototype);
+  utils.registerWrapper(wrapper, impl, $interfaceDescriptor);
+  impl[utils.wrapperSymbol] = wrapper;
   if (Impl.init) {
-    Impl.init(wrapper[implSymbol]);
+    Impl.init(impl);
   }
-  return wrapper[implSymbol];
+  return impl;
 };
 var exposed = new Set(["Window", "Worker"]);
 exports.install = function (globalObject, globalNames) {
@@ -1078,9 +1106,9 @@ exports.install = function (globalObject, globalNames) {
     return _createClass(URLSearchParams, [{
       key: "append",
       value: function append(name, value) {
-        var _esValue$implSymbol;
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this;
+        var $impl = utils.implForWrapperWithInterface((_this = this) !== null && _this !== void 0 ? _this : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'append' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 2) {
@@ -1103,14 +1131,14 @@ exports.install = function (globalObject, globalNames) {
           });
           args.push(_curArg);
         }
-        return utils.tryWrapperForImpl((_esValue$implSymbol = esValue[implSymbol]).append.apply(_esValue$implSymbol, args));
+        return utils.tryWrapperForImpl($impl.append.apply($impl, args));
       }
     }, {
       key: "delete",
       value: function _delete(name) {
-        var _esValue$implSymbol2;
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this2;
+        var $impl = utils.implForWrapperWithInterface((_this2 = this) !== null && _this2 !== void 0 ? _this2 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'delete' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 1) {
@@ -1135,14 +1163,14 @@ exports.install = function (globalObject, globalNames) {
           }
           args.push(_curArg2);
         }
-        return utils.tryWrapperForImpl((_esValue$implSymbol2 = esValue[implSymbol])["delete"].apply(_esValue$implSymbol2, args));
+        return utils.tryWrapperForImpl($impl["delete"].apply($impl, args));
       }
     }, {
       key: "get",
       value: function get(name) {
-        var _esValue$implSymbol3;
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this3;
+        var $impl = utils.implForWrapperWithInterface((_this3 = this) !== null && _this3 !== void 0 ? _this3 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 1) {
@@ -1157,14 +1185,14 @@ exports.install = function (globalObject, globalNames) {
           });
           args.push(curArg);
         }
-        return (_esValue$implSymbol3 = esValue[implSymbol]).get.apply(_esValue$implSymbol3, args);
+        return $impl.get.apply($impl, args);
       }
     }, {
       key: "getAll",
       value: function getAll(name) {
-        var _esValue$implSymbol4;
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this4;
+        var $impl = utils.implForWrapperWithInterface((_this4 = this) !== null && _this4 !== void 0 ? _this4 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'getAll' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 1) {
@@ -1179,14 +1207,14 @@ exports.install = function (globalObject, globalNames) {
           });
           args.push(curArg);
         }
-        return utils.tryWrapperForImpl((_esValue$implSymbol4 = esValue[implSymbol]).getAll.apply(_esValue$implSymbol4, args));
+        return utils.tryWrapperForImpl($impl.getAll.apply($impl, args));
       }
     }, {
       key: "has",
       value: function has(name) {
-        var _esValue$implSymbol5;
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this5;
+        var $impl = utils.implForWrapperWithInterface((_this5 = this) !== null && _this5 !== void 0 ? _this5 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'has' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 1) {
@@ -1211,14 +1239,14 @@ exports.install = function (globalObject, globalNames) {
           }
           args.push(_curArg3);
         }
-        return (_esValue$implSymbol5 = esValue[implSymbol]).has.apply(_esValue$implSymbol5, args);
+        return $impl.has.apply($impl, args);
       }
     }, {
       key: "set",
       value: function set(name, value) {
-        var _esValue$implSymbol6;
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this6;
+        var $impl = utils.implForWrapperWithInterface((_this6 = this) !== null && _this6 !== void 0 ? _this6 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'set' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 2) {
@@ -1241,54 +1269,60 @@ exports.install = function (globalObject, globalNames) {
           });
           args.push(_curArg4);
         }
-        return utils.tryWrapperForImpl((_esValue$implSymbol6 = esValue[implSymbol]).set.apply(_esValue$implSymbol6, args));
+        return utils.tryWrapperForImpl($impl.set.apply($impl, args));
       }
     }, {
       key: "sort",
       value: function sort() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this7;
+        var $impl = utils.implForWrapperWithInterface((_this7 = this) !== null && _this7 !== void 0 ? _this7 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'sort' called on an object that is not a valid instance of URLSearchParams.");
         }
-        return utils.tryWrapperForImpl(esValue[implSymbol].sort());
+        return utils.tryWrapperForImpl($impl.sort());
       }
     }, {
       key: "toString",
       value: function toString() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this8;
+        var $impl = utils.implForWrapperWithInterface((_this8 = this) !== null && _this8 !== void 0 ? _this8 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'toString' called on an object that is not a valid instance of URLSearchParams.");
         }
-        return esValue[implSymbol].toString();
+        return $impl.toString();
       }
     }, {
       key: "keys",
       value: function keys() {
-        if (!exports.is(this)) {
+        var $impl = utils.implForWrapperWithInterface(this, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'keys' called on an object that is not a valid instance of URLSearchParams.");
         }
-        return exports.createDefaultIterator(globalObject, this, "key");
+        return exports.createDefaultIterator(globalObject, $impl, "key");
       }
     }, {
       key: "values",
       value: function values() {
-        if (!exports.is(this)) {
+        var $impl = utils.implForWrapperWithInterface(this, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'values' called on an object that is not a valid instance of URLSearchParams.");
         }
-        return exports.createDefaultIterator(globalObject, this, "value");
+        return exports.createDefaultIterator(globalObject, $impl, "value");
       }
     }, {
       key: "entries",
       value: function entries() {
-        if (!exports.is(this)) {
+        var $impl = utils.implForWrapperWithInterface(this, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'entries' called on an object that is not a valid instance of URLSearchParams.");
         }
-        return exports.createDefaultIterator(globalObject, this, "key+value");
+        return exports.createDefaultIterator(globalObject, $impl, "key+value");
       }
     }, {
       key: "forEach",
       value: function forEach(callback) {
-        if (!exports.is(this)) {
+        var $impl = utils.implForWrapperWithInterface(this, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'forEach' called on an object that is not a valid instance of URLSearchParams.");
         }
         if (arguments.length < 1) {
@@ -1298,7 +1332,7 @@ exports.install = function (globalObject, globalNames) {
           context: "Failed to execute 'forEach' on 'iterable': The callback provided as parameter 1"
         });
         var thisArg = arguments[1];
-        var pairs = Array.from(this[implSymbol]);
+        var pairs = Array.from($impl);
         var i = 0;
         while (i < pairs.length) {
           var _pairs$i$map = pairs[i].map(utils.tryWrapperForImpl),
@@ -1306,18 +1340,19 @@ exports.install = function (globalObject, globalNames) {
             key = _pairs$i$map2[0],
             value = _pairs$i$map2[1];
           callback.call(thisArg, value, key, this);
-          pairs = Array.from(this[implSymbol]);
+          pairs = Array.from($impl);
           i++;
         }
       }
     }, {
       key: "size",
       get: function get() {
-        var esValue = this !== null && this !== undefined ? this : globalObject;
-        if (!exports.is(esValue)) {
+        var _this9;
+        var $impl = utils.implForWrapperWithInterface((_this9 = this) !== null && _this9 !== void 0 ? _this9 : globalObject, $interfaceDescriptor);
+        if ($impl === null) {
           throw new globalObject.TypeError("'get size' called on an object that is not a valid instance of URLSearchParams.");
         }
-        return esValue[implSymbol]["size"];
+        return $impl["size"];
       }
     }]);
   }();
@@ -1383,7 +1418,7 @@ exports.install = function (globalObject, globalNames) {
       var target = internal.target,
         kind = internal.kind,
         index = internal.index;
-      var values = Array.from(target[implSymbol]);
+      var values = Array.from(target);
       var len = values.length;
       if (index >= len) {
         return newObjectInRealm(globalObject, {
@@ -4825,35 +4860,381 @@ var DOMMatrixReadOnly = /*#__PURE__*/function () {
 }();
 
 /**
- * @param {ImageBitmapSource} cvs
- * @deprecated Use a polyfill like that used in test/helpers/test-environment.js
- * @returns {Promise<ImageBitmap>}
+ * Builds Node `canvas`-backed `ImageBitmap`, `OffscreenCanvas`, and
+ *   `createImageBitmap` polyfills.
+ *
+ * The `canvas` package (https://github.com/Automattic/node-canvas) is a
+ *   native module, so rather than this file depending on it directly (and
+ *   forcing that dependency -- or a specific version of it -- onto every
+ *   consumer of these polyfills), the caller supplies its own `canvas`
+ *   module instance here.
+ * @param {{
+ *   Image: new () => import('canvas').Image,
+ *   Canvas: new (
+ *     width: number, height: number
+ *   ) => import('canvas').Canvas
+ * }} canvasModule The `canvas` package (or an equivalent), as imported
+ *   by the caller, e.g., `import * as canvas from 'canvas';`.
+ * @returns {{
+ *   ImageBitmap: ReturnType<typeof buildImageBitmap>,
+ *   OffscreenCanvas: ReturnType<typeof buildOffscreenCanvas>,
+ *   createImageBitmap: (
+ *     source: ImageBitmapSource
+ *   ) => Promise<InstanceType<ReturnType<typeof buildImageBitmap>>>
+ * }}
  */
-function createImageBitmap(_x) {
-  return _createImageBitmap.apply(this, arguments);
+function buildCanvasPolyfills(canvasModule) {
+  var ImageBitmap = buildImageBitmap(canvasModule);
+  var OffscreenCanvas = buildOffscreenCanvas(canvasModule, ImageBitmap);
+
+  /**
+   * Loads a source directly into an `ImageBitmap` instance (rather than a
+   *   plain `canvas.Image`) so the result stays a real, drawable node-canvas
+   *   image -- a plain object merely duck-typing `ImageBitmap`'s shape is
+   *   rejected by jsdom's `CanvasRenderingContext2D#drawImage` ("Image or
+   *   Canvas expected").
+   * @param {string|Buffer} src
+   * @returns {Promise<InstanceType<typeof ImageBitmap>>}
+   */
+  // eslint-disable-next-line promise/avoid-new -- Own API
+  var loadAsImageBitmap = function loadAsImageBitmap(src) {
+    return new Promise(function (resolve, reject) {
+      var bitmap = new ImageBitmap();
+      // node-canvas's `Image` is not a DOM `EventTarget`, so it has no
+      //   `addEventListener` -- only the classic `onload`/`onerror`
+      //   callback properties.
+      // eslint-disable-next-line unicorn/prefer-add-event-listener -- N/A
+      bitmap.onload = function () {
+        return resolve(bitmap);
+      };
+      // eslint-disable-next-line unicorn/prefer-add-event-listener -- N/A
+      bitmap.onerror = reject;
+      bitmap.src = src;
+    });
+  };
+
+  /**
+   * @param {ImageBitmapSource} source
+   * @returns {Promise<InstanceType<typeof ImageBitmap>>}
+   */
+  function createImageBitmap(_x) {
+    return _createImageBitmap.apply(this, arguments);
+  }
+  function _createImageBitmap() {
+    _createImageBitmap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(source) {
+      var blobLike, ab, canvasLike, _canvasLike;
+      return _regenerator().w(function (_context) {
+        while (1) switch (_context.n) {
+          case 0:
+            if (!(Object.prototype.toString.call(source) === '[object Blob]' || _typeof(source) === 'object' && source !== null && 'arrayBuffer' in source)) {
+              _context.n = 3;
+              break;
+            }
+            blobLike = /** @type {Blob} */source;
+            _context.n = 1;
+            return blobLike.arrayBuffer();
+          case 1:
+            ab = _context.v;
+            _context.n = 2;
+            return loadAsImageBitmap(Buffer.from(ab));
+          case 2:
+            return _context.a(2, _context.v);
+          case 3:
+            if (!(typeof source === 'string' || Buffer.isBuffer(source))) {
+              _context.n = 5;
+              break;
+            }
+            _context.n = 4;
+            return loadAsImageBitmap(/** @type {string|Buffer} */ /** @type {unknown} */source);
+          case 4:
+            return _context.a(2, _context.v);
+          case 5:
+            if (!(_typeof(source) === 'object' && source !== null && 'toBuffer' in source)) {
+              _context.n = 7;
+              break;
+            }
+            canvasLike = /** @type {{toBuffer: () => Buffer}} */
+            source;
+            _context.n = 6;
+            return loadAsImageBitmap(canvasLike.toBuffer());
+          case 6:
+            return _context.a(2, _context.v);
+          case 7:
+            if (!(_typeof(source) === 'object' && source !== null && 'toDataURL' in source)) {
+              _context.n = 9;
+              break;
+            }
+            _canvasLike = /** @type {{toDataURL: () => string}} */
+            source;
+            _context.n = 8;
+            return loadAsImageBitmap(_canvasLike.toDataURL());
+          case 8:
+            return _context.a(2, _context.v);
+          case 9:
+            throw new Error('Unsupported source type for createImageBitmap polyfill');
+          case 10:
+            return _context.a(2);
+        }
+      }, _callee);
+    }));
+    return _createImageBitmap.apply(this, arguments);
+  }
+  return {
+    ImageBitmap: ImageBitmap,
+    OffscreenCanvas: OffscreenCanvas,
+    createImageBitmap: createImageBitmap
+  };
 }
-function _createImageBitmap() {
-  _createImageBitmap = _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee(cvs) {
-    return _regenerator().w(function (_context) {
-      while (1) switch (_context.n) {
-        case 0:
-          // This really ought not be a canvas, but it works as a simple shim
-          //   for our tests
 
-          // cvs[Symbol.toStringTag] = 'ImageBitmap';
-          // Above line throwing in current jsdom now
-
-          Object.defineProperty(cvs, Symbol.toStringTag, {
-            value: 'ImageBitmap'
-          });
-          _context.n = 1;
-          return /** @type {ImageBitmap} */cvs;
-        case 1:
-          return _context.a(2, _context.v);
+/* eslint-disable jsdoc/valid-types --
+    Constructor-type-returning-object-literal not parseable by jsdoc's
+    type parser, though valid TypeScript */
+/**
+ * @param {{Image: new () => import('canvas').Image}} canvasModule
+ * @returns {new () => import('canvas').Image & {
+ *   [Symbol.toStringTag]: string,
+ *   close: () => void
+ * }}
+ */
+function buildImageBitmap(canvasModule) {
+  /* eslint-enable jsdoc/valid-types -- See above */
+  /**
+   * `ImageBitmap` polyfill.
+   */
+  var ImageBitmap = /*#__PURE__*/function (_canvasModule$Image) {
+    function ImageBitmap() {
+      var _this;
+      _classCallCheck(this, ImageBitmap);
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
-    }, _callee);
-  }));
-  return _createImageBitmap.apply(this, arguments);
+      _this = _callSuper(this, ImageBitmap, [].concat(args));
+      _defineProperty(_this, Symbol.toStringTag, 'ImageBitmap');
+      return _this;
+    }
+    _inherits(ImageBitmap, _canvasModule$Image);
+    return _createClass(ImageBitmap, [{
+      key: "close",
+      value:
+      /**
+       * @returns {void}
+       */
+      function close() {
+        this.src = '';
+        this.width = 0;
+        this.height = 0;
+      }
+    }]);
+  }(canvasModule.Image);
+  return ImageBitmap;
+}
+
+/* eslint-disable jsdoc/valid-types --
+    Constructor-type-returning-object-literal not parseable by jsdoc's
+    type parser, though valid TypeScript */
+/**
+ * @param {{
+ *   Canvas: new (
+ *     width: number, height: number
+ *   ) => import('canvas').Canvas
+ * }} canvasModule
+ * @param {ReturnType<typeof buildImageBitmap>} ImageBitmap
+ * @returns {new (width: number, height: number) => {
+ *   [Symbol.toStringTag]: string,
+ *   width: number,
+ *   height: number,
+ *   getContext: (
+ *     contextType: "2d"|"3d",
+ *     contextAttributes?: import('canvas').NodeCanvasRenderingContext2DSettings
+ *   ) => import('canvas').CanvasRenderingContext2D,
+ *   transferToImageBitmap: () => InstanceType<typeof ImageBitmap>,
+ *   convertToBlob: (options?: {type?: string}) => Promise<Blob>
+ * }}
+ */
+function buildOffscreenCanvas(canvasModule, ImageBitmap) {
+  /* eslint-enable jsdoc/valid-types -- See above */
+  /**
+   * `OffscreenCanvas` polyfill.
+   */
+  var OffscreenCanvas = /*#__PURE__*/function () {
+    /**
+     * @param {number} width
+     * @param {number} height
+     */
+    function OffscreenCanvas(width, height) {
+      _classCallCheck(this, OffscreenCanvas);
+      _defineProperty(this, Symbol.toStringTag, 'OffscreenCanvas');
+      // Use node-canvas's headless Canvas instance
+      this._canvas = new canvasModule.Canvas(width, height);
+    }
+
+    // Proxy the size properties
+    /**
+     * @returns {number}
+     */
+    return _createClass(OffscreenCanvas, [{
+      key: "width",
+      get: function get() {
+        return this._canvas.width;
+      }
+      // eslint-disable-next-line jsdoc/require-jsdoc -- Not allowed in TS
+      ,
+      set: function set(val) {
+        this._canvas.width = val;
+      }
+      /**
+       * @returns {number}
+       */
+    }, {
+      key: "height",
+      get: function get() {
+        return this._canvas.height;
+      }
+      // eslint-disable-next-line jsdoc/require-jsdoc -- Not allowed in TS
+      ,
+      set: function set(val) {
+        this._canvas.height = val;
+      }
+
+      // Mirror the standard getContext interface
+      /**
+       * @param {"2d"|"3d"} contextType
+       * @param {import('canvas').
+       *   NodeCanvasRenderingContext2DSettings} [contextAttributes]
+       * @returns {import('canvas').CanvasRenderingContext2D}
+       */
+    }, {
+      key: "getContext",
+      value: function getContext(contextType, contextAttributes) {
+        if (contextType === '2d') {
+          return this._canvas.getContext('2d', contextAttributes);
+        }
+        throw new Error("Context type \"".concat(contextType, "\" is not polyfilled in Node.js."));
+      }
+
+      /**
+       * @returns {InstanceType<typeof ImageBitmap>}
+       */
+    }, {
+      key: "transferToImageBitmap",
+      value: function transferToImageBitmap() {
+        var bitmap = new ImageBitmap();
+
+        // Convert the current canvas state to a synchronous buffer snapshot
+        // and feed it directly to the ImageBitmap's source
+        bitmap.src = this._canvas.toBuffer();
+
+        // Mirror the explicit width/height dimensions
+        bitmap.width = this.width;
+        bitmap.height = this.height;
+        return bitmap;
+      }
+
+      // Convert to standard Blob if needed by your frontend libraries
+      /**
+       * @param {{type?: string}} [options]
+       * @returns {Promise<Blob>}
+       */
+    }, {
+      key: "convertToBlob",
+      value: function convertToBlob(options) {
+        var _this2 = this;
+        // eslint-disable-next-line promise/avoid-new -- Own API
+        return new Promise(function (resolve, reject) {
+          // eslint-disable-next-line @stylistic/max-len -- Long
+          // eslint-disable-next-line promise/prefer-await-to-callbacks -- Own API
+          _this2._canvas.toBuffer(function (err, buffer) {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(
+            // @ts-ignore Ok
+            new Blob([buffer], {
+              type: (options === null || options === void 0 ? void 0 : options.type) || 'image/png'
+            }));
+          });
+        });
+      }
+    }]);
+  }();
+  return OffscreenCanvas;
+}
+
+// No means to set a `FileList` currently in jsdom so we
+//   make our own `FileList`; Todo: jsdom should really support this:
+//   https://github.com/jsdom/jsdom/issues/1272
+
+/* eslint-disable jsdoc/valid-types --
+    Constructor-type-returning-object-literal not parseable by jsdoc's
+    type parser, though valid TypeScript */
+/**
+ * Builds a `FileList` polyfill class and installs a `files` getter/setter
+ *   on the given `HTMLInputElement`'s prototype, so that assigning to
+ *   `input.files` works (jsdom does not support this natively). The
+ *   `HTMLInputElement` constructor is supplied by the caller (e.g.,
+ *   `window.HTMLInputElement` from a `jsdom` instance) rather than read
+ *   off a global, since it may not yet be set at the time this module is
+ *   imported.
+ * @param {typeof HTMLInputElement} HTMLInputElementCtor
+ * @returns {new (files: ArrayLike<File>) => {
+ *   [Symbol.toStringTag]: string,
+ *   length: number,
+ *   item: (index: import('typeson').Integer) => File
+ * }}
+ */
+function buildFileList(HTMLInputElementCtor) {
+  /* eslint-enable jsdoc/valid-types -- See above */
+  /**
+   * `FileList` polyfill.
+   */
+  var FileListPolyfill = /*#__PURE__*/function () {
+    /**
+     * @param {ArrayLike<File>} files
+     */
+    function FileListPolyfill(files) {
+      _classCallCheck(this, FileListPolyfill);
+      /** @type {ArrayLike<File>} */
+      this._files = files;
+      this.length = files.length;
+    }
+
+    /**
+     * @param {import('typeson').Integer} index
+     * @returns {File}
+     */
+    return _createClass(FileListPolyfill, [{
+      key: "item",
+      value: function item(index) {
+        return this._files[index];
+      }
+
+      /* eslint-disable class-methods-use-this -- Not needed */
+      /**
+       * @returns {"FileList"}
+       */
+    }, {
+      key: Symbol.toStringTag,
+      get: function get() {
+        /* eslint-enable class-methods-use-this -- Not needed */
+        return 'FileList';
+      }
+    }]);
+  }();
+  Object.defineProperty(HTMLInputElementCtor.prototype, 'files', {
+    get: function get() {
+      // @ts-ignore -- Private API
+      // eslint-disable-next-line @stylistic/max-len -- Long
+      // eslint-disable-next-line unicorn/no-this-outside-of-class -- Monkeypatching
+      return new FileListPolyfill(this._files);
+    },
+    set: function set(val) {
+      // eslint-disable-next-line @stylistic/max-len -- Long
+      // eslint-disable-next-line unicorn/no-this-outside-of-class -- Monkeypatching
+      this._files = val;
+    }
+  });
+  return FileListPolyfill;
 }
 
 /**
@@ -4916,7 +5297,8 @@ exports.SyncBlob = SyncBlob;
 exports.SyncFile = SyncFile;
 exports.VideoFrame = VideoFrame;
 exports.WebTransportError = WebTransportError;
-exports.createImageBitmap = createImageBitmap;
+exports.buildCanvasPolyfills = buildCanvasPolyfills;
+exports.buildFileList = buildFileList;
 exports.createObjectURL = createObjectURL;
 exports.getBlobBytesSync = getBlobBytesSync;
 exports.getSyncBytes = getSyncBytes;
