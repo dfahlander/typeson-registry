@@ -9,6 +9,7 @@ export default [
             'dist/',
             '.idea',
             'polyfills/index.cjs',
+            'polyfills/buildCanvasPolyfills.js',
             'polyfills/SyncBlobFile.js',
             'polyfills/URL.js',
             'coverage'

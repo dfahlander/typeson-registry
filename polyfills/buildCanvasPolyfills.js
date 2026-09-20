@@ -1,3 +1,4 @@
+// @ts-nocheck -- Uses `Buffer`, which has no types without `@types/node`
 /**
  * Builds Node `canvas`-backed `ImageBitmap`, `OffscreenCanvas`, and
  *   `createImageBitmap` polyfills.
