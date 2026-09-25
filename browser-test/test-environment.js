@@ -1,4 +1,4 @@
-import {buildFileList} from '../polyfills/FileList.js';
+import {buildFileList} from '../polyfills/buildFileList.js';
 
 buildFileList(HTMLInputElement);
 
