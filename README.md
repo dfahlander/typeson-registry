@@ -248,6 +248,7 @@ Note that the type name corresponds to the file name in the following manner:
     via deprecated means)
 - `filelist` - HTML does not provide a means of creating a `FileList` object
     dynamically, so we polyfill one for revival. This method also sets `File`
+- `gpucompilationinfo` and `gpucompilationmessage`
 - `imagebitmap` - Has sync and async revivers. If `OffscreenCanvas` is not
     supported, the sync method does not produce a genuine `ImageBitmap`
     but instead produces a canvas element which can frequently be used in
