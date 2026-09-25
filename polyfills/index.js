@@ -15,4 +15,5 @@ export * from './DOMMatrix.js';
 export * from './DOMMatrixReadOnly.js';
 export * from './buildCanvasPolyfills.js';
 export * from './buildFileList.js';
+export * from './buildWebgpu.js';
 export * from './IDBKeyRange.js';

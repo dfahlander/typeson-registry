@@ -9,6 +9,7 @@ import {webcrypto} from 'node:crypto';
 
 import jsdom from 'jsdom';
 import * as canvas from 'canvas';
+import {create, globals} from 'webgpu';
 
 import {
     // eslint-disable-next-line no-shadow -- Polyfill
@@ -29,6 +30,7 @@ import {
 
     buildCanvasPolyfills,
     buildFileList,
+    buildWebgpu,
 
     // URL
     createObjectURL,
@@ -38,6 +40,9 @@ import {
 } from '../../polyfills/index.js';
 
 import '@formatjs/intl-durationformat/polyfill.js';
+
+// eslint-disable-next-line unicorn/no-top-level-side-effects -- Ok
+buildWebgpu({create, globals});
 
 const {JSDOM} = jsdom;
 

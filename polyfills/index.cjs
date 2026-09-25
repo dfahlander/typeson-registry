@@ -5234,6 +5234,37 @@ function buildFileList(HTMLInputElementCtor) {
   return FileListPolyfill;
 }
 
+/* eslint-disable n/no-unsupported-features/node-builtins -- Polyfilling */
+/**
+ * @param {{
+ *   create: (options: string[]) => GPU,
+ *   globals: object
+ * }} cfg
+ * @returns {void}
+ */
+function buildWebgpu(_ref) {
+  var create = _ref.create,
+    globals = _ref.globals;
+  // Mix in WebGPU globals globally if required
+  Object.assign(globalThis, globals);
+  Object.defineProperty(globalThis.GPUCompilationMessage.prototype, Symbol.toStringTag, {
+    get: function get() {
+      return 'GPUCompilationMessage';
+    }
+  });
+  Object.defineProperty(globalThis.GPUCompilationInfo.prototype, Symbol.toStringTag, {
+    get: function get() {
+      return 'GPUCompilationInfo';
+    }
+  });
+
+  // Initialize the native GPU instance
+  if (typeof navigator !== 'undefined' && !navigator.gpu) {
+    // @ts-expect-error Not existing on NOde
+    navigator.gpu = create([]);
+  }
+}
+
 /**
  * For a full polyfill, use the likes of `indexeddbshim`
  */
@@ -5296,6 +5327,7 @@ exports.VideoFrame = VideoFrame;
 exports.WebTransportError = WebTransportError;
 exports.buildCanvasPolyfills = buildCanvasPolyfills;
 exports.buildFileList = buildFileList;
+exports.buildWebgpu = buildWebgpu;
 exports.createObjectURL = createObjectURL;
 exports.getBlobBytesSync = getBlobBytesSync;
 exports.getSyncBytes = getSyncBytes;

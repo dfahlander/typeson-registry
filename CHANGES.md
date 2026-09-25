@@ -1,5 +1,11 @@
 # typeson-registry
 
+## 15.1.0
+
+- feat: `GPUCompilationInfo`, `GPUCompilationMessage` (including within structured-cloning presets)
+- feat: add builgWebgpu polyfill (for Node)
+- test: fix browser test environment
+
 ## 15.0.0
 
 BREAKING CHANGES:

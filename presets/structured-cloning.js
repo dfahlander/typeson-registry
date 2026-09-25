@@ -35,6 +35,8 @@ import bigint from '../types/bigint.js';
 import bigintObject from '../types/bigint-object.js';
 
 import cryptokey from '../types/cryptokey.js';
+import gpucompilationinfo from '../types/gpucompilationinfo.js';
+import gpucompilationmessage from '../types/gpucompilationmessage.js';
 
 /**
  * @type {import('typeson').Preset}
@@ -92,6 +94,10 @@ const expObj = [
     /* c8 ignore next -- Later support */
     typeof EncodedVideoChunk !== 'undefined' ? encodedvideochunk : [],
     /* c8 ignore next -- Later support */
-    typeof VideoFrame !== 'undefined' ? videoframe : []
+    typeof VideoFrame !== 'undefined' ? videoframe : [],
+    /* c8 ignore next -- Later support */
+    typeof GPUCompilationInfo !== 'undefined' ? gpucompilationinfo : [],
+    /* c8 ignore next -- Later support */
+    typeof GPUCompilationMessage !== 'undefined' ? gpucompilationmessage : []
 );
 export default expObj;

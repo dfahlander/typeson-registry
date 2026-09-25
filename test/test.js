@@ -68,6 +68,7 @@ const {
     userObject, cloneable, resurrectable,
     bigint, bigintObject,
     cryptokey, negativeZero, symbol, promise, idbkeyrange,
+    gpucompilationinfo, gpucompilationmessage,
 
     // presets
     arrayNonindexKeys,
@@ -2306,6 +2307,84 @@ describe('IDBKeyRange', () => {
     });
 });
 
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function testGPUCompilation (preset) {
+    describe('GPUCompilationInfo', () => {
+        const shaders = `
+struct VertexOut {
+  @builtin(position) position : vec4f,
+  @location(0) color : vec4f
+}
+
+@vertex
+fn vertex_main(@location(0) position: vec4f,
+               @location(1) color: vec4f -> VertexOut
+{
+  var output : VertexOut;
+  output.position = position;
+  output.color = color;
+  return output;
+}
+
+@fragment
+fn fragment_main(fragData: VertexOut) -> @location(0) vec4f
+{
+  return fragData.color;
+}
+`;
+
+        it('should work with GPUCompilationInfo objects', async () => {
+            if (!navigator.gpu) {
+                throw new Error('WebGPU not supported.');
+            }
+            const adapter = await navigator.gpu.requestAdapter();
+            if (!adapter) {
+                throw new Error("Couldn't request WebGPU adapter.");
+            }
+
+            const device = await adapter.requestDevice();
+            const shaderModule = device.createShaderModule({
+                code: shaders
+            });
+
+            const shaderInfo = await shaderModule.getCompilationInfo();
+
+            const typeson = new Typeson().register(preset || [
+                gpucompilationinfo,
+                gpucompilationmessage
+            ]);
+            const tson = typeson.stringify(shaderInfo);
+            const back = typeson.parse(/** @type {string} */ (tson));
+
+            expect(back[Symbol.toStringTag]).to.equal(
+                'GPUCompilationInfo'
+            );
+            expect(back.messages).to.be.an('Array');
+            expect(back.messages[0][Symbol.toStringTag]).to.equal(
+                'GPUCompilationMessage'
+            );
+            expect(back.messages[0]).to.have.lengthOf(2);
+            expect(back.messages[0].lineNum).to.equal(9);
+            expect(back.messages[0].linePos).to.equal(42);
+            try { // Chrome
+                expect(back.messages[0].message).to.equal(
+                    "expected ')' for function declaration"
+                );
+            } catch { // Firefox
+                expect(back.messages[0].message).to.contain(
+                    `\nShader '' parsing error: expected \`,\`, found "->"`
+                );
+            }
+            expect(back.messages[0].offset).to.equal(185);
+            expect(back.messages[0].type).to.equal('error');
+        });
+    });
+}
+testGPUCompilation();
+
 describe('Non-built-in object ignoring', () => {
     it('should ignore non-built-in objects (simulated)', () => {
         const typeson = new Typeson().register(nonbuiltinIgnore);
@@ -2476,6 +2555,7 @@ describe('Presets', () => {
         testEncodedAudioChunk(structuredCloningThrowing);
         testEncodedVideoChunk(structuredCloningThrowing);
         testVideoFrame(structuredCloningThrowing);
+        testGPUCompilation(structuredCloningThrowing);
         DomException(structuredCloningThrowing);
         QuotaExceededErrorTest(structuredCloningThrowing);
         WebTransportErrorTest(structuredCloningThrowing);
