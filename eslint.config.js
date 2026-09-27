@@ -1,7 +1,9 @@
 import ashNazg from 'eslint-config-ash-nazg';
-import nodePlugin from 'eslint-plugin-n';
 import stylistic from '@stylistic/eslint-plugin';
 import markdown from '@eslint/markdown';
+
+const ashNazgNode = ashNazg(['sauron', 'node']);
+const nodePlugin = ashNazgNode.find((cfg) => cfg.plugins?.n)?.plugins?.n;
 
 export default [
     {

@@ -2783,14 +2783,7 @@ function p(_char) {
   return _char.codePointAt(0);
 }
 var failure = Symbol("failure");
-var specialSchemes = {
-  ftp: 21,
-  file: null,
-  http: 80,
-  https: 443,
-  ws: 80,
-  wss: 443
-};
+var specialSchemes = new Map([["ftp", 21], ["file", null], ["http", 80], ["https", 443], ["ws", 80], ["wss", 443]]);
 var urlCodePoints = new Set([p("!"), p("$"), p("&"), p("'"), p("("), p(")"), p("*"), p("+"), p(","), p("-"), p("."), p("/"), p(":"), p(";"), p("="), p("?"), p("@"), p("_"), p("~")]);
 var forbiddenHostCodePoints = new Set([0x00, 0x09, 0x0A, 0x0D, 0x20, p("#"), p("/"), p(":"), p("<"), p(">"), p("?"), p("@"), p("["), p("\\"), p("]"), p("^"), p("|")]);
 function isURLCodePoint(c) {
@@ -2917,13 +2910,13 @@ function domainParser(domain) {
   return result;
 }
 function isSpecialScheme(scheme) {
-  return specialSchemes[scheme.toLowerCase()] !== undefined;
+  return specialSchemes.has(scheme.toLowerCase());
 }
 function isSpecialSchemeExceptFile(scheme) {
   return isSpecialScheme(scheme) && scheme.toLowerCase() !== "file";
 }
 function defaultPort(scheme) {
-  return specialSchemes[scheme.toLowerCase()];
+  return specialSchemes.get(scheme.toLowerCase());
 }
 function isWindowsDriveLetterCodePoints(cp1, cp2) {
   return infra.isASCIIAlpha(cp1) && (cp2 === p(":") || cp2 === p("|"));

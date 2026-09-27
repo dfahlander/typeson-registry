@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
-    "@babel/core": "^8.0.1",
+    "@babel/core": "^8.0.6",
     "@babel/eslint-parser": "^8.0.6",
     "@babel/preset-env": "^8.0.6",
     "@eslint/markdown": "^8.0.3",
@@ -120,22 +120,22 @@
     "canvas": "^3.2.3",
     "chai": "^6.2.2",
     "eslint": "^10.11.0",
-    "eslint-config-ash-nazg": "^43.2.2",
-    "eslint-plugin-n": "^18.3.0",
-    "jsdom": "^30.1.0",
+    "eslint-config-ash-nazg": "^43.2.3",
+    "eslint-plugin-n": "^18.4.0",
+    "jsdom": "^30.1.1",
     "mocha": "^12.0.2",
     "open-cli": "^9.0.0",
-    "rollup": "^4.63.4",
+    "rollup": "^4.63.5",
     "semver": "^7.8.5",
-    "socket.io": "^4.8.3",
-    "socket.io-client": "^4.8.3",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
     "typescript": "^6.0.3",
     "webgpu": "^0.6.1"
   },
   "dependencies": {
     "base64-arraybuffer-es6": "^3.1.0",
     "typeson": "^10.3.0",
-    "whatwg-url": "^17.1.1"
+    "whatwg-url": "^17.1.2"
   },
   "tonicExample": "var Typeson = require('typeson');\nvar TSON = new Typeson().register(require('typeson-registry/dist/presets/builtin'));\n\nTSON.stringify({foo: new Date()}, null, 2);"
 }
