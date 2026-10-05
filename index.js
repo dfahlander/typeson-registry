@@ -23,6 +23,7 @@ import file from './types/file.js';
 import filelist from './types/filelist.js';
 import gpucompilationinfo from './types/gpucompilationinfo.js';
 import gpucompilationmessage from './types/gpucompilationmessage.js';
+import gpupipelineerror from './types/gpupipelineerror.js';
 import idbkeyrange from './types/idbkeyrange.js';
 import imagebitmap from './types/imagebitmap.js';
 import imagedata from './types/imagedata.js';
@@ -67,11 +68,11 @@ export {
     arraybuffer, audiodata, bigintObject, bigint, blob, cloneable, cryptokey,
     dataview, date, domexception, dommatrix, dompoint, domquad, domrect,
     encodedaudiochunk, encodedvideochunk, error, errors, file, filelist,
-    gpucompilationinfo, gpucompilationmessage, idbkeyrange, imagebitmap,
-    imagedata, infinity, intlTypes, map, nan, negativeInfinity, negativeZero,
-    nonbuiltinIgnore, primitiveObjects, promise, quotaexceedederror, regexp,
-    resurrectable, set, symbol, typedArraysSocketio, typedArrays, undef,
-    userObject, videoframe, webtransporterror
+    gpucompilationinfo, gpucompilationmessage, gpupipelineerror, idbkeyrange,
+    imagebitmap, imagedata, infinity, intlTypes, map, nan, negativeInfinity,
+    negativeZero, nonbuiltinIgnore, primitiveObjects, promise,
+    quotaexceedederror, regexp, resurrectable, set, symbol, typedArraysSocketio,
+    typedArrays, undef, userObject, videoframe, webtransporterror
 };
 
 /* presets */

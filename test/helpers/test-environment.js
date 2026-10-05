@@ -15,6 +15,7 @@ import {
     // eslint-disable-next-line no-shadow -- Polyfill
     QuotaExceededError,
     WebTransportError,
+    GPUPipelineError,
     AudioData,
     EncodedAudioChunk,
     EncodedVideoChunk,
@@ -90,6 +91,9 @@ globalThis.DOMException = window.DOMException;
 
 
 globalThis.QuotaExceededError = QuotaExceededError;
+
+// @ts-expect-error - Ok
+globalThis.GPUPipelineError = GPUPipelineError;
 
 // @ts-expect-error - More recent API (single `init` argument)
 globalThis.WebTransportError = WebTransportError;

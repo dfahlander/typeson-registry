@@ -1,5 +1,9 @@
 # typeson-registry
 
+## 15.2.0
+
+- feat: export polyfills: `GPUPipelineError` and add type `gpupipelineerror`
+
 ## 15.1.0
 
 - feat: `GPUCompilationInfo`, `GPUCompilationMessage` (including within structured-cloning presets)

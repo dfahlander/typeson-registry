@@ -4845,6 +4845,52 @@ var DOMMatrixReadOnly = /*#__PURE__*/function () {
   }]);
 }();
 
+/**
+ * @typedef {{reason: "internal"|"validation"}} GPUPipelineErrorInit
+ */
+/**
+ * GPUPipelineError polyfill (not yet available in Node/jsdom).
+ */
+var GPUPipelineError = /*#__PURE__*/function (_DOMException) {
+  /**
+   * @param {string} message
+   * @param {GPUPipelineErrorInit} init
+   */
+  function GPUPipelineError(message, _ref) {
+    var _this;
+    var reason = _ref.reason;
+    _classCallCheck(this, GPUPipelineError);
+    _this = _callSuper(this, GPUPipelineError, [message, 'GPUPipelineError']);
+    if (reason !== 'internal' && reason !== 'validation') {
+      throw new TypeError('`reason` must be either "internal" or "validation".');
+    }
+    _this._reason = reason;
+    return _this;
+  }
+
+  /**
+   * @returns {"internal"|"validation"}
+   */
+  _inherits(GPUPipelineError, _DOMException);
+  return _createClass(GPUPipelineError, [{
+    key: "reason",
+    get: function get() {
+      return this._reason;
+    }
+
+    /* eslint-disable class-methods-use-this -- Not needed */
+    /**
+     * @returns {string}
+     */
+  }, {
+    key: Symbol.toStringTag,
+    get: function get() {
+      /* eslint-enable class-methods-use-this -- Not needed */
+      return 'GPUPipelineError';
+    }
+  }]);
+}(/*#__PURE__*/_wrapNativeSuper(DOMException));
+
 // @ts-nocheck -- Uses `Buffer`, which has no types without `@types/node`
 /**
  * Builds Node `canvas`-backed `ImageBitmap`, `OffscreenCanvas`, and
@@ -5312,6 +5358,7 @@ exports.DOMRect = DOMRect;
 exports.DOMRectReadOnly = DOMRectReadOnly;
 exports.EncodedAudioChunk = EncodedAudioChunk;
 exports.EncodedVideoChunk = EncodedVideoChunk;
+exports.GPUPipelineError = GPUPipelineError;
 exports.IDBKeyRange = IDBKeyRange;
 exports.QuotaExceededError = QuotaExceededError;
 exports.SyncBlob = SyncBlob;

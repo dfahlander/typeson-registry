@@ -33,7 +33,8 @@ URL.createObjectURL = createObjectURL;
 We have not added `jsdom` as a dependency, but it is required if this
 polyfill is used.
 
-Also exported: `QuotaExceededError`, `WebTransportError`, `AudioData`, `EncodedAudioChunk`,
+Also exported: `QuotaExceededError`, `WebTransportError`, `GPUPipelineError`,
+    `AudioData`, `EncodedAudioChunk`,
     `EncodedVideoChunk`, `VideoFrame`, `DOMRect`,
     `DOMRectReadOnly`, `DOMPoint`, `DOMPointReadOnly`, `DOMQuad`, `DOMMatrix`, `DOMMatrixReadOnly`,
     `createImageBitmap`, `createObjectURL`, `revokeObjectURL`, `xmlHttpRequestOverrideMimeType`

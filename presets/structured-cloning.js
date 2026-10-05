@@ -37,6 +37,7 @@ import bigintObject from '../types/bigint-object.js';
 import cryptokey from '../types/cryptokey.js';
 import gpucompilationinfo from '../types/gpucompilationinfo.js';
 import gpucompilationmessage from '../types/gpucompilationmessage.js';
+import gpupipelineerror from '../types/gpupipelineerror.js';
 
 /**
  * @type {import('typeson').Preset}
@@ -98,6 +99,8 @@ const expObj = [
     /* c8 ignore next -- Later support */
     typeof GPUCompilationInfo !== 'undefined' ? gpucompilationinfo : [],
     /* c8 ignore next -- Later support */
-    typeof GPUCompilationMessage !== 'undefined' ? gpucompilationmessage : []
+    typeof GPUCompilationMessage !== 'undefined' ? gpucompilationmessage : [],
+    /* c8 ignore next -- Later support */
+    typeof GPUPipelineError !== 'undefined' ? gpupipelineerror : []
 );
 export default expObj;

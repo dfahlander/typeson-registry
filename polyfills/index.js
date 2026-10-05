@@ -13,6 +13,7 @@ export * from './DOMPointReadOnly.js';
 export * from './DOMQuad.js';
 export * from './DOMMatrix.js';
 export * from './DOMMatrixReadOnly.js';
+export * from './GPUPipelineError.js';
 export * from './buildCanvasPolyfills.js';
 export * from './buildFileList.js';
 export * from './buildWebgpu.js';

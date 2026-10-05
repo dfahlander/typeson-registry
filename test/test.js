@@ -4,7 +4,7 @@
     AudioData, EncodedAudioChunk, EncodedVideoChunk, VideoFrame,
     DOMRect, DOMPoint, DOMMatrix,
     DOMRectReadOnly, DOMPointReadOnly, DOMMatrixReadOnly,
-    DOMQuad, WebTransportError, IDBKeyRange,
+    DOMQuad, WebTransportError, GPUPipelineError, IDBKeyRange,
     XMLHttpRequest, xmlHttpRequestOverrideMimeType,
     OffscreenCanvas -- Polyfills or globals */
 /* eslint-disable no-restricted-syntax -- instanceof is
@@ -62,7 +62,7 @@ const {
     regexp, map, set, arraybuffer, domexception,
     domrect, dompoint, domquad, dommatrix,
     audiodata, encodedaudiochunk, encodedvideochunk, videoframe,
-    quotaexceedederror, webtransporterror,
+    quotaexceedederror, webtransporterror, gpupipelineerror,
     dataview, imagedata, imagebitmap,
     blob, file, filelist, nonbuiltinIgnore,
     userObject, cloneable, resurrectable,
@@ -501,6 +501,45 @@ function WebTransportErrorTest (preset) {
     });
 }
 WebTransportErrorTest();
+
+/**
+ * @param {TypesonPreset} [preset]
+ * @returns {void}
+ */
+function GPUPipelineErrorTest (preset) {
+    describe('GPUPipelineError', function () {
+        it('should return a GPUPipelineError', function () {
+            const typeson = new Typeson().register(
+                preset || [gpupipelineerror]
+            );
+            const err = new GPUPipelineError('something wrong', {
+                reason: 'internal'
+            });
+            const tson = typeson.stringify(err, null, 2);
+            const back = typeson.parse(/** @type {string} */ (tson));
+            expect(back).to.be.an.instanceOf(GPUPipelineError);
+            expect(back.name).to.equal('GPUPipelineError');
+            expect(back.message).to.equal('something wrong');
+            expect(back.reason).to.equal('internal');
+        });
+
+        it(
+            'should return a QuotaExceededError with null quota/requested',
+            function () {
+                const typeson = new Typeson().register(
+                    preset || [quotaexceedederror]
+                );
+                const exc = new QuotaExceededError('Not enough room');
+                const tson = typeson.stringify(exc, null, 2);
+                const back = typeson.parse(/** @type {string} */ (tson));
+                expect(back).to.be.an.instanceOf(QuotaExceededError);
+                expect(back.quota).to.be.null;
+                expect(back.requested).to.be.null;
+            }
+        );
+    });
+}
+GPUPipelineErrorTest();
 
 /**
  *
@@ -2559,6 +2598,7 @@ describe('Presets', () => {
         DomException(structuredCloningThrowing);
         QuotaExceededErrorTest(structuredCloningThrowing);
         WebTransportErrorTest(structuredCloningThrowing);
+        GPUPipelineErrorTest(structuredCloningThrowing);
         DomRect(structuredCloningThrowing);
         DomPoint(structuredCloningThrowing);
         DomQuad(structuredCloningThrowing);
@@ -3496,5 +3536,18 @@ describe('Polyfills', () => {
                 expect(exc.source).to.equal('session');
             });
         }
+    });
+
+    describe('GPUPipelineError', () => {
+        it('should throw upon bad `reason`', () => {
+            expect(() => {
+                // eslint-disable-next-line @stylistic/max-len -- Long
+                // eslint-disable-next-line no-new, sonarjs/no-unthrown-error -- Testing
+                new GPUPipelineError('msg', {
+                    // @ts-expect-error Bad argument
+                    reason: 'invalidreason'
+                });
+            }).to.throw(TypeError);
+        });
     });
 });
