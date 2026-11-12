@@ -41,6 +41,7 @@ import regexp from './types/regexp.js';
 import resurrectable from './types/resurrectable.js';
 import set from './types/set.js';
 import symbol from './types/symbol.js';
+import temporal from './types/temporal.js';
 import typedArraysSocketio from './types/typed-arrays-socketio.js';
 import typedArrays from './types/typed-arrays.js';
 import undef from './types/undef.js';
@@ -71,8 +72,9 @@ export {
     gpucompilationinfo, gpucompilationmessage, gpupipelineerror, idbkeyrange,
     imagebitmap, imagedata, infinity, intlTypes, map, nan, negativeInfinity,
     negativeZero, nonbuiltinIgnore, primitiveObjects, promise,
-    quotaexceedederror, regexp, resurrectable, set, symbol, typedArraysSocketio,
-    typedArrays, undef, userObject, videoframe, webtransporterror
+    quotaexceedederror, regexp, resurrectable, set, symbol, temporal,
+    typedArraysSocketio, typedArrays, undef, userObject, videoframe,
+    webtransporterror
 };
 
 /* presets */

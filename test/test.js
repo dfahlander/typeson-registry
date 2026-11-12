@@ -22,6 +22,7 @@ import io from './helpers/io.js';
 
 import {imageTestFileNode} from './helpers/test-environment.js';
 import * as TypesonNamespace from '../index.js';
+import {toStringTag} from 'typeson';
 import * as util from './helpers/test-utils.js';
 
 import {
@@ -68,7 +69,7 @@ const {
     userObject, cloneable, resurrectable,
     bigint, bigintObject,
     cryptokey, negativeZero, symbol, promise, idbkeyrange,
-    gpucompilationinfo, gpucompilationmessage,
+    gpucompilationinfo, gpucompilationmessage, temporal,
 
     // presets
     arrayNonindexKeys,
@@ -540,6 +541,49 @@ function GPUPipelineErrorTest (preset) {
     });
 }
 GPUPipelineErrorTest();
+
+/**
+ * @returns {void}
+ */
+function TemporalTest () {
+    /* eslint-disable n/no-sync -- Sync is convenient here */
+    describe('Temporal', function () {
+        const cases = [
+            Temporal.Duration.from('P1Y2M3DT4H5M6S'),
+            Temporal.Instant.from('2020-01-02T03:04:05.123Z'),
+            Temporal.PlainDate.from('2020-01-02'),
+            Temporal.PlainDateTime.from('2020-01-02T03:04:05'),
+            Temporal.PlainMonthDay.from('01-02'),
+            Temporal.PlainTime.from('03:04:05'),
+            Temporal.PlainYearMonth.from('2020-01'),
+            Temporal.ZonedDateTime.from(
+                '2020-01-02T03:04:05+01:00[Europe/Paris]'
+            )
+        ];
+        for (const orig of cases) {
+            const name = toStringTag(orig);
+            it(`should round-trip ${name}`, function () {
+                const typeson = new Typeson().register([temporal]);
+                const tson = typeson.stringifySync(orig);
+                const back = typeson.parse(tson);
+                expect(toStringTag(back)).to.equal(name);
+                expect(back.toString()).to.equal(orig.toString());
+            });
+        }
+        it('should round-trip nested Temporal objects', function () {
+            const typeson = new Typeson().register([temporal]);
+            const orig = {
+                d: Temporal.PlainDate.from('2020-01-02'),
+                list: [Temporal.Duration.from('PT1H')]
+            };
+            const back = typeson.parse(typeson.stringifySync(orig));
+            expect(back.d.toString()).to.equal('2020-01-02');
+            expect(back.list[0].toString()).to.equal('PT1H');
+        });
+    });
+    /* eslint-enable n/no-sync -- Sync is convenient here */
+}
+TemporalTest();
 
 /**
  *

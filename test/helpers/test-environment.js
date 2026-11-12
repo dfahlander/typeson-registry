@@ -41,6 +41,7 @@ import {
 } from '../../polyfills/index.js';
 
 import '@formatjs/intl-durationformat/polyfill.js';
+import {Temporal as TemporalPolyfill} from 'temporal-polyfill';
 
 // eslint-disable-next-line unicorn/no-top-level-side-effects -- Ok
 buildWebgpu({create, globals});
@@ -91,6 +92,8 @@ globalThis.DOMException = window.DOMException;
 
 
 globalThis.QuotaExceededError = QuotaExceededError;
+
+globalThis.Temporal ??= TemporalPolyfill;
 
 // @ts-expect-error - Ok
 globalThis.GPUPipelineError = GPUPipelineError;

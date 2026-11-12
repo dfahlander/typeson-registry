@@ -1,5 +1,11 @@
 # typeson-registry
 
+## 15.3.0
+
+- feat: add `temporal` type (`Temporal.Duration`, `Instant`, `PlainDate`,
+    `PlainDateTime`, `PlainMonthDay`, `PlainTime`, `PlainYearMonth`,
+    `ZonedDateTime`) (fixes #43)
+
 ## 15.2.0
 
 - feat: export polyfills: `GPUPipelineError` and add type `gpupipelineerror`

@@ -273,6 +273,8 @@ Note that the type name corresponds to the file name in the following manner:
     only be revived for the current window session.
 - `set`
 - `symbol`
+- `temporal` - Requires a global `Temporal` (native or polyfilled) for
+    revival; handles all eight `Temporal` classes
 - `typed-arrays-socketio.js` (`Int8Array`, `Uint8Array`, `Uint8ClampedArray`,
     `Int16Array`, `Uint16Array`, `Int32Array`, `Uint32Array`, `Float32Array`,
     `Float64Array`) - See
